@@ -1,18 +1,18 @@
-<span style=display:none; >[You are now in a GitHub source code view - click this link to view Read Me file as a web page]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/readme.html "View file as a web page." ) </span>
+<span style=display:none; >[You are now in a GitHub source code view - click this link to view Read Me file as a web page]( https://ladybug-tools.github.io/spider-2020/cookbook/covid-19-statistics-on-globe/readme.html "View file as a web page." ) </span>
 
-<div><input type=button onclick=window.location.href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
+<div><input type=button onclick=window.location.href="https://github.com/ladybug-tools/spider-2020/tree/master/cookbook/";
 value='You are now in a GitHub web page view - Click this button to view this read me file as source code' ></div>
 
 
-# [covid 19 viz 3d Read Me]( #README.md )
+# [covid 19 statistics on globe Read Me]( #README.md )
 
 
-<iframe src=https://ladybug-tools.github.io/spider-covid-19-viz-3d/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
-_covid 19 viz 3d - touch me!_
+<iframe src=https://ladybug-tools.github.io/spider-2020/cookbook/covid-19-statistics-on-globe/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
+_covid 19 statistics on globe - touch me!_
 
-### Full Screen stable: [covid 19 viz 3d]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/ )
+### Full Screen stable: [covid 19 statistics on globe]( https://ladybug-tools.github.io/spider-2020/cookbook/covid-19-statistics-on-globe/ )
 
-### Full Screen latest: [covid 19 viz 3d]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev/ )
+### Full Screen latest: [covid 19 statistics on globe]( https://ladybug-tools.github.io/spider-2020/cookbook/covid-19-statistics-on-globe/dev/ )
 
 
 <details open >

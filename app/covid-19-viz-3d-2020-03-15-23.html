@@ -208,8 +208,8 @@ function onLoad( xhr ) {
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
 	//console.log( 'lines', lines );
 
-	lines.push( [ "Test Case", "Null Island", "", "10000", "", "10000", "0", "0" ] );
-	//lines.push(  [ "", "North Pole", "", "100000", "", "", "90", "90" ] );
+	lines.push( [ "Test Case", "Null Island", "", "0", "", "0", "0", "0" ] );
+	//lines.push(  [ "", "North Pole", "", "0", "", "", "90", "90" ] );
 
 	lines.forEach( ( line, index ) => addIndicator( line, index ) );
 

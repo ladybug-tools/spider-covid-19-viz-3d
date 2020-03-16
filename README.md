@@ -19,7 +19,7 @@ _covid 19 viz 3d - touch me!_
 <summary>Concept</summary>
 
 * View the data from John Hopkins University [GitHub repository]( https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data ) in 3D
-* Entry-level code anyboy can play with
+* Entry-level code anybody can play with
 * Displays in seconds on any device
 
 

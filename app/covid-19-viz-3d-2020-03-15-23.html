@@ -206,7 +206,7 @@ function onLoad( xhr ) {
 	scene.add( group )
 
 	let response = xhr.target.response;
-	response = response.replace( /Korea,/, "Korea" ).replace( /Virgin Islands,/, "Virgin Islands");
+	response = response.replace( /"Korea, South"/, "South Korea" ).replace( /Virgin Islands,/, "Virgin Islands");
 
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
 	//console.log( 'lines', lines );

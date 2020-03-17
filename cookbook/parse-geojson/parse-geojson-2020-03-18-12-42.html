@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+	<meta name=description
+		content="Real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library">
+	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+	<meta name=version content="2020-03-03">
+
+	<title></title>
+
+	<style>
+		/* Copyright 2020 Theo Armour. MIT License */
+
+		:root {
+			font: 100% monospace;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			overflow: hidden;
+		}
+
+		a {
+			color: crimson;
+			text-decoration: none;
+		}
+
+		a:hover,
+		a:focus,
+		a:active {
+			background-color: yellow;
+			color: #aaa;
+			text-decoration: underline;
+		}
+
+		button {
+			background-color: #ddd;
+			border: none;
+			border-radius: 2px;
+			color: #322;
+			cursor: pointer;
+			padding: 3px 5px;
+		}
+
+		button:hover {
+			background: #ccc;
+			color: #fff
+		}
+
+		input[ type=range] {
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			background-color: #ddd;
+			border-radius: 2px;
+			height: 1.7ch;
+			width: 100%;
+		}
+
+		input[ type=range]::-moz-range-thumb {
+			background-color: #888;
+			border-radius: 2;
+			width: 10px;
+		}
+
+		input[ type=range]::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			background-color: #888;
+			height: 18px;
+			width: 10px;
+		}
+
+		.help {
+			float: right;
+		}
+
+		.couponcode {
+			float: right
+		}
+
+		.couponcode:hover>.coupontooltip {
+			display: block;
+		}
+
+		.coupontooltip {
+			border: 0.8ch double #888;
+			background: white;
+			display: none;
+			font: 100% monospace;
+			font-size: 1rem;
+			font-weight: normal;
+			/* unset summary settings */
+			margin-left: -20ch;
+			padding: 10px;
+			position: absolute;
+			z-index: 1000;
+		}
+
+		#navMenu {
+			margin: 0 20px;
+			max-width: 15rem;
+			position: absolute;
+		}
+
+		#divMessage {
+			background-color: #eee;
+			border-radius: 1rem;
+			left: 5vw;
+			padding: 1rem;
+			position: absolute;
+			top: 50vh;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
+		}
+
+	</style>
+
+
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/npm/globe.gl"></script>
+
+	<script>
+
+	const url = "https://raw.githubusercontent.com/vasturiano/three-globe/master/example/country-polygons/ne_110m_admin_0_countries.geojson";
+
+	init()
+
+	function init() {
+
+		requestFile( url, onLoadGeoJson );
+
+		const N = 300;
+		const gData = [ ...Array( N ).keys() ].map( () => ( {
+			lat: ( Math.random() - 0.5 ) * 180,
+			lng: ( Math.random() - 0.5 ) * 360,
+			size: Math.random() / 3,
+			color: [ 'red', 'white', 'blue', 'green' ][ Math.round( Math.random() * 3 ) ]
+		} ) );
+
+		// Globe( )
+		// 	//.globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg')
+		// 	//.globeImageUrl( 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/textures/planets/earth_atmos_4096.jpg' )
+		// 	.backgroundColor( "#cce0ff" )
+		// 	.globeImageUrl( "geojson/earth_atmos_4096.jpg" )
+		// 	.pointsData( gData )
+		// 	.pointAltitude( 'size' )
+		// 	.pointColor( 'color' )
+		// 	.polygonCapColor("white")
+		// 	//(document.getElementById('globeViz'))
+		// 	( document.body )
+
+			// setTimeout( () => {
+
+			// 	scene.children[ 1 ].color.r = 1;
+			// 	scene.children[ 1 ].color.g = 1;
+			// 	scene.children[ 1 ].color.b = 1;
+
+			// 	scene.children[ 2 ].intensity = 1;
+			// 	scene.children[ 2 ].position.set( 0, -1, 0);
+
+			// }, 2000);
+
+
+	}
+
+
+	function requestFile( url, callback ) {
+
+		xhr = new XMLHttpRequest();
+		xhr.open( 'GET', url, true );
+		xhr.onerror = ( xhr ) => console.log( 'error:', xhr  );
+		//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+		xhr.onload = callback;
+		xhr.send( null );
+
+	}
+
+	function onLoadGeoJson( xhr ) {
+
+		//console.log( 'xhr.target.response ', xhr.target.response );
+		json = JSON.parse( xhr.target.response )
+
+		Globe( )
+			//.globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg')
+			//.globeImageUrl( 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/textures/planets/earth_atmos_4096.jpg' )
+			//.backgroundColor( "#cce0ff" )
+			//.globeImageUrl( "geojson/earth_atmos_4096.jpg" )
+			//.pointsData( gData )
+			//.pointAltitude( "0" )
+			//.pointColor( "" )
+
+			.polygonsData( json.features )
+			// .polygonCapColor( "#ff0000" )
+			// .polygonStrokeColor( "#ff00ff" )
+			.polygonAltitude( 0.01 )
+
+			.polygonCapColor(() => 'rgba(200, 0, 0, 0.7)')
+			.polygonSideColor(() => 'rgba(0, 200, 0, 0.1)')
+			.polygonStrokeColor(() => '#f0f')
+			//(document.getElementById('globeViz'))
+			( document.body );
+
+
+	}
+	</script>
+
+</body>
+
+</html>

@@ -18,9 +18,13 @@ _covid 19 viz 3d - touch me!_
 <details open >
 <summary>Concept</summary>
 
+The concept of the web page is to show you the current COVID-19 situation around the entire world in 3 seconds or less.
+
 * View the data from John Hopkins University [GitHub repository]( https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data ) in 3D
-* Entry-level code anybody can play with
-* Displays in seconds on any device
+* Provide entry-level programming code anybody can copy and make better
+* Display all the data in seconds on any device then zoom and rotate and click to see the cases in 3D
+
+The progress made in one day of programming was excellent - as you can see above. And there's a lot more features that can be added. For example, why are those blue bars so boring-looking? Or can you show me the borders of the countries?
 
 
 </details>
@@ -63,6 +67,12 @@ _covid 19 viz 3d - touch me!_
 
 <details open >
 <summary>Change log </summary>
+
+### 2020-03-16 ~ Theo
+
+* Added death and recovery bars
+* Bar colors now red, black, green
+
 
 ### 2020-03-15
 

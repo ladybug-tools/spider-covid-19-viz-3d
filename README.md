@@ -35,7 +35,7 @@ The progress made in one day of programming was excellent - as you can see above
 * Globe rotates to the lat/lon indicated by your browser location
 * Placards over each bar showing country & cases
 * Map showing countries
-* Indicators divided into cases,deaths & recovered
+
 
 
 </details>
@@ -60,8 +60,14 @@ The progress made in one day of programming was excellent - as you can see above
 <details open >
 <summary>Links of interest</summary>
 
+Other 3D visualizations of the COVID-19 data
+
 * https://earth3dmap.com/coronavirus-interactive-global-map/
 * https://covid19.martinpham.com/
+
+Sourc of map used on globe
+
+* https://github.com/mrdoob/three.js/tree/dev/examples/textures/planets
 
 </details>
 
@@ -73,6 +79,9 @@ The progress made in one day of programming was excellent - as you can see above
 * Added death and recovery bars
 * Bar colors now red, black, green
 
+Done
+
+* Indicators divided into cases, deaths & recovered
 
 ### 2020-03-15
 

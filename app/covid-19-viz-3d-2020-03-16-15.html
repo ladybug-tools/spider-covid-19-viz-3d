@@ -69,7 +69,11 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 				<span id=sVersion ></span>
 			</a>
 
-			<span class="couponcode" >??<span id=divDescription class="coupontooltip" ></span></span>
+			<span class="couponcode" >??<span id=divDescription class="coupontooltip" >
+				View the data from John Hopkins University
+				<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
+				in 3D using the <a href="https://threeja.org" target="_blank">Three.js</a> library.
+			</span></span>
 
 		</h2>
 
@@ -104,7 +108,7 @@ imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
 sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
 sVersion.innerHTML = version ? version.content : "";
-divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+//divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 
 let lines;
 let intersected;
@@ -165,28 +169,14 @@ function init() {
 
 function addLights() {
 
-//scene.add( new THREE.AmbientLight( 0x404040 ) );
-scene.add( new THREE.AmbientLight( 0xaaaaaa ) );
+	scene.add( new THREE.AmbientLight( 0xaaaaaa ) );
 
-const pointLight = new THREE.PointLight( 0xffffff, 1 );
-pointLight.position.copy( camera.position );
-camera.add( pointLight );
+	const pointLight = new THREE.PointLight( 0xffffff, 1 );
+	pointLight.position.copy( camera.position );
+	camera.add( pointLight );
 
-lightDirectional = new THREE.DirectionalLight( 0xfffffff, 1);
-lightDirectional.position.set( -50, -200, 100 );
-// lightDirectional.castShadow = true;
-// lightDirectional.shadow.mapSize.width = 1024;
-// lightDirectional.shadow.mapSize.height = 1024;
-
-// var d = 100;
-// lightDirectional.shadow.camera.left = - d;
-// lightDirectional.shadow.camera.right = d;
-// lightDirectional.shadow.camera.top = d;
-// lightDirectional.shadow.camera.bottom = - d;
-// lightDirectional.shadow.camera.far = 500;
-// scene.add( lightDirectional );
-
-// scene.add( new THREE.CameraHelper( lightDirectional.shadow.camera ) );
+	lightDirectional = new THREE.DirectionalLight( 0xfffffff, 1);
+	lightDirectional.position.set( -50, -200, 100 );
 
 }
 
@@ -210,7 +200,7 @@ function addGlobe( size = 50 ) {
 	const geometry = new THREE.SphereGeometry( size, 50, 25 );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 
-	const url = "maps/earth_atmos_2048.jpg";
+	const url = "maps/earth_atmos_4096.jpg";
 	var texture = new THREE.TextureLoader().load( url );
 
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
@@ -240,7 +230,7 @@ function onLoad( xhr ) {
 	scene.add( group )
 
 	let response = xhr.target.response;
-	response = response.replace( /Korea,/, "Korea" ).replace( /Virgin Islands,/, "Virgin Islands");
+	response = response.replace( /Korea, South/, "South Korea" ).replace( /Virgin Islands,/, "Virgin Islands");
 
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
 	//console.log( 'lines', lines );
@@ -291,47 +281,47 @@ recoveries: ${ usaRecoveries.toLocaleString() }<br>
 
 function addIndicator( line, index ) {
 
-		const height = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 1 );
-		const heightRecoveries = 0.2 * Math.sqrt( Number( line[ 5 ] ) || 1 );
+	const height = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 1 );
+	const heightDeaths = 0.2 * Math.sqrt( Number( line[ 4 ] ) || 1 );
+	const heightRecoveries = 0.2 * Math.sqrt( Number( line[ 5 ] ) || 1 );
 
-		let p1 = latLonToXYZ( 50 + 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
-		let p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+	let p1 = latLonToXYZ( 50 + 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
+	let p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-		let geometry = new THREE.BoxGeometry( 0.8, 0.8, height );
-		let material = new THREE.MeshPhongMaterial( { color: "red" });
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.copy( p1 );
-		mesh.lookAt( p2 );
-		mesh.userData = index;
+	let geometry = new THREE.BoxGeometry( 0.8, 0.8, height );
+	let material = new THREE.MeshPhongMaterial( { color: "red" });
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
 
-		group.add( mesh );
+	group.add( mesh );
 
 
-		const heightDeaths = 0.2 * Math.sqrt( Number( line[ 4 ] ) || 1 );
+	p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
+	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-		p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
-		p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+	geometry = new THREE.BoxGeometry( 1, 1, heightDeaths );
+	material = new THREE.MeshPhongMaterial( { color: "black" });
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
 
-		geometry = new THREE.BoxGeometry( 1, 1, heightDeaths );
-		material = new THREE.MeshPhongMaterial( { color: "black" });
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.copy( p1 );
-		mesh.lookAt( p2 );
-		mesh.userData = index;
 
-		group.add( mesh );
+	group.add( mesh );
 
-		p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
-		p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+	p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
+	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-		geometry = new THREE.BoxGeometry( 0.9, 0.9, heightRecoveries );
-		material = new THREE.MeshPhongMaterial( { color: "green" });
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.copy( p1 );
-		mesh.lookAt( p2 );
-		mesh.userData = index;
+	geometry = new THREE.BoxGeometry( 0.9, 0.9, heightRecoveries );
+	material = new THREE.MeshPhongMaterial( { color: "green" });
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
 
-		group.add( mesh );
+	group.add( mesh );
 
 }
 

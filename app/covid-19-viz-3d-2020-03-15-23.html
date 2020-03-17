@@ -90,6 +90,9 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 <script>
 
+// keep address bar pointed to latest
+window.history.pushState( '', '', '/spider-covid-19-viz-3d/' )
+
 const path = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_daily_reports/"
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
@@ -203,7 +206,7 @@ function onLoad( xhr ) {
 	scene.add( group )
 
 	let response = xhr.target.response;
-	response = response.replace( /Korea,/, "Korea" ).replace( /Virgin Islands,/, "Virgin Islands");
+	response = response.replace( /"Korea, South"/, "South Korea" ).replace( /Virgin Islands,/, "Virgin Islands");
 
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
 	//console.log( 'lines', lines );

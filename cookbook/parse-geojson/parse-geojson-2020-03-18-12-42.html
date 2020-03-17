@@ -156,16 +156,18 @@
 		// 	//(document.getElementById('globeViz'))
 		// 	( document.body )
 
-			// setTimeout( () => {
+			setTimeout( () => {
 
-			// 	scene.children[ 1 ].color.r = 1;
-			// 	scene.children[ 1 ].color.g = 1;
-			// 	scene.children[ 1 ].color.b = 1;
+				scene.children[ 0 ].material.transparent = true;
+				scene.children[ 0 ].material.opacity = 0;
+				scene.children[ 1 ].color.r = 1;
+				scene.children[ 1 ].color.g = 1;
+				scene.children[ 1 ].color.b = 1;
 
-			// 	scene.children[ 2 ].intensity = 1;
-			// 	scene.children[ 2 ].position.set( 0, -1, 0);
+				scene.children[ 2 ].intensity = 1;
+				scene.children[ 2 ].position.set( 0, -1, 0);
 
-			// }, 2000);
+			}, 2000);
 
 
 	}
@@ -188,10 +190,10 @@
 		json = JSON.parse( xhr.target.response )
 
 		Globe( )
+			.backgroundColor( "#cce0ff" )
 			//.globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg')
 			//.globeImageUrl( 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/textures/planets/earth_atmos_4096.jpg' )
-			//.backgroundColor( "#cce0ff" )
-			//.globeImageUrl( "geojson/earth_atmos_4096.jpg" )
+			.globeImageUrl( "geojson/earth_atmos_4096.jpg" )
 			//.pointsData( gData )
 			//.pointAltitude( "0" )
 			//.pointColor( "" )
@@ -199,7 +201,7 @@
 			.polygonsData( json.features )
 			// .polygonCapColor( "#ff0000" )
 			// .polygonStrokeColor( "#ff00ff" )
-			.polygonAltitude( 0.01 )
+			.polygonAltitude( 0.1 )
 
 			.polygonCapColor(() => 'rgba(200, 0, 0, 0.7)')
 			.polygonSideColor(() => 'rgba(0, 200, 0, 0.1)')

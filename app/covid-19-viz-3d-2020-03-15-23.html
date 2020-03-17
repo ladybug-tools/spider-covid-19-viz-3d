@@ -90,9 +90,6 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 <script>
 
-// keep address bar pointed to latest
-window.history.pushState( '', '', '/spider-covid-19-viz-3d/' )
-
 const path = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_daily_reports/"
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
@@ -373,6 +370,11 @@ function animate() {
 	controls.update();
 
 }
+
+
+
+// keep address bar pointed to latest
+window.history.pushState( '', '', '/spider-covid-19-viz-3d/' )
 
 </script>
 </body>

@@ -1,0 +1,32 @@
+
+<head>
+
+	<style> body { margin: 0; } </style>
+
+	<script src="https://cdn.jsdelivr.net/npm/globe.gl"></script>
+
+  </head>
+
+  <body>
+	<div id="globeViz"></div>
+
+	<script>
+	  // Gen random data
+	  const N = 300;
+	  const gData = [...Array(N).keys()].map(() => ({
+		lat: (Math.random() - 0.5) * 180,
+		lng: (Math.random() - 0.5) * 360,
+		size: Math.random() / 3,
+		color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
+	  }));
+
+	  Globe()
+		//.globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg')
+		.globeImageUrl('https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/textures/planets/earth_atmos_4096.jpg')
+		.pointsData(gData)
+		.pointAltitude('size')
+		.pointColor('color')
+	  (document.getElementById('globeViz'))
+
+	</script>
+  </body>

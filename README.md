@@ -65,9 +65,30 @@ Other 3D visualizations of the COVID-19 data
 * https://earth3dmap.com/coronavirus-interactive-global-map/
 * https://covid19.martinpham.com/
 
-Sourc of map used on globe
+Globes
+
+* https://github.com/vasturiano/three-globe
+* https://github.com/vasturiano/globe.gl
+
+
+
+Source of maps used on globe
 
 * https://github.com/mrdoob/three.js/tree/dev/examples/textures/planets
+
+TopoJson
+
+* https://www.npmjs.com/package/world-atlas
+* https://observablehq.com/@mbostock/geojson-in-three-js
+
+geoJson
+
+* https://github.com/nvkelso/natural-earth-vector
+* https://github.com/maptime-ams/geojson-3d
+* https://github.com/jdomingu/ThreeGeoJSON
+* https://stackoverflow.com/questions/40520463/how-can-i-draw-geojson-in-three-js-as-a-mesh-and-not-a-line-and-fill-with-color
+* https://bl.ocks.org/marcopompili/f5e071ce646c5cf3d600828ace734ce7
+
 
 </details>
 

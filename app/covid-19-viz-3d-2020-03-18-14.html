@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-18-16-32">
+<meta name=version content="2020-03-18-16-49">
 
 
 <title>COVID-19 Viz 3D</title>
@@ -322,9 +322,9 @@ function addIndicatorNew( line, index ) {
 	p1 = latLonToXYZ( 50 + heightCases - 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
 	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-	const geometry = new THREE.CylinderBufferGeometry( 0.7, 0.7, height, 12, 1, true );
+	const geometry = new THREE.CylinderBufferGeometry( 0.45, 0.7, height, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	const material = new THREE.MeshPhongMaterial( { color: "magenta", opacity: 0.5, side: 2, transparent: true });
+	const material = new THREE.MeshPhongMaterial( { color: "magenta", opacity: 0.8, side: 2, transparent: true });
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );

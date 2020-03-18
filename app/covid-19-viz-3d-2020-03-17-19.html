@@ -71,7 +71,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 				<span id=sVersion ></span>
 			</a>
 
-			<span class="couponcode" >??<span id=divDescription class="coupontooltip" >
+			<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
 				View the data from John Hopkins University
 				<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
 				in 3D using the <a href="https://threeja.org" target="_blank">Three.js</a> library.
@@ -278,17 +278,17 @@ function getStats() {
 	divStats.hidden = !divStats.hidden;
 	divStats.innerHTML = `<p>global totals</p>
 cases: ${ cases.toLocaleString() }<br>
-deaths:: ${ deaths.toLocaleString() }<br>
+deaths: ${ deaths.toLocaleString() }<br>
 recoveries: ${ recoveries.toLocaleString() }<br>
 
 <p>China totals</p>
 cases: ${ chinaCases.toLocaleString() }<br>
-deaths:: ${ chinaDeaths.toLocaleString() }<br>
+deaths: ${ chinaDeaths.toLocaleString() }<br>
 recoveries: ${ chinaRecoveries.toLocaleString() }<br>
 
 <p>USA totals</p>
 cases: ${ usaCases.toLocaleString() }<br>
-deaths:: ${ usaDeaths.toLocaleString() }<br>
+deaths: ${ usaDeaths.toLocaleString() }<br>
 recoveries: ${ usaRecoveries.toLocaleString() }<br>
 
 <p>To be added: Canada, Australia, Europe & everyone</p>

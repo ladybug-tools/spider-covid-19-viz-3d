@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the data from John Hopkins University GitHub repository in 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-16">
+<meta name=version content="2020-03-19">
 
 
 <title>COVID-19 viz 3D</title>
@@ -54,6 +54,8 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 <body>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+
+<script src="js/threeGeoJSON.js"></script>
 
 <nav id="navMenu">
 
@@ -163,8 +165,23 @@ function init() {
 
 	requestFile( url, callbackDailyReport );
 
+	const urlJson = "js/countries_states.geojson"
+
+	requestFile( urlJson, onLoadGeoJson );
+
 }
 
+
+function onLoadGeoJson( xhr ) {
+
+	let response = xhr.target.response;
+
+	json = JSON.parse( response )
+	//console.log( '', response );
+
+	drawThreeGeo( json, 50, 'sphere', { color: '#888' })
+
+}
 
 
 function addLights() {
@@ -288,7 +305,8 @@ function addIndicator( line, index ) {
 	let p1 = latLonToXYZ( 50 + 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
 	let p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-	let geometry = new THREE.BoxGeometry( 0.8, 0.8, height );
+	let geometry = new THREE.CylinderGeometry( 0.4, 0.4, height );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	let material = new THREE.MeshPhongMaterial( { color: "red" });
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
@@ -301,7 +319,8 @@ function addIndicator( line, index ) {
 	p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
 	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-	geometry = new THREE.BoxGeometry( 1, 1, heightDeaths );
+	geometry = new THREE.CylinderBufferGeometry( 0.5, 0.5, heightDeaths,12,1,true );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	material = new THREE.MeshPhongMaterial( { color: "black" });
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
@@ -314,7 +333,8 @@ function addIndicator( line, index ) {
 	p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
 	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-	geometry = new THREE.BoxGeometry( 0.9, 0.9, heightRecoveries );
+	geometry = new THREE.CylinderBufferGeometry( 0.45, 0.45, heightRecoveries, 12, 1, true );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	material = new THREE.MeshPhongMaterial( { color: "green" });
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );

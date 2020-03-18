@@ -26,15 +26,21 @@ The concept of the web page is to show you the current COVID-19 situation around
 
 The progress made in one day of programming was excellent - as you can see above. And there's a lot more features that can be added. For example, why are those blue bars so boring-looking? Or can you show me the borders of the countries?
 
+* https://www.reddit.com/r/COVID19/comments/fkjby9/view_the_latest_covid19_numbers_from_around_the/
 
 </details>
 
 <details open >
 <summary>To do and wish list </summary>
 
+* New cases at top of bar? Country or state flag?
 * Globe rotates to the lat/lon indicated by your browser location
 * Placards over each bar showing country & cases
-* Map showing countries
+* Show global stats when not on mobile
+* Mortality rate: deaths divided by confirmed cases > show as increased radius of black cylinder
+* Days since last new case as color or opacity
+* Community transmission vs traveller
+* a growing percentage affected per day of each country's population rather than cases detected if we're separating it out by country.
 
 
 
@@ -60,8 +66,19 @@ The progress made in one day of programming was excellent - as you can see above
 <details open >
 <summary>Links of interest</summary>
 
+Data sources
+
+* https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data
+
+Dependencies
+
+* https://threejs.org
+* https://github.com/jdomingu/ThreeGeoJSON
+
+
 Other 3D visualizations of the COVID-19 data
 
+* https://coronation.xyz/
 * https://earth3dmap.com/coronavirus-interactive-global-map/
 * https://covid19.martinpham.com/
 
@@ -94,6 +111,12 @@ geoJson
 
 <details open >
 <summary>Change log </summary>
+
+### 2020-03-17 ~ Theo
+
+Done
+
+* Map showing country boundaries
 
 ### 2020-03-16 ~ Theo
 

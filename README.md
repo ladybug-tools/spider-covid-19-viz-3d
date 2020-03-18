@@ -64,7 +64,7 @@ The progress made in one day of programming was excellent - as you can see above
 </details>
 
 <details open >
-<summary>Links of interest</summary>
+<summary>Credits and Links of interest</summary>
 
 Data sources
 
@@ -111,6 +111,13 @@ geoJson
 
 <details open >
 <summary>Change log </summary>
+
+### 2020-03-18 ~ Theo
+
+* Update meta tag and ?? popup text
+* Remove Virgin Islands correction - no longer needed
+* Global stats displays on start up
+* deaths/cases % added to globals stats and to pop-ups
 
 ### 2020-03-17 ~ Theo
 

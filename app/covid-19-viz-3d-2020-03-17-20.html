@@ -5,16 +5,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
 <meta name=description
-	content="View the data from John Hopkins University GitHub repository in 3D">
+	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
 <meta name=version content="2020-03-17-20">
 
 
-<title>COVID-19 viz 3D</title>
+<title>COVID-19 Viz 3D</title>
 
 <style>
 
-/* Copyright 2020 Theo Armour. MIT License */
+/* Copyright 2020 Spider contributors. MIT License */
 
 :root { font: 100% monospace; }
 
@@ -72,9 +72,10 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 			</a>
 
 			<span class="couponcode" >??<span id=divDescription class="coupontooltip" >
-				View the data from John Hopkins University
+				View the COVID-19 data from the John Hopkins University
 				<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
-				in 3D using the <a href="https://threeja.org" target="_blank">Three.js</a> library.
+				in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
+				WebGL tools.
 			</span></span>
 
 		</h2>
@@ -92,7 +93,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
 	</p>
 
-	<p><button onclick=getStats(); >global statistics</button></button></p>
+	<p><button id=butStats onclick=getStats(); >global statistics</button></button></p>
 
 	<div id=divStats style=background-color:white;padding:1ch; hidden ></div>
 
@@ -148,10 +149,10 @@ function init() {
 	window.addEventListener( 'resize', onWindowResize, false );
 	window.addEventListener( 'orientationchange', onWindowResize, false );
 	window.addEventListener( 'keyup', () => controls.autoRotate = false, false );
+
 	renderer.domElement.addEventListener( 'wheel', () => controls.autoRotate = false, false );
 	renderer.domElement.addEventListener( 'mousedown', () => controls.autoRotate = false, false );
 	renderer.domElement.addEventListener( 'touchstart', () => controls.autoRotate = false, false );
-
 	renderer.domElement.addEventListener( 'click', () => controls.autoRotate = false, false );
 
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -165,11 +166,13 @@ function init() {
 
 	requestFile( url, callbackDailyReport );
 
-	const urlJson = "js/countries_states.geojson"
+	const urlJson = "js/countries_states.geojson";
 
 	requestFile( urlJson, onLoadGeoJson );
 
+
 }
+
 
 
 function onLoadGeoJson( xhr ) {
@@ -182,6 +185,7 @@ function onLoadGeoJson( xhr ) {
 	drawThreeGeo( json, 50, 'sphere', { color: '#888' })
 
 }
+
 
 
 function addLights() {
@@ -230,7 +234,7 @@ function addGlobe( size = 50 ) {
 
 function requestFile( url, callback ) {
 
-	xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
 	xhr.open( 'GET', url, true );
 	xhr.onerror = ( xhr ) => console.log( 'error:', xhr  );
 	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
@@ -247,7 +251,8 @@ function onLoad( xhr ) {
 	scene.add( group )
 
 	let response = xhr.target.response;
-	response = response.replace( /"Korea, South"/, "South Korea" ).replace( /Virgin Islands,/, "Virgin Islands");
+	response = response.replace( /"Korea, South"/, "South Korea" );
+	//.replace( /"Virgin Islands,/, "Virgin Islands");
 
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
 	//console.log( 'lines', lines );
@@ -257,39 +262,46 @@ function onLoad( xhr ) {
 
 	lines.forEach( ( line, index ) => addIndicator( line, index ) );
 
+	butStats.click();
 }
 
 
 
 function getStats() {
 
-	const cases = lines.reduce( (sum, line ) => sum + Number( line[ 3 ] ), 0 );
-	const deaths = lines.reduce( (sum, line ) => sum + Number( line[ 4 ] ), 0 );
-	const recoveries = lines.reduce( (sum, line ) => sum + Number( line[ 5 ] ), 0 );
+	const globalCases = lines.reduce( (sum, line ) => sum + Number( line[ 3 ] ), 0 );
+	const globalDeaths = lines.reduce( (sum, line ) => sum + Number( line[ 4 ] ), 0 );
+	const globalRecoveries = lines.reduce( (sum, line ) => sum + Number( line[ 5 ] ), 0 );
+	const globalDeathsToCases = 100 * globalDeaths /globalCases;
 
 	const chinaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 3 ] ) : 0, 0 );
 	const chinaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 4 ] ) : 0, 0 );
 	const chinaRecoveries = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 5 ] ) : 0, 0 );
+	const chinaDeathsToCases = 100 * chinaDeaths /chinaCases;
 
 	const usaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 3 ] ) : 0, 0 );
 	const usaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 4 ] ) : 0, 0 );
 	const usaRecoveries = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 5 ] ) : 0, 0 );
+	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
 
 	divStats.hidden = !divStats.hidden;
 	divStats.innerHTML = `<p>global totals</p>
-cases: ${ cases.toLocaleString() }<br>
-deaths:: ${ deaths.toLocaleString() }<br>
-recoveries: ${ recoveries.toLocaleString() }<br>
+	cases: ${ globalCases.toLocaleString() }<br>
+	deaths: ${ globalDeaths.toLocaleString() }<br>
+	recoveries: ${ globalRecoveries.toLocaleString() }<br>
+	deaths/cases %: ${ globalDeathsToCases.toLocaleString() }<br>
 
 <p>China totals</p>
 cases: ${ chinaCases.toLocaleString() }<br>
-deaths:: ${ chinaDeaths.toLocaleString() }<br>
+deaths: ${ chinaDeaths.toLocaleString() }<br>
 recoveries: ${ chinaRecoveries.toLocaleString() }<br>
+deaths/cases %: ${ chinaDeathsToCases.toLocaleString() }<br>
 
 <p>USA totals</p>
 cases: ${ usaCases.toLocaleString() }<br>
-deaths:: ${ usaDeaths.toLocaleString() }<br>
+deaths: ${ usaDeaths.toLocaleString() }<br>
 recoveries: ${ usaRecoveries.toLocaleString() }<br>
+deaths/cases %: ${ usaDeathsToCases.toLocaleString() }<br>
 
 <p>To be added: Canada, Australia, Europe & everyone</p>
 `;
@@ -409,6 +421,7 @@ update: ${ line[ 2 ] }<br>
 cases: ${ Number( line[ 3 ] ).toLocaleString() }<br>
 deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
 recovered: ${ Number( line[ 5 ] ).toLocaleString() }<br>
+deaths/cases %: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }<br>
 `;
 
 		}

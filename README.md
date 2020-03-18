@@ -33,11 +33,10 @@ The progress made in one day of programming was excellent - as you can see above
 <details open >
 <summary>To do and wish list </summary>
 
-* New cases at top of bar? Country or state flag?
+* Country or state flag?
 * Globe rotates to the lat/lon indicated by your browser location
 * Placards over each bar showing country & cases
 * Show global stats when not on mobile
-* Mortality rate: deaths divided by confirmed cases > show as increased radius of black cylinder
 * Days since last new case as color or opacity
 * Community transmission vs traveller
 * a growing percentage affected per day of each country's population rather than cases detected if we're separating it out by country.
@@ -119,6 +118,11 @@ geoJson
 * Global stats displays on start up
 * deaths/cases % added to globals stats and to pop-ups
 * Add spread to black bars
+* Add new cases at top of bar
+
+Done
+
+* Mortality rate: deaths divided by confirmed cases > show as increased radius of black cylinder
 
 ### 2020-03-17 ~ Theo
 

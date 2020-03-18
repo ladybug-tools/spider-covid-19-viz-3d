@@ -12,10 +12,10 @@ var z_values = [];
 
 function drawThreeGeo ( json, radius, shape, options ) {
 
-	group = new THREE.Group();
-	group.rotation.x = Math.PI / 2;
-	group.rotation.y = Math.PI / 2;
-	scene.add( group );
+	groupLines = new THREE.Group();
+	groupLines.rotation.x = Math.PI / 2;
+	groupLines.rotation.y = Math.PI / 2;
+	scene.add( groupLines );
 
 	var json_geom = createGeometryArray( json );
 	var convertCoordinates = getConversionFunctionName( shape );
@@ -142,7 +142,7 @@ function drawLine ( x_values, y_values, z_values, options ) {
 
 	var line_material = new THREE.LineBasicMaterial( options );
 	var line = new THREE.Line( line_geom, line_material );
-	group.add( line );
+	groupLines.add( line );
 
 	clearArrays();
 

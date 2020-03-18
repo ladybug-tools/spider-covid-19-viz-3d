@@ -322,9 +322,9 @@ function addIndicatorNew( line, index ) {
 	p1 = latLonToXYZ( 50 + heightCases - 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
 	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-	const geometry = new THREE.CylinderBufferGeometry( 1, 1, height, 12, 1, true );
+	const geometry = new THREE.CylinderBufferGeometry( 0.7, 0.7, height, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	const material = new THREE.MeshPhongMaterial( { color: "magenta", side: 2 });
+	const material = new THREE.MeshPhongMaterial( { color: "magenta", opacity: 0.5, side: 2, transparent: true });
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );
@@ -334,49 +334,6 @@ function addIndicatorNew( line, index ) {
 
 }
 
-
-function getStats() {
-
-	const globalCases = lines.reduce( (sum, line ) => sum + Number( line[ 3 ] ), 0 );
-	const globalDeaths = lines.reduce( (sum, line ) => sum + Number( line[ 4 ] ), 0 );
-	const globalRecoveries = lines.reduce( (sum, line ) => sum + Number( line[ 5 ] ), 0 );
-	const globalDeathsToCases = 100 * globalDeaths /globalCases;
-
-	const chinaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 3 ] ) : 0, 0 );
-	const chinaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 4 ] ) : 0, 0 );
-	const chinaRecoveries = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 5 ] ) : 0, 0 );
-	const chinaDeathsToCases = 100 * chinaDeaths /chinaCases;
-
-	const usaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 3 ] ) : 0, 0 );
-	const usaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 4 ] ) : 0, 0 );
-	const usaRecoveries = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 5 ] ) : 0, 0 );
-	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
-
-	divStats.hidden = !divStats.hidden;
-	divStats.innerHTML = `<p>global totals</p>
-
-	cases: ${ globalCases.toLocaleString() }<br>
-	deaths: ${ globalDeaths.toLocaleString() }<br>
-	recoveries: ${ globalRecoveries.toLocaleString() }<br>
-	deaths/cases %: ${ globalDeathsToCases.toLocaleString() }<br>
-
-	<p>China totals</p>
-	cases: ${ chinaCases.toLocaleString() }<br>
-	deaths: ${ chinaDeaths.toLocaleString() }<br>
-	recoveries: ${ chinaRecoveries.toLocaleString() }<br>
-	deaths/cases %: ${ chinaDeathsToCases.toLocaleString() }<br>
-
-	<p>USA totals</p>
-	cases: ${ usaCases.toLocaleString() }<br>
-	deaths: ${ usaDeaths.toLocaleString() }<br>
-	recoveries: ${ usaRecoveries.toLocaleString() }<br>
-	deaths/cases %: ${ usaDeathsToCases.toLocaleString() }<br>
-
-	<p>To be added: Canada, Australia, Europe & everyone</p>
-	<p>Black bar spread indicates high deaths to cases ratio</p>
-`;
-
-}
 
 
 
@@ -430,6 +387,50 @@ function addIndicator( line, index ) {
 	mesh.userData = index;
 
 	group.add( mesh );
+
+}
+
+
+function getStats() {
+
+	const globalCases = lines.reduce( (sum, line ) => sum + Number( line[ 3 ] ), 0 );
+	const globalDeaths = lines.reduce( (sum, line ) => sum + Number( line[ 4 ] ), 0 );
+	const globalRecoveries = lines.reduce( (sum, line ) => sum + Number( line[ 5 ] ), 0 );
+	const globalDeathsToCases = 100 * globalDeaths /globalCases;
+
+	const chinaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 3 ] ) : 0, 0 );
+	const chinaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 4 ] ) : 0, 0 );
+	const chinaRecoveries = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 5 ] ) : 0, 0 );
+	const chinaDeathsToCases = 100 * chinaDeaths /chinaCases;
+
+	const usaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 3 ] ) : 0, 0 );
+	const usaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 4 ] ) : 0, 0 );
+	const usaRecoveries = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 5 ] ) : 0, 0 );
+	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
+
+	divStats.hidden = !divStats.hidden;
+	divStats.innerHTML = `<p>global totals</p>
+
+	cases: ${ globalCases.toLocaleString() }<br>
+	deaths: ${ globalDeaths.toLocaleString() }<br>
+	recoveries: ${ globalRecoveries.toLocaleString() }<br>
+	deaths/cases %: ${ globalDeathsToCases.toLocaleString() }<br>
+
+	<p>China totals</p>
+	cases: ${ chinaCases.toLocaleString() }<br>
+	deaths: ${ chinaDeaths.toLocaleString() }<br>
+	recoveries: ${ chinaRecoveries.toLocaleString() }<br>
+	deaths/cases %: ${ chinaDeathsToCases.toLocaleString() }<br>
+
+	<p>USA totals</p>
+	cases: ${ usaCases.toLocaleString() }<br>
+	deaths: ${ usaDeaths.toLocaleString() }<br>
+	recoveries: ${ usaRecoveries.toLocaleString() }<br>
+	deaths/cases %: ${ usaDeathsToCases.toLocaleString() }<br>
+
+	<p>To be added: Canada, Australia, Europe & everyone</p>
+	<p>Black bar spread indicates high deaths to cases ratio</p>
+	`;
 
 }
 

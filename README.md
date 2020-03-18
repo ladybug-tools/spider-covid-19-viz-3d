@@ -118,6 +118,7 @@ geoJson
 * Remove Virgin Islands correction - no longer needed
 * Global stats displays on start up
 * deaths/cases % added to globals stats and to pop-ups
+* Add spread to black bars
 
 ### 2020-03-17 ~ Theo
 

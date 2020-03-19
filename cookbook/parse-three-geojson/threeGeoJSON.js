@@ -76,6 +76,7 @@ function createGeometryArray ( json ) {
 	if ( json.type == 'Feature' ) {
 		geometry_array.push( json.geometry );
 	} else if ( json.type == 'FeatureCollection' ) {
+
 		for ( var feature_num = 0; feature_num < json.features.length; feature_num++ ) {
 			geometry_array.push( json.features[ feature_num ].geometry );
 		}
@@ -86,8 +87,9 @@ function createGeometryArray ( json ) {
 	} else {
 		throw new Error( 'The geoJSON is not valid.' );
 	}
-	//alert(geometry_array.length);
+
 	return geometry_array;
+
 }
 
 function getConversionFunctionName ( shape ) {
@@ -112,6 +114,7 @@ function convertToSphereCoords ( coordinates_array, sphere_radius ) {
 	y_values.push( Math.cos( lat * Math.PI / 180 ) * Math.sin( lon * Math.PI / 180 ) * sphere_radius );
 	z_values.push( Math.sin( lat * Math.PI / 180 ) * sphere_radius );
 }
+
 
 function convertToPlaneCoords ( coordinates_array, radius ) {
 	var lon = coordinates_array[ 0 ];

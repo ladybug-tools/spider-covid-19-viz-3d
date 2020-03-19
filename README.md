@@ -69,6 +69,8 @@ Data sources
 
 * https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data
 * https://opendata.arcgis.com/datasets/bbb2e4f589ba40d692fab712ae37b9ac_1.csv
+* https://nssac.bii.virginia.edu/covid-19/dashboard/
+
 
 Dependencies
 
@@ -107,12 +109,29 @@ geoJson
 * https://bl.ocks.org/marcopompili/f5e071ce646c5cf3d600828ace734ce7
 
 
+geoJson useful
+
+* ne_110m_admin_0_countries_lakes.geoJson
+* ne_110m_admin_1_states_provinces_lines.geoJson
+* https://github.com/longwosion/geojson-map-china
+* https://github.com/waylau/svg-china-map
+
 </details>
 
 <details open >
 <summary>Change log </summary>
 
+### 2020-03-19 ~ Theo
+
+covid-19-viz-3d-2020-03-19-10-29.html
+
+* Add new geoJSON files to maps folder
+* Load new geoJSON files
+	* Countries, states & China
+* Add deaths/population & deaths/gdp to pop-ups
+
 ### 2020-03-18 ~ Theo
+
 
 * Update meta tag and ?? popup text
 * Remove Virgin Islands correction - no longer needed

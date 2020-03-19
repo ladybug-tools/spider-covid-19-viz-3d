@@ -7,7 +7,7 @@
 <meta name=description
 	content="Real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-03">
+<meta name=version content="2020-03-18">
 
 
 <title></title>
@@ -77,6 +77,8 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 		</h2>
 
 	</header>
+
+	<p><select id=selNatEarth onclick=onClick(this.value) size=40 style=width:50ch; ></select></p>
 
 	<p>
 		<button onclick="addMeshes()">add meshes</button>
@@ -154,25 +156,44 @@ function init() {
 
 	var geometry = new THREE.SphereGeometry(50,32,32);
 
-	const url = "../../app/maps/earth_atmos_4096.jpg";
-	let texture = new THREE.TextureLoader().load( url );
+	const urlGlobe = "../../app/maps/earth_atmos_4096.jpg";
+	let texture = new THREE.TextureLoader().load( urlGlobe );
 
-	const material = new THREE.MeshPhongMaterial({  map: texture });
-
+	//const material = new THREE.MeshPhongMaterial({  map: texture, });
+	const material = new THREE.MeshNormalMaterial();
 	const sphere = new THREE.Mesh(geometry, material);
 	sphere.rotation.x = Math.PI / 2;
 	sphere.rotation.y = -Math.PI / 2;
 	scene.add(sphere);
 
- 	// const urlJson = "countries_states.geojson";
+	const url = "https://api.github.com/repos/nvkelso/natural-earth-vector/contents/geojson";
 
-	const urlJson = "../parse-geojson/geojson/ne_110m_admin_0_countries.geojson.geojson.txt"
-
-
-	requestFile( urlJson, onLoad );
+	requestFile( url, callbackNaturalEarth );
 
 }
 
+
+
+
+function callbackNaturalEarth( xhr ) {
+
+	const json = JSON.parse( xhr.target.response )
+
+	const names = json.map( json => json.name ).filter( name => name.startsWith( "ne_50" ) );
+	//console.log( names );
+
+	selNatEarth.innerHTML = names.map( name => `<option>${ name }</option>` )
+
+}
+
+
+function onClick( fName, callback ) {
+
+	path = "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/";
+
+	requestFile( path + fName, onLoad );
+
+}
 
 
 function requestFile( url, callback ) {

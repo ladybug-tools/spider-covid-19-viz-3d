@@ -120,6 +120,8 @@ geoJson
 * deaths/cases % added to globals stats and to pop-ups
 * Add spread to black bars
 * Add new cases at top of bar
+* 16-57 menu items reordered
+* 17-17 ignores NAN is global cases summing
 
 Done
 

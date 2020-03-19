@@ -136,6 +136,7 @@ covid-19-viz-3d-2020-03-19-12-05.html
 * Add notes and settings card with details tag
 * Change global statistics from button to details
 * Add new cases to global statistics
+* Update flare to bars new cases
 
 
 

@@ -42,7 +42,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
 	margin-left: -20ch; padding: 10px; position: absolute; z-index: 1000; }
 
-#navMenu { margin: 0 20px; max-width: 15rem; position: absolute; }
+#navMenu { margin: 0 20px; max-height: 100vh;  max-width: 15rem; overflow: auto; position: absolute; }
 
 #divMessage { background-color:#eee; border-radius: 1rem; left: 5vw; padding: 1rem; position: absolute; top: 50vh;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6); }
@@ -90,13 +90,11 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 	<p style=background-color:lightgreen;color:white;padding:1ch; >Recoveries</p>
 
-	<button id=butStats onclick=getStats(); >global statistics</button>
-	<div id=divStats style=background-color:white;padding:1ch; hidden ></div>
+	<div id=divStats style=background-color:white;padding:1ch; ></div>
 
-	<p>
-		<button onclick=controls.reset() >reset view</button>
-		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
-	</p>
+	<div id=divSettings style=background-color:white;padding:1ch; ></div>
+
+
 </nav>
 
 
@@ -187,6 +185,8 @@ function init() {
 
 	requestFile( urlJson, onLoadGeoJson );
 
+	getSettings();
+
 }
 
 
@@ -272,7 +272,8 @@ function onLoad( xhr ) {
 	scene.add( group )
 
 	let response = xhr.target.response;
-	response = response.replace( /"Korea, South"/, "South Korea" );
+	response = response.replace( /"Korea, South"/, "South Korea" )
+	.replace( /"Gambia, The"/, "The Gambia");
 	//.replace( /"Virgin Islands,/, "Virgin Islands");
 
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
@@ -297,7 +298,7 @@ function onLoadYesterday( xhr ) {
 
 	lines.forEach( ( line, index ) => addIndicatorNew( line, index ) );
 
-	butStats.click();
+	getStats();
 
 }
 
@@ -311,12 +312,14 @@ function addIndicatorNew( line, index ) {
 	lineNew = linesYesterday.filter( line => line[ 0 ] === state && line[ 1 ] === country );
 	//console.log( 'ln',line[ 3 ]);
 
-	if ( !lineNew.length ){ return; };
+	//if ( !lineNew.length ){ return; };
 
-	casesNew = Math.abs( Number( line[ 3 ] ) - Number( lineNew[ 0 ][ 3 ] ) );
+	num  = lineNew.length ? Number( lineNew[ 0 ][ 3 ] ) : 0;
+
+	casesNew = Math.abs( Number( line[ 3 ] ) - num );
 
 	lines[ index ].push( casesNew )
-	//console.log( 'casesNew', casesNew );
+	//console.log( 'casesNew', casesNew, line );
 
 	group.add( mesh );
 
@@ -330,8 +333,7 @@ function addIndicatorNew( line, index ) {
 	//console.log( 'heightRatio', heightRatio );
 
 	const height = heightCases * heightRatio;
-
-	//console.log( 'heightNew', height );
+	//console.log( 'height', height );
 
 	p1 = latLonToXYZ( 50 + heightCases - 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
 	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
@@ -412,43 +414,87 @@ function getStats() {
 		return sum + cases}
 	, 0 );
 	//console.log( '', globalCases);
+
+	//caseNew = ;
+	const globalCasesNew = lines.reduce( (sum, line ) => {
+		let caseNew =  line[ 8 ];
+		//console.log( 'caseNew', caseNew );
+		return sum + caseNew;
+	}, 0 );
+
+
 	const globalDeaths = lines.reduce( (sum, line ) => sum + Number( line[ 4 ] ), 0 );
 	const globalRecoveries = lines.reduce( (sum, line ) => sum + Number( line[ 5 ] ), 0 );
 	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
 
-	const chinaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 3 ] ) : 0, 0 );
 	const chinaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 4 ] ) : 0, 0 );
+	const chinaCasesNew = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? line[ 8 ] : 0, 0 );
+	const chinaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 3 ] ) : 0, 0 );
 	const chinaRecoveries = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 5 ] ) : 0, 0 );
 	const chinaDeathsToCases = 100 * chinaDeaths /chinaCases;
 
 	const usaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 3 ] ) : 0, 0 );
+	const usaCasesNew = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? line[ 8 ] : 0, 0 );
 	const usaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 4 ] ) : 0, 0 );
 	const usaRecoveries = lines.reduce( (sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 5 ] ) : 0, 0 );
 	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
 
-	divStats.hidden = !divStats.hidden;
-	divStats.innerHTML = `<p>global totals</p>
+	divStats.innerHTML = `<details id=detStats>
 
-	cases: ${ globalCases.toLocaleString() }<br>
-	deaths: ${ globalDeaths.toLocaleString() }<br>
-	recoveries: ${ globalRecoveries.toLocaleString() }<br>
-	deaths/cases %: ${ globalDeathsToCases.toLocaleString() }<br>
+	<summary><b>global statistics</b></summary>
+	<p>
+		<b>global</b><br>
+		cases: ${ globalCases.toLocaleString() }<br>
+		cases new: ${ globalCasesNew.toLocaleString() }<br>
+		deaths: ${ globalDeaths.toLocaleString() }<br>
+		recoveries: ${ globalRecoveries.toLocaleString() }<br>
+		deaths/cases %: ${ globalDeathsToCases.toLocaleString() }<br>
+	</p>
 
-	<p>China totals</p>
-	cases: ${ chinaCases.toLocaleString() }<br>
-	deaths: ${ chinaDeaths.toLocaleString() }<br>
-	recoveries: ${ chinaRecoveries.toLocaleString() }<br>
-	deaths/cases %: ${ chinaDeathsToCases.toLocaleString() }<br>
+	<p>
+		<b>China totals</b><br>
+		cases: ${ chinaCases.toLocaleString() }<br>
+		cases new: ${ chinaCasesNew.toLocaleString() }<br>
+		deaths: ${ chinaDeaths.toLocaleString() }<br>
+		recoveries: ${ chinaRecoveries.toLocaleString() }<br>
+		deaths/cases %: ${ chinaDeathsToCases.toLocaleString() }<br>
+	</p>
 
-	<p>USA totals</p>
-	cases: ${ usaCases.toLocaleString() }<br>
-	deaths: ${ usaDeaths.toLocaleString() }<br>
-	recoveries: ${ usaRecoveries.toLocaleString() }<br>
-	deaths/cases %: ${ usaDeathsToCases.toLocaleString() }<br>
+	<p>
+		<b>USA totals</b><br>
+		cases: ${ usaCases.toLocaleString() }<br>
+		casesNew: ${ usaCasesNew.toLocaleString() }<br>
+		deaths: ${ usaDeaths.toLocaleString() }<br>
+		recoveries: ${ usaRecoveries.toLocaleString() }<br>
+		deaths/cases %: ${ usaDeathsToCases.toLocaleString() }<br>
+	</p>
 
 	<p>To be added: Canada, Australia, Europe & everyone</p>
-	<p>Black bar spread indicates high deaths to cases ratio</p>
-	`;
+
+	</details>`;
+
+	detStats.open = window.innerWidth > 640;
+
+}
+
+
+function getSettings() {
+
+
+	divSettings.innerHTML = `<details id=detSettings>
+
+		<summary><b>notes & statistics</b></summary>
+
+		<p>Black bar spread indicates high deaths to cases ratio.</p>
+
+		<p>Not all populations and GDPs are reported. Some GDPs are in trillions and some are in billions.
+			<a href="https://github.com/nvkelso/natural-earth-vector/tree/master/geojson" target="_blank">Go figure.</a></p>
+		<p>
+			<button onclick=controls.reset() >reset view</button>
+			<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
+		</p>
+
+	</details>`;
 
 }
 
@@ -512,7 +558,8 @@ function onDocumentMouseMove ( event ) {
 
 			const population = json.features[ index ] ? json.features[ index ].properties.POP_EST : 99999999;
 			const gdp = json.features[ index ] ? json.features[ index ].properties.GDP_MD_EST : 99999999;
-			const casesNew = line[ 8 ] ? line[ 8 ] :0;
+
+			casesNew = line[ 8 ] ? line[ 8 ] :0;
 
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX  + "px";

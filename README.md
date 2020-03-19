@@ -80,8 +80,8 @@ Dependencies
 
 Other 3D visualizations of the COVID-19 data
 
-* https://coronation.xyz/
 * https://earth3dmap.com/coronavirus-interactive-global-map/
+* https://coronation.xyz/
 * https://covid19.martinpham.com/
 
 Globes
@@ -90,8 +90,7 @@ Globes
 * https://github.com/vasturiano/globe.gl
 
 
-
-Source of maps used on globe
+Source of bitmaps used on globe
 
 * https://github.com/mrdoob/three.js/tree/dev/examples/textures/planets
 
@@ -116,7 +115,9 @@ geoJson useful
 * https://github.com/longwosion/geojson-map-china
 * https://github.com/waylau/svg-china-map
 
+
 </details>
+
 
 <details open >
 <summary>Change log </summary>
@@ -129,6 +130,16 @@ covid-19-viz-3d-2020-03-19-10-29.html
 * Load new geoJSON files
 	* Countries, states & China
 * Add deaths/population & deaths/gdp to pop-ups
+
+covid-19-viz-3d-2020-03-19-12-05.html
+
+* Add notes and settings card with details tag
+* Change global statistics from button to details
+* Add new cases to global statistics
+
+
+
+
 
 ### 2020-03-18 ~ Theo
 

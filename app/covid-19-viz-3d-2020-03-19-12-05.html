@@ -306,19 +306,21 @@ function onLoadYesterday( xhr ) {
 
 function addIndicatorNew( line, index ) {
 
-	state = line[ 0 ];
-	country = line [ 1 ]
+	const state = line[ 0 ];
+	const country = line [ 1 ]
 
-	lineNew = linesYesterday.filter( line => line[ 0 ] === state && line[ 1 ] === country );
+	const lineNew = linesYesterday.filter( line => line[ 0 ] === state && line[ 1 ] === country );
 	//console.log( 'ln',line[ 3 ]);
 
 	//if ( !lineNew.length ){ return; };
 
-	num  = lineNew.length ? Number( lineNew[ 0 ][ 3 ] ) : 0;
+	str = lineNew.length ?lineNew[ 0 ][ 3 ] : ""
+
+	num  = str ? Number( str ) : Number( line[ 3 ] );
 
 	casesNew = Math.abs( Number( line[ 3 ] ) - num );
 
-	lines[ index ].push( casesNew )
+	lines[ index ].push( casesNew );
 	//console.log( 'casesNew', casesNew, line );
 
 	group.add( mesh );
@@ -329,7 +331,7 @@ function addIndicatorNew( line, index ) {
 //	const heightNew = 0.2 * Math.sqrt( casesNew || 1 );
 
 	const cases = Number( line[ 3 ] );
-	const heightRatio = casesNew / cases;
+	const heightRatio = cases ? casesNew / cases : 0;
 	//console.log( 'heightRatio', heightRatio );
 
 	const height = heightCases * heightRatio;
@@ -338,7 +340,7 @@ function addIndicatorNew( line, index ) {
 	p1 = latLonToXYZ( 50 + heightCases - 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
 	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-	const geometry = new THREE.CylinderBufferGeometry( 0.45, 0.7, height, 12, 1, true );
+	const geometry = new THREE.CylinderBufferGeometry( 0.45, 0.45 + heightRatio, height, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	const material = new THREE.MeshPhongMaterial( { color: "cyan", opacity: 0.8, side: 2, transparent: true });
 	mesh = new THREE.Mesh( geometry, material );
@@ -480,7 +482,6 @@ function getStats() {
 
 function getSettings() {
 
-
 	divSettings.innerHTML = `<details id=detSettings>
 
 		<summary><b>notes & statistics</b></summary>
@@ -554,10 +555,28 @@ function onDocumentMouseMove ( event ) {
 
 			const line = lines[ index ];
 
-			//console.log( '', json.features[ index ].properties.POP_EST );
+			country = line[ 1 ];
 
-			const population = json.features[ index ] ? json.features[ index ].properties.POP_EST : 99999999;
-			const gdp = json.features[ index ] ? json.features[ index ].properties.GDP_MD_EST : 99999999;
+			arr = json.features.filter( feature => feature.properties.NAME === country );
+
+			const feature = arr.length ? arr[ 0 ] : undefined;
+
+			//console.log( 'feature', feature );
+
+			let population, gdp;
+
+			if ( feature ) {
+
+				population = feature.properties.POP_EST;
+				gdp = feature.properties.GDP_MD_EST;
+				name = feature.properties.NAME;
+			} else {
+
+				population = 999999999;
+				gdp = 999999999;
+				name = "not found";
+
+			}
 
 			casesNew = line[ 8 ] ? line[ 8 ] :0;
 
@@ -565,19 +584,20 @@ function onDocumentMouseMove ( event ) {
 			divMessage.style.left = event.clientX  + "px";
 			divMessage.style.top = event.clientY  + "px";
 			divMessage.innerHTML = `
-place: ${ line[ 0 ] }<br>
+JHU place: ${ line[ 0 ] }<br>
 country: ${ line[ 1 ] }<br>
 update: ${ line[ 2 ] }<br>
-cases new: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
 cases: ${ Number( line[ 3 ] ).toLocaleString() }<br>
+cases new: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
 deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
 recovered: ${ Number( line[ 5 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }%<br>
 deaths/population: ${ ( 100 * ( Number( line[ 4 ] ) / population ) ).toLocaleString() }%<br>
 deaths/gdp: ${ ( 100 * ( Number( line[ 4 ] ) / gdp ) ).toLocaleString() }%<br>
 <hr>
+geoJSON name: ${ name }<br>
+population: ${ population.toLocaleString() }<br>
 gdp: ${ gdp.toLocaleString() }<br>
-population: ${ population.toLocaleString() }
 `;
 
 		}

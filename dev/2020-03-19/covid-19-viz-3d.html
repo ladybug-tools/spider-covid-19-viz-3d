@@ -55,7 +55,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
 
-<script src="js/threeGeoJSON.js"></script>
+<script src="threeGeoJSON.js"></script>
 
 <nav id="navMenu">
 
@@ -106,6 +106,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 <script>
 
+const pathAssets = "../../assets/";
 const path = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_daily_reports/"
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
@@ -115,6 +116,7 @@ sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).p
 const version = document.head.querySelector( "[ name=version ]" );
 sVersion.innerHTML = version ? version.content : "";
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
 
 let lines;
 let json;
@@ -173,15 +175,15 @@ function init() {
 	requestFile( url, callbackDailyReport );
 
 
-	const urlJsonStatesProvinces = "../assets/ne_50m_admin_1_states_provinces_lines.geojson";
+	const urlJsonStatesProvinces = pathAssets + "ne_50m_admin_1_states_provinces_lines.geojson";
 
 	requestFile( urlJsonStatesProvinces, onLoadGeoJson );
 
-	const urlJsonChina = "../assets/china.geojson";
+	const urlJsonChina = pathAssets + "china.geojson";
 
 	requestFile( urlJsonChina, onLoadGeoJson );
 
-	const urlJson = "../assets/ne_110m_admin_0_countries_lakes.geojson";
+	const urlJson = pathAssets + "ne_110m_admin_0_countries_lakes.geojson";
 
 	requestFile( urlJson, onLoadGeoJson );
 
@@ -196,10 +198,11 @@ function init() {
 function addSkyBox() {
 
 	scene.background = new THREE.CubeTextureLoader()
-	.setPath( '../assets/' )
+	.setPath( pathAssets )
 	.load( ['f1.jpg', 'f2.jpg', 'f3.jpg', 'f4.jpg', 'f5.jpg','f6.jpg'] );
 
 }
+
 
 
 function onLoadGeoJson( xhr ) {
@@ -252,7 +255,7 @@ function addGlobe( size = 50 ) {
 	const geometry = new THREE.SphereGeometry( size, 50, 25 );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 
-	const url = "maps/earth_atmos_4096.jpg";
+	const url = pathAssets + "earth_atmos_4096.jpg";
 	var texture = new THREE.TextureLoader().load( url );
 
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );

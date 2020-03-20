@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-19-15-01">
+<meta name=version content="2020-03-19-10-29">
 
 
 <title>COVID-19 Viz 3D</title>
@@ -173,33 +173,23 @@ function init() {
 	requestFile( url, callbackDailyReport );
 
 
-	const urlJsonStatesProvinces = "../assets/ne_50m_admin_1_states_provinces_lines.geojson";
+	const urlJsonStatesProvinces = "../maps/ne_50m_admin_1_states_provinces_lines.geojson";
 
 	requestFile( urlJsonStatesProvinces, onLoadGeoJson );
 
-	const urlJsonChina = "../assets/china.geojson";
+	const urlJsonChina = "../maps/china.geojson";
 
 	requestFile( urlJsonChina, onLoadGeoJson );
 
-	const urlJson = "../assets/ne_110m_admin_0_countries_lakes.geojson";
+	const urlJson = "../maps/ne_110m_admin_0_countries_lakes.geojson";
 
 	requestFile( urlJson, onLoadGeoJson );
 
 	getSettings();
 
-	addSkyBox()
-
 }
 
 
-
-function addSkyBox() {
-
-	scene.background = new THREE.CubeTextureLoader()
-	.setPath( '../assets/' )
-	.load( ['f1.jpg', 'f2.jpg', 'f3.jpg', 'f4.jpg', 'f5.jpg','f6.jpg'] );
-
-}
 
 
 function onLoadGeoJson( xhr ) {
@@ -283,8 +273,7 @@ function onLoad( xhr ) {
 
 	let response = xhr.target.response;
 	response = response.replace( /"Korea, South"/, "South Korea" )
-	.replace( /"Gambia, The"/, "The Gambia")
-	.replace( /"Bahamas, The"/, "The Bahamas");
+	.replace( /"Gambia, The"/, "The Gambia");
 	//.replace( /"Virgin Islands,/, "Virgin Islands");
 
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
@@ -495,7 +484,7 @@ function getSettings() {
 
 	divSettings.innerHTML = `<details id=detSettings>
 
-		<summary><b>notes & settings</b></summary>
+		<summary><b>notes & statistics</b></summary>
 
 		<p>Black bar spread indicates high deaths to cases ratio.</p>
 

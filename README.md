@@ -33,15 +33,40 @@ Mentions
 <details open >
 <summary>To do and wish list </summary>
 
-* Country or state flag?
+### [Issue #5 Expressions of hope]( https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5 )
+
+> @loleg I'm not sure how best to describe this, but what I wish for in an interactive viz like this, is the ability to discover what's hot and happening "out there". For example, the home page of gitter.im has more or less live messages from around the world. I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world.
+
+### Generally
+
+* Show some item of interest at the top of each indicator
+	* As in all classical columns have a capital
+	* Country or state flag?
+	* Placards over each bar showing country & cases?
 * Globe rotates to the lat/lon indicated by your browser location
-* Placards over each bar showing country & cases
-* Show global stats when not on mobile
-* Days since last new case as color or opacity
-* Community transmission vs traveller
+* Days since last new case indicated as color or opacity
+* Community transmission vs traveller transmission
+	* Data in WHO PDF file hard to parse
 * a growing percentage affected per day of each country's population rather than cases detected if we're separating it out by country.
 
 
+Medium Term
+
+* Global statistics displayed in-world
+* Translations with workflow for producing translations
+* Better geoJson parsee JavaScript function
+* Restart rotation + zoom - 3D Lissajous path - after a period of no-interaction
+
+Vision of the future
+
+* new organization?
+* separate timeline pages
+* web pages for counties/provinces
+* Add sound/music? During mouseover and at mouse click or data update
+* Add text to speech commentary
+* Refresh data every few minutes
+* Add "expressions of hope" such as positive tweets?
+* Sun path? Mountains? Flamingos and dolphins?
 
 </details>
 
@@ -130,6 +155,7 @@ covid-19-viz-3d-2020-03-19-10-29.html
 * Load new geoJSON files
 	* Countries, states & China
 * Add deaths/population & deaths/gdp to pop-ups
+* Show global stats when not on mobile
 
 covid-19-viz-3d-2020-03-19-12-05.html
 

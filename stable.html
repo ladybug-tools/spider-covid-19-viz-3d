@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang=en >
+<head>
+<meta charset=utf-8 >
+</head>
+<body>
+<script>
+
+const url = "https://api.github.com/repos/ladybug-tools/spider-covid-19-viz-3d/contents/stable"
+
+requestFile( url, callbackLatest );
+
+
+function callbackLatest( xhr ) {
+
+	const json = JSON.parse( xhr.target.response )
+
+	const name = json.map( json => json.name )[ json.length - 4 ]
+	//console.log( name );
+
+	window.location.href = './app/' + name + location.hash;
+
+}
+
+
+function requestFile( url, callback ) {
+
+	xhr = new XMLHttpRequest();
+	xhr.open( 'GET', url, true );
+	xhr.onerror = ( xhr ) => console.log( 'error:', xhr  );
+	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+	xhr.onload = callback;
+	xhr.send( null );
+
+}
+
+</script>
+</body>
+</html>

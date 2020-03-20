@@ -383,7 +383,7 @@ function getSettings () {
 
 		<p>Black bar flare indicates high deaths to cases ratio.</p>
 
-		<p>Cyan bar flare indicates rapid increase in new casescompared to number of previous cases.</p>
+		<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
 
 		<p>Not all populations and GDPs are reported.
 			<!--

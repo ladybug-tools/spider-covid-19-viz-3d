@@ -6,7 +6,7 @@
 <body>
 <script>
 
-const url = "https://api.github.com/repos/ladybug-tools/spider-covid-19-viz-3d/contents/stable"
+const url = "https://api.github.com/repos/ladybug-tools/spider-covid-19-viz-3d/contents/app"
 
 requestFile( url, callbackLatest );
 
@@ -15,10 +15,10 @@ function callbackLatest( xhr ) {
 
 	const json = JSON.parse( xhr.target.response )
 
-	const name = json.map( json => json.name )[ json.length - 2 ]
+	const name = json.map( json => json.name )[ json.length - 4 ]
 	//console.log( name );
 
-	window.location.href = './stable/' + name + location.hash;
+	window.location.href = './app/' + name + location.hash;
 
 }
 

@@ -15,10 +15,10 @@ function callbackLatest( xhr ) {
 
 	const json = JSON.parse( xhr.target.response )
 
-	const name = json.map( json => json.name )[ json.length - 4 ]
+	const name = json.map( json => json.name )[ json.length - 2 ]
 	//console.log( name );
 
-	window.location.href = './app/' + name + location.hash;
+	window.location.href = './stable/' + name + location.hash;
 
 }
 

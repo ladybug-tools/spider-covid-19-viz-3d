@@ -28,6 +28,13 @@ Mentions
 
 * https://www.reddit.com/r/COVID19/comments/fkjby9/view_the_latest_covid19_numbers_from_around_the/
 
+Features
+
+Sky Box as an "Expression of Hope"
+
+* Zoom out then rotate. Trying to read the messages is a little guessing game.
+* The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
+
 </details>
 
 <details open >
@@ -36,6 +43,12 @@ Mentions
 ### [Issue #5 Expressions of hope]( https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5 )
 
 > @loleg I'm not sure how best to describe this, but what I wish for in an interactive viz like this, is the ability to discover what's hot and happening "out there". For example, the home page of gitter.im has more or less live messages from around the world. I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world.
+
+New version uses the dky box to post hopeful messages
+
+Zoom out then rotate. Trying to read the messages is a little guessing game.
+
+The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
 
 ### Generally
 
@@ -49,6 +62,24 @@ Mentions
 	* Data in WHO PDF file hard to parse
 * a growing percentage affected per day of each country's population rather than cases detected if we're separating it out by country.
 
+From Reddit
+
+> Why do the death "black sleeves" look far bigger than the actual numbers suggest?
+
+My answer
+The actual reason is that - currently - the heights are scaled via a square root of the number in question. This means bigger numbers are drawn much smaller than they really are.
+
+If this were a 2D chart -it would be easy to have gridlines and legends that indicated the scaling, but this is not so easy to show in 3D,
+
+And therefore - as your sharp eyes have pointed out - the indicated relations between cases and deaths appear to be wacky. My bad.
+
+I think a better idea might be to calculate the height of the cases and then calculate the height of the deaths as: casesHeight * deathCount / casesCount
+
+***
+
+>> new cases in the past day.
+> divided by the new cases the previous day. More cases is interesting, but far more interesting (to me, anyway) is that if it's increasing.
+> I'd suggest the derivative of the above as well, as I'd like to know if the rate of growth is increasing or decreasing, but I might be the only one that would find that interesting.
 
 Medium Term
 
@@ -67,6 +98,7 @@ Vision of the future
 * Refresh data every few minutes
 * Add "expressions of hope" such as positive tweets?
 * Sun path? Mountains? Flamingos and dolphins?
+* Dark mode? Themes? Mid-century modern, Burner, pixelated
 
 </details>
 
@@ -146,6 +178,16 @@ geoJson useful
 
 <details open >
 <summary>Change log </summary>
+
+### 2020-03-20 ~ Theo
+
+v-2020-03-20-13-30
+
+* Split style to style.css
+* Spilt JavaScript to main.css
+* Split three.js functions to thr-thee.js
+
+
 
 ### 2020-03-19 ~ Theo
 

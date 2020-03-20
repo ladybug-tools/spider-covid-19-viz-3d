@@ -186,6 +186,10 @@ v-2020-03-20-13-30
 * Split style to style.css
 * Spilt JavaScript to main.css
 * Split three.js functions to thr-thee.js
+* Remove geoJson popup data
+* Make Null Island a better test case
+* Pop-up: not show places if empty string
+* Global stats: add Europe and rest of world
 
 
 

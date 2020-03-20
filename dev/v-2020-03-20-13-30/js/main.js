@@ -91,15 +91,16 @@ function requestFile ( url, callback ) {
 
 function callbackDailyReport ( xhr ) {
 
-	const response = JSON.parse( xhr.target.response );
+	const json = JSON.parse( xhr.target.response );
 
-	const names = response.map( json => json.name );
+	const names = json.map( json => json.name );
+
 	const today = names[ names.length - 2 ];
 	//console.log( today );
 
 	yesterday = names[ names.length - 3 ];
-
 	//console.log( 'yesterday', yesterday );
+
 	requestFile( path + today, onLoad );
 
 }
@@ -120,7 +121,9 @@ function onLoad ( xhr ) {
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
 	//console.log( 'lines', lines );
 
-	lines.push( [ "Test Case", "Null Island", "", "0", "", "0", "0", "0" ] );
+	const date = new Date().toISOString();
+
+	lines.push( [ "Test Case", "Null Island", date, "abc", "", "-3.333", "0", "0" ] );
 
 	lines.forEach( ( line, index ) => addIndicator( line, index ) );
 
@@ -271,6 +274,8 @@ function latLonToXYZ ( radius, lat, lon, index ) {
 
 function getStats () {
 
+	const europe = [ "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "EstoniaF", "Finland", "France", "Georgia", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Holy See" ];
+
 	const globalCases = lines.reduce( ( sum, line ) => {
 		let cases = Number( line[ 3 ] );
 		cases = isNaN( cases ) ? 0 : cases;
@@ -278,10 +283,9 @@ function getStats () {
 	}, 0 );
 	//console.log( '', globalCases);
 
-	//caseNew = ;
 	const globalCasesNew = lines.reduce( ( sum, line ) => {
-		let caseNew = line[ 8 ];
-		//console.log( 'caseNew', caseNew );
+		let caseNew = Number( line[ 8 ] );
+		caseNew = isNaN( caseNew ) ? 0 : caseNew;
 		return sum + caseNew;
 	}, 0 );
 
@@ -296,17 +300,30 @@ function getStats () {
 	const chinaRecoveries = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 5 ] ) : 0, 0 );
 	const chinaDeathsToCases = 100 * chinaDeaths / chinaCases;
 
+	const europeDeaths = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ?
+	Number( line[ 4 ] ) : 0, 0 );
+	const europeCasesNew = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? line[ 8 ] : 0, 0 );
+	const europeCases = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ 3 ] ) : 0, 0 );
+	const europeRecoveries = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ 5 ] ) : 0, 0 );
+	const europeDeathsToCases = 100 * europeDeaths / europeCases;
+
 	const usaCases = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 3 ] ) : 0, 0 );
 	const usaCasesNew = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? line[ 8 ] : 0, 0 );
 	const usaDeaths = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 4 ] ) : 0, 0 );
 	const usaRecoveries = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 5 ] ) : 0, 0 );
 	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
 
+	const rowCases = globalCases - chinaCases - europeCases - usaCases;
+	const rowCasesNew = globalCasesNew - chinaCasesNew - europeCasesNew - usaCasesNew;
+	const rowDeaths = globalDeaths - chinaDeaths - europeDeaths - usaDeaths;
+	const rowRecoveries = globalRecoveries - chinaRecoveries - europeRecoveries - usaRecoveries;
+	const rowDeathsToCases = 100 * ( rowDeaths / rowCases );
+
 	divStats.innerHTML = `<details id=detStats>
 
 	<summary><b>global statistics</b></summary>
 	<p>
-		<b>global</b><br>
+		<b>global totals</b><br>
 		cases: ${ globalCases.toLocaleString() }<br>
 		cases new: ${ globalCasesNew.toLocaleString() }<br>
 		deaths: ${ globalDeaths.toLocaleString() }<br>
@@ -324,6 +341,15 @@ function getStats () {
 	</p>
 
 	<p>
+	<b>Europe totals</b><br>
+		cases: ${ europeCases.toLocaleString() }<br>
+		cases new: ${ europeCasesNew.toLocaleString() }<br>
+		deaths: ${ chinaDeaths.toLocaleString() }<br>
+		recoveries: ${ europeRecoveries.toLocaleString() }<br>
+		deaths/cases %: ${ europeDeathsToCases.toLocaleString() }<br>
+	</p>
+
+	<p>
 		<b>USA totals</b><br>
 		cases: ${ usaCases.toLocaleString() }<br>
 		cases new: ${ usaCasesNew.toLocaleString() }<br>
@@ -332,7 +358,14 @@ function getStats () {
 		deaths/cases %: ${ usaDeathsToCases.toLocaleString() }<br>
 	</p>
 
-	<p>To be added: Canada, Australia, Europe & everyone</p>
+	<p>
+		<b>rest of world totals</b><br>
+		cases: ${ rowCases.toLocaleString() }<br>
+		cases new: ${ rowCasesNew.toLocaleString() }<br>
+		deaths: ${ rowDeaths.toLocaleString() }<br>
+		recoveries: ${ rowRecoveries.toLocaleString() }<br>
+		deaths/cases %: ${ rowDeathsToCases.toLocaleString() }<br>
+	</p>
 
 	</details>`;
 
@@ -468,22 +501,23 @@ function onDocumentMouseMove ( event ) {
 			const arr = json.features.filter( feature => feature.properties.NAME === country );
 
 			const feature = arr.length ? arr[ 0 ] : undefined;
-
 			//console.log( 'feature', feature );
 
-			let population, gdp, name;
+			let d2Pop, d2Gdp;
 
 			if ( feature ) {
 
-				population = feature.properties.POP_EST;
-				gdp = feature.properties.GDP_MD_EST;
-				name = feature.properties.NAME;
+				const population = feature.properties.POP_EST;
+				const gdp = feature.properties.GDP_MD_EST;
+				const name = feature.properties.NAME;
+
+				d2Pop = ( 100 * ( Number( line[ 4 ] ) / population ) ).toLocaleString() + "%";
+				d2Gdp = ( 100 * ( Number( line[ 4 ] ) / gdp ) ).toLocaleString() + "%";
 
 			} else {
 
-				population = 999999999;
-				gdp = 999999999;
-				name = "not found";
+				d2Pop = "not available";
+				d2Gdp = "not available";
 
 			}
 
@@ -493,21 +527,22 @@ function onDocumentMouseMove ( event ) {
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
 			divMessage.innerHTML = `
-JHU place: ${ line[ 0 ] }<br>
+			${ ( line[ 0 ] ? "place: " + line[ 0 ] + "<br>" : "" ) }
 country: ${ line[ 1 ] }<br>
 update: ${ line[ 2 ] }<br>
 cases: ${ Number( line[ 3 ] ).toLocaleString() }<br>
 cases new: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
 deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
-recovered: ${ Number( line[ 5 ] ).toLocaleString() }<br>
+recoveries: ${ Number( line[ 5 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }%<br>
-deaths/population: ${ ( 100 * ( Number( line[ 4 ] ) / population ) ).toLocaleString() }%<br>
-deaths/gdp: ${ ( 100 * ( Number( line[ 4 ] ) / gdp ) ).toLocaleString() }%<br>
-<hr>
-geoJSON name: ${ name }<br>
-population: ${ population.toLocaleString() }<br>
-gdp: ${ gdp.toLocaleString() }<br>
+deaths/population: ${ d2Pop }<br>
+deaths/gdp: ${ d2Gdp }<br>
 `;
+
+//<hr>
+//geoJSON name: ${ name }<br>
+//population: ${ population.toLocaleString() }<br>
+//</br>gdp: ${ gdp.toLocaleString() }<br>
 
 		}
 

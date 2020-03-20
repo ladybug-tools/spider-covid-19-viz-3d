@@ -283,7 +283,8 @@ function onLoad( xhr ) {
 
 	let response = xhr.target.response;
 	response = response.replace( /"Korea, South"/, "South Korea" )
-	.replace( /"Gambia, The"/, "The Gambia");
+	.replace( /"Gambia, The"/, "The Gambia")
+	.replace( /"Bahamas, The"/, "The Bahamas");
 	//.replace( /"Virgin Islands,/, "Virgin Islands");
 
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );

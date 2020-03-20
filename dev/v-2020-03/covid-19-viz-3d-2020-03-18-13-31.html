@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-19-10-29">
+<meta name=version content="2020-03-18-13-31">
 
 
 <title>COVID-19 Viz 3D</title>
@@ -71,7 +71,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 				<span id=sVersion ></span>
 			</a>
 
-			<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
+			<span class="couponcode" >??<span id=divDescription class="coupontooltip" >
 				View the COVID-19 data from the John Hopkins University
 				<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
 				in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
@@ -82,29 +82,26 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 	</header>
 
-	<p style=background-color:cyan;color:white;padding:1ch; >New cases</p>
+	<p style=background-color:magenta;color:white;padding:1ch; >New cases</p>
 
 	<p style=background-color:red;color:white;padding:1ch; >Confirmed cases</p>
 
 	<p style=background-color:black;color:white;padding:1ch; title="Spread indicates high deaths to cases ratios" >Deaths</p>
 
-	<p style=background-color:lightgreen;color:white;padding:1ch; >Recoveries</p>
-
-	<button id=butStats onclick=getStats(); >global statistics</button>
-	<div id=divStats style=background-color:white;padding:1ch; hidden ></div>
+	<p style=background-color:green;color:white;padding:1ch; >Recoveries</p>
 
 	<p>
 		<button onclick=controls.reset() >reset view</button>
 		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
 	</p>
+
+	<p><button id=butStats onclick=getStats(); >global statistics</button></button></p>
+
+	<div id=divStats style=background-color:white;padding:1ch; hidden ></div>
+
 </nav>
 
-
-<div id=divMessage >
-	Touch the screen to stop rotation<br>
-	Touch a country "stick" to pop-up the statistics<br>
-	Two fingers or mousewheel to zoom
-</div>
+<div id=divMessage >Touch a bar to stop rotation and view the statistics</div>
 
 <script>
 
@@ -119,11 +116,8 @@ sVersion.innerHTML = version ? version.content : "";
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 
 let lines;
-let json;
-let yesterday;
 let intersected;
 let group = new THREE.Group();
-let groupLines;
 let mesh;
 let renderer, camera, controls, scene;
 
@@ -174,21 +168,12 @@ function init() {
 
 	requestFile( url, callbackDailyReport );
 
-
-	const urlJsonStatesProvinces = "../maps/ne_50m_admin_1_states_provinces_lines.geojson";
-
-	requestFile( urlJsonStatesProvinces, onLoadGeoJson );
-
-	const urlJsonChina = "../maps/china.geojson";
-
-	requestFile( urlJsonChina, onLoadGeoJson );
-
-	const urlJson = "../maps/ne_110m_admin_0_countries_lakes.geojson";
+	const urlJson = "js/countries_states.geojson";
 
 	requestFile( urlJson, onLoadGeoJson );
 
-}
 
+}
 
 
 
@@ -213,7 +198,7 @@ function addLights() {
 	pointLight.position.copy( camera.position );
 	camera.add( pointLight );
 
-	const lightDirectional = new THREE.DirectionalLight( 0xfffffff, 1);
+	lightDirectional = new THREE.DirectionalLight( 0xfffffff, 1);
 	lightDirectional.position.set( -50, -200, 100 );
 
 }
@@ -222,15 +207,15 @@ function addLights() {
 
 function callbackDailyReport( xhr ) {
 
-	const response = JSON.parse( xhr.target.response )
+	response = JSON.parse( xhr.target.response )
 
 	const names = response.map( json => json.name )
-	const today = names[ names.length - 2 ];
-	//console.log( today );
+	today = names[ names.length - 2 ];
 
+	//console.log( today );
 	yesterday = names[ names.length - 3 ];
 
-	//console.log( 'yesterday', yesterday );
+	console.log( 'yesterday', yesterday );
 	requestFile( path + today, onLoad );
 
 }
@@ -242,7 +227,7 @@ function addGlobe( size = 50 ) {
 	const geometry = new THREE.SphereGeometry( size, 50, 25 );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 
-	const url = "maps/earth_atmos_4096.jpg";
+	const url = "../../assets/images/earth_atmos_4096.jpg";
 	var texture = new THREE.TextureLoader().load( url );
 
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
@@ -279,13 +264,14 @@ function onLoad( xhr ) {
 	//console.log( 'lines', lines );
 
 	lines.push( [ "Test Case", "Null Island", "", "0", "", "0", "0", "0" ] );
+	//lines.push(  [ "", "North Pole", "", "0", "", "", "90", "90" ] );
 
 	lines.forEach( ( line, index ) => addIndicator( line, index ) );
 
 	requestFile( path + yesterday, onLoadYesterday );
 
+	butStats.click();
 }
-
 
 
 function onLoadYesterday( xhr ) {
@@ -297,11 +283,9 @@ function onLoadYesterday( xhr ) {
 
 	lines.forEach( ( line, index ) => addIndicatorNew( line, index ) );
 
-	butStats.click();
+
 
 }
-
-
 
 function addIndicatorNew( line, index ) {
 
@@ -316,11 +300,13 @@ function addIndicatorNew( line, index ) {
 	casesNew = Math.abs( Number( line[ 3 ] ) - Number( lineNew[ 0 ][ 3 ] ) );
 
 	lines[ index ].push( casesNew )
+
 	//console.log( 'casesNew', casesNew );
 
 	group.add( mesh );
 
 	if ( casesNew < 1 ) {return; }
+
 
 	const heightCases = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 0 );
 //	const heightNew = 0.2 * Math.sqrt( casesNew || 1 );
@@ -336,64 +322,9 @@ function addIndicatorNew( line, index ) {
 	p1 = latLonToXYZ( 50 + heightCases - 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
 	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-	const geometry = new THREE.CylinderBufferGeometry( 0.45, 0.7, height, 12, 1, true );
+	const geometry = new THREE.CylinderBufferGeometry( 1, 1, height, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	const material = new THREE.MeshPhongMaterial( { color: "cyan", opacity: 0.8, side: 2, transparent: true });
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.copy( p1 );
-	mesh.lookAt( p2 );
-	mesh.userData = index;
-
-	group.add( mesh );
-
-}
-
-
-
-function addIndicator( line, index ) {
-
-	const height = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 1 );
-	const heightDeaths = 0.2 * Math.sqrt( Number( line[ 4 ] ) || 1 );
-	const heightRecoveries = 0.2 * Math.sqrt( Number( line[ 5 ] ) || 1 );
-
-	let p1 = latLonToXYZ( 50 + 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
-	let p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
-
-	let geometry = new THREE.CylinderGeometry( 0.4, 0.4, height );
-	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	let material = new THREE.MeshPhongMaterial( { color: "red" });
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.copy( p1 );
-	mesh.lookAt( p2 );
-	mesh.userData = index;
-
-	group.add( mesh );
-
-
-	p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
-	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
-
-	let dToC =  Number( line[ 3 ] ) > 0 ? 5 * Number( line[ 4 ] ) / Number( line[ 3 ] ) : 0;
-	dToC = dToC < 1 ? dToC : 1;
-	//console.log( 'dc', dToC );
-
-	geometry = new THREE.CylinderBufferGeometry( 0.5, 0.5 + dToC, heightDeaths,12,1,true );
-	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	material = new THREE.MeshPhongMaterial( { color: "black", side: 2 });
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.copy( p1 );
-	mesh.lookAt( p2 );
-	mesh.userData = index;
-
-
-	group.add( mesh );
-
-	p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
-	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
-
-	geometry = new THREE.CylinderBufferGeometry( 0.45, 0.45, heightRecoveries, 12, 1, true );
-	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	material = new THREE.MeshPhongMaterial( { color: "green" });
+	const material = new THREE.MeshPhongMaterial( { color: "magenta", side: 2 });
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );
@@ -406,15 +337,10 @@ function addIndicator( line, index ) {
 
 function getStats() {
 
-	const globalCases = lines.reduce( (sum, line ) => {
-		let cases = Number( line[ 3 ] )
-		cases = isNaN( cases ) ? 0 : cases;
-		return sum + cases}
-	, 0 );
-	//console.log( '', globalCases);
+	const globalCases = lines.reduce( (sum, line ) => sum + Number( line[ 3 ] ), 0 );
 	const globalDeaths = lines.reduce( (sum, line ) => sum + Number( line[ 4 ] ), 0 );
 	const globalRecoveries = lines.reduce( (sum, line ) => sum + Number( line[ 5 ] ), 0 );
-	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
+	const globalDeathsToCases = 100 * globalDeaths /globalCases;
 
 	const chinaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 3 ] ) : 0, 0 );
 	const chinaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 4 ] ) : 0, 0 );
@@ -448,7 +374,62 @@ function getStats() {
 
 	<p>To be added: Canada, Australia, Europe & everyone</p>
 	<p>Black bar spread indicates high deaths to cases ratio</p>
-	`;
+`;
+
+}
+
+
+
+function addIndicator( line, index ) {
+
+	const height = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 1 );
+	const heightDeaths = 0.2 * Math.sqrt( Number( line[ 4 ] ) || 1 );
+	const heightRecoveries = 0.2 * Math.sqrt( Number( line[ 5 ] ) || 1 );
+
+	let p1 = latLonToXYZ( 50 + 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
+	let p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+
+	let geometry = new THREE.CylinderGeometry( 0.4, 0.4, height );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+	let material = new THREE.MeshPhongMaterial( { color: "red" });
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
+
+	group.add( mesh );
+
+
+	p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
+	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+
+	let dToC =  Number( line[ 3 ] ) > 0 ? 5 * Number( line[ 4 ] ) / Number( line[ 3 ] ) : 0;
+	dToC = dToC < 2 ? dToC : 2;
+	//console.log( 'dc', dToC );
+
+	geometry = new THREE.CylinderBufferGeometry( 0.5, 0.5 + dToC, heightDeaths,12,1,true );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+	material = new THREE.MeshPhongMaterial( { color: "black", side: 2 });
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
+
+
+	group.add( mesh );
+
+	p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
+	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+
+	geometry = new THREE.CylinderBufferGeometry( 0.45, 0.45, heightRecoveries, 12, 1, true );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+	material = new THREE.MeshPhongMaterial( { color: "green" });
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
+
+	group.add( mesh );
 
 }
 
@@ -504,15 +485,9 @@ function onDocumentMouseMove ( event ) {
 
 			intersected = intersects[ 0 ].object;
 
-			const index = intersected.userData;
+			const line = lines[ intersected.userData ];
 
-			const line = lines[ index ];
-
-			//console.log( '', json.features[ index ].properties.POP_EST );
-
-			const population = json.features[ index ] ? json.features[ index ].properties.POP_EST : 99999999;
-			const gdp = json.features[ index ] ? json.features[ index ].properties.GDP_MD_EST : 99999999;
-			const casesNew = line[ 8 ] ? line[ 8 ] :0;
+			casesNew = line[ 8 ] ? line[ 8 ] :0;
 
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX  + "px";
@@ -525,12 +500,7 @@ cases new: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
 cases: ${ Number( line[ 3 ] ).toLocaleString() }<br>
 deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
 recovered: ${ Number( line[ 5 ] ).toLocaleString() }<br>
-deaths/cases: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }%<br>
-deaths/population: ${ ( 100 * ( Number( line[ 4 ] ) / population ) ).toLocaleString() }%<br>
-deaths/gdp: ${ ( 100 * ( Number( line[ 4 ] ) / gdp ) ).toLocaleString() }%<br>
-<hr>
-gdp: ${ gdp.toLocaleString() }<br>
-population: ${ population.toLocaleString() }
+deaths/cases %: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }<br>
 `;
 
 		}

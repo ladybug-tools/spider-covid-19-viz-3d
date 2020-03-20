@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-18-13-31">
+<meta name=version content="2020-03-18-20">
 
 
 <title>COVID-19 Viz 3D</title>
@@ -71,7 +71,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 				<span id=sVersion ></span>
 			</a>
 
-			<span class="couponcode" >??<span id=divDescription class="coupontooltip" >
+			<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
 				View the COVID-19 data from the John Hopkins University
 				<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
 				in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
@@ -88,20 +88,23 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 	<p style=background-color:black;color:white;padding:1ch; title="Spread indicates high deaths to cases ratios" >Deaths</p>
 
-	<p style=background-color:green;color:white;padding:1ch; >Recoveries</p>
+	<p style=background-color:lightgreen;color:white;padding:1ch; >Recoveries</p>
+
+	<button id=butStats onclick=getStats(); >global statistics</button>
+	<div id=divStats style=background-color:white;padding:1ch; hidden ></div>
 
 	<p>
 		<button onclick=controls.reset() >reset view</button>
 		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
 	</p>
-
-	<p><button id=butStats onclick=getStats(); >global statistics</button></button></p>
-
-	<div id=divStats style=background-color:white;padding:1ch; hidden ></div>
-
 </nav>
 
-<div id=divMessage >Touch a bar to stop rotation and view the statistics</div>
+
+<div id=divMessage >
+	Touch the screen to stop rotation<br>
+	Touch a country "stick" to pop-up the statistics<br>
+	Two fingers or mousewheel to zoom
+</div>
 
 <script>
 
@@ -215,7 +218,7 @@ function callbackDailyReport( xhr ) {
 	//console.log( today );
 	yesterday = names[ names.length - 3 ];
 
-	console.log( 'yesterday', yesterday );
+	//console.log( 'yesterday', yesterday );
 	requestFile( path + today, onLoad );
 
 }
@@ -227,7 +230,7 @@ function addGlobe( size = 50 ) {
 	const geometry = new THREE.SphereGeometry( size, 50, 25 );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 
-	const url = "../assets/earth_atmos_4096.jpg";
+	const url = "../../assets/images/earth_atmos_4096.jpg";
 	var texture = new THREE.TextureLoader().load( url );
 
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
@@ -322,9 +325,65 @@ function addIndicatorNew( line, index ) {
 	p1 = latLonToXYZ( 50 + heightCases - 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
 	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-	const geometry = new THREE.CylinderBufferGeometry( 1, 1, height, 12, 1, true );
+	const geometry = new THREE.CylinderBufferGeometry( 0.45, 0.7, height, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	const material = new THREE.MeshPhongMaterial( { color: "magenta", side: 2 });
+	const material = new THREE.MeshPhongMaterial( { color: "magenta", opacity: 0.8, side: 2, transparent: true });
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
+
+	group.add( mesh );
+
+}
+
+
+
+
+function addIndicator( line, index ) {
+
+	const height = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 1 );
+	const heightDeaths = 0.2 * Math.sqrt( Number( line[ 4 ] ) || 1 );
+	const heightRecoveries = 0.2 * Math.sqrt( Number( line[ 5 ] ) || 1 );
+
+	let p1 = latLonToXYZ( 50 + 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
+	let p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+
+	let geometry = new THREE.CylinderGeometry( 0.4, 0.4, height );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+	let material = new THREE.MeshPhongMaterial( { color: "red" });
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
+
+	group.add( mesh );
+
+
+	p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
+	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+
+	let dToC =  Number( line[ 3 ] ) > 0 ? 5 * Number( line[ 4 ] ) / Number( line[ 3 ] ) : 0;
+	dToC = dToC < 1 ? dToC : 1;
+	//console.log( 'dc', dToC );
+
+	geometry = new THREE.CylinderBufferGeometry( 0.5, 0.5 + dToC, heightDeaths,12,1,true );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+	material = new THREE.MeshPhongMaterial( { color: "black", side: 2 });
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
+
+
+	group.add( mesh );
+
+	p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
+	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+
+	geometry = new THREE.CylinderBufferGeometry( 0.45, 0.45, heightRecoveries, 12, 1, true );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+	material = new THREE.MeshPhongMaterial( { color: "green" });
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );
@@ -337,10 +396,16 @@ function addIndicatorNew( line, index ) {
 
 function getStats() {
 
-	const globalCases = lines.reduce( (sum, line ) => sum + Number( line[ 3 ] ), 0 );
+
+	const globalCases = lines.reduce( (sum, line ) => {
+		let cases = Number( line[ 3 ] )
+		cases = isNaN( cases ) ? 0 : cases;
+		return sum + cases}
+	, 0 );
+	//console.log( '', globalCases);
 	const globalDeaths = lines.reduce( (sum, line ) => sum + Number( line[ 4 ] ), 0 );
 	const globalRecoveries = lines.reduce( (sum, line ) => sum + Number( line[ 5 ] ), 0 );
-	const globalDeathsToCases = 100 * globalDeaths /globalCases;
+	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
 
 	const chinaCases = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 3 ] ) : 0, 0 );
 	const chinaDeaths = lines.reduce( (sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 4 ] ) : 0, 0 );
@@ -374,62 +439,7 @@ function getStats() {
 
 	<p>To be added: Canada, Australia, Europe & everyone</p>
 	<p>Black bar spread indicates high deaths to cases ratio</p>
-`;
-
-}
-
-
-
-function addIndicator( line, index ) {
-
-	const height = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 1 );
-	const heightDeaths = 0.2 * Math.sqrt( Number( line[ 4 ] ) || 1 );
-	const heightRecoveries = 0.2 * Math.sqrt( Number( line[ 5 ] ) || 1 );
-
-	let p1 = latLonToXYZ( 50 + 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
-	let p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
-
-	let geometry = new THREE.CylinderGeometry( 0.4, 0.4, height );
-	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	let material = new THREE.MeshPhongMaterial( { color: "red" });
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.copy( p1 );
-	mesh.lookAt( p2 );
-	mesh.userData = index;
-
-	group.add( mesh );
-
-
-	p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
-	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
-
-	let dToC =  Number( line[ 3 ] ) > 0 ? 5 * Number( line[ 4 ] ) / Number( line[ 3 ] ) : 0;
-	dToC = dToC < 2 ? dToC : 2;
-	//console.log( 'dc', dToC );
-
-	geometry = new THREE.CylinderBufferGeometry( 0.5, 0.5 + dToC, heightDeaths,12,1,true );
-	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	material = new THREE.MeshPhongMaterial( { color: "black", side: 2 });
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.copy( p1 );
-	mesh.lookAt( p2 );
-	mesh.userData = index;
-
-
-	group.add( mesh );
-
-	p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, Number( line[ 6 ] ), Number( line[ 7 ] ), index  );
-	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
-
-	geometry = new THREE.CylinderBufferGeometry( 0.45, 0.45, heightRecoveries, 12, 1, true );
-	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	material = new THREE.MeshPhongMaterial( { color: "green" });
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.copy( p1 );
-	mesh.lookAt( p2 );
-	mesh.userData = index;
-
-	group.add( mesh );
+	`;
 
 }
 

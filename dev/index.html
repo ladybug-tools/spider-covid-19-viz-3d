@@ -6,34 +6,7 @@
 <body>
 <script>
 
-const url = "https://api.github.com/repos/ladybug-tools/spider-covid-19-viz-3d/contents/app";
-
-requestFile( url, callbackLatest );
-
-
-function callbackLatest( xhr ) {
-
-	const json = JSON.parse( xhr.target.response );
-	//console.log( 'json', json );
-
-	const name = json.map( json => json.name )[ json.length - 3 ];
-	//console.log( name );
-
-	window.location.href = '../app/' + name + location.hash;
-
-}
-
-
-function requestFile( url, callback ) {
-
-	const xhr = new XMLHttpRequest();
-	xhr.open( 'GET', url, true );
-	xhr.onerror = ( xhr ) => console.log( 'error:', xhr  );
-	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
-	xhr.onload = callback;
-	xhr.send( null );
-
-}
+	window.location.href = './v-2020-03-19/covid-19-viz-3d.html' + location.hash;
 
 </script>
 </body>

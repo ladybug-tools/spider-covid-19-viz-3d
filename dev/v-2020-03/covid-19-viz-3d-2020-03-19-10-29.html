@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-18-20">
+<meta name=version content="2020-03-19-10-29">
 
 
 <title>COVID-19 Viz 3D</title>
@@ -82,7 +82,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 	</header>
 
-	<p style=background-color:magenta;color:white;padding:1ch; >New cases</p>
+	<p style=background-color:cyan;color:white;padding:1ch; >New cases</p>
 
 	<p style=background-color:red;color:white;padding:1ch; >Confirmed cases</p>
 
@@ -119,8 +119,11 @@ sVersion.innerHTML = version ? version.content : "";
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 
 let lines;
+let json;
+let yesterday;
 let intersected;
 let group = new THREE.Group();
+let groupLines;
 let mesh;
 let renderer, camera, controls, scene;
 
@@ -171,12 +174,21 @@ function init() {
 
 	requestFile( url, callbackDailyReport );
 
-	const urlJson = "js/countries_states.geojson";
+
+	const urlJsonStatesProvinces = "../../assets/json/ne_50m_admin_1_states_provinces_lines.geojson";
+
+	requestFile( urlJsonStatesProvinces, onLoadGeoJson );
+
+	const urlJsonChina = "../../assets/json/china.geojson";
+
+	requestFile( urlJsonChina, onLoadGeoJson );
+
+	const urlJson = "../../assets/json/ne_110m_admin_0_countries_lakes.geojson";
 
 	requestFile( urlJson, onLoadGeoJson );
 
-
 }
+
 
 
 
@@ -201,7 +213,7 @@ function addLights() {
 	pointLight.position.copy( camera.position );
 	camera.add( pointLight );
 
-	lightDirectional = new THREE.DirectionalLight( 0xfffffff, 1);
+	const lightDirectional = new THREE.DirectionalLight( 0xfffffff, 1);
 	lightDirectional.position.set( -50, -200, 100 );
 
 }
@@ -210,12 +222,12 @@ function addLights() {
 
 function callbackDailyReport( xhr ) {
 
-	response = JSON.parse( xhr.target.response )
+	const response = JSON.parse( xhr.target.response )
 
 	const names = response.map( json => json.name )
-	today = names[ names.length - 2 ];
-
+	const today = names[ names.length - 2 ];
 	//console.log( today );
+
 	yesterday = names[ names.length - 3 ];
 
 	//console.log( 'yesterday', yesterday );
@@ -230,7 +242,7 @@ function addGlobe( size = 50 ) {
 	const geometry = new THREE.SphereGeometry( size, 50, 25 );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 
-	const url = "../assets/earth_atmos_4096.jpg";
+	const url = "../../assets/images/earth_atmos_4096.jpg";
 	var texture = new THREE.TextureLoader().load( url );
 
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
@@ -267,14 +279,13 @@ function onLoad( xhr ) {
 	//console.log( 'lines', lines );
 
 	lines.push( [ "Test Case", "Null Island", "", "0", "", "0", "0", "0" ] );
-	//lines.push(  [ "", "North Pole", "", "0", "", "", "90", "90" ] );
 
 	lines.forEach( ( line, index ) => addIndicator( line, index ) );
 
 	requestFile( path + yesterday, onLoadYesterday );
 
-	butStats.click();
 }
+
 
 
 function onLoadYesterday( xhr ) {
@@ -286,9 +297,11 @@ function onLoadYesterday( xhr ) {
 
 	lines.forEach( ( line, index ) => addIndicatorNew( line, index ) );
 
-
+	butStats.click();
 
 }
+
+
 
 function addIndicatorNew( line, index ) {
 
@@ -303,13 +316,11 @@ function addIndicatorNew( line, index ) {
 	casesNew = Math.abs( Number( line[ 3 ] ) - Number( lineNew[ 0 ][ 3 ] ) );
 
 	lines[ index ].push( casesNew )
-
 	//console.log( 'casesNew', casesNew );
 
 	group.add( mesh );
 
 	if ( casesNew < 1 ) {return; }
-
 
 	const heightCases = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 0 );
 //	const heightNew = 0.2 * Math.sqrt( casesNew || 1 );
@@ -327,7 +338,7 @@ function addIndicatorNew( line, index ) {
 
 	const geometry = new THREE.CylinderBufferGeometry( 0.45, 0.7, height, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	const material = new THREE.MeshPhongMaterial( { color: "magenta", opacity: 0.8, side: 2, transparent: true });
+	const material = new THREE.MeshPhongMaterial( { color: "cyan", opacity: 0.8, side: 2, transparent: true });
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );
@@ -336,7 +347,6 @@ function addIndicatorNew( line, index ) {
 	group.add( mesh );
 
 }
-
 
 
 
@@ -395,7 +405,6 @@ function addIndicator( line, index ) {
 
 
 function getStats() {
-
 
 	const globalCases = lines.reduce( (sum, line ) => {
 		let cases = Number( line[ 3 ] )
@@ -495,9 +504,15 @@ function onDocumentMouseMove ( event ) {
 
 			intersected = intersects[ 0 ].object;
 
-			const line = lines[ intersected.userData ];
+			const index = intersected.userData;
 
-			casesNew = line[ 8 ] ? line[ 8 ] :0;
+			const line = lines[ index ];
+
+			//console.log( '', json.features[ index ].properties.POP_EST );
+
+			const population = json.features[ index ] ? json.features[ index ].properties.POP_EST : 99999999;
+			const gdp = json.features[ index ] ? json.features[ index ].properties.GDP_MD_EST : 99999999;
+			const casesNew = line[ 8 ] ? line[ 8 ] :0;
 
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX  + "px";
@@ -510,7 +525,12 @@ cases new: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
 cases: ${ Number( line[ 3 ] ).toLocaleString() }<br>
 deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
 recovered: ${ Number( line[ 5 ] ).toLocaleString() }<br>
-deaths/cases %: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }<br>
+deaths/cases: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }%<br>
+deaths/population: ${ ( 100 * ( Number( line[ 4 ] ) / population ) ).toLocaleString() }%<br>
+deaths/gdp: ${ ( 100 * ( Number( line[ 4 ] ) / gdp ) ).toLocaleString() }%<br>
+<hr>
+gdp: ${ gdp.toLocaleString() }<br>
+population: ${ population.toLocaleString() }
 `;
 
 		}

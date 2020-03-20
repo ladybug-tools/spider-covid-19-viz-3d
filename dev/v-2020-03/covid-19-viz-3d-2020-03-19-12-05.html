@@ -173,15 +173,15 @@ function init() {
 	requestFile( url, callbackDailyReport );
 
 
-	const urlJsonStatesProvinces = "../maps/ne_50m_admin_1_states_provinces_lines.geojson";
+	const urlJsonStatesProvinces = "../../assets/json/ne_50m_admin_1_states_provinces_lines.geojson";
 
 	requestFile( urlJsonStatesProvinces, onLoadGeoJson );
 
-	const urlJsonChina = "../maps/china.geojson";
+	const urlJsonChina = "../../assets/json/china.geojson";
 
 	requestFile( urlJsonChina, onLoadGeoJson );
 
-	const urlJson = "../maps/ne_110m_admin_0_countries_lakes.geojson";
+	const urlJson = "../../assets/json/ne_110m_admin_0_countries_lakes.geojson";
 
 	requestFile( urlJson, onLoadGeoJson );
 
@@ -242,7 +242,7 @@ function addGlobe( size = 50 ) {
 	const geometry = new THREE.SphereGeometry( size, 50, 25 );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 
-	const url = "maps/earth_atmos_4096.jpg";
+	const url = "../../assets/images/earth_atmos_4096.jpg";
 	var texture = new THREE.TextureLoader().load( url );
 
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );

@@ -101,6 +101,7 @@ function callbackDailyReport ( xhr ) {
 	yesterday = names[ names.length - 3 ];
 	//console.log( 'yesterday', yesterday );
 
+	
 	requestFile( path + today, onLoad );
 
 }
@@ -211,8 +212,6 @@ function addIndicatorNew ( line, index ) {
 	const lineNew = linesYesterday.filter( line => line[ 0 ] === state && line[ 1 ] === country );
 	//console.log( 'ln',line[ 3 ]);
 
-	//if ( !lineNew.length ){ return; };
-
 	const str = lineNew.length ? lineNew[ 0 ][ 3 ] : "";
 
 	const num = str ? Number( str ) : Number( line[ 3 ] );
@@ -281,7 +280,6 @@ function getStats () {
 		cases = isNaN( cases ) ? 0 : cases;
 		return sum + cases;
 	}, 0 );
-	//console.log( '', globalCases);
 
 	const globalCasesNew = lines.reduce( ( sum, line ) => {
 		let caseNew = Number( line[ 8 ] );

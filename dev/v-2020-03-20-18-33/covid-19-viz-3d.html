@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+<meta name=description
+	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
+<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+<meta name=version content="2020-03-20-18-45">
+
+
+<title>COVID-19 Viz 3D</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+
+
+</head>
+
+<body>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+
+
+<script src="js/thr-three.js"></script>
+<script src="js/threeGeoJSON.js"></script>
+
+<nav id="navMenu">
+
+	<header id="hdrTitle">
+
+		<h2>
+			<a id=aSource target=_top title="Readme & Source code on GitHub" >
+				<img id=imgIcon height=18 style=opacity:0.5; >
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
+				View the COVID-19 data from the John Hopkins University
+				<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
+				in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
+				WebGL tools.
+			</span></span>
+
+		</h2>
+
+	</header>
+
+	<p style=background-color:cyan;color:white;padding:1ch; >New cases</p>
+
+	<p style=background-color:red;color:white;padding:1ch; >Confirmed cases</p>
+
+	<p style=background-color:black;color:white;padding:1ch; title="Spread indicates high deaths to cases ratios" >Deaths</p>
+
+	<p style=background-color:limegreen;color:white;padding:1ch; >Recoveries</p>
+
+	<div id=divStats style=background-color:white;padding:1ch; ></div>
+
+	<div id=divSettings style=background-color:white;padding:1ch; ></div>
+
+
+</nav>
+
+
+<div id=divMessage >
+	Touch the screen to stop rotation<br>
+	Touch a country "stick" to pop-up the statistics<br>
+	Two fingers or mousewheel to zoom
+</div>
+
+<script src="js/main.js"></script>
+
+<script>
+
+// keep address bar pointed to latest
+window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );
+
+</script>
+</body>
+</html>

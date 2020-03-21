@@ -14,6 +14,7 @@ _covid 19 viz 3d - touch me!_
 
 ### Full Screen latest: [covid 19 viz 3d/dev ]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev/ )
 
+Cookbook: [COVID-19 New Cases by Date]( https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/parse-m-media-group/parse-m-media-group-2020-03-21.html )
 
 <details open >
 <summary>Concept</summary>

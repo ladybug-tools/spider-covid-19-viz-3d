@@ -164,6 +164,7 @@ TopoJson
 
 geoJson
 
+* https://datahub.io/collections/geojson
 * https://github.com/nvkelso/natural-earth-vector
 * https://github.com/maptime-ams/geojson-3d
 * https://github.com/jdomingu/ThreeGeoJSON
@@ -184,6 +185,13 @@ geoJson useful
 
 <details open >
 <summary>Change log </summary>
+
+### 2020-03-21 ~ Theo
+
+COVID-19 New Cases by Date
+
+* First commit
+
 
 ### 2020-03-20 ~ Theo
 

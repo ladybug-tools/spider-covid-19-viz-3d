@@ -299,7 +299,7 @@ function getStats () {
 	const chinaDeathsToCases = 100 * chinaDeaths / chinaCases;
 
 	const europeDeaths = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ?
-	Number( line[ 4 ] ) : 0, 0 );
+		Number( line[ 4 ] ) : 0, 0 );
 	const europeCasesNew = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? line[ 8 ] : 0, 0 );
 	const europeCases = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ 3 ] ) : 0, 0 );
 	const europeRecoveries = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ 5 ] ) : 0, 0 );
@@ -379,16 +379,30 @@ function getSettings () {
 
 		<summary><b>notes & settings</b></summary>
 
+		<p><i>Why are there messages in the background?</i></p>
+		<p>
+			An early visitor to our tracker raised this issue
+			"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
+			Oleg askeg "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
+		</p>
+
+		<p>
+			What you see is our first attempt to give Oleg some delight.<br>
+			&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
+			&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
+		</p>
+
+		<hr>
+
 		<p>Black bar flare indicates high deaths to cases ratio.</p>
 
 		<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
 
-		<p>Not all populations and GDPs are reported.
-			<!--
-			Some GDPs are in trillions and some are in billions.
-			<a href="https://github.com/nvkelso/natural-earth-vector/tree/master/geojson" target="_blank">Go figure.</a></p>
-			-->
-			<p>
+		<p>
+			Not all populations and GDPs are reported.
+		</p>
+
+		<p>
 			<button onclick=controls.reset() >reset view</button>
 			<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
 		</p>
@@ -537,10 +551,10 @@ deaths/population: ${ d2Pop }<br>
 deaths/gdp: ${ d2Gdp }<br>
 `;
 
-//<hr>
-//geoJSON name: ${ name }<br>
-//population: ${ population.toLocaleString() }<br>
-//</br>gdp: ${ gdp.toLocaleString() }<br>
+			//<hr>
+			//geoJSON name: ${ name }<br>
+			//population: ${ population.toLocaleString() }<br>
+			//</br>gdp: ${ gdp.toLocaleString() }<br>
 
 		}
 

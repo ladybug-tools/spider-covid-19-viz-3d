@@ -125,7 +125,9 @@ Vision of the future
 Data sources
 
 * https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data
-* https://opendata.arcgis.com/datasets/bbb2e4f589ba40d692fab712ae37b9ac_1.csv
+* https://github.com/M-Media-Group/Covid-19-API
+	* https://opendata.arcgis.com/datasets/bbb2e4f589ba40d692fab712ae37b9ac_1.csv
+	* https://mmediagroup.fr/covid-19
 * https://nssac.bii.virginia.edu/covid-19/dashboard/
 
 

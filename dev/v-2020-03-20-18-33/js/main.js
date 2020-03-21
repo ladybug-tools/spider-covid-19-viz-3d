@@ -326,7 +326,7 @@ function getStats () {
 		cases new: ${ globalCasesNew.toLocaleString() }<br>
 		deaths: ${ globalDeaths.toLocaleString() }<br>
 		recoveries: ${ globalRecoveries.toLocaleString() }<br>
-		deaths/cases: ${ globalDeathsToCases.toLocaleString() }%br>
+		deaths/cases: ${ globalDeathsToCases.toLocaleString() }%<br>
 	</p>
 
 	<p>

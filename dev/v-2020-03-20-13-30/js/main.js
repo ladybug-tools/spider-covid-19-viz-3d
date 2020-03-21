@@ -101,7 +101,7 @@ function callbackDailyReport ( xhr ) {
 	yesterday = names[ names.length - 3 ];
 	//console.log( 'yesterday', yesterday );
 
-	
+
 	requestFile( path + today, onLoad );
 
 }
@@ -326,7 +326,7 @@ function getStats () {
 		cases new: ${ globalCasesNew.toLocaleString() }<br>
 		deaths: ${ globalDeaths.toLocaleString() }<br>
 		recoveries: ${ globalRecoveries.toLocaleString() }<br>
-		deaths/cases %: ${ globalDeathsToCases.toLocaleString() }<br>
+		deaths/cases: ${ globalDeathsToCases.toLocaleString() }%<br>
 	</p>
 
 	<p>
@@ -335,7 +335,7 @@ function getStats () {
 		cases new: ${ chinaCasesNew.toLocaleString() }<br>
 		deaths: ${ chinaDeaths.toLocaleString() }<br>
 		recoveries: ${ chinaRecoveries.toLocaleString() }<br>
-		deaths/cases %: ${ chinaDeathsToCases.toLocaleString() }<br>
+		deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%<br>
 	</p>
 
 	<p>
@@ -344,7 +344,7 @@ function getStats () {
 		cases new: ${ europeCasesNew.toLocaleString() }<br>
 		deaths: ${ chinaDeaths.toLocaleString() }<br>
 		recoveries: ${ europeRecoveries.toLocaleString() }<br>
-		deaths/cases %: ${ europeDeathsToCases.toLocaleString() }<br>
+		deaths/cases: ${ europeDeathsToCases.toLocaleString() }%<br>
 	</p>
 
 	<p>
@@ -353,7 +353,7 @@ function getStats () {
 		cases new: ${ usaCasesNew.toLocaleString() }<br>
 		deaths: ${ usaDeaths.toLocaleString() }<br>
 		recoveries: ${ usaRecoveries.toLocaleString() }<br>
-		deaths/cases %: ${ usaDeathsToCases.toLocaleString() }<br>
+		deaths/cases: ${ usaDeathsToCases.toLocaleString() }%<br>
 	</p>
 
 	<p>
@@ -362,7 +362,7 @@ function getStats () {
 		cases new: ${ rowCasesNew.toLocaleString() }<br>
 		deaths: ${ rowDeaths.toLocaleString() }<br>
 		recoveries: ${ rowRecoveries.toLocaleString() }<br>
-		deaths/cases %: ${ rowDeathsToCases.toLocaleString() }<br>
+		deaths/cases: ${ rowDeathsToCases.toLocaleString() }%<br>
 	</p>
 
 	</details>`;

@@ -86,7 +86,6 @@ Medium Term
 * Global statistics displayed in-world
 * Translations with workflow for producing translations
 * Better geoJson parsee JavaScript function
-* Restart rotation + zoom - 3D Lissajous path - after a period of no-interaction
 
 Vision of the future
 
@@ -99,6 +98,7 @@ Vision of the future
 * Add "expressions of hope" such as positive tweets?
 * Sun path? Mountains? Flamingos and dolphins?
 * Dark mode? Themes? Mid-century modern, Burner, pixelated
+* Rotation + zoom - 3D Lissajous path
 
 </details>
 
@@ -192,6 +192,9 @@ v-2020-03-20-13-30
 * Global stats: add Europe and rest of world
 * Add resume autoRotate
 
+Done
+
+* Restart rotation - after a period of no-interaction
 
 ### 2020-03-19 ~ Theo
 

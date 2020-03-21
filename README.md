@@ -21,12 +21,14 @@ _covid 19 viz 3d - touch me!_
 The concept of the web page is to show you the current COVID-19 situation around the entire world in 3 seconds or less.
 
 * View the latest COVID-19 data from John Hopkins University [GitHub repository]( https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data ) with interactive 3D
-* Provide entry-level programming code anybody can copy and make better
-* Display all the data in seconds on any device then zoom and rotate and click to see the cases in 3D
+Provide entry-level programming code - plain-vanilla JavaScript - anybody can copy and make better
+Display all the data in seconds on any device then zoom and rotate and click to see the cases in 3D
 
 Mentions
 
+* https://discourse.ladybug.tools/t/spider-covid-19-viz-3d-web-page-updated-2020-03-17/8697/2
 * https://www.reddit.com/r/COVID19/comments/fkjby9/view_the_latest_covid19_numbers_from_around_the/
+* https://discourse.threejs.org/t/covid-19-viz-3d-interactive-3d-globe/13613/8
 
 Features
 
@@ -61,6 +63,8 @@ The text is huge and leaves much white space. This is so you are not totally dis
 * Community transmission vs traveller transmission
 	* Data in WHO PDF file hard to parse
 * a growing percentage affected per day of each country's population rather than cases detected if we're separating it out by country.
+* Set limits so cannot fo too far morth or south
+* only show new cases and hide the other stats?
 
 From Reddit
 

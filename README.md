@@ -190,7 +190,7 @@ v-2020-03-20-13-30
 * Make Null Island a better test case
 * Pop-up: not show places if empty string
 * Global stats: add Europe and rest of world
-
+* Add resume autoRotate
 
 
 ### 2020-03-19 ~ Theo

@@ -7,7 +7,7 @@
 let THR = {};
 
 THR.group = new THREE.Group();
-
+THR.suspendTimer = undefined;
 
 
 THR.init = function () {
@@ -45,9 +45,14 @@ THR.init = function () {
 	window.addEventListener( 'orientationchange', THR.onWindowResize, false );
 
 	window.addEventListener( 'keydown', THR.onStart );
-	renderer.domElement.addEventListener( 'wheel', THR.onStart );
+
 	renderer.domElement.addEventListener( 'mousedown', THR.onStart );
+	renderer.domElement.addEventListener( 'mousemove', THR.onStart );
+	renderer.domElement.addEventListener( 'wheel', THR.onStart );
+
 	renderer.domElement.addEventListener( 'touchstart', THR.onStart );
+	renderer.domElement.addEventListener( 'touchmove', THR.onStart );
+	renderer.domElement.addEventListener( 'touchend', THR.onStart );
 
 	THR.camera = camera; THR.scene = scene; THR.renderer = renderer; THR.controls = controls;
 
@@ -70,12 +75,11 @@ THR.onLoad = function ( event ) {
 
 THR.onStart = function () {
 
-	controls.autoRotate = false;
+	clearInterval( THR.suspendTimer );
 
-	window.removeEventListener( 'keydown', THR.onStart );
-	THR.renderer.domElement.removeEventListener( 'heel', THR.onStart );
-	THR.renderer.domElement.removeEventListener( 'mousedown', THR.onStart );
-	THR.renderer.domElement.removeEventListener( 'touchstart', THR.onStart );
+	THR.controls.autoRotate = false;
+
+	THR.suspendTimer = setTimeout( () => { THR.controls.autoRotate = true; }, 5000 );
 
 };
 

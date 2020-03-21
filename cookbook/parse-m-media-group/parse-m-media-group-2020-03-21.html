@@ -288,7 +288,7 @@ function drawChart( arr ) {
 	const bars = arr.map( ( item, index )=>
 
 	`<div style="background-color: gray; color: white; margin-top:1px; width:${ scale * item }px;"
-		title="date: ${ dateStrings[ index ] } - cases: ${ item }">${ item.toLocaleString() }</div>` ).join( "");
+		title="date: ${ dateStrings[ index ] }">${ item.toLocaleString() }</div>` ).join( "");
 
 	divChartMmg.innerHTML = bars;
 

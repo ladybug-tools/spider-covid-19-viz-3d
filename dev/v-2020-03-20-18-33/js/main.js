@@ -353,7 +353,7 @@ function getStats () {
 		cases new: ${ usaCasesNew.toLocaleString() }<br>
 		deaths: ${ usaDeaths.toLocaleString() }<br>
 		recoveries: ${ usaRecoveries.toLocaleString() }<br>
-		deaths/cases: ${ usaDeathsToCases.toLocaleString() }$<br>
+		deaths/cases: ${ usaDeathsToCases.toLocaleString() }%<br>
 	</p>
 
 	<p>
@@ -362,7 +362,7 @@ function getStats () {
 		cases new: ${ rowCasesNew.toLocaleString() }<br>
 		deaths: ${ rowDeaths.toLocaleString() }<br>
 		recoveries: ${ rowRecoveries.toLocaleString() }<br>
-		deaths/cases: ${ rowDeathsToCases.toLocaleString() }$<br>
+		deaths/cases: ${ rowDeathsToCases.toLocaleString() }%<br>
 	</p>
 
 	</details>`;

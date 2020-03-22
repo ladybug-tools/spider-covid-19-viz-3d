@@ -21,7 +21,7 @@ NCD.init = function () {
 	<summary><b>New cases by date</b> Most recent at top</summary>
 	<div id=NCDdivStats ></div>
 
-	<div id=NCDdivChartMmg style="border: 1px red solid; height: 30ch; overflow: auto; resize: both;" ></div>
+	<div id=NCDdivChartMmg style="border: 0px red solid; height: 30ch; overflow: auto; resize: both;" ></div>
 
 	<div><small>
 		Data credit: <a href="https://mmediagroup.fr" target="_blank">https://mmediagroup.fr</a>
@@ -85,10 +85,6 @@ NCD.getCountries = function () {
 	} );
 
 	places.sort();
-
-	//selCountry.innerHTML = places.map( item => `<option>${ item }</option>` );
-
-	//selCountry.selectedIndex = Math.floor( Math.random() * places.length );
 
 };
 

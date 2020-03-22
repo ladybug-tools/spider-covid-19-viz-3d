@@ -99,7 +99,7 @@ NCD.getDates = function ( country = "France" ) {
 	const countryData = NCD.json[ country ];
 	//console.log( 'countryData', countryData );
 
-	if ( !countryData ) { divChartMmg.innerHTML = "no case data"; return; }
+	if ( !countryData ) { NCDdivChartMmg.innerHTML = "no case data"; return; }
 
 	if ( Array.isArray( countryData.All ) === false ) {
 
@@ -147,7 +147,6 @@ NCD.drawChart = function ( arr ) {
 		title="date: ${ dateStrings[ index ] }">${ item.toLocaleString() }</div>` ).join( "" );
 
 	NCDdivChartMmg.innerHTML = bars;
-
 
 };
 

@@ -323,7 +323,7 @@ function getStats () {
 	<p>
 		<b>global totals</b><br>
 		cases: ${ globalCases.toLocaleString() }<br>
-		cases new: ${ globalCasesNew.toLocaleString() }<br>
+		cases today: ${ globalCasesNew.toLocaleString() }<br>
 		deaths: ${ globalDeaths.toLocaleString() }<br>
 		recoveries: ${ globalRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ globalDeathsToCases.toLocaleString() }%<br>
@@ -332,7 +332,7 @@ function getStats () {
 	<p>
 		<b>China totals</b><br>
 		cases: ${ chinaCases.toLocaleString() }<br>
-		cases new: ${ chinaCasesNew.toLocaleString() }<br>
+		cases today: ${ chinaCasesNew.toLocaleString() }<br>
 		deaths: ${ chinaDeaths.toLocaleString() }<br>
 		recoveries: ${ chinaRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%<br>
@@ -341,7 +341,7 @@ function getStats () {
 	<p>
 	<b>Europe totals</b><br>
 		cases: ${ europeCases.toLocaleString() }<br>
-		cases new: ${ europeCasesNew.toLocaleString() }<br>
+		cases today: ${ europeCasesNew.toLocaleString() }<br>
 		deaths: ${ chinaDeaths.toLocaleString() }<br>
 		recoveries: ${ europeRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ europeDeathsToCases.toLocaleString() }%<br>
@@ -350,7 +350,7 @@ function getStats () {
 	<p>
 		<b>USA totals</b><br>
 		cases: ${ usaCases.toLocaleString() }<br>
-		cases new: ${ usaCasesNew.toLocaleString() }<br>
+		cases today: ${ usaCasesNew.toLocaleString() }<br>
 		deaths: ${ usaDeaths.toLocaleString() }<br>
 		recoveries: ${ usaRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ usaDeathsToCases.toLocaleString() }%<br>
@@ -359,7 +359,7 @@ function getStats () {
 	<p>
 		<b>rest of world totals</b><br>
 		cases: ${ rowCases.toLocaleString() }<br>
-		cases new: ${ rowCasesNew.toLocaleString() }<br>
+		cases today: ${ rowCasesNew.toLocaleString() }<br>
 		deaths: ${ rowDeaths.toLocaleString() }<br>
 		recoveries: ${ rowRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ rowDeathsToCases.toLocaleString() }%<br>
@@ -546,7 +546,7 @@ function onDocumentMouseMove ( event ) {
 country: ${ line[ 1 ] }<br>
 update: ${ line[ 2 ] }<br>
 cases: ${ Number( line[ 3 ] ).toLocaleString() }<br>
-cases new: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
+cases today: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
 deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
 recoveries: ${ Number( line[ 5 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }%<br>

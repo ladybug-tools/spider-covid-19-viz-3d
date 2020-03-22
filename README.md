@@ -6,7 +6,6 @@ value='You are now in a GitHub web page view - Click this button to view this re
 
 # [covid 19 viz 3d Read Me]( #README.md )
 
-
 <iframe src=https://ladybug-tools.github.io/spider-covid-19-viz-3d/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
 _covid 19 viz 3d - touch me!_
 
@@ -27,31 +26,53 @@ Display all the data in seconds on any device then zoom and rotate and click to 
 
 Mentions
 
+* https://twitter.com/electricdisk/status/1240735764071288837
 * https://discourse.ladybug.tools/t/spider-covid-19-viz-3d-web-page-updated-2020-03-17/8697/2
 * https://www.reddit.com/r/COVID19/comments/fkjby9/view_the_latest_covid19_numbers_from_around_the/
 * https://discourse.threejs.org/t/covid-19-viz-3d-interactive-3d-globe/13613/8
 
-Features
+Influences on the featurues
+
+### [Issue #5 Expressions of hope]( https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5 )
+
+> @loleg I'm not sure how best to describe this, but what I wish for in an interactive viz like this, is the ability to discover what's hot and happening "out there". For example, the home page of gitter.im has more or less live messages from around the world. I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world.
+
 
 Sky Box as an "Expression of Hope"
 
 * Zoom out then rotate. Trying to read the messages is a little guessing game.
 * The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
 
+Messages of hope to add
+
+* “Do what you can, where you are, with what you have.”
+
+#### Burning Man / Wikd Wild West / Fair
+
+Most of the time I to create very simple, clean user experiences. Think Google's Material Design and Apple. I generally build tech stuff for techies.
+
+But this is different. We want oldsters and children, tech and non-techies involved. We are seeing thus with painting abd drawing - a move from abstract to figurative, from minimal to pop-surreal.
+
+The idea is to re-imagine the "chart", to turn the representation of quantities into more than mere the calligraphic scrawls we call "numbers".
+
+
+### Love and Hate with the Earth as a globe
+
+Some of the great things about the globe is that yoo know what to do with it. You can spin it, You know the top and bottom bits are kind of boring and not much happens there. You know where you live.
+
+On the other hand, the Pacific Ocean takes half the space and there's nothing there eithr. And whenever ther places of interest there tend to be a ton of then and it's very difficult to attach a sign to one place without covering up the next place.
+
+
+
+
+
+
+
 </details>
 
 <details open >
 <summary>To do and wish list </summary>
 
-### [Issue #5 Expressions of hope]( https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5 )
-
-> @loleg I'm not sure how best to describe this, but what I wish for in an interactive viz like this, is the ability to discover what's hot and happening "out there". For example, the home page of gitter.im has more or less live messages from around the world. I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world.
-
-New version uses the dky box to post hopeful messages
-
-Zoom out then rotate. Trying to read the messages is a little guessing game.
-
-The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
 
 ### Generally
 
@@ -64,7 +85,7 @@ The text is huge and leaves much white space. This is so you are not totally dis
 * Community transmission vs traveller transmission
 	* Data in WHO PDF file hard to parse
 * a growing percentage affected per day of each country's population rather than cases detected if we're separating it out by country.
-* Set limits so cannot fo too far morth or south
+* Set limits so cannot go too far morth or south
 * only show new cases and hide the other stats?
 
 From Reddit
@@ -90,7 +111,7 @@ Medium Term
 
 * Global statistics displayed in-world
 * Translations with workflow for producing translations
-* Better geoJson parsee JavaScript function
+* Better geoJson parser JavaScript function
 
 Vision of the future
 
@@ -144,6 +165,7 @@ Dependencies
 
 Other 3D visualizations of the COVID-19 data
 
+* https://icao.maps.arcgis.com/apps/webappviewer3d/index.html?id=d9d3f8fa9a23425c8f0889baab626186
 * https://earth3dmap.com/coronavirus-interactive-global-map/
 * https://coronation.xyz/
 * https://covid19.martinpham.com/

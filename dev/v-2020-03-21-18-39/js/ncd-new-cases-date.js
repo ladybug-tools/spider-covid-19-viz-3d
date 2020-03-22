@@ -17,15 +17,19 @@ NCD.init = function () {
 	NCD.requestFile( urlCORS + url, NCD.onLoadMMG );
 
 	NCDdivNewCasesDate.innerHTML = `
-	<div><b>New cases by date</b> Most recent at top</div>
+	<details id=detNCD >
+	<summary><b>New cases by date</b> Most recent at top</summary>
 	<div id=NCDdivStats ></div>
 
-	<div id=NCDdivChartMmg style="height: 30ch; overflow: auto; resize: both;" ></div>
+	<div id=NCDdivChartMmg style="border: 1px red solid; height: 30ch; overflow: auto; resize: both;" ></div>
 
 	<div><small>
 		Data credit: <a href="https://mmediagroup.fr" target="_blank">https://mmediagroup.fr</a>
 	</small></div>
+	</details>
 	`;
+
+	detNCD.open = window.innerWidth > 640;
 
 };
 

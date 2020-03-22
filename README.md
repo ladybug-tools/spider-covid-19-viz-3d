@@ -31,7 +31,7 @@ Mentions
 * https://www.reddit.com/r/COVID19/comments/fkjby9/view_the_latest_covid19_numbers_from_around_the/
 * https://discourse.threejs.org/t/covid-19-viz-3d-interactive-3d-globe/13613/8
 
-Influences on the featurues
+## Influences on the featurues
 
 ### [Issue #5 Expressions of hope]( https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5 )
 
@@ -47,9 +47,9 @@ Messages of hope to add
 
 * “Do what you can, where you are, with what you have.”
 
-#### Burning Man / Wikd Wild West / Fair
+### Burning Man / Wikd Wild West / Fair
 
-Most of the time I to create very simple, clean user experiences. Think Google's Material Design and Apple. I generally build tech stuff for techies.
+Most of the time I try to create very simple, clean user experiences. Think Google's Material Design and Apple. I generally build tech stuff for techies.
 
 But this is different. We want oldsters and children, tech and non-techies involved. We are seeing thus with painting abd drawing - a move from abstract to figurative, from minimal to pop-surreal.
 

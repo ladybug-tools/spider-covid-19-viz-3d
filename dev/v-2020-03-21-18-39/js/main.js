@@ -537,6 +537,7 @@ function onDocumentMouseMove ( event ) {
 
 			const casesNew = line[ 8 ] ? line[ 8 ] : 0;
 
+			detNCD.hidden = false;
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
@@ -567,6 +568,7 @@ deaths/gdp: ${ d2Gdp }<br>
 		intersected = null;
 		divMessage.hidden = true;
 		divMessage.innerHTML = "";
+		detNCD.hidden = true;
 
 	}
 

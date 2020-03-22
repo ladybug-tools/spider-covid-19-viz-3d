@@ -17,7 +17,7 @@ NCD.init = function () {
 	NCD.requestFile( urlCORS + url, NCD.onLoadMMG );
 
 	NCDdivNewCasesDate.innerHTML = `
-	<details id=detNCD >
+	<details id=detNCD hidden>
 	<summary><b>New cases by date</b> Most recent at top</summary>
 	<div id=NCDdivStats ></div>
 

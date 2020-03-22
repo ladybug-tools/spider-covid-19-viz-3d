@@ -582,7 +582,7 @@ function onDocumentMouseMove ( event ) {
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `JHU data<br<br>
+			divMessage.innerHTML = `JHU data<br?
 			${ ( line[ 0 ] ? "place: " + line[ 0 ] + "<br>" : "" ) }
 country: ${ line[ 1 ] }<br>
 update: ${ line[ 2 ] }<br>

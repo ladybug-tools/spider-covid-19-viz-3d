@@ -209,6 +209,16 @@ geoJson useful
 <details open >
 <summary>Change log </summary>
 
+### 2020-03-22 ~ Theo
+
+version: 2020-03-22-13-09
+
+* Add separate groups for each case type
+* convert legend to buttons
+* Add global stats to buttons
+* Move MMG data to pop-up
+* Update dev index
+
 ### 2020-03-21 ~ Theo
 
 COVID-19 New Cases by Date

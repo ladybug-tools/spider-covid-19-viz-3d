@@ -388,49 +388,56 @@ function getStats () {
 	scene.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
 
 
-	// divStats.innerHTML = `<details id=detStats>
+	divStats.innerHTML = `<details id=detStats>
 
-	// <summary><b>global statistics</b></summary>
+	<summary><b>global statistics</b></summary>
 
-	// <p>global deaths/cases: ${ globalDeathsToCases.toLocaleString() }%</p>
+	<p>
+		<b>global totals</b><br>
+		cases: ${ globalCases.toLocaleString() }<br>
+		cases today: ${ globalCasesNew.toLocaleString() }<br>
+		deaths: ${ globalDeaths.toLocaleString() }<br>
+		recoveries: ${ globalRecoveries.toLocaleString() }<br>
+		deaths/cases: ${ globalDeathsToCases.toLocaleString() }%<br>
+	</p>
 
-	// <p>
-	// 	<b>China totals</b><br>
-	// 	cases: ${ chinaCases.toLocaleString() }<br>
-	// 	cases today: ${ chinaCasesNew.toLocaleString() }<br>
-	// 	deaths: ${ chinaDeaths.toLocaleString() }<br>
-	// 	recoveries: ${ chinaRecoveries.toLocaleString() }<br>
-	// 	deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%<br>
-	// </p>
+	<p>
+		<b>China totals</b><br>
+		cases: ${ chinaCases.toLocaleString() }<br>
+		cases today: ${ chinaCasesNew.toLocaleString() }<br>
+		deaths: ${ chinaDeaths.toLocaleString() }<br>
+		recoveries: ${ chinaRecoveries.toLocaleString() }<br>
+		deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%<br>
+	</p>
 
-	// <p>
-	// <b>Europe totals</b><br>
-	// 	cases: ${ europeCases.toLocaleString() }<br>
-	// 	cases today: ${ europeCasesNew.toLocaleString() }<br>
-	// 	deaths: ${ chinaDeaths.toLocaleString() }<br>
-	// 	recoveries: ${ europeRecoveries.toLocaleString() }<br>
-	// 	deaths/cases: ${ europeDeathsToCases.toLocaleString() }%<br>
-	// </p>
+	<p>
+	<b>Europe totals</b><br>
+		cases: ${ europeCases.toLocaleString() }<br>
+		cases today: ${ europeCasesNew.toLocaleString() }<br>
+		deaths: ${ chinaDeaths.toLocaleString() }<br>
+		recoveries: ${ europeRecoveries.toLocaleString() }<br>
+		deaths/cases: ${ europeDeathsToCases.toLocaleString() }%<br>
+	</p>
 
-	// <p>
-	// 	<b>USA totals</b><br>
-	// 	cases: ${ usaCases.toLocaleString() }<br>
-	// 	cases today: ${ usaCasesNew.toLocaleString() }<br>
-	// 	deaths: ${ usaDeaths.toLocaleString() }<br>
-	// 	recoveries: ${ usaRecoveries.toLocaleString() }<br>
-	// 	deaths/cases: ${ usaDeathsToCases.toLocaleString() }%<br>
-	// </p>
+	<p>
+		<b>USA totals</b><br>
+		cases: ${ usaCases.toLocaleString() }<br>
+		cases today: ${ usaCasesNew.toLocaleString() }<br>
+		deaths: ${ usaDeaths.toLocaleString() }<br>
+		recoveries: ${ usaRecoveries.toLocaleString() }<br>
+		deaths/cases: ${ usaDeathsToCases.toLocaleString() }%<br>
+	</p>
 
-	// <p>
-	// 	<b>rest of world totals</b><br>
-	// 	cases: ${ rowCases.toLocaleString() }<br>
-	// 	cases today: ${ rowCasesNew.toLocaleString() }<br>
-	// 	deaths: ${ rowDeaths.toLocaleString() }<br>
-	// 	recoveries: ${ rowRecoveries.toLocaleString() }<br>
-	// 	deaths/cases: ${ rowDeathsToCases.toLocaleString() }%<br>
-	// </p>
+	<p>
+		<b>rest of world totals</b><br>
+		cases: ${ rowCases.toLocaleString() }<br>
+		cases today: ${ rowCasesNew.toLocaleString() }<br>
+		deaths: ${ rowDeaths.toLocaleString() }<br>
+		recoveries: ${ rowRecoveries.toLocaleString() }<br>
+		deaths/cases: ${ rowDeathsToCases.toLocaleString() }%<br>
+	</p>
 
-	// </details>`;
+	</details>`;
 
 	//detStats.open = window.innerWidth > 640;
 

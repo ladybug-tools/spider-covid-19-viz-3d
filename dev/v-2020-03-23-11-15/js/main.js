@@ -689,10 +689,10 @@ function onDocumentMouseMove ( event ) {
 			const tots = NCD.getDates( country, place );
 			const bars = NCD.bars;
 
-			const arr = geoJson.features.filter( feature => feature.properties.NAME === place );
-
+			const arr = geoJson.features.filter( feature => feature.properties.NAME === country );
+			console.log( 'arr', arr );
 			const feature = arr.length ? arr[ 0 ] : undefined;
-			//console.log( 'feature', feature );
+			console.log( 'feature', feature );
 
 			let d2Pop, d2Gdp;
 

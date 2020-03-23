@@ -219,6 +219,14 @@ version: 2020-03-22-13-09
 * Move MMG data to pop-up
 * Update dev index
 
+v-2020-03-22-15-15
+
+* Add content to Notes & Settings ontoggle
+* Add THR.drawPlacard()
+* Add global stats in-world
+
+
+
 ### 2020-03-21 ~ Theo
 
 COVID-19 New Cases by Date

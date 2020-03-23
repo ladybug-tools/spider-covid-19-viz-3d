@@ -324,57 +324,115 @@ function getStats () {
 	const rowRecoveries = globalRecoveries - chinaRecoveries - europeRecoveries - usaRecoveries;
 	const rowDeathsToCases = 100 * ( rowDeaths / rowCases );
 
-	butNew.innerHTML += globalCasesNew.toLocaleString();
-	butCases.innerHTML += globalCases.toLocaleString();
-	butDeaths.innerHTML += globalDeaths.toLocaleString();
-	butRecoveries.innerHTML += globalRecoveries.toLocaleString();
+	// butNew.innerHTML += globalCasesNew.toLocaleString();
+	// butCases.innerHTML += globalCases.toLocaleString();
+	// butDeaths.innerHTML += globalDeaths.toLocaleString();
+	// butRecoveries.innerHTML += globalRecoveries.toLocaleString();
 
-	divStats.innerHTML = `<details id=detStats>
+	// [text], scale, color, x, y, z )
+	scene.add( THR.drawPlacard( "Null Island", "0.01", 1, 60, 0, 0 ) );
+
+	const totalsGlobal = [
+		`Global`,
+		`cases: ${ globalCases.toLocaleString() }`,
+		`cases today: ${ globalCasesNew.toLocaleString() }`,
+		`deaths: ${ globalDeaths.toLocaleString() }`,
+		`recoveries: ${ globalRecoveries.toLocaleString() }`,
+		`deaths/cases: ${ globalDeathsToCases.toLocaleString() }%`
+	];
+	vGlo = latLonToXYZ( 55, 90, 0 );
+	scene.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
+
+	const totalsChina = [
+		`China`,
+		`cases: ${ chinaCases.toLocaleString() }`,
+		`cases today: ${ chinaCasesNew.toLocaleString() }`,
+		`deaths: ${ chinaDeaths.toLocaleString() }`,
+		`recoveries: ${ chinaRecoveries.toLocaleString() }`,
+		`deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%`
+	];
+	vChi = latLonToXYZ( 70, 50, 110 );
+	scene.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
+
+	const totalsEurope = [
+		`Europe`,
+		`cases: ${ europeCases.toLocaleString() }`,
+		`cases today: ${ europeCasesNew.toLocaleString() }`,
+		`deaths: ${ europeDeaths.toLocaleString() }`,
+		`recoveries: ${ europeRecoveries.toLocaleString() }`,
+		`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
+	];
+	const vEur = latLonToXYZ( 70, 60, 25 );
+	scene.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
+
+	const totalsUsa = [
+		`USA`,
+		`cases: ${ usaCases.toLocaleString() }`,
+		`cases today: ${ usaCasesNew.toLocaleString() }`,
+		`deaths: ${ usaDeaths.toLocaleString() }`,
+		`recoveries: ${ usaRecoveries.toLocaleString() }`,
+		`deaths/cases: ${ usaDeathsToCases.toLocaleString() }%`
+	];
+	const vUsa = latLonToXYZ( 70, 40, -120 );
+	scene.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
+
+	const totalsRow = [
+		`Rest of World`,
+		`cases: ${ rowCases.toLocaleString() }`,
+		`cases today: ${ rowCasesNew.toLocaleString() }`,
+		`deaths: ${ rowDeaths.toLocaleString() }`,
+		`recoveries: ${ rowRecoveries.toLocaleString() }`,
+		`deaths/cases: ${ rowDeathsToCases.toLocaleString() }%`
+	];
+	const vRow = latLonToXYZ( 70, 23, 180 );
+	scene.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
 
 
-	<summary><b>global statistics</b></summary>
+	// divStats.innerHTML = `<details id=detStats>
 
-	<p>global deaths/cases: ${ globalDeathsToCases.toLocaleString() }%</p>
+	// <summary><b>global statistics</b></summary>
 
-	<p>
-		<b>China totals</b><br>
-		cases: ${ chinaCases.toLocaleString() }<br>
-		cases today: ${ chinaCasesNew.toLocaleString() }<br>
-		deaths: ${ chinaDeaths.toLocaleString() }<br>
-		recoveries: ${ chinaRecoveries.toLocaleString() }<br>
-		deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%<br>
-	</p>
+	// <p>global deaths/cases: ${ globalDeathsToCases.toLocaleString() }%</p>
 
-	<p>
-	<b>Europe totals</b><br>
-		cases: ${ europeCases.toLocaleString() }<br>
-		cases today: ${ europeCasesNew.toLocaleString() }<br>
-		deaths: ${ chinaDeaths.toLocaleString() }<br>
-		recoveries: ${ europeRecoveries.toLocaleString() }<br>
-		deaths/cases: ${ europeDeathsToCases.toLocaleString() }%<br>
-	</p>
+	// <p>
+	// 	<b>China totals</b><br>
+	// 	cases: ${ chinaCases.toLocaleString() }<br>
+	// 	cases today: ${ chinaCasesNew.toLocaleString() }<br>
+	// 	deaths: ${ chinaDeaths.toLocaleString() }<br>
+	// 	recoveries: ${ chinaRecoveries.toLocaleString() }<br>
+	// 	deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%<br>
+	// </p>
 
-	<p>
-		<b>USA totals</b><br>
-		cases: ${ usaCases.toLocaleString() }<br>
-		cases today: ${ usaCasesNew.toLocaleString() }<br>
-		deaths: ${ usaDeaths.toLocaleString() }<br>
-		recoveries: ${ usaRecoveries.toLocaleString() }<br>
-		deaths/cases: ${ usaDeathsToCases.toLocaleString() }%<br>
-	</p>
+	// <p>
+	// <b>Europe totals</b><br>
+	// 	cases: ${ europeCases.toLocaleString() }<br>
+	// 	cases today: ${ europeCasesNew.toLocaleString() }<br>
+	// 	deaths: ${ chinaDeaths.toLocaleString() }<br>
+	// 	recoveries: ${ europeRecoveries.toLocaleString() }<br>
+	// 	deaths/cases: ${ europeDeathsToCases.toLocaleString() }%<br>
+	// </p>
 
-	<p>
-		<b>rest of world totals</b><br>
-		cases: ${ rowCases.toLocaleString() }<br>
-		cases today: ${ rowCasesNew.toLocaleString() }<br>
-		deaths: ${ rowDeaths.toLocaleString() }<br>
-		recoveries: ${ rowRecoveries.toLocaleString() }<br>
-		deaths/cases: ${ rowDeathsToCases.toLocaleString() }%<br>
-	</p>
+	// <p>
+	// 	<b>USA totals</b><br>
+	// 	cases: ${ usaCases.toLocaleString() }<br>
+	// 	cases today: ${ usaCasesNew.toLocaleString() }<br>
+	// 	deaths: ${ usaDeaths.toLocaleString() }<br>
+	// 	recoveries: ${ usaRecoveries.toLocaleString() }<br>
+	// 	deaths/cases: ${ usaDeathsToCases.toLocaleString() }%<br>
+	// </p>
 
-	</details>`;
+	// <p>
+	// 	<b>rest of world totals</b><br>
+	// 	cases: ${ rowCases.toLocaleString() }<br>
+	// 	cases today: ${ rowCasesNew.toLocaleString() }<br>
+	// 	deaths: ${ rowDeaths.toLocaleString() }<br>
+	// 	recoveries: ${ rowRecoveries.toLocaleString() }<br>
+	// 	deaths/cases: ${ rowDeathsToCases.toLocaleString() }%<br>
+	// </p>
 
-	detStats.open = window.innerWidth > 640;
+	// </details>`;
+
+	//detStats.open = window.innerWidth > 640;
 
 }
 
@@ -382,44 +440,54 @@ function getStats () {
 
 function getSettings () {
 
-	divSettings.innerHTML = `<details id=detSettings>
+	divSettings.innerHTML = `<details id=detSettings ontoggle=getSettingsContent() >
 
 		<summary><b>notes & settings</b></summary>
 
-		<p><i>Why are there messages in the background?</i></p>
-		<p>
-			An early visitor to our tracker raised this issue
-			"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
-			Oleg askeg "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
-		</p>
-
-		<p>
-			What you see is our first attempt to give Oleg some delight.<br>
-			&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
-			&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
-		</p>
-
-		<hr>
-
-		<p>US States new cases data coming soon</p
-		>
-		<p>Black bar flare indicates high deaths to cases ratio.</p>
-
-		<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
-
-		<p>
-			Not all populations and GDPs are reported.
-		</p>
-
-		<p>
-			<button onclick=controls.reset() >reset view</button>
-			<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
-		</p>
+		<div id=divNoteSettings ></div>
 
 	</details>`;
 
 }
 
+
+
+function getSettingsContent () {
+
+
+	divNoteSettings.innerHTML =`
+
+	<p><i>Why are there messages in the background?</i></p>
+	<p>
+		An early visitor to our tracker raised this issue
+		"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
+		Oleg askeg "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
+	</p>
+
+	<p>
+		What you see is our first attempt to give Oleg some delight.<br>
+		&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
+		&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
+	</p>
+
+	<hr>
+
+	<p>US States new cases data coming soon</p
+	>
+	<p>Black bar flare indicates high deaths to cases ratio.</p>
+
+	<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
+
+	<p>
+		Not all populations and GDPs are reported.
+	</p>
+
+	<p>
+		<button onclick=controls.reset() >reset view</button>
+		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
+	</p>`;
+
+}
 
 
 

@@ -65,51 +65,23 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 
 
 
-
-
-
 </details>
 
 <details open >
 <summary>To do and wish list </summary>
 
 
-### Generally
+### Generally / Short term
 
-* Show some item of interest at the top of each indicator
-	* As in all classical columns have a capital
-	* Country or state flag?
-	* Placards over each bar showing country & cases?
+* Better display of text in placards??
+* Location hash goes to place and set language and other aspects
 * Globe rotates to the lat/lon indicated by your browser location
 * Days since last new case indicated as color or opacity
-* Community transmission vs traveller transmission
-	* Data in WHO PDF file hard to parse
-* a growing percentage affected per day of each country's population rather than cases detected if we're separating it out by country.
-* Set limits so cannot go too far morth or south
-* only show new cases and hide the other stats?
+* Dark mode?
 
-From Reddit
 
-> Why do the death "black sleeves" look far bigger than the actual numbers suggest?
+### Medium Term
 
-My answer
-The actual reason is that - currently - the heights are scaled via a square root of the number in question. This means bigger numbers are drawn much smaller than they really are.
-
-If this were a 2D chart -it would be easy to have gridlines and legends that indicated the scaling, but this is not so easy to show in 3D,
-
-And therefore - as your sharp eyes have pointed out - the indicated relations between cases and deaths appear to be wacky. My bad.
-
-I think a better idea might be to calculate the height of the cases and then calculate the height of the deaths as: casesHeight * deathCount / casesCount
-
-***
-
->> new cases in the past day.
-> divided by the new cases the previous day. More cases is interesting, but far more interesting (to me, anyway) is that if it's increasing.
-> I'd suggest the derivative of the above as well, as I'd like to know if the rate of growth is increasing or decreasing, but I might be the only one that would find that interesting.
-
-Medium Term
-
-* Global statistics displayed in-world
 * Translations with workflow for producing translations
 * Better geoJson parser JavaScript function
 
@@ -119,12 +91,25 @@ Vision of the future
 * separate timeline pages
 * web pages for counties/provinces
 * Add sound/music? During mouseover and at mouse click or data update
-* Add text to speech commentary
 * Refresh data every few minutes
-* Add "expressions of hope" such as positive tweets?
+* Add "expressions of hope" such as positive tweets - in language?
 * Sun path? Mountains? Flamingos and dolphins?
-* Dark mode? Themes? Mid-century modern, Burner, pixelated
+* Themes? Mid-century modern, Burner, pixelated
 * Rotation + zoom - 3D Lissajous path
+* Show some item of interest at the top of each indicator
+	* As in all classical columns have a capital
+	* Country or state flag?
+	* Placards over each bar showing country & cases?
+* Community transmission vs traveller transmission
+	* Data in WHO PDF file hard to parse
+* a growing percentage affected per day of each country's population rather than cases detected if we're separating it out by country.
+* Set limits so cannot go too far north or south
+
+
+>> new cases in the past day.
+> divided by the new cases the previous day. More cases is interesting, but far more interesting (to me, anyway) is that if it's increasing.
+> I'd suggest the derivative of the above as well, as I'd like to know if the rate of growth is increasing or decreasing, but I might be the only one that would find that interesting.
+
 
 </details>
 
@@ -155,6 +140,7 @@ Data sources
 	* https://opendata.arcgis.com/datasets/bbb2e4f589ba40d692fab712ae37b9ac_1.csv
 	* https://mmediagroup.fr/covid-19
 * https://nssac.bii.virginia.edu/covid-19/dashboard/
+* http://globalcovid19.live/index.php/148-2/
 
 
 Dependencies
@@ -169,6 +155,13 @@ Other 3D visualizations of the COVID-19 data
 * https://earth3dmap.com/coronavirus-interactive-global-map/
 * https://coronation.xyz/
 * https://covid19.martinpham.com/
+
+
+
+Geolocation
+
+* https://www.w3schools.com/html/html5_geolocation.asp
+* https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
 
 Globes
 
@@ -209,6 +202,46 @@ geoJson useful
 <details open >
 <summary>Change log </summary>
 
+### 2020-03-23 ~ Theo
+
+version: 2020-03-23
+
+* main.js > path to pathDataJhu
+* html > add class to legend buttons
+* Cleanup addIndicator() a lot
+	* In response to [Why do the death "black sleeves" look far bigger than the actual numbers suggest?]( https://www.reddit.com/r/COVID19/comments/fkjby9/view_the_latest_covid19_numbers_from_around_the/fkzo1nk )
+* Cleanup addIndicatorNew a little
+* Stop rotation Add THR.onStop()
+* html > add class to footer buttons
+* Make placards opaque - improves fps and image quality slightly
+* Change pop-up display from mouseover to mousedown
+	* computer matches phone / touch behavior
+	* enables you to see date and count of new cases bars in popup
+* pop-up display set fro renderer.domElement instead of document
+	* enables interaction with pop-up
+* Drop buttons from notes and settings
+* Change to MMG data? Add mmg credit to Info
+* Pop-ups many fixes
+* Splash screen > update text
+
+
+Done
+
+From Reddit
+
+> Why do the death "black sleeves" look far bigger than the actual numbers suggest?
+
+My answer
+The actual reason is that - currently - the heights are scaled via a square root of the number in question. This means bigger numbers are drawn much smaller than they really are.
+
+If this were a 2D chart -it would be easy to have gridlines and legends that indicated the scaling, but this is not so easy to show in 3D,
+
+And therefore - as your sharp eyes have pointed out - the indicated relations between cases and deaths appear to be wacky. My bad.
+
+I think a better idea might be to calculate the height of the cases and then calculate the height of the deaths as: casesHeight * deathCount / casesCount
+
+
+
 ### 2020-03-22 ~ Theo
 
 version: 2020-03-22-13-09
@@ -231,6 +264,12 @@ v-2020-03-22-18-30
 * Add back global statistics to left menu
 * Add footer with buttons
 
+Done
+
+* Toggle view of new, deaths etc
+* only show new cases and hide the other stats?
+* Add text to speech commentary
+* Global statistics displayed in-world
 
 
 ### 2020-03-21 ~ Theo

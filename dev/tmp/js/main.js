@@ -5,7 +5,7 @@
 // jshint loopfunc: true
 
 
-const pathAssets = "../assets/";
+let pathAssets = "../assets/";
 const path = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_daily_reports/";
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
@@ -16,30 +16,22 @@ const version = document.head.querySelector( "[ name=version ]" );
 sVersion.innerHTML = version ? version.content : "";
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 
-let group = new THREE.Group();
-let groupCases = new THREE.Group();
-let groupNew = new THREE.Group();
-let groupDeaths = new THREE.Group();
-let groupRecoveries = new THREE.Group();
-let groupPlacards = new THREE.Group();
-let groupLines = new THREE.Group();
 
-let geoJson;
+let lines;
+let json;
 let yesterday;
 let linesYesterday;
 let intersected;
-
+let group = new THREE.Group();
+let groupLines;
 let mesh;
-let scene, camera, controls, renderer;
+let renderer, camera, controls, scene;
 
-var synth = window.speechSynthesis;
-var voices = [];
 
 THR.init();
 THR.animate();
 
 init();
-
 
 
 
@@ -84,31 +76,6 @@ function init () {
 
 
 
-
-function sayThis( text = "Hello world! My fingers are crossed. I hope you will be here tomorrow") {
-
-	synth.cancel();
-
-	const utterThis = new SpeechSynthesisUtterance( text );
-
-	voices = voices.length ? voices : window.speechSynthesis.getVoices();
-
-	if ( voices.length > 0 ) {
-
-		const voice = voices.find( item => item.name === "Google UK English Female" );
-
-		const theDefault =  voices.find( item => item.default === true );
-
-		utterThis.voice = voice ? voice : theDefault;
-
-	}
-
-	synth.speak( utterThis );
-
-}
-
-
-
 function requestFile ( url, callback ) {
 
 	const xhr = new XMLHttpRequest();
@@ -144,14 +111,7 @@ function callbackDailyReport ( xhr ) {
 function onLoad ( xhr ) {
 
 	group = new THREE.Group();
-	groupCases = new THREE.Group();
-	groupNew = new THREE.Group();
-	groupDeaths = new THREE.Group();
-	groupRecoveries = new THREE.Group();
-	groupPlacards = new THREE.Group();
-	groupLines = new THREE.Group();
-
-	scene.add( group, groupCases, groupNew, groupDeaths, groupRecoveries, groupPlacards, groupLines );
+	scene.add( group );
 
 	let response = xhr.target.response;
 	response = response.replace( /"Korea, South"/, "South Korea" )
@@ -201,12 +161,12 @@ function addIndicator ( line, index ) {
 	let geometry = new THREE.CylinderGeometry( 0.4, 0.4, height );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	let material = new THREE.MeshPhongMaterial( { color: "red" } );
-	let mesh = new THREE.Mesh( geometry, material );
+	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );
 	mesh.userData = index;
 
-	groupCases.add( mesh );
+	group.add( mesh );
 
 
 	p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
@@ -224,7 +184,8 @@ function addIndicator ( line, index ) {
 	mesh.lookAt( p2 );
 	mesh.userData = index;
 
-	groupDeaths.add( mesh );
+
+	group.add( mesh );
 
 	p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
@@ -237,7 +198,7 @@ function addIndicator ( line, index ) {
 	mesh.lookAt( p2 );
 	mesh.userData = index;
 
-	groupRecoveries.add( mesh );
+	group.add( mesh );
 
 }
 
@@ -260,6 +221,8 @@ function addIndicatorNew ( line, index ) {
 	lines[ index ].push( casesNew );
 	//console.log( 'casesNew', casesNew, line );
 
+	group.add( mesh );
+
 	if ( casesNew < 1 ) { return; }
 
 	const heightCases = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 0 );
@@ -278,12 +241,12 @@ function addIndicatorNew ( line, index ) {
 	const geometry = new THREE.CylinderBufferGeometry( 0.45, 0.45 + heightRatio, height, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	const material = new THREE.MeshPhongMaterial( { color: "cyan", opacity: 0.8, side: 2, transparent: true } );
-	const mesh = new THREE.Mesh( geometry, material );
+	mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );
 	mesh.userData = index;
 
-	groupNew.add( mesh );
+	group.add( mesh );
 
 }
 
@@ -336,7 +299,7 @@ function getStats () {
 	const chinaDeathsToCases = 100 * chinaDeaths / chinaCases;
 
 	const europeDeaths = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ?
-		Number( line[ 4 ] ) : 0, 0 );
+	Number( line[ 4 ] ) : 0, 0 );
 	const europeCasesNew = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? line[ 8 ] : 0, 0 );
 	const europeCases = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ 3 ] ) : 0, 0 );
 	const europeRecoveries = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ 5 ] ) : 0, 0 );
@@ -354,78 +317,13 @@ function getStats () {
 	const rowRecoveries = globalRecoveries - chinaRecoveries - europeRecoveries - usaRecoveries;
 	const rowDeathsToCases = 100 * ( rowDeaths / rowCases );
 
-	// butNew.innerHTML += globalCasesNew.toLocaleString();
-	// butCases.innerHTML += globalCases.toLocaleString();
-	// butDeaths.innerHTML += globalDeaths.toLocaleString();
-	// butRecoveries.innerHTML += globalRecoveries.toLocaleString();
-
-	// [text], scale, color, x, y, z )
-	groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 60, 0, 0 ) );
-
-	const totalsGlobal = [
-		`Global`,
-		`cases: ${ globalCases.toLocaleString() }`,
-		`cases today: ${ globalCasesNew.toLocaleString() }`,
-		`deaths: ${ globalDeaths.toLocaleString() }`,
-		`recoveries: ${ globalRecoveries.toLocaleString() }`,
-		`deaths/cases: ${ globalDeathsToCases.toLocaleString() }%`
-	];
-	vGlo = latLonToXYZ( 55, 90, 0 );
-	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
-
-	const totalsChina = [
-		`China`,
-		`cases: ${ chinaCases.toLocaleString() }`,
-		`cases today: ${ chinaCasesNew.toLocaleString() }`,
-		`deaths: ${ chinaDeaths.toLocaleString() }`,
-		`recoveries: ${ chinaRecoveries.toLocaleString() }`,
-		`deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%`
-	];
-	vChi = latLonToXYZ( 70, 50, 110 );
-	groupPlacards.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
-
-	const totalsEurope = [
-		`Europe`,
-		`cases: ${ europeCases.toLocaleString() }`,
-		`cases today: ${ europeCasesNew.toLocaleString() }`,
-		`deaths: ${ europeDeaths.toLocaleString() }`,
-		`recoveries: ${ europeRecoveries.toLocaleString() }`,
-		`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
-	];
-	const vEur = latLonToXYZ( 70, 60, 25 );
-	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
-
-	const totalsUsa = [
-		`USA`,
-		`cases: ${ usaCases.toLocaleString() }`,
-		`cases today: ${ usaCasesNew.toLocaleString() }`,
-		`deaths: ${ usaDeaths.toLocaleString() }`,
-		`recoveries: ${ usaRecoveries.toLocaleString() }`,
-		`deaths/cases: ${ usaDeathsToCases.toLocaleString() }%`
-	];
-	const vUsa = latLonToXYZ( 70, 40, -120 );
-	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
-
-	const totalsRow = [
-		`Rest of World`,
-		`cases: ${ rowCases.toLocaleString() }`,
-		`cases today: ${ rowCasesNew.toLocaleString() }`,
-		`deaths: ${ rowDeaths.toLocaleString() }`,
-		`recoveries: ${ rowRecoveries.toLocaleString() }`,
-		`deaths/cases: ${ rowDeathsToCases.toLocaleString() }%`
-	];
-	const vRow = latLonToXYZ( 70, 23, 180 );
-	groupPlacards.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
-
-
 	divStats.innerHTML = `<details id=detStats>
 
 	<summary><b>global statistics</b></summary>
-
 	<p>
 		<b>global totals</b><br>
 		cases: ${ globalCases.toLocaleString() }<br>
-		cases today: ${ globalCasesNew.toLocaleString() }<br>
+		cases new: ${ globalCasesNew.toLocaleString() }<br>
 		deaths: ${ globalDeaths.toLocaleString() }<br>
 		recoveries: ${ globalRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ globalDeathsToCases.toLocaleString() }%<br>
@@ -434,7 +332,7 @@ function getStats () {
 	<p>
 		<b>China totals</b><br>
 		cases: ${ chinaCases.toLocaleString() }<br>
-		cases today: ${ chinaCasesNew.toLocaleString() }<br>
+		cases new: ${ chinaCasesNew.toLocaleString() }<br>
 		deaths: ${ chinaDeaths.toLocaleString() }<br>
 		recoveries: ${ chinaRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%<br>
@@ -443,7 +341,7 @@ function getStats () {
 	<p>
 	<b>Europe totals</b><br>
 		cases: ${ europeCases.toLocaleString() }<br>
-		cases today: ${ europeCasesNew.toLocaleString() }<br>
+		cases new: ${ europeCasesNew.toLocaleString() }<br>
 		deaths: ${ chinaDeaths.toLocaleString() }<br>
 		recoveries: ${ europeRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ europeDeathsToCases.toLocaleString() }%<br>
@@ -452,7 +350,7 @@ function getStats () {
 	<p>
 		<b>USA totals</b><br>
 		cases: ${ usaCases.toLocaleString() }<br>
-		cases today: ${ usaCasesNew.toLocaleString() }<br>
+		cases new: ${ usaCasesNew.toLocaleString() }<br>
 		deaths: ${ usaDeaths.toLocaleString() }<br>
 		recoveries: ${ usaRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ usaDeathsToCases.toLocaleString() }%<br>
@@ -461,7 +359,7 @@ function getStats () {
 	<p>
 		<b>rest of world totals</b><br>
 		cases: ${ rowCases.toLocaleString() }<br>
-		cases today: ${ rowCasesNew.toLocaleString() }<br>
+		cases new: ${ rowCasesNew.toLocaleString() }<br>
 		deaths: ${ rowDeaths.toLocaleString() }<br>
 		recoveries: ${ rowRecoveries.toLocaleString() }<br>
 		deaths/cases: ${ rowDeathsToCases.toLocaleString() }%<br>
@@ -469,7 +367,7 @@ function getStats () {
 
 	</details>`;
 
-	//detStats.open = window.innerWidth > 640;
+	detStats.open = window.innerWidth > 640;
 
 }
 
@@ -477,54 +375,42 @@ function getStats () {
 
 function getSettings () {
 
-	divSettings.innerHTML = `<details id=detSettings ontoggle=getSettingsContent() >
+	divSettings.innerHTML = `<details id=detSettings>
 
 		<summary><b>notes & settings</b></summary>
 
-		<div id=divNoteSettings ></div>
+		<p><i>Why are there messages in the background?</i></p>
+		<p>
+			An early visitor to our tracker raised this issue
+			"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
+			Oleg askeg "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
+		</p>
+
+		<p>
+			What you see is our first attempt to give Oleg some delight.<br>
+			&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
+			&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
+		</p>
+
+		<hr>
+
+		<p>Black bar flare indicates high deaths to cases ratio.</p>
+
+		<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
+
+		<p>
+			Not all populations and GDPs are reported.
+		</p>
+
+		<p>
+			<button onclick=controls.reset() >reset view</button>
+			<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
+		</p>
 
 	</details>`;
 
 }
 
-
-
-function getSettingsContent () {
-
-
-	divNoteSettings.innerHTML =`
-
-	<p><i>Why are there messages in the background?</i></p>
-	<p>
-		An early visitor to our tracker raised this issue
-		"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
-		Oleg askeg "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
-	</p>
-
-	<p>
-		What you see is our first attempt to give Oleg some delight.<br>
-		&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
-		&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
-	</p>
-
-	<hr>
-
-	<p>US States new cases data coming soon</p
-	>
-	<p>Black bar flare indicates high deaths to cases ratio.</p>
-
-	<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
-
-	<p>
-		Not all populations and GDPs are reported.
-	</p>
-
-	<p>
-		<button onclick=controls.reset() >reset view</button>
-		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
-	</p>`;
-
-}
 
 
 
@@ -535,10 +421,10 @@ function onLoadGeoJson ( xhr ) {
 
 	let response = xhr.target.response;
 
-	geoJson = JSON.parse( response );
+	json = JSON.parse( response );
 	//console.log( '', response );
 
-	drawThreeGeo( geoJson, 50, 'sphere', { color: "#888" } );
+	drawThreeGeo( json, 50, 'sphere', { color: '#888' } );
 
 }
 
@@ -554,7 +440,6 @@ function addLights () {
 
 	const lightDirectional = new THREE.DirectionalLight( 0xfffffff, 1 );
 	lightDirectional.position.set( -50, -200, 100 );
-	scene.add( lightDirectional );
 
 }
 
@@ -569,8 +454,7 @@ function addGlobe ( size = 50 ) {
 	var texture = new THREE.TextureLoader().load( url );
 
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
-	const mesh = new THREE.Mesh( geometry, material );
-	mesh.name = "globe";
+	mesh = new THREE.Mesh( geometry, material );
 	scene.add( mesh );
 
 }
@@ -587,33 +471,6 @@ function addSkyBox () {
 
 
 /////////
-
-function toggleCases ( group = groupCases ) {
-
-	if ( group === window.groupPrevious ) {
-
-		groupCases.visible = true;
-		groupNew.visible = true;
-		groupDeaths.visible = true;
-		groupRecoveries.visible = true;
-
-	} else {
-
-		groupCases.visible = false;
-		groupNew.visible = false;
-		groupDeaths.visible = false;
-		groupRecoveries.visible = false;
-		//groupLines.visible = false;
-
-		group.visible = true;
-
-	}
-
-	groupPrevious = group;
-
-}
-
-
 
 function onDocumentTouchStart ( event ) {
 
@@ -639,7 +496,7 @@ function onDocumentMouseMove ( event ) {
 	const raycaster = new THREE.Raycaster();
 	raycaster.setFromCamera( mouse, camera );
 
-	const intersects = raycaster.intersectObjects( groupCases.children );
+	const intersects = raycaster.intersectObjects( group.children );
 
 	if ( intersects.length > 0 ) {
 
@@ -653,7 +510,7 @@ function onDocumentMouseMove ( event ) {
 
 			const country = line[ 1 ];
 
-			const arr = geoJson.features.filter( feature => feature.properties.NAME === country );
+			const arr = json.features.filter( feature => feature.properties.NAME === country );
 
 			const feature = arr.length ? arr[ 0 ] : undefined;
 			//console.log( 'feature', feature );
@@ -676,40 +533,28 @@ function onDocumentMouseMove ( event ) {
 
 			}
 
-			tots = NCD.getDates( line[ 1 ] );
-			bars = NCD.bars;
-
-			//console.log( 'tots', tots );
-
 			const casesNew = line[ 8 ] ? line[ 8 ] : 0;
 
-			//detNCD.hidden = false;
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `JHU data<br>
+			divMessage.innerHTML = `
 			${ ( line[ 0 ] ? "place: " + line[ 0 ] + "<br>" : "" ) }
 country: ${ line[ 1 ] }<br>
 update: ${ line[ 2 ] }<br>
 cases: ${ Number( line[ 3 ] ).toLocaleString() }<br>
-cases today: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
+cases new: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
 deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
 recoveries: ${ Number( line[ 5 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }%<br>
 deaths/population: ${ d2Pop }<br>
 deaths/gdp: ${ d2Gdp }<br>
-<hr>
-MMG data (state data soon)<br>
-${ tots }
-${ bars }
 `;
 
-			//<hr>
-			//geoJSON name: ${ name }<br>
-			//population: ${ population.toLocaleString() }<br>
-			//</br>gdp: ${ gdp.toLocaleString() }<br>
-
-			NCD.getDates( line[ 1 ] );
+//<hr>
+//geoJSON name: ${ name }<br>
+//population: ${ population.toLocaleString() }<br>
+//</br>gdp: ${ gdp.toLocaleString() }<br>
 
 		}
 
@@ -718,7 +563,6 @@ ${ bars }
 		intersected = null;
 		divMessage.hidden = true;
 		divMessage.innerHTML = "";
-		//detNCD.hidden = true;
 
 	}
 

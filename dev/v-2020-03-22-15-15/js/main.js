@@ -370,7 +370,7 @@ function getStats () {
 		`recoveries: ${ globalRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ globalDeathsToCases.toLocaleString() }%`
 	];
-	vGlo = latLonToXYZ( 55, 90, 0 );
+	vGlo = latLonToXYZ( 75, 65, -20 );
 	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
 
 	const totalsChina = [
@@ -381,7 +381,7 @@ function getStats () {
 		`recoveries: ${ chinaRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%`
 	];
-	vChi = latLonToXYZ( 70, 50, 110 );
+	vChi = latLonToXYZ( 85, 50, 110 );
 	groupPlacards.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
 
 	const totalsEurope = [
@@ -392,7 +392,7 @@ function getStats () {
 		`recoveries: ${ europeRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
 	];
-	const vEur = latLonToXYZ( 70, 60, 25 );
+	const vEur = latLonToXYZ( 80, 60, 20 );
 	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
 
 	const totalsUsa = [
@@ -403,7 +403,7 @@ function getStats () {
 		`recoveries: ${ usaRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ usaDeathsToCases.toLocaleString() }%`
 	];
-	const vUsa = latLonToXYZ( 70, 40, -120 );
+	const vUsa = latLonToXYZ( 80, 40, -120 );
 	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
 
 	const totalsRow = [
@@ -414,7 +414,7 @@ function getStats () {
 		`recoveries: ${ rowRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ rowDeathsToCases.toLocaleString() }%`
 	];
-	const vRow = latLonToXYZ( 70, 23, 180 );
+	const vRow = latLonToXYZ( 90, 30, 180 );
 	groupPlacards.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
 
 

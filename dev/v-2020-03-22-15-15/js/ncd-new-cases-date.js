@@ -146,7 +146,7 @@ NCD.drawChart = function ( arr ) {
 
 	//NCDdivChartMmg.innerHTML = bars;
 
-	NCD.bars = bars;
+	NCD.bars = `<div style=background-color:#ddd >${ bars }</div>`;
 
 };
 

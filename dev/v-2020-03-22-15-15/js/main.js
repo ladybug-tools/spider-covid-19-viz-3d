@@ -21,6 +21,7 @@ let groupCases = new THREE.Group();
 let groupNew = new THREE.Group();
 let groupDeaths = new THREE.Group();
 let groupRecoveries = new THREE.Group();
+let groupPlacards = new THREE.Group();
 let groupLines = new THREE.Group();
 
 let geoJson;
@@ -31,11 +32,14 @@ let intersected;
 let mesh;
 let scene, camera, controls, renderer;
 
+var synth = window.speechSynthesis;
+var voices = [];
 
 THR.init();
 THR.animate();
 
 init();
+
 
 
 
@@ -80,6 +84,31 @@ function init () {
 
 
 
+
+function sayThis( text = "Hello world! My fingers are crossed. I hope you will be here tomorrow") {
+
+	synth.cancel();
+
+	const utterThis = new SpeechSynthesisUtterance( text );
+
+	voices = voices.length ? voices : window.speechSynthesis.getVoices();
+
+	if ( voices.length > 0 ) {
+
+		const voice = voices.find( item => item.name === "Google UK English Female" );
+
+		const theDefault =  voices.find( item => item.default === true );
+
+		utterThis.voice = voice ? voice : theDefault;
+
+	}
+
+	synth.speak( utterThis );
+
+}
+
+
+
 function requestFile ( url, callback ) {
 
 	const xhr = new XMLHttpRequest();
@@ -119,9 +148,10 @@ function onLoad ( xhr ) {
 	groupNew = new THREE.Group();
 	groupDeaths = new THREE.Group();
 	groupRecoveries = new THREE.Group();
+	groupPlacards = new THREE.Group();
 	groupLines = new THREE.Group();
 
-	scene.add( group, groupCases, groupNew, groupDeaths, groupRecoveries, groupLines );
+	scene.add( group, groupCases, groupNew, groupDeaths, groupRecoveries, groupPlacards, groupLines );
 
 	let response = xhr.target.response;
 	response = response.replace( /"Korea, South"/, "South Korea" )
@@ -330,7 +360,7 @@ function getStats () {
 	// butRecoveries.innerHTML += globalRecoveries.toLocaleString();
 
 	// [text], scale, color, x, y, z )
-	scene.add( THR.drawPlacard( "Null Island", "0.01", 1, 60, 0, 0 ) );
+	groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 60, 0, 0 ) );
 
 	const totalsGlobal = [
 		`Global`,
@@ -341,7 +371,7 @@ function getStats () {
 		`deaths/cases: ${ globalDeathsToCases.toLocaleString() }%`
 	];
 	vGlo = latLonToXYZ( 55, 90, 0 );
-	scene.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
+	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
 
 	const totalsChina = [
 		`China`,
@@ -352,7 +382,7 @@ function getStats () {
 		`deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%`
 	];
 	vChi = latLonToXYZ( 70, 50, 110 );
-	scene.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
+	groupPlacards.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
 
 	const totalsEurope = [
 		`Europe`,
@@ -363,7 +393,7 @@ function getStats () {
 		`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
 	];
 	const vEur = latLonToXYZ( 70, 60, 25 );
-	scene.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
+	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
 
 	const totalsUsa = [
 		`USA`,
@@ -374,7 +404,7 @@ function getStats () {
 		`deaths/cases: ${ usaDeathsToCases.toLocaleString() }%`
 	];
 	const vUsa = latLonToXYZ( 70, 40, -120 );
-	scene.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
+	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
 
 	const totalsRow = [
 		`Rest of World`,
@@ -385,7 +415,7 @@ function getStats () {
 		`deaths/cases: ${ rowDeathsToCases.toLocaleString() }%`
 	];
 	const vRow = latLonToXYZ( 70, 23, 180 );
-	scene.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
+	groupPlacards.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
 
 
 	divStats.innerHTML = `<details id=detStats>
@@ -657,7 +687,7 @@ function onDocumentMouseMove ( event ) {
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `JHU data<br?
+			divMessage.innerHTML = `JHU data<br>
 			${ ( line[ 0 ] ? "place: " + line[ 0 ] + "<br>" : "" ) }
 country: ${ line[ 1 ] }<br>
 update: ${ line[ 2 ] }<br>

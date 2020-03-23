@@ -224,7 +224,12 @@ v-2020-03-22-15-15
 * Add content to Notes & Settings ontoggle
 * Add THR.drawPlacard()
 * Add global stats in-world
+
+v-2020-03-22-18-30
+
 * Add details to main menu
+* Add back global statistics to left menu
+* Add footer with buttons
 
 
 

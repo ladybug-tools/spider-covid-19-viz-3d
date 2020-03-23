@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-22-15-15">
+<meta name=version content="2020-03-22-18-30">
 
 
 <title>COVID-19 Viz3D</title>
@@ -23,6 +23,12 @@
 
 <script src="js/thr-three.js"></script>
 <script src="js/threeGeoJSON.js"></script>
+<script>
+
+
+
+
+</script>
 
 <nav id="navMenu">
 
@@ -55,19 +61,19 @@
 
 		</header>
 
-		<p style=background-color:cyan;padding:1ch; title="The flare indicates high number of new cases">
+		<p style=background-color:cyan;border-radius:5px;padding:1ch; title="The flare indicates high number of new cases">
 			<button id=butNew onclick=toggleCases(groupNew) style=background-color:cyan;color:black;width:100%; >
 				New cases today&nbsp;</button></p>
 
-		<p style=background-color:red;color:white;padding:1ch; >
+		<p style=background-color:red;border-radius:5px;color:white;padding:1ch; >
 			<button id=butCases onclick=toggleCases(groupCases) style=background-color:red;color:white;width:100%; >
 				Confirmed cases&nbsp;</button></p>
 
-		<p style=background-color:black;color:white;padding:1ch; title="Flare indicates high deaths to cases ratios" >
+		<p style=background-color:black;border-radius:5px;color:white;padding:1ch; title="Flare indicates high deaths to cases ratios" >
 			<button id=butDeaths onclick=toggleCases(groupDeaths) style=background-color:black;color:white;width:100%; >
 				Deaths&nbsp;</button></p>
 
-		<p style=background-color:limegreen;color:white;padding:1ch; >
+		<p style=background-color:limegreen;border-radius:5px;color:white;padding:1ch; >
 			<button id=butRecoveries onclick=toggleCases(groupRecoveries) style=background-color:limegreen;width:100%; >
 				Recoveries&nbsp;</button></p>
 
@@ -76,6 +82,7 @@
 		<div id=divSettings style=background-color:white;padding:1ch; ></div>
 
 	</details>
+
 </nav>
 
 <!--
@@ -90,7 +97,19 @@
 	Two fingers or mousewheel to zoom
 </div>
 
+<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
+
+	<button onclick=controls.reset(); title="reset the view" style=background-color:#eee;border-radius:5px;font-size:300%;margin:auto; >&CirclePlus;</button>
+	&nbsp;
+	<button onclick=controls.autoRotate=!controls.autoRotate; title="stop the rotation" style=background-color:#eee;border-radius:5px;font-size:300%;margin:auto; >&circlearrowright;</button>
+	&nbsp;
+	<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards" style=background-color:#eee;border-radius:5px;font-size:300%;margin:auto; >&sdotb;</button>
+	&nbsp;
+	<button onclick=sayThis(); title="Can you hear me now?" style=background-color:#eee;border-radius:5px;font-size:250%;margin:auto; >&phone;</button>
+
+</footer>
 <script src="js/main.js"></script>
+
 <script src="js/ncd-new-cases-date.js"></script>
 
 <script>

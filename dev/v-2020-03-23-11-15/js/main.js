@@ -687,12 +687,14 @@ function onDocumentMouseMove ( event ) {
 			//console.log( 'place', place );
 
 			const tots = NCD.getDates( country, place );
+			//console.log( 'tots', tots );
 			const bars = NCD.bars;
 
 			const arr = geoJson.features.filter( feature => feature.properties.NAME === country );
-			console.log( 'arr', arr );
+			//console.log( 'arr', arr );
+
 			const feature = arr.length ? arr[ 0 ] : undefined;
-			console.log( 'feature', feature );
+			//console.log( 'feature', feature );
 
 			let d2Pop, d2Gdp;
 
@@ -702,8 +704,9 @@ function onDocumentMouseMove ( event ) {
 				const gdp = feature.properties.GDP_MD_EST;
 				const name = feature.properties.NAME;
 
+				//console.log( 'gdp/pop', 1000000 * gdp / population  );
 				d2Pop = ( 100 * ( Number( line[ 4 ] ) / population ) ).toLocaleString() + "%";
-				d2Gdp = ( 100 * ( Number( line[ 4 ] ) / gdp ) ).toLocaleString() + "%";
+				d2Gdp = ( ( Number( line[ 3 ] ) / (1000000 *  gdp / population ) ) ).toLocaleString() + "";
 
 			} else {
 
@@ -711,10 +714,6 @@ function onDocumentMouseMove ( event ) {
 				d2Gdp = "not available";
 
 			}
-
-
-
-			//console.log( 'tots', tots );
 
 			const casesNew = line[ 8 ] ? line[ 8 ] : 0;
 
@@ -732,7 +731,7 @@ deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
 recoveries: ${ Number( line[ 5 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }%<br>
 deaths/population: ${ d2Pop }<br>
-deaths/gdp: ${ d2Gdp }<br>
+cases/(gdp/pop): ${ d2Gdp }<br>
 <hr>
 <a href="https://mmediagroup.fr/covid-19" target="_blank">MMG data</a> - updates hourly<br>
 ${ tots }

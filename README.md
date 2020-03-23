@@ -224,6 +224,11 @@ version: 2020-03-23
 * Pop-ups many fixes
 * Splash screen > update text
 
+v-2020-03-23-16-00
+
+* stop console.log
+* pop-up: cases/(gdp/pop)
+
 
 Done
 

@@ -80,6 +80,10 @@ function init () {
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	document.addEventListener( 'touchstart', onDocumentTouchStart, false );
 
+	if ("geolocation" in navigator) {
+		navigator.geolocation.getCurrentPosition(moveCameraToCurrentLocation);
+  	}
+
 }
 
 
@@ -585,6 +589,15 @@ function addSkyBox () {
 
 }
 
+function moveCameraToCurrentLocation ( position ) {
+	controls.autoRotate = false;
+
+	const radius = camera.position.length(); // keep current distance to center
+	let newCameraPosition = latLonToXYZ( radius, position.coords.latitude, position.coords.longitude, null );
+
+	camera.position.copy(newCameraPosition);
+	controls.update();
+}
 
 /////////
 

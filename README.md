@@ -80,7 +80,6 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 	* As in all classical columns have a capital
 	* Country or state flag?
 	* Placards over each bar showing country & cases?
-* Globe rotates to the lat/lon indicated by your browser location
 * Days since last new case indicated as color or opacity
 * Community transmission vs traveller transmission
 	* Data in WHO PDF file hard to parse

@@ -128,7 +128,7 @@ function callbackDailyReport ( xhr ) {
 
 	const names = json.map( json => json.name );
 
-	const today = names[ names.length - 2 ];
+	today = names[ names.length - 2 ];
 	//console.log( today );
 
 	yesterday = names[ names.length - 3 ];
@@ -293,7 +293,8 @@ function addIndicatorNew ( line, index ) {
 	const casesNew = Math.abs( Number( line[ 3 ] ) - num );
 
 	lines[ index ].push( casesNew );
-	//console.log( 'casesNew', casesNew, line );
+
+	//if ( casesNew > 0 ) console.log( 'casesNew', casesNew, line );
 
 	if ( casesNew < 1 ) { return; }
 
@@ -358,6 +359,7 @@ function getStats () {
 		caseNew = isNaN( caseNew ) ? 0 : caseNew;
 		return sum + caseNew;
 	}, 0 );
+	//console.log( 'globalCasesNew', globalCasesNew );
 
 
 	const globalDeaths = lines.reduce( ( sum, line ) => sum + Number( line[ 4 ] ), 0 );
@@ -455,10 +457,10 @@ function getStats () {
 
 	divStats.innerHTML = `<details id=detStats>
 
-	<summary><b>global statistics</b></summary>
+	<summary><b>global data ${ today.slice( 0, -4 ) }</b></summary>
 
 	<p>
-		<b>global totals</b><br>
+		<b>global totals </b><br>
 		cases: ${ globalCases.toLocaleString() }<br>
 		cases today: ${ globalCasesNew.toLocaleString() }<br>
 		deaths: ${ globalDeaths.toLocaleString() }<br>

@@ -47,7 +47,7 @@ THR.init = function () {
 	window.addEventListener( 'keydown', THR.onStart );
 
 	renderer.domElement.addEventListener( 'mousedown', THR.onStart );
-	//renderer.domElement.addEventListener( 'mousemove', THR.onStart );
+	renderer.domElement.addEventListener( 'mousemove', THR.onStart );
 	renderer.domElement.addEventListener( 'wheel', THR.onStart );
 
 	renderer.domElement.addEventListener( 'touchstart', THR.onStart );
@@ -75,11 +75,11 @@ THR.onLoad = function ( event ) {
 
 THR.onStart = function () {
 
-	//clearInterval( THR.suspendTimer );
+	clearInterval( THR.suspendTimer );
 
 	THR.controls.autoRotate = false;
 
-	//THR.suspendTimer = setTimeout( () => { THR.controls.autoRotate = true; }, 5000 );
+	THR.suspendTimer = setTimeout( () => { THR.controls.autoRotate = true; }, 5000 );
 
 };
 

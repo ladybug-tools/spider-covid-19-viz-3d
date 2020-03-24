@@ -5,7 +5,7 @@
 // jshint loopfunc: true
 
 
-let pathAssets = "../../assets/"; // reset in html file if needed
+let pathAssets = "../../assets/"; // change in html of stable
 const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_daily_reports/";
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
@@ -38,7 +38,7 @@ var voices = [];
 THR.init();
 THR.animate();
 
-
+//init();
 
 
 function init () {
@@ -126,14 +126,15 @@ function callbackDailyReport ( xhr ) {
 
 	const names = json.map( json => json.name );
 
-	today = names[ names.length - 2 ];
-	//console.log( today );
+	today = names[ names.length - 1 ];
+	console.log( today );
 
-	yesterday = names[ names.length - 3 ];
+	yesterday = names[ names.length - 2 ];
 	//console.log( 'yesterday', yesterday );
 
+	//requestFile( dataJhu + today, onLoad );
 
-	requestFile( dataJhu + today, onLoad );
+	requestFile( "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-23-2020.csv", onLoad );
 
 }
 
@@ -158,7 +159,7 @@ function onLoad ( xhr ) {
 	//.replace( /"Virgin Islands,/, "Virgin Islands");
 
 	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
-	//console.log( 'lines', lines );
+	console.log( 'lines', lines );
 
 	const date = new Date().toISOString();
 

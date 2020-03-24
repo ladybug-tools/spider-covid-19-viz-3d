@@ -229,6 +229,11 @@ v-2020-03-23-16-00
 * stop console.log
 * pop-up: cases/(gdp/pop)
 
+stable v-2020-03-23-18-15
+
+* Move init & assets path to html
+
+
 
 Done
 

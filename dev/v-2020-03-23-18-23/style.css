@@ -1,0 +1,105 @@
+/* Copyright 2020 Spider contributors. MIT License */
+
+:root {
+	font: 100% monospace;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	overflow: hidden;
+}
+
+a {
+	color: crimson;
+	text-decoration: none;
+}
+a:hover, a:focus, a:active {
+	background-color: yellow;
+	color: #aaa;
+	text-decoration: underline;
+}
+
+button {
+	background-color: #ddd;
+	border: none;
+	border-radius: 2px;
+	color: #322;
+	cursor: pointer;
+	padding: 3px 5px;
+}
+button:hover {
+	background: #ccc;
+	color: #fff
+}
+
+input[ type=range] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-color: #ddd;
+	border-radius: 2px;
+	height: 1.7ch;
+	width: 100%;
+}
+input[ type=range]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 2;
+	width: 10px;
+}
+input[ type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 18px;
+	width: 10px;
+}
+
+.help {
+	float: right;
+}
+
+.couponcode {
+	float: right
+}
+
+.couponcode:hover>.coupontooltip {
+	display: block;
+}
+
+.coupontooltip {
+	border: 0.8ch double #888;
+	background: white;
+	display: none;
+	font: 100% monospace;
+	font-size: 1rem;
+	font-weight: normal;
+	/* unset summary settings */
+	margin-left: -20ch;
+	padding: 10px;
+	position: absolute;
+	z-index: 1000;
+}
+
+#navMenu {
+	margin: 0 20px;
+	max-height: 100vh;
+	max-width: 18rem;
+	overflow: auto;
+	position: absolute;
+}
+
+#divMessage {
+	background-color: #eee;
+	border-radius: 1rem;
+	left: 5vw;
+	padding: 1rem;
+	position: absolute;
+	top: 50vh;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
+}
+
+.navLegend { border-radius:5px; padding:1ch; }
+
+.ftrButton { background-color:#eee; border-radius:5px; font-size:300%; margin:auto; }

@@ -7,7 +7,8 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-23-18-15">
+<meta name=version content="2020-03-22-18-30">
+
 
 <title>COVID-19 Viz3D</title>
 
@@ -25,11 +26,11 @@
 <script>
 
 
+
+
 </script>
 
 <nav id="navMenu">
-
-	<br>
 
 	<details open>
 
@@ -38,7 +39,7 @@
 		<header id="hdrTitle">
 
 			<h2>
-				<a id=aSource target=_top title="Ladybug Tools / Spider readme & source code on GitHub" >
+				<a id=aSource target=_top title="Readme & Source code on GitHub" >
 					<img id=imgIcon height=18 style=opacity:0.5; >
 				</a>
 
@@ -60,19 +61,19 @@
 
 		</header>
 
-		<p class=navLegend style=background-color:cyan; title="The flare indicates high number of new cases">
+		<p style=background-color:cyan;border-radius:5px;padding:1ch; title="The flare indicates high number of new cases">
 			<button id=butNew onclick=toggleCases(groupNew) style=background-color:cyan;color:black;width:100%; >
 				New cases today&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:red; >
+		<p style=background-color:red;border-radius:5px;color:white;padding:1ch; >
 			<button id=butCases onclick=toggleCases(groupCases) style=background-color:red;color:white;width:100%; >
 				Confirmed cases&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
+		<p style=background-color:black;border-radius:5px;color:white;padding:1ch; title="Flare indicates high deaths to cases ratios" >
 			<button id=butDeaths onclick=toggleCases(groupDeaths) style=background-color:black;color:white;width:100%; >
 				Deaths&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:limegreen; >
+		<p style=background-color:limegreen;border-radius:5px;color:white;padding:1ch; >
 			<button id=butRecoveries onclick=toggleCases(groupRecoveries) style=background-color:limegreen;width:100%; >
 				Recoveries&nbsp;</button></p>
 
@@ -84,28 +85,27 @@
 
 </nav>
 
+<!--
+	<div id=NCDdivNewCasesDate style="border: #eee solid 1px; opacity: 0.8; padding:1ch; position:absolute;
+	right:1rem; width:350px" > </div>
+-->
+
 
 <div id=divMessage style=max-width:250px; >
 	Touch the screen to stop rotation<br>
-	Click or touch a country "stick" to pop-up statistics<br>
+	Touch a country "stick" to pop-up the statistics<br>
 	Two fingers or mousewheel to zoom
-	<hr>
-	New today<br>
-	<mark>Mouse over no longer works</mark><br>
-	pop-ups show province or state data<br>
-	pop-up bars show new cases and dates as tooltips
 </div>
 
 <footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
 
-	<button onclick=controls.reset(); class=ftrButton title="reset the view" >&CirclePlus;</button>
+	<button onclick=controls.reset(); title="reset the view" style=background-color:#eee;border-radius:5px;font-size:300%;margin:auto; >&CirclePlus;</button>
 	&nbsp;
-	<button onclick=THR.onStop() title="stop the rotation"
-	class=ftrButton "Stop all rotation" >&circlearrowright;</button>
+	<button onclick=controls.autoRotate=!controls.autoRotate; title="stop the rotation" style=background-color:#eee;border-radius:5px;font-size:300%;margin:auto; >&circlearrowright;</button>
 	&nbsp;
-	<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards"  class=ftrButton >&sdotb;</button>
+	<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards" style=background-color:#eee;border-radius:5px;font-size:300%;margin:auto; >&sdotb;</button>
 	&nbsp;
-	<button onclick=sayThis(); title="Can you hear me now?"  class=ftrButton >&phone;</button>
+	<button onclick=sayThis(); title="Can you hear me now?" style=background-color:#eee;border-radius:5px;font-size:250%;margin:auto; >&phone;</button>
 
 </footer>
 <script src="js/main.js"></script>
@@ -113,12 +113,6 @@
 <script src="js/ncd-new-cases-date.js"></script>
 
 <script>
-
-pathAssets = "../assets/";
-
-
-init();
-
 
 // keep address bar pointed to latest
 window.history.pushState( '', '', '/spider-covid-19-viz-3d/' );

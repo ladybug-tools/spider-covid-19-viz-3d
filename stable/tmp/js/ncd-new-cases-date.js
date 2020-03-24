@@ -80,12 +80,6 @@ NCD.getCountries = function () {
 
 			//const arr = locations.slice( 1 ).map( arr => arr[ 0 ] );
 			places.push( country[ 0 ] );
-
-			arr = Object.keys( country[ 1 ] ).slice( 1 );
-
-			//console.log( 'country', arr );
-
-			places.push( ...arr );
 		}
 
 	} );
@@ -96,29 +90,16 @@ NCD.getCountries = function () {
 
 
 
-NCD.getDates = function ( country = "France", place = "France" ) {
-
-	if ( !NCD.json ) {
-
-		return "It may take a while to load all the data. Keep trying every ten seconds or so.";
-
-	}
-	//console.log( 'c/p', country, place );
+NCD.getDates = function ( country = "France" ) {
 
 	const countryData = NCD.json[ country ];
 	//console.log( 'countryData', countryData );
-
-	const placeData = countryData[ place ];
-	//console.log( 'placeData', placeData );
 
 	if ( !countryData ) { return "no case data"; }
 
 	if ( Array.isArray( countryData.All ) === false ) {
 
-		const dates = placeData ? placeData.dates : countryData.All.dates;
-		locate = placeData ? placeData : countryData.All;
-
-		NCD.dates = locate.dates;
+		NCD.dates = countryData.All.dates;
 		//console.log( 'dates', dates );
 
 		const cases = Object.entries( NCD.dates ).map( item => item[ 1 ] );
@@ -135,9 +116,9 @@ NCD.getDates = function ( country = "France", place = "France" ) {
 
 	// population: ${ stats.population.toLocaleString() }
 
-	const stats = locate;
+	const stats = countryData.All;
 
-	const totals = `${ place } ${ country } totals:
+	const totals = `${ country } totals:
 	confirmed: ${ stats.confirmed.toLocaleString() }
 	recovered: ${ stats.recovered.toLocaleString() }
 	deaths: ${ stats.deaths.toLocaleString() }
@@ -161,11 +142,11 @@ NCD.drawChart = function ( arr ) {
 	const bars = arr.map( ( item, index ) =>
 
 		`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
-		title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>` ).join( "" );
+		title="date: ${ dateStrings[ index ] } cases:${ item.toLocaleString() }">&nbsp;</div>` ).join( "" );
 
 	//NCDdivChartMmg.innerHTML = bars;
 
-	NCD.bars = `<div style=background-color:#ddd title="New cases per day. The curve you hope to see flatten!" >${ bars }</div>`;
+	NCD.bars = `<div style=background-color:#ddd >${ bars }</div>`;
 
 };
 

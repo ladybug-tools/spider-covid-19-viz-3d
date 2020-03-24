@@ -5,8 +5,8 @@
 // jshint loopfunc: true
 
 
-let pathAssets = "../../assets/"; // reset in html file if needed
-const DataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_daily_reports/";
+const pathAssets = "../assets/";
+const path = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_daily_reports/";
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
@@ -37,6 +37,8 @@ var voices = [];
 
 THR.init();
 THR.animate();
+
+init();
 
 
 
@@ -75,11 +77,11 @@ function init () {
 
 	getSettings();
 
-	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
-	renderer.domElement.addEventListener( 'touchstart', onDocumentTouchStart, false );
+	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	document.addEventListener( 'touchstart', onDocumentTouchStart, false );
 
 }
+
 
 
 
@@ -126,14 +128,14 @@ function callbackDailyReport ( xhr ) {
 
 	const names = json.map( json => json.name );
 
-	today = names[ names.length - 2 ];
+	const today = names[ names.length - 2 ];
 	//console.log( today );
 
 	yesterday = names[ names.length - 3 ];
 	//console.log( 'yesterday', yesterday );
 
 
-	requestFile( DataJhu + today, onLoad );
+	requestFile( path + today, onLoad );
 
 }
 
@@ -166,7 +168,7 @@ function onLoad ( xhr ) {
 
 	lines.forEach( ( line, index ) => addIndicator( line, index ) );
 
-	requestFile( DataJhu + yesterday, onLoadYesterday );
+	requestFile( path + yesterday, onLoadYesterday );
 
 }
 
@@ -189,30 +191,14 @@ function onLoadYesterday ( xhr ) {
 
 function addIndicator ( line, index ) {
 
-	const l3 = Number( line[ 3 ] );
-	cases = isNaN( l3 ) ? 0 : l3;
+	const height = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 1 );
+	const heightDeaths = 0.2 * Math.sqrt( Number( line[ 4 ] ) || 1 );
+	const heightRecoveries = 0.2 * Math.sqrt( Number( line[ 5 ] ) || 1 );
 
-	const l4 = Number( line[ 4 ] );
-	const deaths = isNaN( l4 ) ? 0 : l4;
+	let p1 = latLonToXYZ( 50 + 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+	let p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-	const l5 = Number( line[ 5 ] );
-	const recoveries = isNaN( l5 ) ? 0 : l5;
-
-	const l6 = Number( line[ 6 ] )
-	const lat = isNaN( l6 ) ? 0 : l6;
-
-	const l7 = Number( line[ 7 ] )
-	const lon = isNaN( l7 ) ? 0 : l7;
-
-	const heightCases = 0.2 * Math.sqrt( cases || 1 );
-	const heightDeaths = cases > 0 ? heightCases * ( deaths / cases ) : 0;
-	const heightRecoveries = 0.2 * Math.sqrt( recoveries );
-
-
-	let p1 = latLonToXYZ( 50 + 0.5 * heightCases, lat, lon, index );
-	let p2 = latLonToXYZ( 100, lat, lon, index );
-
-	let geometry = new THREE.CylinderGeometry( 0.4, 0.4, heightCases );
+	let geometry = new THREE.CylinderGeometry( 0.4, 0.4, height );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	let material = new THREE.MeshPhongMaterial( { color: "red" } );
 	let mesh = new THREE.Mesh( geometry, material );
@@ -223,29 +209,25 @@ function addIndicator ( line, index ) {
 	groupCases.add( mesh );
 
 
-	//if ( heightDeaths > 0 ) {
+	p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
-		p1 = latLonToXYZ( 50 + 0.5 * heightDeaths, lat, lon, index );
-		p2 = latLonToXYZ( 100, lat, lon, index );
+	let dToC = Number( line[ 3 ] ) > 0 ? 5 * Number( line[ 4 ] ) / Number( line[ 3 ] ) : 0;
+	dToC = dToC < 1 ? dToC : 1;
+	//console.log( 'dc', dToC );
 
-		let dToC = cases > 0 ? 5 * ( deaths / cases ) : 0;
-		dToC = dToC < 1 ? dToC : 1;
-		//console.log( 'dc', dToC );
-		geometry = new THREE.CylinderBufferGeometry( 0.5, 0.5 + dToC, heightDeaths, 12, 1, true );
+	geometry = new THREE.CylinderBufferGeometry( 0.5, 0.5 + dToC, heightDeaths, 12, 1, true );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+	material = new THREE.MeshPhongMaterial( { color: "black", side: 2 } );
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.copy( p1 );
+	mesh.lookAt( p2 );
+	mesh.userData = index;
 
-		geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-		material = new THREE.MeshPhongMaterial( { color: "black", side: 2 } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.copy( p1 );
-		mesh.lookAt( p2 );
-		mesh.userData = index;
+	groupDeaths.add( mesh );
 
-		groupDeaths.add( mesh );
-
-	//}
-
-	p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, lat, lon, index );
-	p2 = latLonToXYZ( 100, lat, lon, index );
+	p1 = latLonToXYZ( 50 + 0.5 * heightRecoveries, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+	p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
 	geometry = new THREE.CylinderBufferGeometry( 0.45, 0.45, heightRecoveries, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
@@ -266,22 +248,7 @@ function addIndicatorNew ( line, index ) {
 	const state = line[ 0 ];
 	const country = line[ 1 ];
 
-	const l3 = Number( line[ 3 ] );
-	cases = isNaN( l3 ) ? 0 : l3;
-
-	//const l4 = Number( line[ 4 ] );
-	//const deaths = isNaN( l4 ) ? 0 : l4;
-
-	//const l5 = Number( line[ 5 ] );
-	//const recoveries = isNaN( l5 ) ? 0 : l5;
-
-	const l6 = Number( line[ 6 ] )
-	const lat = isNaN( l6 ) ? 0 : l6;
-
-	const l7 = Number( line[ 7 ] )
-	const lon = isNaN( l7 ) ? 0 : l7;
-
-	const lineNew = linesYesterday.filter( lineNew => lineNew[ 0 ] === state && lineNew[ 1 ] === country );
+	const lineNew = linesYesterday.filter( line => line[ 0 ] === state && line[ 1 ] === country );
 	//console.log( 'ln',line[ 3 ]);
 
 	const str = lineNew.length ? lineNew[ 0 ][ 3 ] : "";
@@ -291,23 +258,22 @@ function addIndicatorNew ( line, index ) {
 	const casesNew = Math.abs( Number( line[ 3 ] ) - num );
 
 	lines[ index ].push( casesNew );
-
-	//if ( casesNew > 0 ) console.log( 'casesNew', casesNew, line );
+	//console.log( 'casesNew', casesNew, line );
 
 	if ( casesNew < 1 ) { return; }
 
 	const heightCases = 0.2 * Math.sqrt( Number( line[ 3 ] ) || 0 );
 	//	const heightNew = 0.2 * Math.sqrt( casesNew || 1 );
 
-	//const cases = Number( line[ 3 ] );
+	const cases = Number( line[ 3 ] );
 	const heightRatio = cases ? casesNew / cases : 0;
 	//console.log( 'heightRatio', heightRatio );
 
 	const height = heightCases * heightRatio;
 	//console.log( 'height', height );
 
-	const p1 = latLonToXYZ( 50 + heightCases - 0.5 * height, lat, lon, index );
-	const p2 = latLonToXYZ( 100, lat, lon, index );
+	const p1 = latLonToXYZ( 50 + heightCases - 0.5 * height, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
+	const p2 = latLonToXYZ( 100, Number( line[ 6 ] ), Number( line[ 7 ] ), index );
 
 	const geometry = new THREE.CylinderBufferGeometry( 0.45, 0.45 + heightRatio, height, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
@@ -327,13 +293,13 @@ function latLonToXYZ ( radius, lat, lon, index ) {
 
 	const pi2 = Math.PI / 2;
 
-	const theta = Number( lat ) * Math.PI / 180;
-	const phi = Number( lon ) * Math.PI / 180;
-	//console.log( "lat/lon", theta, phi, index);
+	lat = Number( lat ) * Math.PI / 180;
+	lon = Number( lon ) * Math.PI / 180;
+	//console.log( "lat/lon", lat, lon, index);
 
-	const x = radius * Math.sin( theta + pi2 ) * Math.cos( phi );
-	const y = radius * Math.sin( theta + pi2 ) * Math.sin( phi );
-	const z = radius * Math.cos( theta - pi2 );
+	const x = radius * Math.sin( lat + pi2 ) * Math.cos( lon );
+	const y = radius * Math.sin( lat + pi2 ) * Math.sin( lon );
+	const z = radius * Math.cos( lat - pi2 );
 
 	return new THREE.Vector3( x, y, z );
 
@@ -357,7 +323,6 @@ function getStats () {
 		caseNew = isNaN( caseNew ) ? 0 : caseNew;
 		return sum + caseNew;
 	}, 0 );
-	//console.log( 'globalCasesNew', globalCasesNew );
 
 
 	const globalDeaths = lines.reduce( ( sum, line ) => sum + Number( line[ 4 ] ), 0 );
@@ -455,10 +420,10 @@ function getStats () {
 
 	divStats.innerHTML = `<details id=detStats>
 
-	<summary><b>global data ${ today.slice( 0, -4 ) }</b></summary>
+	<summary><b>global statistics</b></summary>
 
 	<p>
-		<b>global totals </b><br>
+		<b>global totals</b><br>
 		cases: ${ globalCases.toLocaleString() }<br>
 		cases today: ${ globalCasesNew.toLocaleString() }<br>
 		deaths: ${ globalDeaths.toLocaleString() }<br>
@@ -544,14 +509,19 @@ function getSettingsContent () {
 
 	<hr>
 
-	<p>US States new cases data coming soon</p>
-
+	<p>US States new cases data coming soon</p
+	>
 	<p>Black bar flare indicates high deaths to cases ratio.</p>
 
 	<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
 
 	<p>
 		Not all populations and GDPs are reported.
+	</p>
+
+	<p>
+		<button onclick=controls.reset() >reset view</button>
+		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
 	</p>`;
 
 }
@@ -683,15 +653,7 @@ function onDocumentMouseMove ( event ) {
 
 			const country = line[ 1 ];
 
-			const place = line[ 0 ];
-			//console.log( 'place', place );
-
-			const tots = NCD.getDates( country, place );
-			//console.log( 'tots', tots );
-			const bars = NCD.bars;
-
 			const arr = geoJson.features.filter( feature => feature.properties.NAME === country );
-			//console.log( 'arr', arr );
 
 			const feature = arr.length ? arr[ 0 ] : undefined;
 			//console.log( 'feature', feature );
@@ -704,9 +666,8 @@ function onDocumentMouseMove ( event ) {
 				const gdp = feature.properties.GDP_MD_EST;
 				const name = feature.properties.NAME;
 
-				//console.log( 'gdp/pop', 1000000 * gdp / population  );
 				d2Pop = ( 100 * ( Number( line[ 4 ] ) / population ) ).toLocaleString() + "%";
-				d2Gdp = ( ( Number( line[ 3 ] ) / (1000000 *  gdp / population ) ) ).toLocaleString() + "";
+				d2Gdp = ( 100 * ( Number( line[ 4 ] ) / gdp ) ).toLocaleString() + "%";
 
 			} else {
 
@@ -715,15 +676,20 @@ function onDocumentMouseMove ( event ) {
 
 			}
 
+			tots = NCD.getDates( line[ 1 ] );
+			bars = NCD.bars;
+
+			//console.log( 'tots', tots );
+
 			const casesNew = line[ 8 ] ? line[ 8 ] : 0;
 
 			//detNCD.hidden = false;
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
+			divMessage.innerHTML = `JHU data<br>
 			${ ( line[ 0 ] ? "place: " + line[ 0 ] + "<br>" : "" ) }
-country: ${ country }<br>
+country: ${ line[ 1 ] }<br>
 update: ${ line[ 2 ] }<br>
 cases: ${ Number( line[ 3 ] ).toLocaleString() }<br>
 cases today: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
@@ -731,12 +697,19 @@ deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
 recoveries: ${ Number( line[ 5 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }%<br>
 deaths/population: ${ d2Pop }<br>
-cases/(gdp/pop): ${ d2Gdp }<br>
+deaths/gdp: ${ d2Gdp }<br>
 <hr>
-<a href="https://mmediagroup.fr/covid-19" target="_blank">MMG data</a> - updates hourly<br>
+MMG data (state data soon)<br>
 ${ tots }
 ${ bars }
 `;
+
+			//<hr>
+			//geoJSON name: ${ name }<br>
+			//population: ${ population.toLocaleString() }<br>
+			//</br>gdp: ${ gdp.toLocaleString() }<br>
+
+			NCD.getDates( line[ 1 ] );
 
 		}
 

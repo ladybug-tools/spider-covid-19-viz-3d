@@ -119,6 +119,7 @@ function resetGroups() {
 }
 
 
+
 function onLoadCases ( xhr ) {
 
 	resetGroups();
@@ -128,33 +129,10 @@ function onLoadCases ( xhr ) {
 	linesCases = xhr.target.response.split( "\n" ).map( line => line.split( "," ) )
 	//console.log( 'lines', lines );
 
-	dates = linesCases[ 0 ].slice( 4 );
+	const dates = linesCases[ 0 ].slice( 4 );
 
 	selDate.innerHTML = dates.map( date => `<option>${ date }</option>` );
 
-	//linesCases.forEach( ( line, index ) => addBar( line, index, "red", 0.4, 0, groupCases ) );
-
-
-	// linesCasesNew = linesCases.map( ( line, index ) => {
-
-	// 	const items = line.slice( 4 );
-	// 	const casesNew = items.map( ( item, index ) => Math.abs(  item - items[ index -1 ]) );
-	// 	//console.log( 'caseNew', caseNew );
-
-	// 	//console.log( 'll', ll );
-	// 	return line.slice( 0, 4 ).concat( casesNew)
-
-	// } );
-	// //console.log( 'linesCasesNew', linesCasesNew );
-
-	// linesCasesNew.forEach( ( line, index ) => {
-
-	// 	const offset = 0.2 * Math.sqrt( linesCases[ index ][ linesCases[ index ].length - 1 ] )
-
-	// 	- 0.2 * Math.sqrt( line[ line.length - 1 ] );
-	// 	addBar( line, index, "cyan", 0.6, offset, groupCasesNew );
-
-	// } )
 
 }
 
@@ -162,11 +140,9 @@ function onLoadCases ( xhr ) {
 function onLoadDeaths ( xhr ) {
 
 	linesDeaths = xhr.target.response.split( "\n" ).map( line => line.split( "," ) )
-	//console.log( 'lines', lines );
+	//console.log( 'linesDeaths', linesDeaths );
 
-	//linesDeaths.forEach( ( line, index ) => addBar( line, index, "black", 0.5, 0, groupDeaths ) );
-
-	updateBars ( dates.length - 1 )
+	updateBars( linesDeaths[ 0 ].length - 1 );
 
 }
 
@@ -176,51 +152,56 @@ function updateBars ( indexDate ) {
 
 	resetGroups();
 
-	linesCases.forEach( ( line, index ) => addBar( line, index, "red", 0.4, 0, groupCases, indexDate ) );
+	heightsCases = linesCases.map( line => line[ indexDate ] );
+	//console.log( 'heights', heightsCases );
 
-	const linesCasesNew = linesCases.map( ( line, index ) => {
+	meshesCases = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
 
-		const items = line.slice( 4 );
-		const casesNew = items.map( ( item, index ) => Math.abs(  item - items[ index -1 ]) );
-		return line.slice( 0, 4 ).concat( casesNew)
+	groupCases.add( ...meshesCases.slice( 1 ) );
 
-	} );
 
-	// use mesh bbox max z
+	casesNew = linesCases.map( line => line[ indexDate ] - line[ indexDate - 1 ] );
+	heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
 
-	// linesCasesNew.forEach( ( line, index ) => {
+		//line[ indexDate] * ( line[ indexDate ] - line[ indexDate - 1 ] ) / line[ indexDate ] );
 
-	// 	const offset = 0.2 * Math.sqrt( linesCases[ index ][ indexDate] ) - 0.2 * Math.sqrt( line[ 4 + indexDate ] );
-	// 	addBar( line, index, "cyan", 0.6, offset, groupCasesNew );
+	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
-	// } )
+	offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 
-	linesDeaths.forEach( ( line, index ) => addBar( line, index, "black", 0.5, 0, groupDeaths, indexDate ) );
+	meshesCasesNew = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
+
+	groupCasesNew.add( ...meshesCasesNew.slice( 1 ) );
+
+
+	heightsDeaths = linesDeaths.map( line => line[ indexDate ] );
+	//console.log( 'heightsDeaths', heightsDeaths );
+
+	meshesDeath = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
+
+	groupDeaths.add( ...meshesDeath.slice( 1 ) );
+
+
+	heightsDeathsNew = linesDeaths.map( line => line[ indexDate ] - line[ indexDate - 1 ] );
+
+	offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
+
+	meshesDeathsNew = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
+
+	groupDeathsNew.add( ...meshesDeathsNew.slice( 1 ) );
 
 }
 
 
 
-function addBar ( line, index, color = "red", radius = 0.4, offset = 0, group = groupCases, date) {
+function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 1, offset = 0 ) {
 
-	const place = line[ 0 ];
-	const country = line[ 1 ];
-	const lat = line[ 2 ];
-	const lon = line[ 3 ];
-	const items = line.slice( 4 );
+	heightScaled = 0.2 * Math.sqrt( height );
 
-	date = date || items.length - 1;
+	let p1 = latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
+	let p2 = latLonToXYZ( 100, lat, lon );
 
-	item = items[ date ]
-	//console.log( 'item', item  );
-
-	const height = 0.2 * Math.sqrt( item || 1 );
-
-
-	let p1 = latLonToXYZ( 50 + offset + 0.5 * height, lat, lon, index );
-	let p2 = latLonToXYZ( 100, lat, lon, index );
-
-	let geometry = new THREE.CylinderGeometry( radius, radius, height, 12, 1, true );
+	let geometry = new THREE.CylinderGeometry( radius, radius, heightScaled, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	let material = new THREE.MeshPhongMaterial( { color: color, side: 2 } );
 	let mesh = new THREE.Mesh( geometry, material );
@@ -228,13 +209,13 @@ function addBar ( line, index, color = "red", radius = 0.4, offset = 0, group = 
 	mesh.lookAt( p2 );
 	mesh.userData = index;
 
-	group.add( mesh );
+	return mesh;
 
 }
 
 
 
-function latLonToXYZ ( radius, lat, lon, index ) {
+function latLonToXYZ ( radius, lat, lon ) {
 
 	const pi2 = Math.PI / 2;
 
@@ -550,6 +531,10 @@ function onDocumentMouseMove ( event ) {
 
 			const line = linesCases[ index ];
 
+			const lineDeaths = linesDeaths[ index ];
+
+			dateIndex = selDate.selectedIndex > -1 ? selDate.selectedIndex : line.length - 1 ;
+
 			const country = line[ 1 ];
 
 			const place = line[ 0 ];
@@ -557,6 +542,7 @@ function onDocumentMouseMove ( event ) {
 
 			const tots = NCD.getDates( country, place );
 			//console.log( 'tots', tots );
+
 			const bars = NCD.bars;
 
 			const arr = geoJson.features.filter( feature => feature.properties.NAME === country );
@@ -584,7 +570,7 @@ function onDocumentMouseMove ( event ) {
 
 			}
 
-			const casesNew = line[ 8 ] ? line[ 8 ] : 0;
+			//const casesNew = line[ 8 ] ? line[ 8 ] : 0;
 
 			//detNCD.hidden = false;
 			divMessage.hidden = false;
@@ -593,17 +579,17 @@ function onDocumentMouseMove ( event ) {
 			divMessage.innerHTML = `<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
 			${ ( line[ 0 ] ? "place: " + line[ 0 ] + "<br>" : "" ) }
 country: ${ country }<br>
-update: ${ line[ 2 ] }<br>
-cases: ${ Number( line[ 3 ] ).toLocaleString() }<br>
-cases today: <mark>${ Number( casesNew ).toLocaleString() }</mark><br>
-deaths: ${ Number( line[ 4 ] ).toLocaleString() }<br>
-recoveries: ${ Number( line[ 5 ] ).toLocaleString() }<br>
-deaths/cases: ${ ( 100 * ( Number( line[ 4 ] ) / Number( line[ 3 ] ) ) ).toLocaleString() }%<br>
-deaths/population: ${ d2Pop }<br>
-cases/(gdp/pop): ${ d2Gdp }<br>
+cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
+cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex -1 ] ).toLocaleString() }</mark><br>
+deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
+deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex -1 ] ).toLocaleString() }<br>
+deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 <hr>
 <a href="https://mmediagroup.fr/covid-19" target="_blank">MMG data</a> - updates hourly<br>
 ${ tots }
+deaths/population: ${ d2Pop }<br>
+cases/(gdp/pop): ${ d2Gdp }<br>
+<b>New cases per day</b><br>
 ${ bars }
 `;
 

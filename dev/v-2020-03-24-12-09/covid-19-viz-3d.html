@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+<meta name=description
+	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
+<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+<meta name=version content="2020-03-24-12-09">
+
+<title>COVID-19 Viz3D</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+
+<body>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+
+
+<script src="js/thr-three.js"></script>
+<script src="js/threeGeoJSON.js"></script>
+<script>
+
+
+</script>
+
+<nav id="navMenu">
+
+	<br>
+
+	<details open>
+
+		<summary>hide menu</summary>
+
+		<header id="hdrTitle">
+
+			<h2>
+				<a id=aSource target=_top title="Ladybug Tools / Spider readme & source code on GitHub" >
+					<img id=imgIcon height=18 style=opacity:0.5; >
+				</a>
+
+				<a href="" title="Click to reload this page" >
+					<span id=sTitle ></span>&nbsp;
+				</a>
+
+				<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
+					View the COVID-19 data from the John Hopkins University
+					<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
+					in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
+					WebGL tools.
+				</span></span>
+			</h2>
+
+			<div>
+				v-<span id=sVersion ></span>
+			</div>
+
+		</header>
+
+		<p class=navLegend style=background-color:cyan; title="The flare indicates high number of new cases">
+			<button id=butNew onclick=toggleBars(groupCasesNew) style=background-color:cyan;color:black;width:100%; >
+				New cases today&nbsp;</button></p>
+
+		<p class=navLegend style=background-color:red; >
+			<button id=butCases onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
+				Confirmed cases&nbsp;</button></p>
+
+		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
+			<button id=butDeaths onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
+				Deaths&nbsp;</button></p>
+
+		<p class=navLegend style=background-color:lavender; >
+			<button id=butRecoveries onclick=toggleBars(groupDeathsNew) style=background-color:lavender;width:100%; >
+				New deaths today&nbsp;</button></p>
+
+		<div id=divStats style=background-color:white;padding:1ch;></div>
+
+		<div id=divSettings style=background-color:white;padding:1ch; ></div>
+
+	</details>
+
+</nav>
+
+
+<div id=divMessage style=max-width:250px; >
+	<mark>New database format. JHU made a silly update. Fixes are in progress</mark>
+	Touch the screen to stop rotation<br>
+	Click or touch a country "stick" to pop-up statistics<br>
+	Two fingers or mousewheel to zoom
+	<hr>
+</div>
+
+<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
+
+	<button onclick=controls.reset(); class=ftrButton title="reset the view" >&CirclePlus;</button>
+	&nbsp;
+	<button onclick=THR.onStop() title="stop the rotation"
+	class=ftrButton "Stop all rotation" >&circlearrowright;</button>
+	&nbsp;
+	<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards"  class=ftrButton >&sdotb;</button>
+	&nbsp;
+	<button onclick=sayThis(); title="Can you hear me now?"  class=ftrButton >&phone;</button>
+
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/glo-globe.js"></script>
+<script src="js/spk-speak.js"></script>
+<script src="js/ncd-new-cases-date.js"></script>
+
+<script>
+
+pathAssets = "../../assets/"; // change in html of stable
+
+init();
+
+// keep address bar pointed to latest
+window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );
+
+</script>
+</body>
+</html>

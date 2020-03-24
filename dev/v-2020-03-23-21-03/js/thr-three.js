@@ -85,6 +85,29 @@ THR.onStart = function () {
 
 
 
+THR.onStop = function () {
+
+	window.removeEventListener( 'keydown', THR.onStart );
+
+	clearInterval( THR.suspendTimer );
+
+	THR.controls.autoRotate = false;
+
+	renderer.domElement.removeEventListener( 'mousedown', THR.onStart );
+	renderer.domElement.removeEventListener( 'mousemove', THR.onStart );
+	renderer.domElement.removeEventListener( 'wheel', THR.onStart );
+
+	renderer.domElement.removeEventListener( 'touchstart', THR.onStart );
+	renderer.domElement.removeEventListener( 'touchmove', THR.onStart );
+	renderer.domElement.removeEventListener( 'touchend', THR.onStart );
+
+
+
+
+}
+
+
+
 THR.drawPlacard = function( text = ["abc", "testing 123" ], scale = "0.2", color = 20, x = 20, y = 20, z = 20 ) {
 
 	// [text], scale, color, x, y, z )
@@ -92,7 +115,8 @@ THR.drawPlacard = function( text = ["abc", "testing 123" ], scale = "0.2", color
 	const v = ( x, y, z ) => new THREE.Vector3( x, y, z );
 
 	const texture = canvasMultilineText( text, { backgroundColor: color }   );
-	const spriteMaterial = new THREE.SpriteMaterial( { map: texture, opacity: 0.9, transparent: true } );
+	//const spriteMaterial = new THREE.SpriteMaterial( { map: texture, opacity: 0.9, transparent: true } );
+	const spriteMaterial = new THREE.SpriteMaterial( { map: texture } );
 	const sprite = new THREE.Sprite( spriteMaterial );
 	sprite.position.set( x, y, z ) ;
 	sprite.scale.set( scale * texture.image.width, scale * texture.image.height );

@@ -126,10 +126,10 @@ function callbackDailyReport ( xhr ) {
 
 	const names = json.map( json => json.name );
 
-	today = names[ names.length - 1 ];
-	console.log( today );
+	today = names[ names.length - 2 ];
+	//console.log( today );
 
-	yesterday = names[ names.length - 2 ];
+	yesterday = names[ names.length - 3 ];
 	//console.log( 'yesterday', yesterday );
 
 	//requestFile( dataJhu + today, onLoad );
@@ -153,21 +153,24 @@ function onLoad ( xhr ) {
 	scene.add( group, groupCases, groupNew, groupDeaths, groupRecoveries, groupPlacards, groupLines );
 
 	let response = xhr.target.response;
-	response = response.replace( /"Korea, South"/, "South Korea" )
-		.replace( /"Gambia, The"/, "The Gambia" )
-		.replace( /"Bahamas, The"/, "The Bahamas" );
-	//.replace( /"Virgin Islands,/, "Virgin Islands");
+	// response = response.replace( /"Korea, South"/, "South Korea" )
+	// 	.replace( /"Gambia, The"/, "The Gambia" )
+	// 	.replace( /"Bahamas, The"/, "The Bahamas" );
+	// //.replace( /"Virgin Islands,/, "Virgin Islands");
 
-	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
-	console.log( 'lines', lines );
+	lines = response.split( "\n" ).map( line => line.split( "," ) )
+	//console.log( 'lines', lines );
 
 	const date = new Date().toISOString();
 
+	//FIPS,Admin2,Province_State,Country_Region,Last_Update,Lat,Long_,Confirmed,Deaths,Recovered,Active,Combined_Key
 	lines.push( [ "Test Case", "Null Island", date, "abc", "", "-3.333", "0", "0" ] );
 
 	lines.forEach( ( line, index ) => addIndicator( line, index ) );
 
-	requestFile( dataJhu + yesterday, onLoadYesterday );
+	//requestFile( dataJhu + yesterday, onLoadYesterday );
+
+	getStats();
 
 }
 
@@ -182,7 +185,7 @@ function onLoadYesterday ( xhr ) {
 
 	lines.forEach( ( line, index ) => addIndicatorNew( line, index ) );
 
-	getStats();
+	//getStats();
 
 }
 
@@ -190,20 +193,22 @@ function onLoadYesterday ( xhr ) {
 
 function addIndicator ( line, index ) {
 
-	const l3 = Number( line[ 3 ] );
-	cases = isNaN( l3 ) ? 0 : l3;
+	const lat = Number( line[ 5 ] )
+	//const lat = isNaN( l5 ) ? 0 : l5;
 
-	const l4 = Number( line[ 4 ] );
-	const deaths = isNaN( l4 ) ? 0 : l4;
+	const lon= Number( line[ 6 ] )
+	//const lon = isNaN( l6 ) ? 0 : l6;
 
-	const l5 = Number( line[ 5 ] );
-	const recoveries = isNaN( l5 ) ? 0 : l5;
+	const cases = Number( line[ 7 ] );
+	//cases = isNaN( l7 ) ? 0 : l7;
 
-	const l6 = Number( line[ 6 ] )
-	const lat = isNaN( l6 ) ? 0 : l6;
+	const deaths = Number( line[ 8 ] );
+	//const deaths = isNaN( l8 ) ? 0 : l8;
 
-	const l7 = Number( line[ 7 ] )
-	const lon = isNaN( l7 ) ? 0 : l7;
+	const recoveries = Number( line[ 9 ] );
+	//const recoveries = isNaN( l9 ) ? 0 : l9;
+
+	const active = Number( line[ 10 ] );
 
 	const heightCases = 0.2 * Math.sqrt( cases || 1 );
 	const heightDeaths = cases > 0 ? heightCases * ( deaths / cases ) : 0;
@@ -348,40 +353,56 @@ function getStats () {
 	const europe = [ "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "EstoniaF", "Finland", "France", "Georgia", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Holy See" ];
 
 	const globalCases = lines.reduce( ( sum, line ) => {
-		let cases = Number( line[ 3 ] );
-		cases = isNaN( cases ) ? 0 : cases;
+		let cases = Number( line[ 7 ] );
+		//cases = isNaN( cases ) ? 0 : cases;
 		return sum + cases;
 	}, 0 );
 
-	const globalCasesNew = lines.reduce( ( sum, line ) => {
-		let caseNew = Number( line[ 8 ] );
-		caseNew = isNaN( caseNew ) ? 0 : caseNew;
-		return sum + caseNew;
-	}, 0 );
-	//console.log( 'globalCasesNew', globalCasesNew );
+	const globalCasesNew = 999999; // lines.reduce( ( sum, line ) => {
+	// 	let caseNew = Number( line[ 8 ] );
+	// 	caseNew = isNaN( caseNew ) ? 0 : caseNew;
+	// 	return sum + caseNew;
+	// }, 0 );
+	console.log( 'globalCasesNew', globalCasesNew );
 
+	// const lat = Number( line[ 5 ] )
+	// //const lat = isNaN( l5 ) ? 0 : l5;
 
-	const globalDeaths = lines.reduce( ( sum, line ) => sum + Number( line[ 4 ] ), 0 );
-	const globalRecoveries = lines.reduce( ( sum, line ) => sum + Number( line[ 5 ] ), 0 );
+	// const lon= Number( line[ 6 ] )
+	// //const lon = isNaN( l6 ) ? 0 : l6;
+
+	// const cases = Number( line[ 7 ] );
+	// //cases = isNaN( l7 ) ? 0 : l7;
+
+	// const deaths = Number( line[ 8 ] );
+	// //const deaths = isNaN( l8 ) ? 0 : l8;
+
+	// const recoveries = Number( line[ 9 ] );
+	// //const recoveries = isNaN( l9 ) ? 0 : l9;
+
+	// 	const active = Number( line[ 10 ] );
+
+	const globalDeaths = lines.reduce( ( sum, line ) => sum + Number( line[ 8 ] ), 0 );
+	const globalRecoveries = lines.reduce( ( sum, line ) => sum + Number( line[ 9 ] ), 0 );
 	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
 
-	const chinaDeaths = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 4 ] ) : 0, 0 );
-	const chinaCasesNew = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ 8 ] : 0, 0 );
-	const chinaCases = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 3 ] ) : 0, 0 );
-	const chinaRecoveries = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 5 ] ) : 0, 0 );
+	const chinaDeaths = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 8 ] ) : 0, 0 );
+	const chinaCasesNew = 0; //lines.reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ 8 ] : 0, 0 );
+	const chinaCases = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 7 ] ) : 0, 0 );
+	const chinaRecoveries = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ 9 ] ) : 0, 0 );
 	const chinaDeathsToCases = 100 * chinaDeaths / chinaCases;
 
-	const europeDeaths = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ?
-		Number( line[ 4 ] ) : 0, 0 );
-	const europeCasesNew = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? line[ 8 ] : 0, 0 );
-	const europeCases = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ 3 ] ) : 0, 0 );
-	const europeRecoveries = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ 5 ] ) : 0, 0 );
+	const europeDeaths = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 3 ] ) ?
+		Number( line[ 8 ] ) : 0, 0 );
+	const europeCasesNew = 0; //lines.reduce( ( sum, line ) => sum += europe.includes( line[ 3 ] ) ? line[ 8 ] : 0, 0 );
+	const europeCases = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 3 ] ) ? Number( line[ 7 ] ) : 0, 0 );
+	const europeRecoveries = lines.reduce( ( sum, line ) => sum += europe.includes( line[ 3 ] ) ? Number( line[ 9 ] ) : 0, 0 );
 	const europeDeathsToCases = 100 * europeDeaths / europeCases;
 
-	const usaCases = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 3 ] ) : 0, 0 );
-	const usaCasesNew = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? line[ 8 ] : 0, 0 );
-	const usaDeaths = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 4 ] ) : 0, 0 );
-	const usaRecoveries = lines.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ 5 ] ) : 0, 0 );
+	const usaCases = lines.reduce( ( sum, line ) => sum += line[ 3 ] === "US" ? Number( line[ 7 ] ) : 0, 0 );
+	const usaCasesNew = 0; //lines.reduce( ( sum, line ) => sum += line[ 3 ] === "US" ? line[ 8 ] : 0, 0 );
+	const usaDeaths = lines.reduce( ( sum, line ) => sum += line[ 3 ] === "US" ? Number( line[ 8 ] ) : 0, 0 );
+	const usaRecoveries = lines.reduce( ( sum, line ) => sum += line[ 3 ] === "US" ? Number( line[ 9 ] ) : 0, 0 );
 	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
 
 	const rowCases = globalCases - chinaCases - europeCases - usaCases;

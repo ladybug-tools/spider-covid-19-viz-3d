@@ -135,6 +135,8 @@ Vision of the future
 
 Data sources
 
+* https://datahub.io/core/covid-19
+* https://covidtracking.com/api/
 * https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data
 * https://github.com/M-Media-Group/Covid-19-API
 	* https://opendata.arcgis.com/datasets/bbb2e4f589ba40d692fab712ae37b9ac_1.csv

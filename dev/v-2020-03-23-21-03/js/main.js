@@ -186,12 +186,12 @@ function updateBars ( indexDate ) {
 
 	} );
 
-	linesCasesNew.forEach( ( line, index ) => {
+	// linesCasesNew.forEach( ( line, index ) => {
 
-		const offset = 0.2 * Math.sqrt( linesCases[ index ][ indexDate] ) - 0.2 * Math.sqrt( line[ 4 + indexDate ] );
-		addBar( line, index, "cyan", 0.6, offset, groupCasesNew );
+	// 	const offset = 0.2 * Math.sqrt( linesCases[ index ][ indexDate] ) - 0.2 * Math.sqrt( line[ 4 + indexDate ] );
+	// 	addBar( line, index, "cyan", 0.6, offset, groupCasesNew );
 
-	} )
+	// } )
 
 	linesDeaths.forEach( ( line, index ) => addBar( line, index, "black", 0.5, 0, groupDeaths, indexDate ) );
 

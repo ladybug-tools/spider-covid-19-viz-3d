@@ -92,7 +92,6 @@ function init () {
 
 
 
-
 function requestFile ( url, callback ) {
 
 	const xhr = new XMLHttpRequest();
@@ -129,7 +128,14 @@ function onLoadCases ( xhr ) {
 
 	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=10 style=width:100%; ></select>`;
 
-	linesCases = xhr.target.response.split( "\n" ).map( line => line.split( "," ) )
+	response = xhr.target.response
+
+	response = response.replace( /"Korea, South"/, "South Korea" )
+	// 	.replace( /"Gambia, The"/, "The Gambia" )
+	// 	.replace( /"Bahamas, The"/, "The Bahamas" );
+	// .replace( /"Virgin Islands,/, "Virgin Islands");
+
+	linesCases = response.split( "\n" ).map( line => line.split( "," ) );
 	//console.log( 'lines', lines );
 
 	const dates = linesCases[ 0 ].slice( 4 );
@@ -466,7 +472,6 @@ function toggleBars ( group = groupCases ) {
 		groupCasesNew.visible = false;
 		groupDeaths.visible = false;
 		groupDeathsNew.visible = false;
-
 		group.visible = true;
 
 	}

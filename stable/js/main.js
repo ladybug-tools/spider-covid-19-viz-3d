@@ -55,12 +55,6 @@ function init () {
 	requestFile( dataJhu, onLoadCases );
 
 
-	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-
-	requestFile( dataJhuDeaths, onLoadDeaths );
-
-
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
 
 	requestFile( urlJsonStatesProvinces, onLoadGeoJson );
@@ -144,6 +138,11 @@ function onLoadCases ( xhr ) {
 	selDate.innerHTML = dates.map( date => `<option>${ date }</option>` );
 
 	selDate.selectedIndex = dates.length - 1;
+
+		//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+		const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+
+		requestFile( dataJhuDeaths, onLoadDeaths );
 
 }
 

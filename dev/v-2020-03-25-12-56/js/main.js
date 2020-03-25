@@ -25,8 +25,11 @@ let groupPlacards = new THREE.Group();
 let groupLines = new THREE.Group();
 
 let geoJson;
-let yesterday;
-let linesYesterday;
+let linesCases;
+let linesCasesNew;
+let linesDeaths;
+let linesDeathsNew;
+
 let intersected;
 
 let mesh;
@@ -55,11 +58,6 @@ function init () {
 	requestFile( dataJhu, onLoadCases );
 
 
-	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-
-	requestFile( dataJhuDeaths, onLoadDeaths );
-
 
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
 
@@ -82,8 +80,6 @@ function init () {
 
 	getNotes();
 
-
-	//NCD.init();
 
 	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
@@ -129,7 +125,7 @@ function onLoadCases ( xhr ) {
 
 	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=10 style=width:100%; ></select>`;
 
-	response = xhr.target.response;
+	let response = xhr.target.response;
 
 	response = response.replace( /"Korea, South"/, "South Korea" );
 	// 	.replace( /"Gambia, The"/, "The Gambia" )
@@ -144,6 +140,13 @@ function onLoadCases ( xhr ) {
 	selDate.innerHTML = dates.map( date => `<option>${ date }</option>` );
 
 	selDate.selectedIndex = dates.length - 1;
+
+
+	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+
+	requestFile( dataJhuDeaths, onLoadDeaths );
+
 
 }
 
@@ -165,6 +168,8 @@ function onLoadDeaths ( xhr ) {
 function updateBars ( indexDate ) {
 
 	resetGroups();
+
+	if ( !linesCases ) { console.log( 'linesCases', linesCases );}
 
 	heightsCases = linesCases.map( line => line[ indexDate ] );
 	//console.log( 'heights', heightsCases );

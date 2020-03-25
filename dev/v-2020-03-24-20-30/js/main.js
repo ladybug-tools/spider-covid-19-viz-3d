@@ -54,7 +54,6 @@ function init () {
 
 	requestFile( dataJhu, onLoadCases );
 
-	https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv
 
 	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
@@ -84,7 +83,7 @@ function init () {
 	getNotes();
 
 
-	NCD.init();
+	//NCD.init();
 
 	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
@@ -175,7 +174,7 @@ function updateBars ( indexDate ) {
 	groupCases.add( ...meshesCases.slice( 1 ) );
 
 
-	casesNew = linesCases.map( line => line[ indexDate ] - line[ indexDate - 1 ] );
+	casesNew = linesCases.slice( 1 ).map( line => line[ indexDate ] - line[ indexDate - 1 ] );
 	heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
 
 		//line[ indexDate] * ( line[ indexDate ] - line[ indexDate - 1 ] ) / line[ indexDate ] );
@@ -519,21 +518,19 @@ function onDocumentMouseMove ( event ) {
 			const index = intersected.userData;
 
 			const line = linesCases[ index ];
+			//console.log( 'line', line );
 
 			const lineDeaths = linesDeaths[ index ];
 
+			const casesNew = line.slice( 5 ).map( ( cases, index ) => cases - line[ 5 + index - 1 ] );
+			//console.log( 'cb', casesNew );
+
 			const dateIndex = selDate.selectedIndex > -1 ? 4 + selDate.selectedIndex : line.length - 1 ;
 
-			const country = line[ 1 ];
-
+			let country = line[ 1 ];
 			const place = line[ 0 ];
-			//console.log( 'place', place );
 
-			const tots = NCD.getDates( country, place );
-			//console.log( 'tots', tots );
-
-			const bars = NCD.bars;
-
+			if ( country === "US" ) { country = "United States of America"; }
 			const arr = geoJson.features.filter( feature => feature.properties.NAME === country );
 			//console.log( 'arr', arr );
 
@@ -559,14 +556,12 @@ function onDocumentMouseMove ( event ) {
 
 			}
 
-			//const casesNew = line[ 8 ] ? line[ 8 ] : 0;
-
 			//detNCD.hidden = false;
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
 			divMessage.innerHTML = `<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
-			${ ( line[ 0 ] ? "place: " + line[ 0 ] + "<br>" : "" ) }
+			${ ( place ? "place: " + place + "<br>" : "" ) }
 country: ${ country }<br>
 cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
 cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex -1 ] ).toLocaleString() }</mark><br>
@@ -574,12 +569,10 @@ deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
 deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex -1 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 <hr>
-<a href="https://mmediagroup.fr/covid-19" target="_blank">MMG data</a> - updates hourly<br>
-${ tots }
 deaths/population: ${ d2Pop }<br>
 cases/(gdp/pop): ${ d2Gdp }<br>
 <b>New cases per day</b><br>
-${ bars }
+${ getBars( casesNew ) }
 `;
 
 		}
@@ -592,5 +585,22 @@ ${ bars }
 		//detNCD.hidden = true;
 
 	}
+
+}
+
+
+function getBars ( arr ) {
+
+	arr.reverse();
+
+	const max = Math.max( ...arr );
+	const scale = 200 / max;
+	const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
+
+	const bars = arr.map( ( item, index ) =>
+	`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
+	title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>` ).join( "" );
+
+	return `<div style=background-color:#ddd title="New cases per day. The curve you hope to see flatten!" >${ bars }</div>`;
 
 }

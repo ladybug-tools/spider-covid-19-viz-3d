@@ -343,7 +343,7 @@ function getStats () {
 	groupPlacards.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
 
 
-	divStats.innerHTML = `<details id=detStats open>
+	divStats.innerHTML = `<details id=detStats>
 
 	<summary><b>global data </b></summary>
 

@@ -40,7 +40,7 @@ NCD.requestFile = function ( url, callback ) {
 	const xhr = new XMLHttpRequest();
 	xhr.open( 'GET', url, true );
 	xhr.onerror = ( xhr ) => console.log( 'error:', xhr );
-	//xhr.onprogress = ( xhr ) => NCDdivChartMmg.innerHTML = 'bytes loaded:' + xhr.loaded;
+	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded', xhr.loaded, xhr.target.status  );
 	xhr.onload = callback;
 	xhr.send( null );
 
@@ -101,6 +101,10 @@ NCD.getDates = function ( country = "France", place = "France" ) {
 	if ( !NCD.json ) {
 
 		return "It may take a while to load all the data. Keep trying every ten seconds or so.";
+
+	} else if ( NCD.json.message ) {
+
+		return `<p><mark>${ NCD.json.message }</mark></p><p>Try again later</p>`;
 
 	}
 	//console.log( 'c/p', country, place );
@@ -170,5 +174,3 @@ NCD.drawChart = function ( arr ) {
 };
 
 
-
-NCD.init();

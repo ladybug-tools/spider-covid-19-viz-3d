@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-23-18-15">
+<meta name=version content="2020-03-24-15-33">
 
 <title>COVID-19 Viz3D</title>
 
@@ -61,22 +61,22 @@
 		</header>
 
 		<p class=navLegend style=background-color:cyan; title="The flare indicates high number of new cases">
-			<button id=butNew onclick=toggleCases(groupNew) style=background-color:cyan;color:black;width:100%; >
+			<button id=butNew onclick=toggleBars(groupCasesNew) style=background-color:cyan;color:black;width:100%; >
 				New cases today&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:red; >
-			<button id=butCases onclick=toggleCases(groupCases) style=background-color:red;color:white;width:100%; >
+			<button id=butCases onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
 				Confirmed cases&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
-			<button id=butDeaths onclick=toggleCases(groupDeaths) style=background-color:black;color:white;width:100%; >
+			<button id=butDeaths onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
 				Deaths&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:limegreen; >
-			<button id=butRecoveries onclick=toggleCases(groupRecoveries) style=background-color:limegreen;width:100%; >
-				Recoveries&nbsp;</button></p>
+		<p class=navLegend style=background-color:lavender; >
+			<button id=butRecoveries onclick=toggleBars(groupDeathsNew) style=background-color:lavender;width:100%; >
+				New deaths today&nbsp;</button></p>
 
-		<div id=divStats style=background-color:white;padding:1ch; ></div>
+		<div id=divStats style=background-color:white;padding:1ch;></div>
 
 		<div id=divSettings style=background-color:white;padding:1ch; ></div>
 
@@ -86,15 +86,11 @@
 
 
 <div id=divMessage style=max-width:250px; >
-	<mark>18:51 PST ~ JHU file format has changed. Working on fixes!!</mark>
+	<mark>New database format. JHU made a silly update. Fixes are in progress</mark>
 	Touch the screen to stop rotation<br>
 	Click or touch a country "stick" to pop-up statistics<br>
 	Two fingers or mousewheel to zoom
 	<hr>
-	New today<br>
-	<mark>Mouse over no longer works</mark><br>
-	pop-ups show province or state data<br>
-	pop-up bars show new cases and dates as tooltips
 </div>
 
 <footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
@@ -109,17 +105,17 @@
 	<button onclick=sayThis(); title="Can you hear me now?"  class=ftrButton >&phone;</button>
 
 </footer>
-<script src="js/main.js"></script>
 
+<script src="js/main.js"></script>
+<script src="js/glo-globe.js"></script>
+<script src="js/spk-speak.js"></script>
 <script src="js/ncd-new-cases-date.js"></script>
 
 <script>
 
-pathAssets = "../assets/";
-
+pathAssets = "../assets/"; // change in html of stable
 
 init();
-
 
 // keep address bar pointed to latest
 window.history.pushState( '', '', '/spider-covid-19-viz-3d/' );

@@ -144,6 +144,10 @@ Data sources
 * https://nssac.bii.virginia.edu/covid-19/dashboard/
 * http://globalcovid19.live/index.php/148-2/
 
+Compare sources
+
+* https://ourworldindata.org/covid-sources-comparison
+
 
 Dependencies
 

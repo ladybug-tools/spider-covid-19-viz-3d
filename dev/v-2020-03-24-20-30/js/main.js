@@ -546,8 +546,8 @@ function onDocumentMouseMove ( event ) {
 				const name = feature.properties.NAME;
 
 				//console.log( 'gdp/pop', 1000000 * gdp / population  );
-				d2Pop = ( 100 * ( Number( line[ 4 ] ) / population ) ).toLocaleString() + "%";
-				d2Gdp = ( ( Number( line[ 3 ] ) / (1000000 *  gdp / population ) ) ).toLocaleString() + "";
+				d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
+				d2Gdp = ( line[ dateIndex ]  / (1000000 *  gdp / population ) ).toLocaleString() + "";
 
 			} else {
 
@@ -569,7 +569,7 @@ deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
 deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex -1 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 <hr>
-deaths/population: ${ d2Pop }<br>
+deaths/100K persons: ${ d2Pop }<br>
 cases/(gdp/pop): ${ d2Gdp }<br>
 <b>New cases per day</b><br>
 ${ getBars( casesNew ) }

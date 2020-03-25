@@ -73,6 +73,7 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 
 ### Generally / Short term
 
+* 2020-03-24 ~ Theo ~ use Three.js fonts??
 * Better display of text in placards??
 * Location hash goes to place and set language and other aspects
 * Globe rotates to the lat/lon indicated by your browser location
@@ -87,8 +88,8 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 
 Vision of the future
 
-* new organization?
-* separate timeline pages
+* New organization?
+* Separate timeline pages
 * web pages for counties/provinces
 * Add sound/music? During mouseover and at mouse click or data update
 * Refresh data every few minutes
@@ -160,11 +161,6 @@ Dependencies
 
 * https://threejs.org
 * https://github.com/jdomingu/ThreeGeoJSON
-
-
-
-
-
 
 
 

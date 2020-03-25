@@ -136,10 +136,12 @@ Vision of the future
 
 Data sources
 
-* https://xapix-io.github.io/covid-data/
+* https://github.com/ulklc/covid19-timeseries
+* https://coronadatascraper.com/#timeseries.csv
 * https://github.com/datasets/covid-19/tree/master/data  ~ daily ?
 * https://datahub.io/core/covid-19
 * https://covidtracking.com/api/
+* https://covidtracking.com/data/
 * https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data
 * https://github.com/M-Media-Group/Covid-19-API
 	* https://opendata.arcgis.com/datasets/bbb2e4f589ba40d692fab712ae37b9ac_1.csv
@@ -149,6 +151,7 @@ Data sources
 
 Compare sources
 
+* https://vitals.lifehacker.com/look-up-your-states-covid-19-test-results-with-this-tra-1842475525
 * https://blog.datawrapper.de/coronaviruscharts/
 * https://www.visualcapitalist.com/7-best-covid-19-resources/
 * https://www.lewuathe.com/open-dataset-for-covid-19.html
@@ -156,6 +159,10 @@ Compare sources
 * https://jarv.is/notes/coronavirus-open-source/
 * https://ourworldindata.org/covid-sources-comparison
 
+About Covid
+
+* https://xapix-io.github.io/covid-data/
+* https://covidnearyou.org/#!/
 
 Dependencies
 

@@ -515,7 +515,7 @@ function onDocumentMouseMove ( event ) {
 
 			const lineDeaths = linesDeaths[ index ];
 
-			dateIndex = selDate.selectedIndex > -1 ? selDate.selectedIndex : line.length - 1 ;
+			const dateIndex = selDate.selectedIndex > -1 ? 4 + selDate.selectedIndex : line.length - 1 ;
 
 			const country = line[ 1 ];
 

@@ -135,6 +135,8 @@ Vision of the future
 
 Data sources
 
+* https://xapix-io.github.io/covid-data/
+* https://github.com/datasets/covid-19/tree/master/data  ~ daily ?
 * https://datahub.io/core/covid-19
 * https://covidtracking.com/api/
 * https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data
@@ -142,10 +144,15 @@ Data sources
 	* https://opendata.arcgis.com/datasets/bbb2e4f589ba40d692fab712ae37b9ac_1.csv
 	* https://mmediagroup.fr/covid-19
 * https://nssac.bii.virginia.edu/covid-19/dashboard/
-* http://globalcovid19.live/index.php/148-2/
+* http://globalcovid19.live/index.php/148-2/ ~ many interesting stats
 
 Compare sources
 
+* https://blog.datawrapper.de/coronaviruscharts/
+* https://www.visualcapitalist.com/7-best-covid-19-resources/
+* https://www.lewuathe.com/open-dataset-for-covid-19.html
+* https://covid19dashboards.com/
+* https://jarv.is/notes/coronavirus-open-source/
 * https://ourworldindata.org/covid-sources-comparison
 
 
@@ -154,6 +161,16 @@ Dependencies
 * https://threejs.org
 * https://github.com/jdomingu/ThreeGeoJSON
 
+
+
+
+
+
+
+
+Trackers
+
+* https://towardsdatascience.com/top-5-r-resources-on-covid-19-coronavirus-1d4c8df6d85f
 
 Other 3D visualizations of the COVID-19 data
 
@@ -168,6 +185,7 @@ Geolocation
 
 * https://www.w3schools.com/html/html5_geolocation.asp
 * https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
+
 
 Globes
 
@@ -214,6 +232,10 @@ v-2020-03-24
 
 * Emergency repairs after JHU database format change
 
+v-2020-03-24-18-04
+
+* Switch to https://raw.githubusercontent.com to get latest
+* dev and stable
 
 
 ### 2020-03-23 ~ Theo

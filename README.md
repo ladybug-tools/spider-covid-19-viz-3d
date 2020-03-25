@@ -204,6 +204,14 @@ geoJson useful
 <details open >
 <summary>Change log </summary>
 
+### 2020-03-24 ~ Theo
+
+v-2020-03-24
+
+* Emergency repairs after JHU database format change
+
+
+
 ### 2020-03-23 ~ Theo
 
 version: 2020-03-23

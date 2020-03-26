@@ -4,16 +4,16 @@
 value='You are now in a GitHub web page view - Click this button to view this read me file as source code' ></div>
 
 
-# [covid 19 viz 3d Read Me]( #README.md )
+# [COVID-19 Viz3D Read Me]( #README.md )
 
 <iframe src=https://ladybug-tools.github.io/spider-covid-19-viz-3d/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
 _covid 19 viz 3d - touch me!_
 
-### Full Screen stable: [covid 19 viz 3d]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/ )
+### Full Screen stable: [covid 19 viz3d]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/ )
 
-### Full Screen latest: [covid 19 viz 3d/dev ]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev/ )
+### Full Screen latest: [covid 19 viz3d/dev ]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev/ )
 
-Cookbook: [COVID-19 New Cases by Date]( https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/parse-m-media-group/parse-m-media-group-2020-03-21.html )
+
 
 <details open >
 <summary>Concept</summary>
@@ -31,7 +31,7 @@ Mentions
 * https://www.reddit.com/r/COVID19/comments/fkjby9/view_the_latest_covid19_numbers_from_around_the/
 * https://discourse.threejs.org/t/covid-19-viz-3d-interactive-3d-globe/13613/8
 
-## Influences on the featurues
+## Influences on the features
 
 ### [Issue #5 Expressions of hope]( https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5 )
 
@@ -228,6 +228,16 @@ geoJson useful
 
 <details open >
 <summary>Change log </summary>
+
+### 2020-03-25 ~ Theo
+
+v-2020-03-25
+
+* Fix bars not showing up on load?
+* Cleaned up getStats()
+* Add select country and province
+* Start hacking or reborn recoveries data
+* Cleanup pop-up
 
 ### 2020-03-24 ~ Theo
 

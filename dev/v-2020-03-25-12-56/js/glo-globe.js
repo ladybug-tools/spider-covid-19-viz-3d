@@ -2,8 +2,10 @@ function onLoadGeoJson ( xhr ) {
 
 	let response = xhr.target.response;
 
-	geoJson = JSON.parse( response );
+	const geoJson = JSON.parse( response );
 	//console.log( '', response );
+
+	geoJsonArray.push( geoJson );
 
 	drawThreeGeo( geoJson, 50, 'sphere', { color: "#888" } );
 

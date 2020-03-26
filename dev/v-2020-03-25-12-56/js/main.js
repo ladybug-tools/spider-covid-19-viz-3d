@@ -247,7 +247,7 @@ function updateBars ( indexDate ) {
 	//const casesNew = linesCases.slice( 1 ).map( line => line[ indexDate ] - line[ indexDate - 1 ] );
 
 	const heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
-	console.log( 'heightsCasesNew ', heightsCasesNew );
+	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
 	const offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 

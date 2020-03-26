@@ -9,7 +9,7 @@ let pathAssets = "../../assets/"; // change in html of stable
 
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
-imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
+imgIcon.src = pathAssets  + "images/github-mark-32.png";
 
 sTitle.innerHTML = document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
@@ -241,7 +241,7 @@ function updateBars ( indexDate ) {
 
 
 	const heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
-	console.log( 'heightsCasesNew ', heightsCasesNew );
+	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
 	const offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 

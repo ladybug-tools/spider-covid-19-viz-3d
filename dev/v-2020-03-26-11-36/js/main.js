@@ -241,7 +241,7 @@ function updateBars ( indexDate ) {
 
 
 	const heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
-	//console.log( 'heightsCasesNew ', heightsCasesNew );
+	console.log( 'heightsCasesNew ', heightsCasesNew );
 
 	const offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 
@@ -268,11 +268,10 @@ function updateBars ( indexDate ) {
 
 
 
-	const heightsRecoveries = linesRecoveries.map( line => Number( line[ indexDate - 1] ) );
+	const heightsRecoveries = linesRecoveries.map( line => Number( line[ indexDate ] ) + heightsDeaths[ indexDate ] );
 	// console.log( 'heights', heightsRecoveries);
 
-	const meshesRecoveries = linesRecoveries.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green",
-	 ( heightsRecoveries[ index ] > heightsDeaths[ index ] ? 0.45 : 0.6 ), heightsRecoveries[ index ] ) );
+	const meshesRecoveries = linesRecoveries.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green", 0.45, heightsRecoveries[ index ] ) );
 
 	groupRecoveries.add( ...meshesRecoveries.slice( 1 ) );
 
@@ -280,7 +279,7 @@ function updateBars ( indexDate ) {
 
 
 
-function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 1, offset = 0 ) {
+function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0 ) {
 
 	heightScaled = 0.2 * Math.sqrt( height );
 

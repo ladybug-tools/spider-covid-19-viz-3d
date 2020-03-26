@@ -240,14 +240,16 @@ function updateBars ( indexDate ) {
 	groupCases.add( ...meshesCases.slice( 1 ) );
 
 
-	const heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
-	console.log( 'heightsCasesNew ', heightsCasesNew );
+	const heightsCasesNew = linesCases.slice( 1 ).map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
+	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
-	const offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
+	const offsetsCasesNew = heightsCases.slice( 1 ).map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 
-	const meshesCasesNew = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
+	const meshesCasesNew = linesCases.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
 
 	groupCasesNew.add( ...meshesCasesNew.slice( 1 ) );
+
+
 
 
 	const heightsDeaths = linesDeaths.map( line => Number( line[ indexDate ] ) );
@@ -263,6 +265,7 @@ function updateBars ( indexDate ) {
 	const offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
 
 	const meshesDeathsNew = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
+
 
 	groupDeathsNew.add( ...meshesDeathsNew.slice( 1 ) );
 
@@ -282,6 +285,14 @@ function updateBars ( indexDate ) {
 function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0 ) {
 
 	heightScaled = 0.2 * Math.sqrt( height );
+
+	if ( !heightScaled || heightScaled < 0.0001 ) {
+
+		//console.log( '', color, linesCases[ index ] );
+
+		return new THREE.Mesh();
+
+	}
 
 	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
 	let p2 = THR.latLonToXYZ( 100, lat, lon );
@@ -643,8 +654,8 @@ cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
 cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
 deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
 deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
-deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
+deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 <hr>
 deaths/100K persons: ${ d2Pop }<br>
 cases/(gdp/pop): ${ d2Gdp }<br>

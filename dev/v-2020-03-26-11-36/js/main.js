@@ -271,9 +271,8 @@ function updateBars ( indexDate ) {
 	const heightsRecoveries = linesRecoveries.map( line => Number( line[ indexDate - 1] ) );
 	// console.log( 'heights', heightsRecoveries);
 
-	const radiusR = heightsRecoveries > heightsDeaths ? 0.45 : 0.6;
-
-	const meshesRecoveries = linesRecoveries.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green", radiusR, heightsRecoveries[ index ]  ) );
+	const meshesRecoveries = linesRecoveries.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green",
+	 ( heightsRecoveries[ index ] > heightsDeaths[ index ] ? 0.45 : 0.6 ), heightsRecoveries[ index ] ) );
 
 	groupRecoveries.add( ...meshesRecoveries.slice( 1 ) );
 

@@ -126,7 +126,8 @@ function onLoadCases ( xhr ) {
 
 	resetGroups();
 
-	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=3 style=width:100%; ></select>`;
+	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=3 style=width:100%;
+		title="Use the cursor keys to go back in time" ></select>`;
 
 	let response = xhr.target.response;
 

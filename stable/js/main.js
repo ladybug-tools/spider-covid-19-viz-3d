@@ -19,14 +19,18 @@ sVersion.innerHTML = version ? version.content : "";
 let group = new THREE.Group();
 let groupCases = new THREE.Group();
 let groupCasesNew = new THREE.Group();
+let groupRecoveries = new THREE.Group();
 let groupDeaths = new THREE.Group();
 let groupDeathsNew = new THREE.Group();
 let groupPlacards = new THREE.Group();
 let groupLines = new THREE.Group();
 
-let geoJson;
-let yesterday;
-let linesYesterday;
+let geoJsonArray = [];
+let linesCases;
+let linesCasesNew;
+let linesDeaths;
+let linesDeathsNew;
+
 let intersected;
 
 let mesh;
@@ -55,6 +59,7 @@ function init () {
 	requestFile( dataJhu, onLoadCases );
 
 
+
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
 
 	requestFile( urlJsonStatesProvinces, onLoadGeoJson );
@@ -77,8 +82,6 @@ function init () {
 	getNotes();
 
 
-	//NCD.init();
-
 	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
 	renderer.domElement.addEventListener( 'touchstart', onDocumentTouchStart, false );
@@ -99,19 +102,21 @@ function requestFile ( url, callback ) {
 }
 
 
+
 function resetGroups () {
 
-	scene.remove( group, groupCases, groupCasesNew, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.remove( group, groupCases, groupCasesNew, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
 
 	group = new THREE.Group();
 	groupCases = new THREE.Group();
 	groupCasesNew = new THREE.Group();
+	groupRecoveries = new THREE.Group();
 	groupDeaths = new THREE.Group();
 	groupDeathsNew = new THREE.Group();
 	groupPlacards = new THREE.Group();
 	groupLines = new THREE.Group();
 
-	scene.add( group, groupCases, groupCasesNew, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.add( group, groupCases, groupCasesNew, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
 
 }
 
@@ -121,9 +126,10 @@ function onLoadCases ( xhr ) {
 
 	resetGroups();
 
-	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=10 style=width:100%; ></select>`;
+	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=3 style=width:100%;
+		title="Use the cursor keys to go back in time" ></select>`;
 
-	response = xhr.target.response;
+	let response = xhr.target.response;
 
 	response = response.replace( /"Korea, South"/, "South Korea" );
 	// 	.replace( /"Gambia, The"/, "The Gambia" )
@@ -139,10 +145,11 @@ function onLoadCases ( xhr ) {
 
 	selDate.selectedIndex = dates.length - 1;
 
-		//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-		const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 
-		requestFile( dataJhuDeaths, onLoadDeaths );
+	requestFile( dataJhuDeaths, onLoadDeaths );
+
 
 }
 
@@ -157,6 +164,55 @@ function onLoadDeaths ( xhr ) {
 
 	getStats();
 
+	getCountries();
+
+	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
+	// const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
+
+	// requestFile( dataJhuDeaths, onLoadRecovered );
+
+}
+
+
+
+function onLoadRecovered ( xhr ) {
+
+	linesRecoveries = xhr.target.response.split( "\n" ).map( line => line.split( "," ) );
+	//console.log( 'linesDeaths', linesDeaths );
+
+	updateBars( linesCases[ 0 ].length - 1 );
+
+	getStats();
+
+	getCountries();
+
+}
+
+
+
+//////////
+
+function toggleBars ( group = groupCases ) {
+
+	if ( group === window.groupPrevious ) {
+
+		groupCases.visible = true;
+		groupCasesNew.visible = true;
+		groupDeaths.visible = true;
+		groupDeathsNew.visible = true;
+
+	} else {
+
+		groupCases.visible = false;
+		groupCasesNew.visible = false;
+		groupDeaths.visible = false;
+		groupDeathsNew.visible = false;
+		group.visible = true;
+
+	}
+
+	groupPrevious = group;
+
 }
 
 
@@ -165,41 +221,55 @@ function updateBars ( indexDate ) {
 
 	resetGroups();
 
-	heightsCases = linesCases.map( line => line[ indexDate ] );
+	if ( !linesCases ) { console.log( 'linesCases', linesCases );}
+
+	const heightsCases = linesCases.map( line => Number( line[ indexDate ] ) );
 	//console.log( 'heights', heightsCases );
 
-	meshesCases = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
+	const meshesCases = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
 
 	groupCases.add( ...meshesCases.slice( 1 ) );
 
 
-	casesNew = linesCases.slice( 1 ).map( line => line[ indexDate ] - line[ indexDate - 1 ] );
-	heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
 
-	//line[ indexDate] * ( line[ indexDate ] - line[ indexDate - 1 ] ) / line[ indexDate ] );
+	// const heightsRecoveries = linesRecoveries.map( line => Number( line[ indexDate - 1] ) );
+	// console.log( 'heights', heightsRecoveries);
 
+	// offsetsRecoveries = heightsCases.slice( 1 ).map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsRecoveries[ index ] ) );
+
+	// console.log( 'offsetsRecoveries', offsetsRecoveries );
+
+	// const meshesRecoveries = linesRecoveries.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green", 0.7, heightsRecoveries[ index ], offsetsRecoveries[ index ]  ) );
+
+	// groupRecoveries.add( ...meshesRecoveries.slice( 1 ) );
+
+
+
+	//const casesNew = linesCases.slice( 1 ).map( line => line[ indexDate ] - line[ indexDate - 1 ] );
+
+	const heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
 	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
-	offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
+	const offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 
-	meshesCasesNew = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
+	const meshesCasesNew = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
 
 	groupCasesNew.add( ...meshesCasesNew.slice( 1 ) );
 
 
-	heightsDeaths = linesDeaths.map( line => line[ indexDate ] );
+	const heightsDeaths = linesDeaths.map( line => Number( line[ indexDate ] ) );
 	//console.log( 'heightsDeaths', heightsDeaths );
 
-	meshesDeath = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
+	const meshesDeath = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
 
 	groupDeaths.add( ...meshesDeath.slice( 1 ) );
 
 
-	heightsDeathsNew = linesDeaths.map( line => line[ indexDate ] - line[ indexDate - 1 ] );
+	const heightsDeathsNew = linesDeaths.map( line => line[ indexDate ] - line[ indexDate - 1 ] );
 
-	offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
+	const offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
 
-	meshesDeathsNew = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
+	const meshesDeathsNew = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
 
 	groupDeathsNew.add( ...meshesDeathsNew.slice( 1 ) );
 
@@ -211,8 +281,8 @@ function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 1, offs
 
 	heightScaled = 0.2 * Math.sqrt( height );
 
-	let p1 = latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
-	let p2 = latLonToXYZ( 100, lat, lon );
+	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
+	let p2 = THR.latLonToXYZ( 100, lat, lon );
 
 	let geometry = new THREE.CylinderGeometry( radius, radius, heightScaled, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
@@ -228,23 +298,6 @@ function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 1, offs
 
 
 
-function latLonToXYZ ( radius, lat, lon ) {
-
-	const pi2 = Math.PI / 2;
-
-	const theta = Number( lat ) * Math.PI / 180;
-	const phi = Number( lon ) * Math.PI / 180;
-	//console.log( "lat/lon", theta, phi, index);
-
-	const x = radius * Math.sin( theta + pi2 ) * Math.cos( phi );
-	const y = radius * Math.sin( theta + pi2 ) * Math.sin( phi );
-	const z = radius * Math.cos( theta - pi2 );
-
-	return new THREE.Vector3( x, y, z );
-
-}
-
-
 /////////
 
 function getStats () {
@@ -253,16 +306,11 @@ function getStats () {
 
 	const index = 4 + selDate.selectedIndex;
 
-	const globalCases = linesCases.slice( 1 ).reduce( ( sum, line ) => {
-		let cases = Number( line[ index ] );
-		return sum + cases;
-	}, 0 );
-	//console.log( 'globalCases', globalCases );
+	const globalCases = linesCases.slice( 1 ).reduce( ( sum, line ) => sum + ( Number( line[ index ] ) || 0 ), 0 );
 
-	const globalCasesNew = linesCases.slice( 1 ).reduce( ( sum, line ) => sum + ( line[ index ] - line[ index - 1 ] ), 0 );
-	//console.log( 'globalCasesNew', globalCasesNew );
-	const globalDeaths = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum + Number( line[ index ] ), 0 );
-	const globalDeathsNew = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum + ( line[ index ] - line[ index - 1 ] ), 0 );
+	const globalCasesNew = linesCases.slice( 1 ).reduce( ( sum, line ) => sum + ( line[ index ] - line[ index - 1 ] || 0 ), 0 );
+	const globalDeaths = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum + ( Number( line[ index ] ) || 0 ), 0 );
+	const globalDeathsNew = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum + ( line[ index ] - line[ index - 1 ] || 0 ), 0 );
 	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
 
 	const chinaCases = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
@@ -290,21 +338,16 @@ function getStats () {
 	const rowDeathsToCases = 100 * ( rowDeaths / rowCases );
 
 
-	// [text], scale, color, x, y, z )
-	groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
-
 	const totalsGlobal = [
-		`Global`,
+		`Global totals`,
 		`cases: ${ globalCases.toLocaleString() }`,
 		`cases new: ${ globalCasesNew.toLocaleString() }`,
 		`deaths: ${ globalDeaths.toLocaleString() }`,
 		`deaths new: ${ globalDeathsNew.toLocaleString() }`,
 		`deaths/cases: ${ globalDeathsToCases.toLocaleString() }%`
 	];
-	vGlo = latLonToXYZ( 75, 65, -20 );
-	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
 
-	const totalsChina = [
+	totalsChina = [
 		`China`,
 		`cases: ${ chinaCases.toLocaleString() }`,
 		`cases today: ${ chinaCasesNew.toLocaleString() }`,
@@ -312,8 +355,6 @@ function getStats () {
 		`deaths new: ${ chinaDeathsNew.toLocaleString() }`,
 		`deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%`
 	];
-	vChi = latLonToXYZ( 85, 50, 110 );
-	groupPlacards.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
 
 	const totalsEurope = [
 		`Europe`,
@@ -323,8 +364,6 @@ function getStats () {
 		`deaths new: ${ europeDeathsNew.toLocaleString() }`,
 		`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
 	];
-	const vEur = latLonToXYZ( 80, 60, 20 );
-	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
 
 	const totalsUsa = [
 		`USA`,
@@ -334,8 +373,6 @@ function getStats () {
 		`deaths new: ${ usaDeathsNew.toLocaleString() }`,
 		`deaths/cases: ${ usaDeathsToCases.toLocaleString() }%`
 	];
-	const vUsa = latLonToXYZ( 80, 40, -120 );
-	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
 
 	const totalsRow = [
 		`Rest of World`,
@@ -345,62 +382,113 @@ function getStats () {
 		`deaths new: ${ rowDeathsNew.toLocaleString() }`,
 		`deaths/cases: ${ rowDeathsToCases.toLocaleString() }%`
 	];
-	const vRow = latLonToXYZ( 90, 30, 180 );
+
+	// [text], scale, color, x, y, z )
+	// groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
+
+	vGlo = THR.latLonToXYZ( 75, 65, -20 );
+	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
+
+	vChi = THR.latLonToXYZ( 85, 50, 110 );
+	groupPlacards.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
+
+	const vEur = THR.latLonToXYZ( 80, 60, 20 );
+	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
+
+	const vUsa = THR.latLonToXYZ( 80, 40, -120 );
+	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
+
+	const vRow = THR.latLonToXYZ( 90, 30, 180 );
 	groupPlacards.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
 
 
-	divStats.innerHTML = `<details id=detStats>
+	divStats.innerHTML = `
+<details id=detStats >
 
 	<summary><b>global data </b></summary>
 
 	<p>
-		<b>global totals </b><br>
-		cases: ${ globalCases.toLocaleString() }<br>
-		cases new: ${ globalCasesNew.toLocaleString() }<br>
-		deaths: ${ globalDeaths.toLocaleString() }<br>
-		deaths new: ${ globalDeathsNew.toLocaleString() }<br>
-		deaths/cases: ${ globalDeathsToCases.toLocaleString() }%<br>
+		${ totalsGlobal.join( "<br>" ).replace( /Global totals/, "<b>Global totals</b>" ) }
 	</p>
 
 	<p>
-		<b>China totals</b><br>
-		cases: ${ chinaCases.toLocaleString() }<br>
-		cases new: ${ chinaCasesNew.toLocaleString() }<br>
-		deaths: ${ chinaDeaths.toLocaleString() }<br>
-		deaths new: ${ chinaDeathsNew.toLocaleString() }<br>
-		deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%<br>
+		${ totalsChina.join( "<br>" ).replace( /China/, "<b>China</b>" ) }
 	</p>
 
 	<p>
-		<b>Europe totals</b><br>
-		cases: ${ europeCases.toLocaleString() }<br>
-		cases new: ${ europeCasesNew.toLocaleString() }<br>
-		deaths: ${ europeDeaths.toLocaleString() }<br>
-		deaths new: ${ europeDeathsNew.toLocaleString() }<br>
-		deaths/cases: ${ europeDeathsToCases.toLocaleString() }%<br>
+		${ totalsEurope.join( "<br>" ).replace( /Europe/, "<b>Europe</b>" ) }
 	</p>
 
 	<p>
-		<b>USA totals</b><br>
-		cases: ${ usaCases.toLocaleString() }<br>
-		cases new: ${ usaCasesNew.toLocaleString() }<br>
-		deaths: ${ usaDeaths.toLocaleString() }<br>
-		deaths new: ${ usaDeathsNew.toLocaleString() }<br>
-		deaths/cases: ${ usaDeathsToCases.toLocaleString() }%<br>
+		${ totalsUsa.join( "<br>" ).replace( /USA/, "<b>USA</b>" ) }
 	</p>
 
-		<p>
-		<b>rest of world totals</b><br>
-		cases: ${ rowCases.toLocaleString() }<br>
-		cases today: ${ rowCasesNew.toLocaleString() }<br>
-		deaths: ${ rowDeaths.toLocaleString() }<br>
-		deaths new: ${ rowDeathsNew.toLocaleString() }<br>
-		deaths/cases: ${ rowDeathsToCases.toLocaleString() }%<br>
+	<p>
+		${ totalsRow.join( "<br>" ).replace( /Rest of World/, "<b>Rest of World</b>" ) }
 	</p>
 
-	</details>`;
+</details>`;
 
 	//detStats.open = window.innerWidth > 640;
+
+
+
+}
+
+
+function getCountries () {
+
+	let countries = linesCases.map( line => line[ 1 ] );
+
+	countries = [ ...new Set( countries ) ]
+
+	//console.log( 'countries', countries );
+
+	const options = countries.map( country => `<option>${ country }</option>` );
+
+	divCountries.innerHTML = `
+<select id=selCountries onchange=getProvince(this.value) >${ options }</select>
+<div id=divProvinces > </div>
+`;
+}
+
+
+
+function getProvince ( country ) {
+
+	THR.controls.autoRotate = false;
+
+	divMessage.hidden = true;
+	divMessage.innerHTML = "";
+
+	let provinces = linesCases.filter( line => line[ 1 ] === country );
+	//console.log( 'provinces', provinces );
+
+
+	if ( provinces[ 0 ][ 0 ] === "" ) {
+
+		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) )
+
+		divProvinces.innerHTML = "";
+
+	} else {
+
+		const options = provinces.map( province => `<option>${ province[ 0 ] || province[ 1 ] }</option>` );
+
+		divProvinces.innerHTML = `<p><select id=selProvinces onchange=getPlace(this.value) >${ options }</select></p>`;
+
+	}
+}
+
+
+
+function getPlace ( province ) {
+
+	const place = linesCases.find( line => line[ 0 ] === province );
+	//console.log( 'place', place );
+
+	camera.position.copy( THR.latLonToXYZ( 70, place[ 2 ], place[ 3 ] ) );
+
 
 }
 
@@ -453,34 +541,7 @@ function getNotesContent () {
 }
 
 
-
-/////////
-
-
-function toggleBars ( group = groupCases ) {
-
-	if ( group === window.groupPrevious ) {
-
-		groupCases.visible = true;
-		groupCasesNew.visible = true;
-		groupDeaths.visible = true;
-		groupDeathsNew.visible = true;
-
-	} else {
-
-		groupCases.visible = false;
-		groupCasesNew.visible = false;
-		groupDeaths.visible = false;
-		groupDeathsNew.visible = false;
-		group.visible = true;
-
-	}
-
-	groupPrevious = group;
-
-}
-
-
+//////////
 
 function onDocumentTouchStart ( event ) {
 
@@ -530,7 +591,8 @@ function onDocumentMouseMove ( event ) {
 			const place = line[ 0 ];
 
 			if ( country === "US" ) { country = "United States of America"; }
-			const arr = geoJson.features.filter( feature => feature.properties.NAME === country );
+
+			const arr = geoJsonArray[ 1 ].features.filter( feature => feature.properties.NAME === country );
 			//console.log( 'arr', arr );
 
 			const feature = arr.length ? arr[ 0 ] : undefined;
@@ -555,7 +617,6 @@ function onDocumentMouseMove ( event ) {
 
 			}
 
-			//detNCD.hidden = false;
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
@@ -572,7 +633,7 @@ deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dat
 deaths/100K persons: ${ d2Pop }<br>
 cases/(gdp/pop): ${ d2Gdp }<br>
 <b title="Latest day at top" >New cases per day</b><br>
-${ getBars( casesNew ) }
+${ getBars2D( casesNew ) }
 `;
 
 		}
@@ -582,25 +643,26 @@ ${ getBars( casesNew ) }
 		intersected = null;
 		divMessage.hidden = true;
 		divMessage.innerHTML = "";
-		//detNCD.hidden = true;
 
 	}
 
-}
 
+		function getBars2D ( arr ) {
 
-function getBars ( arr ) {
+			arr.reverse();
 
-	arr.reverse();
+			const max = Math.max( ...arr );
+			const scale = 200 / max;
+			const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
 
-	const max = Math.max( ...arr );
-	const scale = 200 / max;
-	const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
+			const bars = arr.map( ( item, index ) =>
+				`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
+					title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>`
+			).join( "" );
 
-	const bars = arr.map( ( item, index ) =>
-		`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
-	title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>` ).join( "" );
+			return `<div style=background-color:#ddd title="New cases per day. Latest at top.The curve you hope to see flatten!" >${ bars }</div>`;
 
-	return `<div style=background-color:#ddd title="New cases per day. The curve you hope to see flatten!" >${ bars }</div>`;
+		}
+
 
 }

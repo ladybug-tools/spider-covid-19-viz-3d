@@ -47,18 +47,14 @@ function init () {
 	renderer = THR.renderer;
 
 
+	// const url = "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports";
+
 	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 
 	requestFile( dataJhu, onLoadCases );
 
 
-	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-
-	requestFile( dataJhuDeaths, onLoadDeaths );
-
-	
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
 
 	requestFile( urlJsonStatesProvinces, onLoadGeoJson );
@@ -81,7 +77,7 @@ function init () {
 	getNotes();
 
 
-	NCD.init();
+	//NCD.init();
 
 	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
@@ -103,7 +99,7 @@ function requestFile ( url, callback ) {
 }
 
 
-function resetGroups() {
+function resetGroups () {
 
 	scene.remove( group, groupCases, groupCasesNew, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
 
@@ -127,9 +123,9 @@ function onLoadCases ( xhr ) {
 
 	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=10 style=width:100%; ></select>`;
 
-	response = xhr.target.response
+	response = xhr.target.response;
 
-	response = response.replace( /"Korea, South"/, "South Korea" )
+	response = response.replace( /"Korea, South"/, "South Korea" );
 	// 	.replace( /"Gambia, The"/, "The Gambia" )
 	// 	.replace( /"Bahamas, The"/, "The Bahamas" );
 	// .replace( /"Virgin Islands,/, "Virgin Islands");
@@ -143,13 +139,18 @@ function onLoadCases ( xhr ) {
 
 	selDate.selectedIndex = dates.length - 1;
 
+		//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+		const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+
+		requestFile( dataJhuDeaths, onLoadDeaths );
+
 }
 
 
 
 function onLoadDeaths ( xhr ) {
 
-	linesDeaths = xhr.target.response.split( "\n" ).map( line => line.split( "," ) )
+	linesDeaths = xhr.target.response.split( "\n" ).map( line => line.split( "," ) );
 	//console.log( 'linesDeaths', linesDeaths );
 
 	updateBars( linesDeaths[ 0 ].length - 1 );
@@ -172,14 +173,14 @@ function updateBars ( indexDate ) {
 	groupCases.add( ...meshesCases.slice( 1 ) );
 
 
-	casesNew = linesCases.map( line => line[ indexDate ] - line[ indexDate - 1 ] );
+	casesNew = linesCases.slice( 1 ).map( line => line[ indexDate ] - line[ indexDate - 1 ] );
 	heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
 
-		//line[ indexDate] * ( line[ indexDate ] - line[ indexDate - 1 ] ) / line[ indexDate ] );
+	//line[ indexDate] * ( line[ indexDate ] - line[ indexDate - 1 ] ) / line[ indexDate ] );
 
 	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
-	offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
+	offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 
 	meshesCasesNew = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
 
@@ -196,7 +197,7 @@ function updateBars ( indexDate ) {
 
 	heightsDeathsNew = linesDeaths.map( line => line[ indexDate ] - line[ indexDate - 1 ] );
 
-	offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
+	offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
 
 	meshesDeathsNew = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
 
@@ -250,10 +251,10 @@ function getStats () {
 
 	const europe = [ "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "EstoniaF", "Finland", "France", "Georgia", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Holy See" ];
 
-	const index = 4 + selDate.selectedIndex
+	const index = 4 + selDate.selectedIndex;
 
 	const globalCases = linesCases.slice( 1 ).reduce( ( sum, line ) => {
-		let cases = Number( line[ index] );
+		let cases = Number( line[ index ] );
 		return sum + cases;
 	}, 0 );
 	//console.log( 'globalCases', globalCases );
@@ -265,19 +266,19 @@ function getStats () {
 	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
 
 	const chinaCases = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
-	const chinaCasesNew = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index  - 1]: 0, 0 );
+	const chinaCasesNew = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1 ] : 0, 0 );
 	const chinaDeaths = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
-	const chinaDeathsNew = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1] : 0, 0 );
+	const chinaDeathsNew = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1 ] : 0, 0 );
 	const chinaDeathsToCases = 100 * chinaDeaths / chinaCases;
 
 	const europeCases = linesCases.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ index ] ) : 0, 0 );
-	const europeCasesNew = linesCases.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? line[ index ] - line[ index - 1] : 0, 0 );
+	const europeCasesNew = linesCases.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? line[ index ] - line[ index - 1 ] : 0, 0 );
 	const europeDeaths = linesDeaths.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ index ] ) : 0, 0 );
-	const europeDeathsNew = linesDeaths.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? ( line[ index ] - line[ index - 1] ) : 0, 0 );
+	const europeDeathsNew = linesDeaths.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? ( line[ index ] - line[ index - 1 ] ) : 0, 0 );
 	const europeDeathsToCases = 100 * europeDeaths / europeCases;
 
 	const usaCases = linesCases.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ index ] ) : 0, 0 );
-	const usaCasesNew = linesCases.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? line[ index ] - line[ index - 1] : 0, 0 );
+	const usaCasesNew = linesCases.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? line[ index ] - line[ index - 1 ] : 0, 0 );
 	const usaDeaths = linesDeaths.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ index ] ) : 0, 0 );
 	const usaDeathsNew = linesDeaths.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? ( line[ index ] - line[ index - 1 ] ) : 0, 0 );
 	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
@@ -422,7 +423,7 @@ function getNotes () {
 function getNotesContent () {
 
 
-	divNoteSettings.innerHTML =`
+	divNoteSettings.innerHTML = `
 
 	<p><i>Why are there messages in the background?</i></p>
 	<p>
@@ -516,21 +517,19 @@ function onDocumentMouseMove ( event ) {
 			const index = intersected.userData;
 
 			const line = linesCases[ index ];
+			//console.log( 'line', line );
 
 			const lineDeaths = linesDeaths[ index ];
 
-			const dateIndex = selDate.selectedIndex > -1 ? 4 + selDate.selectedIndex : line.length - 1 ;
+			const casesNew = line.slice( 5 ).map( ( cases, index ) => cases - line[ 5 + index - 1 ] );
+			//console.log( 'cb', casesNew );
 
-			const country = line[ 1 ];
+			const dateIndex = selDate.selectedIndex > -1 ? 4 + selDate.selectedIndex : line.length - 1;
 
+			let country = line[ 1 ];
 			const place = line[ 0 ];
-			//console.log( 'place', place );
 
-			const tots = NCD.getDates( country, place );
-			//console.log( 'tots', tots );
-
-			const bars = NCD.bars;
-
+			if ( country === "US" ) { country = "United States of America"; }
 			const arr = geoJson.features.filter( feature => feature.properties.NAME === country );
 			//console.log( 'arr', arr );
 
@@ -546,8 +545,8 @@ function onDocumentMouseMove ( event ) {
 				const name = feature.properties.NAME;
 
 				//console.log( 'gdp/pop', 1000000 * gdp / population  );
-				d2Pop = ( 100 * ( Number( line[ 4 ] ) / population ) ).toLocaleString() + "%";
-				d2Gdp = ( ( Number( line[ 3 ] ) / (1000000 *  gdp / population ) ) ).toLocaleString() + "";
+				d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
+				d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
 
 			} else {
 
@@ -556,27 +555,24 @@ function onDocumentMouseMove ( event ) {
 
 			}
 
-			//const casesNew = line[ 8 ] ? line[ 8 ] : 0;
-
 			//detNCD.hidden = false;
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
-			${ ( line[ 0 ] ? "place: " + line[ 0 ] + "<br>" : "" ) }
+			divMessage.innerHTML = `
+<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
+${ ( place ? "place: " + place + "<br>" : "" ) }
 country: ${ country }<br>
 cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
-cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex -1 ] ).toLocaleString() }</mark><br>
+cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
 deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
-deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex -1 ] ).toLocaleString() }<br>
+deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 <hr>
-<a href="https://mmediagroup.fr/covid-19" target="_blank">MMG data</a> - updates hourly<br>
-${ tots }
-deaths/population: ${ d2Pop }<br>
+deaths/100K persons: ${ d2Pop }<br>
 cases/(gdp/pop): ${ d2Gdp }<br>
-<b>New cases per day</b><br>
-${ bars }
+<b title="Latest day at top" >New cases per day</b><br>
+${ getBars( casesNew ) }
 `;
 
 		}
@@ -589,5 +585,22 @@ ${ bars }
 		//detNCD.hidden = true;
 
 	}
+
+}
+
+
+function getBars ( arr ) {
+
+	arr.reverse();
+
+	const max = Math.max( ...arr );
+	const scale = 200 / max;
+	const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
+
+	const bars = arr.map( ( item, index ) =>
+		`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
+	title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>` ).join( "" );
+
+	return `<div style=background-color:#ddd title="New cases per day. The curve you hope to see flatten!" >${ bars }</div>`;
 
 }

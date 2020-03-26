@@ -25,7 +25,7 @@ let groupDeathsNew = new THREE.Group();
 let groupPlacards = new THREE.Group();
 let groupLines = new THREE.Group();
 
-let geoJsonArray = [];
+let geoJsonArray = {};
 let linesCases;
 let linesCasesNew;
 let linesDeaths;
@@ -436,6 +436,7 @@ function getStats () {
 }
 
 
+
 function getCountries () {
 
 	let countries = linesCases.map( line => line[ 1 ] );
@@ -592,7 +593,7 @@ function onDocumentMouseMove ( event ) {
 
 			if ( country === "US" ) { country = "United States of America"; }
 
-			const arr = geoJsonArray[ 1 ].features.filter( feature => feature.properties.NAME === country );
+			const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
 			//console.log( 'arr', arr );
 
 			const feature = arr.length ? arr[ 0 ] : undefined;

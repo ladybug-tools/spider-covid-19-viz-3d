@@ -229,6 +229,13 @@ geoJson useful
 <details open >
 <summary>Change log </summary>
 
+### 2020-03-26 ~ Theo
+
+v-v-2020-03-26-11-36
+
+* Add back recoveries data button, bars and stats
+
+
 ### 2020-03-25 ~ Theo
 
 v-2020-03-25

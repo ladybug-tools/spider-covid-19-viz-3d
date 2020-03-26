@@ -93,15 +93,13 @@ input[ type=range]::-webkit-slider-thumb {
 #divMessage {
 	background-color: #eee;
 	border-radius: 1rem;
-	left: 5vw;
+	left: calc( 50% - 125px );
 	padding: 1rem;
 	position: absolute;
-	top: 50vh;
+	top: 30%;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
 }
 
-.navLegend { border-radius:5px; margin: 0;padding:0; }
-
-.butLegend {  width:100%; }
+.navLegend { border-radius:5px; padding:1ch; }
 
 .ftrButton { background-color:#eee; border-radius:5px; font-size:200%; margin:auto; }

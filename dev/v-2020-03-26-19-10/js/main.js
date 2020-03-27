@@ -172,23 +172,30 @@ function onLoadDeaths ( xhr ) {
 
 function onLoadRecovered ( xhr ) {
 
-	lines = xhr.target.response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, - 1 );
-	//console.log( 'linesRecoveries', linesRecoveries );
+	lines = xhr.target.response.split( "\n" ).map( line => line.split( "," ) );
+	//console.log( 'lines', lines );
 
-	arrEmpty = Array( lines[ 0 ].length - 4 ).fill( "0" )
+	const arrEmpty = Array( lines[ 0 ].length - 4 ).fill( "0" )
 
 	linesRecoveries = linesCases.map( ( lineC, index ) => {
 
 		const lineF = lines.find( ( line, index ) => line[ 0 ] === lineC[ 0 ] && line[ 1 ] === lineC[ 1 ] );
 
+	//	console.log( 'lineF', lineF );
+
 		const lineNew = !!lineF ? lineF : lineC.slice( 0, 4 ).concat( arrEmpty );
 
-		return lineNew
+		if ( lineC[ 1 ] === "US" ) {
+
+			//console.log( '', lineC );
+		}
+
+		return lineNew;
 
 	} );
 	//console.log( 'linesRecoveries', linesRecoveries );
 
-	updateBars( linesDeaths[ 0 ].length - 1 );
+	updateBars( linesCases[ 1 ].length );
 
 	getStats();
 
@@ -227,62 +234,74 @@ function toggleBars ( group = groupCases ) {
 
 
 
-function updateBars ( indexDate ) {
+function updateBars ( length ) {
 
+	//console.log( 'length ', length );
 	if ( !linesCases ) { console.log( 'linesCases', linesCases );}
 
 	resetGroups();
 
-	const heightsCases = linesCases.map( line => Number( line[ indexDate ] ) );
+	const heightsCases = linesCases.slice( 1, -1 ).map( line => Number( line[ length - 1 ] ) );
+	//console.log( 'heightsCases', heightsCases );
 
-	const meshesCases = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
+	const meshesCases = linesCases.slice( 1, -1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
 
-	groupCases.add( ...meshesCases.slice( 1 ) );
+	groupCases.add( ...meshesCases );
 
 
-	const heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
-	console.log( 'heightsCasesNew ', heightsCasesNew );
+	const heightsCasesNew = linesCases.slice( 1, -1 ).map( line => Math.sqrt( line[ length - 1 ] - line[ length - 2 ] ) );
+	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
 	const offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 
-	const meshesCasesNew = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
+	const meshesCasesNew = linesCases.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
 
-	groupCasesNew.add( ...meshesCasesNew.slice( 1 ) );
-
-
-	const heightsDeaths = linesDeaths.map( line => Number( line[ indexDate ] ) );
-	//console.log( 'heightsDeaths', heightsDeaths );
-
-	const meshesDeath = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
-
-	groupDeaths.add( ...meshesDeath.slice( 1 ) );
+	groupCasesNew.add( ...meshesCasesNew );
 
 
-	const heightsDeathsNew = linesDeaths.map( line => line[ indexDate ] - line[ indexDate - 1 ] );
+
+
+	const heightsDeaths = linesDeaths.slice( 1 ).map( line => Number( line[ length - 1 ] ) );
+	//console.log( 'heightsDeaths', linesDeaths.slice( 1 )[ 225 ], heightsDeaths[ 225 ] );
+
+	const meshesDeath = linesDeaths.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
+
+	groupDeaths.add( ...meshesDeath );
+
+
+	const heightsDeathsNew = linesDeaths.slice( 1 ).map( line => line[ length - 1 ] - line[ length - 2 ] );
 
 	const offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
 
-	const meshesDeathsNew = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
+	const meshesDeathsNew = linesDeaths.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
 
-	groupDeathsNew.add( ...meshesDeathsNew.slice( 1 ) );
+	groupDeathsNew.add( ...meshesDeathsNew );
 
 
+	const heightsRecoveries = linesRecoveries.slice( 1 ).map( ( line, index ) => Number( line[ length - 1] ) + heightsDeaths[ index ] );
 
-	const heightsRecoveries = linesRecoveries.map( line => Number( line[ indexDate - 1] ) );
-	// console.log( 'heights', heightsRecoveries);
+	//console.log( 'heightsRec', linesRecoveries.slice( 1 )[ 225 ],
+	//	linesRecoveries.slice( 1 )[ 225 ][ 68 ], heightsDeaths[ 69 ] );
 
-	const meshesRecoveries = linesRecoveries.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green",
-	 ( heightsRecoveries[ index ] > heightsDeaths[ index ] ? 0.45 : 0.6 ), heightsRecoveries[ index ] ) );
+	const meshesRecoveries = linesRecoveries.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green", 0.45, heightsRecoveries[ index ] ) );
 
-	groupRecoveries.add( ...meshesRecoveries.slice( 1 ) );
+	groupRecoveries.add( ...meshesRecoveries );
 
 }
 
 
 
-function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 1, offset = 0 ) {
+function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0 ) {
 
 	heightScaled = 0.2 * Math.sqrt( height );
+
+	if ( !heightScaled || heightScaled < 0.0001 ) {
+
+		//console.log( '', color, linesCases[ index ] );
+
+		return new THREE.Mesh();
+
+	}
 
 	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
 	let p2 = THR.latLonToXYZ( 100, lat, lon );
@@ -588,7 +607,7 @@ function onDocumentMouseMove ( event ) {
 
 			intersected = intersects[ 0 ].object;
 
-			const index = intersected.userData;
+			const index = intersected.userData + 1;
 
 			const line = linesCases[ index ];
 			//console.log( 'line', line );
@@ -644,8 +663,8 @@ cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
 cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
 deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
 deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
-deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
+deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 <hr>
 deaths/100K persons: ${ d2Pop }<br>
 cases/(gdp/pop): ${ d2Gdp }<br>

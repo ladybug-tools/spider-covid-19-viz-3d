@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-26-14-48-dev">
+<meta name=version content="2020-03-26-18-49-dev">
 
 <title>COVID-19 Viz3D</title>
 
@@ -61,23 +61,23 @@
 		</header>
 
 		<p class=navLegend style=background-color:cyan; title="The flare indicates high number of new cases">
-			<button id=butNew  class=butLegend onclick=toggleBars(groupCasesNew) style=background-color:cyan;color:black; >
+			<button id=butNew  class=butLegend onclick=toggleBars(groupCasesNew) style=background-color:cyan;color:black;width:100%; >
 				New cases today&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:red; >
-			<button id=butCases  class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white; >
+			<button id=butCases  class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
 				Confirmed cases&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
-			<button id=butDeaths  class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white; >
+			<button id=butDeaths  class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
 				Deaths&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:lavender; >
-			<button id=butDeathsNew  class=butLegend onclick=toggleBars(groupDeathsNew) style=background-color:lavender; >
+			<button id=butDeathsNew  class=butLegend onclick=toggleBars(groupDeathsNew) style=background-color:lavender;width:100%; >
 				New deaths today&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:limegreen; >
-			<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries) style+=background-color:limegreen; >
+			<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries) style=background-color:limegreen;width:100%; >
 				Recoveries&nbsp;</button></p>
 
 		<div id=divDates style=background-color:white;padding:1ch;></div>

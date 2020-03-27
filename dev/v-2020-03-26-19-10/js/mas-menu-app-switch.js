@@ -15,7 +15,7 @@ MAS.arrApps = [
 	},
 	{
 		text: "covid-19 viz3D Wikipedia", url: "https://ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-26-19-10/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html",
-		title: "Data from Wikipedia tht appears to be update more frequently than the JHU data"
+		title: "Data from Wikipedia that appears to be update more frequently than the JHU data"
 	},
 	{
 		text: "Spider home page", url: "https://www.ladybug.tools/spider/",

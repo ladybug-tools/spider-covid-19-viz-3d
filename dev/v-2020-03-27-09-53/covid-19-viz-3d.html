@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-26-18-49-dev">
+<meta name=version content="2020-03-09-53-dev">
 
 <title>COVID-19 Viz3D</title>
 
@@ -47,7 +47,7 @@
 				</a>
 
 				<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
-					View the COVID-19 data from the John Hopkins University
+					View the COVID-19 data from the Johns Hopkins University
 					<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
 					in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
 					WebGL tools.
@@ -63,19 +63,19 @@
 		<div id=MASdivMenuAppSwitch > </div>
 
 		<p class=navLegend style=background-color:cyan; title="The flare indicates high number of new cases">
-			<button id=butNew  class=butLegend onclick=toggleBars(groupCasesNew) style=background-color:cyan;color:black;width:100%; >
+			<button id=butNew class=butLegend onclick=toggleBars(groupCasesNew) style=background-color:cyan;color:black;width:100%; >
 				New cases today&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:red; >
-			<button id=butCases  class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
+			<button id=butCases class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
 				Confirmed cases&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
-			<button id=butDeaths  class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
+			<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
 				Deaths&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:lavender; >
-			<button id=butDeathsNew  class=butLegend onclick=toggleBars(groupDeathsNew) style=background-color:lavender;width:100%; >
+			<button id=butDeathsNew class=butLegend onclick=toggleBars(groupDeathsNew) style=background-color:lavender;width:100%; >
 				New deaths today&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:limegreen; >
@@ -96,11 +96,11 @@
 
 
 <div id=divMessage style=max-width:250px; >
-	<mark>Recoveries (green bars) are back. Data is often incomplete.</mark><br>
-	Touch the screen to stop rotation,<br>
-	Two fingers or mousewheel to zoom.<br>
-	Click or touch the bar in a country to pop-up statistics.<br>
-	Remember: There's a new version every day!<br>
+	<mark>2020-03-27: Select a chart to view from top left menu</mark><hr>
+	Touch the screen to stop rotation.<br>
+	Two fingers or mouse wheel to zoom.<br>
+	Click or touch the bar in a country to pop-up statistics.<hr>
+	<small>Come back! See new version every day!</small>
 </div>
 
 <footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
@@ -131,6 +131,8 @@
 pathAssets = "../../assets/";
 
 init();
+
+MASselApp.selectedIndex = 0;
 
 // keep address bar pointed to latest dev. change in html of stable
 window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );

@@ -44,6 +44,59 @@ function updateBars ( lines) {
 
 	groupRecoveries.add( ...meshesRecoveries );
 
-	//getStats();
+	getStats();
+
+}
+
+
+
+
+function onDocumentMouseMove ( event ) {
+
+	//event.preventDefault();
+
+	const mouse = new THREE.Vector2();
+	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+	const raycaster = new THREE.Raycaster();
+	raycaster.setFromCamera( mouse, camera );
+
+	const intersects = raycaster.intersectObjects( groupCases.children );
+
+	if ( intersects.length > 0 ) {
+
+		if ( intersected !== intersects[ 0 ].object ) {
+
+			intersected = intersects[ 0 ].object;
+
+			const index = intersected.userData + 1;
+
+			const line = lines[ index ];
+			console.log( 'line', line );
+
+			divMessage.hidden = false;
+			divMessage.style.left = event.clientX + "px";
+			divMessage.style.top = event.clientY + "px";
+			divMessage.innerHTML = `
+<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a> - updates ??<br>
+county: ${ line[ 1 ] }<br>
+state: ${ line[ 2 ] }<br>
+state: ${ line[ 3 ] }<br>
+cases: ${ Number( line[ 7 ] ).toLocaleString() }<br>
+deaths: ${ Number( line[ 8 ] ).toLocaleString() }<br>
+recoveries: ${ Number( line[ 9 ] ).toLocaleString() }<br>
+
+`;
+
+		}
+
+	} else {
+
+		intersected = null;
+		divMessage.hidden = true;
+		divMessage.innerHTML = "";
+
+	}
 
 }

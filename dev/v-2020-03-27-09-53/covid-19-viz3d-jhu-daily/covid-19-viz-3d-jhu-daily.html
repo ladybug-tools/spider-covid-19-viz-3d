@@ -88,12 +88,12 @@
 
 
 <div id=divMessage style=max-width:250px; >
-	<mark> 2020-03-27: A brand new page - with issues</mark><br>
-	Displays the case data for over 3,000 US counties.
-	Touch the screen to stop rotation,<br>
-	Two fingers or mousewheel to zoom.<br>
-	Click or touch the bar in a country to pop-up statistics.<br>
-	Remember: There's a new version every day!<br>
+	<mark> 2020-03-27: A brand new page - with bugs & issues</mark><br>
+	Display case data for the world and over 3,000 US counties.<hr>
+	Touch the screen to stop rotation.<br>
+	Two fingers or mouse wheel to zoom.<br>
+	Click or touch the bar in a country to pop-up statistics.<hr>
+	<small>Come back! See new version every day!</small>
 </div>
 
 <footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
@@ -122,6 +122,8 @@
 pathAssets = "../../../assets/";
 
 init();
+
+MASselApp.selectedIndex = 2;
 
 // keep address bar pointed to latest dev. change in html of stable
 //window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );

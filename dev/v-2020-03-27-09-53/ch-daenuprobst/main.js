@@ -53,14 +53,7 @@ function init () {
 	renderer = THR.renderer;
 
 
-	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-	//const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
-	//const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
-
-	const dataChTemplate = "https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/template.csv"
-
-	requestFile( dataChTemplate, onLoadChTemplate );
-
+	requestCh();
 
 
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
@@ -83,8 +76,8 @@ function init () {
 	addSkyBox();
 
 	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	// renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
-	// renderer.domElement.addEventListener( 'touchstart', onDocumentTouchStart, false );
+	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
+	renderer.domElement.addEventListener( 'touchstart', onDocumentTouchStart, false );
 
 }
 
@@ -180,3 +173,15 @@ function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offs
 }
 
 
+//////////
+
+function onDocumentTouchStart ( event ) {
+
+	//event.preventDefault();
+
+	event.clientX = event.touches[ 0 ].clientX;
+	event.clientY = event.touches[ 0 ].clientY;
+
+	onDocumentMouseMove( event );
+
+}

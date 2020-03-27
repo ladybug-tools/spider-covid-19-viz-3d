@@ -87,7 +87,7 @@ MAS.getMenuAppSwitch = function () {
 	const options = MAS.arrApps.map( item =>
 		`<option value="${item.url}" title="${item.title}" >${item.text}</option>` );
 
-	const htm = `<select oninput=window.location.href=this.value style=width:100%; size=4 >${ options }</select>`;
+	const htm = `<select id=MASselApp oninput=window.location.href=this.value style=width:100%; size=4 >${ options }</select>`;
 
 	MASdivMenuAppSwitch.innerHTML = htm;
 

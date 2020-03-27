@@ -236,7 +236,7 @@ function toggleBars ( group = groupCases ) {
 
 function updateBars ( length ) {
 
-	console.log( 'ength ', length );
+	//console.log( 'length ', length );
 	if ( !linesCases ) { console.log( 'linesCases', linesCases );}
 
 	resetGroups();

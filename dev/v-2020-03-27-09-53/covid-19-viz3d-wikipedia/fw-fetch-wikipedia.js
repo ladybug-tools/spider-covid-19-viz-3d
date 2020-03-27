@@ -19,9 +19,15 @@ function fetchUrlWikipediaApi ( url ) {
 
 			const trs = tables[ 0 ].querySelectorAll( "tr" );
 
-			//console.log( 'trs', trs );
+			console.log( 'trs', trs );
 
-			rows = Array.from( trs ).slice( 1, - 3 ).map( tr => tr.innerText.trim().replace( /\[(.*?)\]/g, "" ).replace( /,/g, "" ).split( "\n\n" ).slice( 0, - 1 ) ).sort();
+			rows = Array.from( trs ).slice( 1, - 3 ).map( tr => tr.innerText.trim()
+				.replace( /\[(.*?)\]/g, "" )
+				.replace( /,/g, "" )
+				.split( "\n\n" )
+				//.slice( 0, - 1 )
+			)
+				.sort();
 
 			//console.log( 'rows', rows );
 
@@ -88,14 +94,18 @@ function getStats () {
 	const europe = [ "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "EstoniaF", "Finland", "France", "Georgia", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Holy See" ];
 
 	//const index = 4 + selDate.selectedIndex;
+	rows.forEach( ( line ) => line[ 1 ] = isNaN( Number( line[ 1 ] ) ) ? 0 : line[ 1 ] );
+	rows.forEach( ( line ) => line[ 2 ] = isNaN( Number( line[ 2 ] ) ) ? 0 : line[ 2 ] );
+	rows.forEach( ( line ) => line[ 3 ] = isNaN( Number( line[ 3 ] ) ) ? 0 : line[ 3 ] );
 
-	const globalCases = Number( rows[ 0 ][ 0 ] );
-	const globalDeaths = Number( rows[ 0 ][ 1 ] );
-	const globalRecoveries = Number( rows[ 0 ][ 2 ] );
+	const globalCases = Number( rows[ 0 ][ 1 ] );
+	const globalDeaths = Number( rows[ 0 ][ 2 ] );
+	const globalRecoveries = Number( rows[ 0 ][ 3 ] );
 
-	const chinaCases = Number( rows[ 34 ][ 1 ] ).toLocaleString();
-	const chinaDeaths =  Number( rows[ 34 ][ 2 ] ).toLocaleString();
-	const chinaRecoveries =  Number( rows[ 34 ][ 3 ] ).toLocaleString();
+
+	const chinaCases = Number( rows[ 34 ][ 1 ] );
+	const chinaDeaths =  Number( rows[ 34 ][ 2 ] );
+	const chinaRecoveries =  Number( rows[ 34 ][ 3 ] );
 
 	const europeCases = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 1 ] ) : 0, 0 );
 	const europeDeaths = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 2 ] ) : 0, 0 );
@@ -106,7 +116,7 @@ function getStats () {
 	const usaDeaths = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 2 ] ) : 0, 0 );
 	const usaRecoveries = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 3 ] ) : 0, 0 );
 
-	const rowCases = globalCases - chinaCases - europeCases - usaCases;
+	const rowCases = globalCases - europeCases - usaCases;
 	const rowDeaths = globalDeaths - chinaDeaths - europeDeaths - usaDeaths;
 	const rowRecoveries = globalRecoveries - chinaRecoveries - europeRecoveries - usaRecoveries;
 
@@ -120,9 +130,9 @@ function getStats () {
 
 	totalsChina = [
 		`China`,
-		`cases: ${ chinaCases }`,
-		`deaths: ${ chinaDeaths }`,
-		`recoveries: ${ chinaRecoveries }`,
+		`cases: ${ chinaCases.toLocaleString() }`,
+		`deaths: ${ chinaDeaths.toLocaleString() }`,
+		`recoveries: ${ chinaRecoveries.toLocaleString() }`,
 
 	];
 

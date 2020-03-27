@@ -262,7 +262,7 @@ function updateBars ( length ) {
 
 
 	const heightsDeaths = linesDeaths.slice( 1 ).map( line => Number( line[ length - 1 ] ) );
-	console.log( 'heightsDeaths', linesDeaths.slice( 1 )[ 225 ], heightsDeaths[ 225 ] );
+	//console.log( 'heightsDeaths', linesDeaths.slice( 1 )[ 225 ], heightsDeaths[ 225 ] );
 
 	const meshesDeath = linesDeaths.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
 
@@ -610,7 +610,7 @@ function onDocumentMouseMove ( event ) {
 			const index = intersected.userData + 1;
 
 			const line = linesCases[ index ];
-			console.log( 'line', line );
+			//console.log( 'line', line );
 
 			const lineDeaths = linesDeaths[ index ];
 

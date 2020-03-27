@@ -19,7 +19,7 @@ function fetchUrlWikipediaApi ( url ) {
 
 			const trs = tables[ 0 ].querySelectorAll( "tr" );
 
-			console.log( 'trs', trs );
+			//console.log( 'trs', trs );
 
 			rows = Array.from( trs ).slice( 1, - 3 ).map( tr => tr.innerText.trim()
 				.replace( /\[(.*?)\]/g, "" )
@@ -50,7 +50,7 @@ function updateBars ( rows ) {
 
 		country = countries.find( country => country[ 1 ] === row[ 0 ] )
 
-		if ( !country ) { console.log( 'row lost', row );}
+		//if ( !country ) { console.log( 'row lost', row );}
 
 		return country ? country.concat( row ) : row
 

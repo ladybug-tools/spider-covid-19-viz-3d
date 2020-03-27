@@ -18,7 +18,7 @@ MAS.arrApps = [
 		title: "JHU data with the daily reorts for over 3,000 US counties"
 	},
 	{
-		text: "covid-19 viz3D Wikipedia", url: "https://ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-26-19-10/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html",
+		text: "covid-19 viz3D Wikipedia", url: "https://ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-26-19-10/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html",
 		title: "Data from Wikipedia that appears to be update more frequently than the JHU data"
 	},
 	{

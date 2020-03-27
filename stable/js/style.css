@@ -100,6 +100,8 @@ input[ type=range]::-webkit-slider-thumb {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
 }
 
-.navLegend { border-radius:5px; padding:1ch; }
+.navLegend { border-radius:5px; margin: 0;padding:0; }
+
+.butLegend {}
 
 .ftrButton { background-color:#eee; border-radius:5px; font-size:200%; margin:auto; }

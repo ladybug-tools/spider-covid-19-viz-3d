@@ -102,4 +102,6 @@ input[ type=range]::-webkit-slider-thumb {
 
 .navLegend { border-radius:5px; padding:1ch; }
 
+.buLegend { width:100%; }
+
 .ftrButton { background-color:#eee; border-radius:5px; font-size:200%; margin:auto; }

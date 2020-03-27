@@ -1,5 +1,5 @@
 // copyright 2020 Spider contributors. MIT license.
-// 2020-03-20
+// 2020-03-26
 /* globals THREE, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
 // jshint esversion: 6
 // jshint loopfunc: true
@@ -28,6 +28,7 @@ let groupLines = new THREE.Group();
 let geoJsonArray = {};
 let linesCases;
 let linesCasesNew;
+let linesRecoveries;
 let linesDeaths;
 let linesDeathsNew;
 
@@ -40,7 +41,8 @@ let scene, camera, controls, renderer;
 THR.init();
 THR.animate();
 
-//init();
+//init(); // see html
+
 
 
 function init () {
@@ -50,8 +52,6 @@ function init () {
 	controls = THR.controls;
 	renderer = THR.renderer;
 
-
-	// const url = "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports";
 
 	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
@@ -110,9 +110,9 @@ function resetGroups () {
 	group = new THREE.Group();
 	groupCases = new THREE.Group();
 	groupCasesNew = new THREE.Group();
-	groupRecoveries = new THREE.Group();
 	groupDeaths = new THREE.Group();
 	groupDeathsNew = new THREE.Group();
+	groupRecoveries = new THREE.Group();
 	groupPlacards = new THREE.Group();
 	groupLines = new THREE.Group();
 
@@ -150,7 +150,6 @@ function onLoadCases ( xhr ) {
 
 	requestFile( dataJhuDeaths, onLoadDeaths );
 
-
 }
 
 
@@ -160,16 +159,12 @@ function onLoadDeaths ( xhr ) {
 	linesDeaths = xhr.target.response.split( "\n" ).map( line => line.split( "," ) );
 	//console.log( 'linesDeaths', linesDeaths );
 
-	updateBars( linesDeaths[ 0 ].length - 1 );
 
-	getStats();
-
-	getCountries();
 
 	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
-	// const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
+	const dataJhuRecovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
 
-	// requestFile( dataJhuDeaths, onLoadRecovered );
+	requestFile( dataJhuRecovered, onLoadRecovered );
 
 }
 
@@ -177,10 +172,30 @@ function onLoadDeaths ( xhr ) {
 
 function onLoadRecovered ( xhr ) {
 
-	linesRecoveries = xhr.target.response.split( "\n" ).map( line => line.split( "," ) );
-	//console.log( 'linesDeaths', linesDeaths );
+	lines = xhr.target.response.split( "\n" ).map( line => line.split( "," ) );
+	//console.log( 'lines', lines );
 
-	updateBars( linesCases[ 0 ].length - 1 );
+	const arrEmpty = Array( lines[ 0 ].length - 4 ).fill( "0" )
+
+	linesRecoveries = linesCases.map( ( lineC, index ) => {
+
+		const lineF = lines.find( ( line, index ) => line[ 0 ] === lineC[ 0 ] && line[ 1 ] === lineC[ 1 ] );
+
+	//	console.log( 'lineF', lineF );
+
+		const lineNew = !!lineF ? lineF : lineC.slice( 0, 4 ).concat( arrEmpty );
+
+		if ( lineC[ 1 ] === "US" ) {
+
+			//console.log( '', lineC );
+		}
+
+		return lineNew;
+
+	} );
+	//console.log( 'linesRecoveries', linesRecoveries );
+
+	updateBars( linesCases[ 1 ].length );
 
 	getStats();
 
@@ -200,6 +215,7 @@ function toggleBars ( group = groupCases ) {
 		groupCasesNew.visible = true;
 		groupDeaths.visible = true;
 		groupDeathsNew.visible = true;
+		groupRecoveries.visible = true;
 
 	} else {
 
@@ -207,8 +223,9 @@ function toggleBars ( group = groupCases ) {
 		groupCasesNew.visible = false;
 		groupDeaths.visible = false;
 		groupDeathsNew.visible = false;
-		group.visible = true;
+		groupRecoveries.visible = false;
 
+		group.visible = true;
 	}
 
 	groupPrevious = group;
@@ -217,69 +234,74 @@ function toggleBars ( group = groupCases ) {
 
 
 
-function updateBars ( indexDate ) {
+function updateBars ( length ) {
+
+	//console.log( 'length ', length );
+	if ( !linesCases ) { console.log( 'linesCases', linesCases );}
 
 	resetGroups();
 
-	if ( !linesCases ) { console.log( 'linesCases', linesCases );}
+	const heightsCases = linesCases.slice( 1, -1 ).map( line => Number( line[ length - 1 ] ) );
+	//console.log( 'heightsCases', heightsCases );
 
-	const heightsCases = linesCases.map( line => Number( line[ indexDate ] ) );
-	//console.log( 'heights', heightsCases );
+	const meshesCases = linesCases.slice( 1, -1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
 
-	const meshesCases = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
-
-	groupCases.add( ...meshesCases.slice( 1 ) );
+	groupCases.add( ...meshesCases );
 
 
-
-	// const heightsRecoveries = linesRecoveries.map( line => Number( line[ indexDate - 1] ) );
-	// console.log( 'heights', heightsRecoveries);
-
-	// offsetsRecoveries = heightsCases.slice( 1 ).map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsRecoveries[ index ] ) );
-
-	// console.log( 'offsetsRecoveries', offsetsRecoveries );
-
-	// const meshesRecoveries = linesRecoveries.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green", 0.7, heightsRecoveries[ index ], offsetsRecoveries[ index ]  ) );
-
-	// groupRecoveries.add( ...meshesRecoveries.slice( 1 ) );
-
-
-
-	//const casesNew = linesCases.slice( 1 ).map( line => line[ indexDate ] - line[ indexDate - 1 ] );
-
-	const heightsCasesNew = linesCases.map( line => Math.sqrt( line[ indexDate ] - line[ indexDate - 1 ] ) );
+	const heightsCasesNew = linesCases.slice( 1, -1 ).map( line => Math.sqrt( line[ length - 1 ] - line[ length - 2 ] ) );
 	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
 	const offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 
-	const meshesCasesNew = linesCases.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
+	const meshesCasesNew = linesCases.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
 
-	groupCasesNew.add( ...meshesCasesNew.slice( 1 ) );
-
-
-	const heightsDeaths = linesDeaths.map( line => Number( line[ indexDate ] ) );
-	//console.log( 'heightsDeaths', heightsDeaths );
-
-	const meshesDeath = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
-
-	groupDeaths.add( ...meshesDeath.slice( 1 ) );
+	groupCasesNew.add( ...meshesCasesNew );
 
 
-	const heightsDeathsNew = linesDeaths.map( line => line[ indexDate ] - line[ indexDate - 1 ] );
+
+
+	const heightsDeaths = linesDeaths.slice( 1 ).map( line => Number( line[ length - 1 ] ) );
+	//console.log( 'heightsDeaths', linesDeaths.slice( 1 )[ 225 ], heightsDeaths[ 225 ] );
+
+	const meshesDeath = linesDeaths.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
+
+	groupDeaths.add( ...meshesDeath );
+
+
+	const heightsDeathsNew = linesDeaths.slice( 1 ).map( line => line[ length - 1 ] - line[ length - 2 ] );
 
 	const offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
 
-	const meshesDeathsNew = linesDeaths.map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
+	const meshesDeathsNew = linesDeaths.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
 
-	groupDeathsNew.add( ...meshesDeathsNew.slice( 1 ) );
+	groupDeathsNew.add( ...meshesDeathsNew );
+
+
+	const heightsRecoveries = linesRecoveries.slice( 1 ).map( ( line, index ) => Number( line[ length - 1] ) + heightsDeaths[ index ] );
+
+	//console.log( 'heightsRec', linesRecoveries.slice( 1 )[ 225 ],
+	//	linesRecoveries.slice( 1 )[ 225 ][ 68 ], heightsDeaths[ 69 ] );
+
+	const meshesRecoveries = linesRecoveries.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green", 0.45, heightsRecoveries[ index ] ) );
+
+	groupRecoveries.add( ...meshesRecoveries );
 
 }
 
 
 
-function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 1, offset = 0 ) {
+function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0 ) {
 
 	heightScaled = 0.2 * Math.sqrt( height );
+
+	if ( !heightScaled || heightScaled < 0.0001 ) {
+
+		//console.log( '', color, linesCases[ index ] );
+
+		return new THREE.Mesh();
+
+	}
 
 	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
 	let p2 = THR.latLonToXYZ( 100, lat, lon );
@@ -307,34 +329,38 @@ function getStats () {
 	const index = 4 + selDate.selectedIndex;
 
 	const globalCases = linesCases.slice( 1 ).reduce( ( sum, line ) => sum + ( Number( line[ index ] ) || 0 ), 0 );
-
 	const globalCasesNew = linesCases.slice( 1 ).reduce( ( sum, line ) => sum + ( line[ index ] - line[ index - 1 ] || 0 ), 0 );
 	const globalDeaths = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum + ( Number( line[ index ] ) || 0 ), 0 );
 	const globalDeathsNew = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum + ( line[ index ] - line[ index - 1 ] || 0 ), 0 );
+	const globalRecoveries = linesRecoveries.slice( 1 ).reduce( ( sum, line ) => sum + ( Number( line[ index - 1] ) || 0 ), 0 );
 	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
 
 	const chinaCases = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
 	const chinaCasesNew = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1 ] : 0, 0 );
 	const chinaDeaths = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
 	const chinaDeathsNew = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1 ] : 0, 0 );
+	const chinaRecoveries = linesRecoveries.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index -1 ] ) : 0, 0 );
 	const chinaDeathsToCases = 100 * chinaDeaths / chinaCases;
 
 	const europeCases = linesCases.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ index ] ) : 0, 0 );
 	const europeCasesNew = linesCases.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? line[ index ] - line[ index - 1 ] : 0, 0 );
 	const europeDeaths = linesDeaths.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ index ] ) : 0, 0 );
 	const europeDeathsNew = linesDeaths.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? ( line[ index ] - line[ index - 1 ] ) : 0, 0 );
+	const europeRecoveries  = linesRecoveries.reduce( ( sum, line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ index - 1 ] ) : 0, 0 );
 	const europeDeathsToCases = 100 * europeDeaths / europeCases;
 
 	const usaCases = linesCases.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ index ] ) : 0, 0 );
 	const usaCasesNew = linesCases.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? line[ index ] - line[ index - 1 ] : 0, 0 );
 	const usaDeaths = linesDeaths.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ index ] ) : 0, 0 );
 	const usaDeathsNew = linesDeaths.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? ( line[ index ] - line[ index - 1 ] ) : 0, 0 );
+	const usaRecoveries = linesRecoveries.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ index - 1 ] ) : 0, 0 );
 	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
 
 	const rowCases = globalCases - chinaCases - europeCases - usaCases;
 	const rowCasesNew = globalCasesNew - chinaCasesNew - europeCasesNew - usaCasesNew;
 	const rowDeaths = globalDeaths - chinaDeaths - europeDeaths - usaDeaths;
 	const rowDeathsNew = globalDeathsNew - chinaDeathsNew - europeDeathsNew - usaDeathsNew;
+	const rowRecoveries = globalRecoveries - chinaRecoveries - europeRecoveries - usaRecoveries;
 	const rowDeathsToCases = 100 * ( rowDeaths / rowCases );
 
 
@@ -344,6 +370,7 @@ function getStats () {
 		`cases new: ${ globalCasesNew.toLocaleString() }`,
 		`deaths: ${ globalDeaths.toLocaleString() }`,
 		`deaths new: ${ globalDeathsNew.toLocaleString() }`,
+		`recoveries: ${ globalRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ globalDeathsToCases.toLocaleString() }%`
 	];
 
@@ -353,6 +380,7 @@ function getStats () {
 		`cases today: ${ chinaCasesNew.toLocaleString() }`,
 		`deaths: ${ chinaDeaths.toLocaleString() }`,
 		`deaths new: ${ chinaDeathsNew.toLocaleString() }`,
+		`recoveries: ${ chinaRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%`
 	];
 
@@ -362,6 +390,7 @@ function getStats () {
 		`cases today: ${ europeCasesNew.toLocaleString() }`,
 		`deaths: ${ europeDeaths.toLocaleString() }`,
 		`deaths new: ${ europeDeathsNew.toLocaleString() }`,
+		`recoveries: ${ europeRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
 	];
 
@@ -371,6 +400,7 @@ function getStats () {
 		`cases today: ${ usaCasesNew.toLocaleString() }`,
 		`deaths: ${ usaDeaths.toLocaleString() }`,
 		`deaths new: ${ usaDeathsNew.toLocaleString() }`,
+		`recoveries: ${ usaRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ usaDeathsToCases.toLocaleString() }%`
 	];
 
@@ -380,6 +410,7 @@ function getStats () {
 		`cases today: ${ rowCasesNew.toLocaleString() }`,
 		`deaths: ${ rowDeaths.toLocaleString() }`,
 		`deaths new: ${ rowDeathsNew.toLocaleString() }`,
+		`recoveries: ${ rowRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ rowDeathsToCases.toLocaleString() }%`
 	];
 
@@ -576,12 +607,15 @@ function onDocumentMouseMove ( event ) {
 
 			intersected = intersects[ 0 ].object;
 
-			const index = intersected.userData;
+			const index = intersected.userData + 1;
 
 			const line = linesCases[ index ];
 			//console.log( 'line', line );
 
 			const lineDeaths = linesDeaths[ index ];
+
+			const lineRecoveries = linesRecoveries[ index ];
+			//console.log( 'lineRecoveries', lineRecoveries );
 
 			const casesNew = line.slice( 5 ).map( ( cases, index ) => cases - line[ 5 + index - 1 ] );
 			//console.log( 'cb', casesNew );
@@ -629,6 +663,7 @@ cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
 cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
 deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
 deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
+recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
 deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 <hr>
 deaths/100K persons: ${ d2Pop }<br>

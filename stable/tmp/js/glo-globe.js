@@ -1,9 +1,12 @@
 function onLoadGeoJson ( xhr ) {
 
 	let response = xhr.target.response;
+	const file = xhr.target.responseURL.split( "/" ).pop()
 
-	geoJson = JSON.parse( response );
+	const geoJson = JSON.parse( response );
 	//console.log( '', response );
+
+	geoJsonArray[ file ] = geoJson;
 
 	drawThreeGeo( geoJson, 50, 'sphere', { color: "#888" } );
 

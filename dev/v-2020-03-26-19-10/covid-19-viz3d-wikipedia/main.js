@@ -1,6 +1,6 @@
 // copyright 2020 Spider contributors. MIT license.
 // 2020-03-26
-/* globals THREE"," drawThreeGeo"," aSource"," imgIcon"," sTitle"," sVersion"," divMessage"," divStats"," divSettings"," detStats"," navMenu"," THR */
+/* globals THREE, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
 // jshint esversion: 6
 // jshint loopfunc: true
 
@@ -11,7 +11,7 @@ let pathAssets = "../../../assets/"; // change in html of stable
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = pathAssets + "images/github-mark-32.png";
 
-sTitle.innerHTML = document.title ? document.title : location.href.split( '/' ).pop().slice( 0"," - 5 ).replace( /-/g"," ' ' );
+sTitle.innerHTML = document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
 sVersion.innerHTML = version ? version.content : "";
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
@@ -35,7 +35,7 @@ let linesDeathsNew;
 let intersected;
 
 let mesh;
-let scene"," camera"," controls"," renderer;
+let scene, camera, controls, renderer;
 
 
 THR.init();
@@ -66,23 +66,20 @@ function init () {
 
 	addSkyBox();
 
-	getNotes();
-
-
-	//document.addEventListener( 'mousemove'"," onDocumentMouseMove"," false );
-	renderer.domElement.addEventListener( 'mousedown'"," onDocumentMouseMove"," false );
-	renderer.domElement.addEventListener( 'touchstart'"," onDocumentTouchStart"," false );
+	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
+	renderer.domElement.addEventListener( 'touchstart', onDocumentTouchStart, false );
 
 }
 
 
 
-function requestFile ( url"," callback ) {
+function requestFile ( url, callback ) {
 
 	const xhr = new XMLHttpRequest();
-	xhr.open( 'GET'"," url"," true );
-	xhr.onerror = ( xhr ) => console.log( 'error:'"," xhr );
-	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:'"," xhr.loaded );
+	xhr.open( 'GET', url, true );
+	xhr.onerror = ( xhr ) => console.log( 'error:', xhr );
+	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
 	xhr.onload = callback;
 	xhr.send( null );
 
@@ -92,7 +89,7 @@ function requestFile ( url"," callback ) {
 
 function resetGroups () {
 
-	scene.remove( group"," groupCases"," groupCasesNew"," groupRecoveries"," groupDeaths"," groupDeathsNew"," groupPlacards"," groupLines );
+	scene.remove( group, groupCases, groupCasesNew, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
 
 	group = new THREE.Group();
 	groupCases = new THREE.Group();
@@ -103,93 +100,9 @@ function resetGroups () {
 	groupPlacards = new THREE.Group();
 	groupLines = new THREE.Group();
 
-	scene.add( group"," groupCases"," groupCasesNew"," groupRecoveries"," groupDeaths"," groupDeathsNew"," groupPlacards"," groupLines );
+	scene.add( group, groupCases, groupCasesNew, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
 
 }
-
-
-
-function onLoadCases ( xhr ) {
-
-	resetGroups();
-
-	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=3 style=width:100%;
-		title="Use the cursor keys to go back in time" ></select>`;
-
-	let response = xhr.target.response;
-
-	response = response.replace( /"Korea"," South"/"," "South Korea" );
-	// 	.replace( /"Gambia"," The"/"," "The Gambia" )
-	// 	.replace( /"Bahamas"," The"/"," "The Bahamas" );
-	// .replace( /"Virgin Islands","/"," "Virgin Islands");
-
-	linesCases = response.split( "\n" ).map( line => line.split( "", "" ) );
-	//console.log( 'lines'"," lines );
-
-	const dates = linesCases[ 0 ].slice( 4 );
-
-	selDate.innerHTML = dates.map( date => `<option>${ date }</option>` );
-
-	selDate.selectedIndex = dates.length - 1;
-
-	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-
-	requestFile( dataJhuDeaths"," onLoadDeaths );
-
-}
-
-
-
-function onLoadDeaths ( xhr ) {
-
-	linesDeaths = xhr.target.response.split( "\n" ).map( line => line.split( "", "" ) );
-	//console.log( 'linesDeaths'"," linesDeaths );
-
-
-
-	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
-	const dataJhuRecovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
-
-	requestFile( dataJhuRecovered"," onLoadRecovered );
-
-}
-
-
-
-function onLoadRecovered ( xhr ) {
-
-	lines = xhr.target.response.split( "\n" ).map( line => line.split( "", "" ) );
-	//console.log( 'lines'"," lines );
-
-	const arrEmpty = Array( lines[ 0 ].length - 4 ).fill( "0" );
-
-	linesRecoveries = linesCases.map( ( lineC"," index ) => {
-
-		const lineF = lines.find( ( line"," index ) => line[ 0 ] === lineC[ 0 ] && line[ 1 ] === lineC[ 1 ] );
-
-		//	console.log( 'lineF'"," lineF );
-
-		const lineNew = !!lineF ? lineF : lineC.slice( 0"," 4 ).concat( arrEmpty );
-
-		if ( lineC[ 1 ] === "US" ) {
-
-			//console.log( ''"," lineC );
-		}
-
-		return lineNew;
-
-	} );
-	//console.log( 'linesRecoveries'"," linesRecoveries );
-
-	updateBars( linesCases[ 1 ].length );
-
-	getStats();
-
-	getCountries();
-
-}
-
 
 
 //////////
@@ -221,27 +134,27 @@ function toggleBars ( group = groupCases ) {
 
 
 
-function updateBars ( length ) {
+function xxxxupdateBars ( length ) {
 
-	//console.log( 'length '"," length );
-	if ( !linesCases ) { console.log( 'linesCases'"," linesCases ); }
+	//console.log( 'length ', length );
+	if ( !linesCases ) { console.log( 'linesCases', linesCases ); }
 
 	resetGroups();
 
-	const heightsCases = linesCases.slice( 1"," - 1 ).map( line => Number( line[ length - 1 ] ) );
-	//console.log( 'heightsCases'"," heightsCases );
+	const heightsCases = linesCases.slice( 1, - 1 ).map( line => Number( line[ length - 1 ] ) );
+	//console.log( 'heightsCases', heightsCases );
 
-	const meshesCases = linesCases.slice( 1"," - 1 ).map( ( line"," index ) => addBar( line[ 2 ]"," line[ 3 ]"," index"," "red""," 0.4"," heightsCases[ index ] ) );
+	const meshesCases = linesCases.slice( 1, - 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
 
 	groupCases.add( ...meshesCases );
 
 
-	const heightsCasesNew = linesCases.slice( 1"," - 1 ).map( line => Math.sqrt( line[ length - 1 ] - line[ length - 2 ] ) );
-	//console.log( 'heightsCasesNew '"," heightsCasesNew );
+	const heightsCasesNew = linesCases.slice( 1, - 1 ).map( line => Math.sqrt( line[ length - 1 ] - line[ length - 2 ] ) );
+	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
-	const offsetsCasesNew = heightsCases.map( ( height"," index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
+	const offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
 
-	const meshesCasesNew = linesCases.slice( 1 ).map( ( line"," index ) => addBar( line[ 2 ]"," line[ 3 ]"," index"," "cyan""," 0.6"," heightsCasesNew[ index ]"," offsetsCasesNew[ index ] ) );
+	const meshesCasesNew = linesCases.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
 
 	groupCasesNew.add( ...meshesCasesNew );
 
@@ -249,28 +162,28 @@ function updateBars ( length ) {
 
 
 	const heightsDeaths = linesDeaths.slice( 1 ).map( line => Number( line[ length - 1 ] ) );
-	//console.log( 'heightsDeaths'"," linesDeaths.slice( 1 )[ 225 ]"," heightsDeaths[ 225 ] );
+	//console.log( 'heightsDeaths', linesDeaths.slice( 1 )[ 225 ], heightsDeaths[ 225 ] );
 
-	const meshesDeath = linesDeaths.slice( 1 ).map( ( line"," index ) => addBar( line[ 2 ]"," line[ 3 ]"," index"," "black""," 0.5"," heightsDeaths[ index ] ) );
+	const meshesDeath = linesDeaths.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
 
 	groupDeaths.add( ...meshesDeath );
 
 
 	const heightsDeathsNew = linesDeaths.slice( 1 ).map( line => line[ length - 1 ] - line[ length - 2 ] );
 
-	const offsetsDeathsNew = heightsDeaths.map( ( height"," index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
+	const offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
 
-	const meshesDeathsNew = linesDeaths.slice( 1 ).map( ( line"," index ) => addBar( line[ 2 ]"," line[ 3 ]"," index"," "gray""," 0.6"," heightsDeathsNew[ index ]"," offsetsDeathsNew[ index ] ) );
+	const meshesDeathsNew = linesDeaths.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
 
 	groupDeathsNew.add( ...meshesDeathsNew );
 
 
-	const heightsRecoveries = linesRecoveries.slice( 1 ).map( ( line"," index ) => Number( line[ length - 1 ] ) + heightsDeaths[ index ] );
+	const heightsRecoveries = linesRecoveries.slice( 1 ).map( ( line, index ) => Number( line[ length - 1 ] ) + heightsDeaths[ index ] );
 
-	//console.log( 'heightsRec'"," linesRecoveries.slice( 1 )[ 225 ]","
-	//	linesRecoveries.slice( 1 )[ 225 ][ 68 ]"," heightsDeaths[ 69 ] );
+	//console.log( 'heightsRec', linesRecoveries.slice( 1 )[ 225 ],
+	//	linesRecoveries.slice( 1 )[ 225 ][ 68 ], heightsDeaths[ 69 ] );
 
-	const meshesRecoveries = linesRecoveries.slice( 1 ).map( ( line"," index ) => addBar( line[ 2 ]"," line[ 3 ]"," index"," "green""," 0.45"," heightsRecoveries[ index ] ) );
+	const meshesRecoveries = linesRecoveries.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green", 0.45, heightsRecoveries[ index ] ) );
 
 	groupRecoveries.add( ...meshesRecoveries );
 
@@ -278,25 +191,25 @@ function updateBars ( length ) {
 
 
 
-function addBar ( lat"," lon"," index"," color = "red""," radius = 0.4"," height = 0"," offset = 0 ) {
+function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0 ) {
 
 	heightScaled = 0.2 * Math.sqrt( height );
 
 	if ( !heightScaled || heightScaled < 0.0001 ) {
 
-		//console.log( ''"," color"," linesCases[ index ] );
+		//console.log( '', color, linesCases[ index ] );
 
 		return new THREE.Mesh();
 
 	}
 
-	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled )"," lat"," lon );
-	let p2 = THR.latLonToXYZ( 100"," lat"," lon );
+	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
+	let p2 = THR.latLonToXYZ( 100, lat, lon );
 
-	let geometry = new THREE.CylinderGeometry( radius"," radius"," heightScaled"," 12"," 1"," true );
+	let geometry = new THREE.CylinderGeometry( radius, radius, heightScaled, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-	let material = new THREE.MeshPhongMaterial( { color: color"," side: 2 } );
-	let mesh = new THREE.Mesh( geometry"," material );
+	let material = new THREE.MeshPhongMaterial( { color: color, side: 2 } );
+	let mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );
 	mesh.userData = index;
@@ -311,138 +224,109 @@ function addBar ( lat"," lon"," index"," color = "red""," radius = 0.4"," height
 
 function getStats () {
 
-	const europe = [ "Albania""," "Andorra""," "Armenia""," "Austria""," "Azerbaijan""," "Belarus""," "Belgium""," "Bosnia and Herzegovina""," "Bulgaria""," "Croatia""," "Cyprus""," "Czechia""," "Denmark""," "EstoniaF""," "Finland""," "France""," "Georgia""," "Germany""," "Greece""," "Hungary""," "Iceland""," "Ireland""," "Italy""," "Kazakhstan""," "Kosovo""," "Latvia""," "Liechtenstein""," "Lithuania""," "Luxembourg""," "Malta""," "Moldova""," "Monaco""," "Montenegro""," "Netherlands""," "North Macedonia""," "Norway""," "Poland""," "Portugal""," "Romania""," "Russia""," "San Marino""," "Serbia""," "Slovakia""," "Slovenia""," "Spain""," "Sweden""," "Switzerland""," "Turkey""," "Ukraine""," "United Kingdom""," "Holy See" ];
+	const europe = [ "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "EstoniaF", "Finland", "France", "Georgia", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Holy See" ];
 
-	const index = 4 + selDate.selectedIndex;
+	//const index = 4 + selDate.selectedIndex;
 
-	const globalCases = linesCases.slice( 1 ).reduce( ( sum"," line ) => sum + ( Number( line[ index ] ) || 0 )"," 0 );
-	const globalCasesNew = linesCases.slice( 1 ).reduce( ( sum"," line ) => sum + ( line[ index ] - line[ index - 1 ] || 0 )"," 0 );
-	const globalDeaths = linesDeaths.slice( 1 ).reduce( ( sum"," line ) => sum + ( Number( line[ index ] ) || 0 )"," 0 );
-	const globalDeathsNew = linesDeaths.slice( 1 ).reduce( ( sum"," line ) => sum + ( line[ index ] - line[ index - 1 ] || 0 )"," 0 );
-	const globalRecoveries = linesRecoveries.slice( 1 ).reduce( ( sum"," line ) => sum + ( Number( line[ index - 1 ] ) || 0 )"," 0 );
-	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
+	const globalCases = Number( rows[ 0 ][ 0 ] );
+	const globalDeaths = Number( rows[ 0 ][ 1 ] );
+	const globalRecoveries = Number( rows[ 0 ][ 2 ] );
 
-	const chinaCases = linesCases.slice( 1 ).reduce( ( sum"," line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0"," 0 );
-	const chinaCasesNew = linesCases.slice( 1 ).reduce( ( sum"," line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1 ] : 0"," 0 );
-	const chinaDeaths = linesDeaths.slice( 1 ).reduce( ( sum"," line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0"," 0 );
-	const chinaDeathsNew = linesDeaths.slice( 1 ).reduce( ( sum"," line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1 ] : 0"," 0 );
-	const chinaRecoveries = linesRecoveries.slice( 1 ).reduce( ( sum"," line ) => sum += line[ 1 ] === "China" ? Number( line[ index - 1 ] ) : 0"," 0 );
-	const chinaDeathsToCases = 100 * chinaDeaths / chinaCases;
+	const chinaCases = Number( rows[ 34 ][ 1 ] ).toLocaleString();
+	const chinaDeaths =  Number( rows[ 34 ][ 2 ] ).toLocaleString();
+	const chinaRecoveries =  Number( rows[ 34 ][ 3 ] ).toLocaleString();
 
-	const europeCases = linesCases.reduce( ( sum"," line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ index ] ) : 0"," 0 );
-	const europeCasesNew = linesCases.reduce( ( sum"," line ) => sum += europe.includes( line[ 1 ] ) ? line[ index ] - line[ index - 1 ] : 0"," 0 );
-	const europeDeaths = linesDeaths.reduce( ( sum"," line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ index ] ) : 0"," 0 );
-	const europeDeathsNew = linesDeaths.reduce( ( sum"," line ) => sum += europe.includes( line[ 1 ] ) ? ( line[ index ] - line[ index - 1 ] ) : 0"," 0 );
-	const europeRecoveries = linesRecoveries.reduce( ( sum"," line ) => sum += europe.includes( line[ 1 ] ) ? Number( line[ index - 1 ] ) : 0"," 0 );
-	const europeDeathsToCases = 100 * europeDeaths / europeCases;
+	const europeCases = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 1 ] ) : 0, 0 );
+	const europeDeaths = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 2 ] ) : 0, 0 );
+	const europeRecoveries = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 3 ] ) : 0, 0 );
 
-	const usaCases = linesCases.reduce( ( sum"," line ) => sum += line[ 1 ] === "US" ? Number( line[ index ] ) : 0"," 0 );
-	const usaCasesNew = linesCases.reduce( ( sum"," line ) => sum += line[ 1 ] === "US" ? line[ index ] - line[ index - 1 ] : 0"," 0 );
-	const usaDeaths = linesDeaths.reduce( ( sum"," line ) => sum += line[ 1 ] === "US" ? Number( line[ index ] ) : 0"," 0 );
-	const usaDeathsNew = linesDeaths.reduce( ( sum"," line ) => sum += line[ 1 ] === "US" ? ( line[ index ] - line[ index - 1 ] ) : 0"," 0 );
-	const usaRecoveries = linesRecoveries.reduce( ( sum"," line ) => sum += line[ 1 ] === "US" ? Number( line[ index - 1 ] ) : 0"," 0 );
-	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
+	const usaCases = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 1 ] ) : 0, 0 );
+	const usaDeaths = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 2 ] ) : 0, 0 );
+	const usaRecoveries = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 3 ] ) : 0, 0 );
 
 	const rowCases = globalCases - chinaCases - europeCases - usaCases;
-	const rowCasesNew = globalCasesNew - chinaCasesNew - europeCasesNew - usaCasesNew;
 	const rowDeaths = globalDeaths - chinaDeaths - europeDeaths - usaDeaths;
-	const rowDeathsNew = globalDeathsNew - chinaDeathsNew - europeDeathsNew - usaDeathsNew;
 	const rowRecoveries = globalRecoveries - chinaRecoveries - europeRecoveries - usaRecoveries;
-	const rowDeathsToCases = 100 * ( rowDeaths / rowCases );
 
 
 	const totalsGlobal = [
-		`Global totals`","
-			`cases: ${ globalCases.toLocaleString() }`","
-			`cases new: ${ globalCasesNew.toLocaleString() }`","
-			`deaths: ${ globalDeaths.toLocaleString() }`","
-			`deaths new: ${ globalDeathsNew.toLocaleString() }`","
-			`recoveries: ${ globalRecoveries.toLocaleString() }`","
-			`deaths/cases: ${ globalDeathsToCases.toLocaleString() }%`
+		`Global totals`,
+		`cases: ${ globalCases.toLocaleString() }`,
+		`deaths: ${ globalDeaths.toLocaleString() }`,
+		`recoveries: ${ globalRecoveries.toLocaleString() }`
 	];
 
 	totalsChina = [
-		`China`","
-			`cases: ${ chinaCases.toLocaleString() }`","
-			`cases today: ${ chinaCasesNew.toLocaleString() }`","
-			`deaths: ${ chinaDeaths.toLocaleString() }`","
-			`deaths new: ${ chinaDeathsNew.toLocaleString() }`","
-			`recoveries: ${ chinaRecoveries.toLocaleString() }`","
-			`deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%`
+		`China`,
+		`cases: ${ chinaCases }`,
+		`deaths: ${ chinaDeaths }`,
+		`recoveries: ${ chinaRecoveries }`,
+
 	];
 
 	const totalsEurope = [
-		`Europe`","
-			`cases: ${ europeCases.toLocaleString() }`","
-			`cases today: ${ europeCasesNew.toLocaleString() }`","
-			`deaths: ${ europeDeaths.toLocaleString() }`","
-			`deaths new: ${ europeDeathsNew.toLocaleString() }`","
-			`recoveries: ${ europeRecoveries.toLocaleString() }`","
-			`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
+		`Europe`,
+			`cases: ${ europeCases.toLocaleString() }`,
+			`deaths: ${ europeDeaths.toLocaleString() }`,
+			`recoveries: ${ europeRecoveries.toLocaleString() }`,
 	];
 
 	const totalsUsa = [
-		`USA`","
-			`cases: ${ usaCases.toLocaleString() }`","
-			`cases today: ${ usaCasesNew.toLocaleString() }`","
-			`deaths: ${ usaDeaths.toLocaleString() }`","
-			`deaths new: ${ usaDeathsNew.toLocaleString() }`","
-			`recoveries: ${ usaRecoveries.toLocaleString() }`","
-			`deaths/cases: ${ usaDeathsToCases.toLocaleString() }%`
+		`USA`,
+			`cases: ${ usaCases.toLocaleString() }`,
+			`deaths: ${ usaDeaths.toLocaleString() }`,
+			`recoveries: ${ usaRecoveries.toLocaleString() }`,
 	];
 
 	const totalsRow = [
-		`Rest of World`","
-			`cases: ${ rowCases.toLocaleString() }`","
-			`cases today: ${ rowCasesNew.toLocaleString() }`","
-			`deaths: ${ rowDeaths.toLocaleString() }`","
-			`deaths new: ${ rowDeathsNew.toLocaleString() }`","
-			`recoveries: ${ rowRecoveries.toLocaleString() }`","
-			`deaths/cases: ${ rowDeathsToCases.toLocaleString() }%`
+		`Rest of World`,
+			`cases: ${ rowCases.toLocaleString() }`,
+			`deaths: ${ rowDeaths.toLocaleString() }`,
+			`recoveries: ${ rowRecoveries.toLocaleString() }`,
 	];
 
-	// [text]"," scale"," color"," x"," y"," z )
-	// groupPlacards.add( THR.drawPlacard( "Null Island""," "0.01""," 1"," 80"," 0"," 0 ) );
+	// [text], scale, color, x, y, z )
+	// groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
 
-	vGlo = THR.latLonToXYZ( 75"," 65"," - 20 );
-	groupPlacards.add( THR.drawPlacard( totalsGlobal"," "0.02""," 200"," vGlo.x"," vGlo.y"," vGlo.z ) );
+	vGlo = THR.latLonToXYZ( 75, 65, - 20 );
+	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
 
-	vChi = THR.latLonToXYZ( 85"," 50"," 110 );
-	groupPlacards.add( THR.drawPlacard( totalsChina"," "0.02""," 1"," vChi.x"," vChi.y"," vChi.z ) );
+	vChi = THR.latLonToXYZ( 85, 50, 110 );
+	groupPlacards.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
 
-	const vEur = THR.latLonToXYZ( 80"," 60"," 20 );
-	groupPlacards.add( THR.drawPlacard( totalsEurope"," "0.02""," 120"," vEur.x"," vEur.y"," vEur.z ) );
+	const vEur = THR.latLonToXYZ( 80, 60, 20 );
+	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
 
-	const vUsa = THR.latLonToXYZ( 80"," 40"," - 120 );
-	groupPlacards.add( THR.drawPlacard( totalsUsa"," "0.02""," 60"," vUsa.x"," vUsa.y"," vUsa.z ) );
+	const vUsa = THR.latLonToXYZ( 80, 40, - 120 );
+	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
 
-	const vRow = THR.latLonToXYZ( 90"," 30"," 180 );
-	groupPlacards.add( THR.drawPlacard( totalsRow"," "0.02""," 180"," vRow.x"," vRow.y"," vRow.z ) );
+	const vRow = THR.latLonToXYZ( 90, 30, 180 );
+	groupPlacards.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
 
 
 	divStats.innerHTML = `
-<details id=detStats >
+<details id=detStats open>
 
 	<summary><b>global data </b></summary>
 
 	<p>
-		${ totalsGlobal.join( "<br>" ).replace( /Global totals/"," "<b>Global totals</b>" ) }
+		${ totalsGlobal.join( "<br>" ).replace( /Global totals/, "<b>Global totals</b>" ) }
 	</p>
 
 	<p>
-		${ totalsChina.join( "<br>" ).replace( /China/"," "<b>China</b>" ) }
+		${ totalsChina.join( "<br>" ).replace( /China/, "<b>China</b>" ) }
 	</p>
 
 	<p>
-		${ totalsEurope.join( "<br>" ).replace( /Europe/"," "<b>Europe</b>" ) }
+		${ totalsEurope.join( "<br>" ).replace( /Europe/, "<b>Europe</b>" ) }
 	</p>
 
 	<p>
-		${ totalsUsa.join( "<br>" ).replace( /USA/"," "<b>USA</b>" ) }
+		${ totalsUsa.join( "<br>" ).replace( /USA/, "<b>USA</b>" ) }
 	</p>
 
 	<p>
-		${ totalsRow.join( "<br>" ).replace( /Rest of World/"," "<b>Rest of World</b>" ) }
+		${ totalsRow.join( "<br>" ).replace( /Rest of World/, "<b>Rest of World</b>" ) }
 	</p>
 
 </details>`;
@@ -461,7 +345,7 @@ function getCountries () {
 
 	countries = [ ...new Set( countries ) ];
 
-	//console.log( 'countries'"," countries );
+	//console.log( 'countries', countries );
 
 	const options = countries.map( country => `<option>${ country }</option>` );
 
@@ -481,12 +365,12 @@ function getProvince ( country ) {
 	divMessage.innerHTML = "";
 
 	let provinces = linesCases.filter( line => line[ 1 ] === country );
-	//console.log( 'provinces'"," provinces );
+	//console.log( 'provinces', provinces );
 
 
 	if ( provinces[ 0 ][ 0 ] === "" ) {
 
-		camera.position.copy( THR.latLonToXYZ( 70"," provinces[ 0 ][ 2 ]"," provinces[ 0 ][ 3 ] ) );
+		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) );
 
 		divProvinces.innerHTML = "";
 
@@ -504,60 +388,13 @@ function getProvince ( country ) {
 function getPlace ( province ) {
 
 	const place = linesCases.find( line => line[ 0 ] === province );
-	//console.log( 'place'"," place );
+	//console.log( 'place', place );
 
-	camera.position.copy( THR.latLonToXYZ( 70"," place[ 2 ]"," place[ 3 ] ) );
+	camera.position.copy( THR.latLonToXYZ( 70, place[ 2 ], place[ 3 ] ) );
 
 
 }
 
-
-
-function getNotes () {
-
-	divSettings.innerHTML = `<details id=detSettings ontoggle=getNotesContent() >
-
-		<summary><b>notes & settings</b></summary>
-
-		<div id=divNoteSettings ></div>
-
-	</details>`;
-
-}
-
-
-
-function getNotesContent () {
-
-
-	divNoteSettings.innerHTML = `
-
-	<p><i>Why are there messages in the background?</i></p>
-	<p>
-		An early visitor to our tracker raised this issue
-		"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
-		Oleg askeg "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
-	</p>
-
-	<p>
-		What you see is our first attempt to give Oleg some delight.<br>
-		&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
-		&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
-	</p>
-
-	<hr>
-
-	<p>US States new cases data coming soon</p>
-
-	<p>Black bar flare indicates high deaths to cases ratio.</p>
-
-	<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
-
-	<p>
-		Not all populations and GDPs are reported.
-	</p>`;
-
-}
 
 
 //////////
@@ -584,7 +421,7 @@ function onDocumentMouseMove ( event ) {
 	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
 
 	const raycaster = new THREE.Raycaster();
-	raycaster.setFromCamera( mouse"," camera );
+	raycaster.setFromCamera( mouse, camera );
 
 	const intersects = raycaster.intersectObjects( groupCases.children );
 
@@ -596,67 +433,19 @@ function onDocumentMouseMove ( event ) {
 
 			const index = intersected.userData + 1;
 
-			const line = linesCases[ index ];
-			//console.log( 'line'"," line );
-
-			const lineDeaths = linesDeaths[ index ];
-
-			const lineRecoveries = linesRecoveries[ index ];
-			//console.log( 'lineRecoveries'"," lineRecoveries );
-
-			const casesNew = line.slice( 5 ).map( ( cases"," index ) => cases - line[ 5 + index - 1 ] );
-			//console.log( 'cb'"," casesNew );
-
-			const dateIndex = selDate.selectedIndex > -1 ? 4 + selDate.selectedIndex : line.length - 1;
-
-			let country = line[ 1 ];
-			const place = line[ 0 ];
-
-			if ( country === "US" ) { country = "United States of America"; }
-
-			const arr = geoJsonArray[ "ne_110m_admin_0_countries_lakes.geojson" ].features.filter( feature => feature.properties.NAME === country );
-			//console.log( 'arr'"," arr );
-
-			const feature = arr.length ? arr[ 0 ] : undefined;
-			//console.log( 'feature'"," feature );
-
-			let d2Pop"," d2Gdp;
-
-			if ( feature ) {
-
-				const population = feature.properties.POP_EST;
-				const gdp = feature.properties.GDP_MD_EST;
-				const name = feature.properties.NAME;
-
-				//console.log( 'gdp/pop'"," 1000000 * gdp / population  );
-				d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
-				d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
-
-			} else {
-
-				d2Pop = "not available";
-				d2Gdp = "not available";
-
-			}
+			const line = rows[ index ];
+			console.log( 'line', line );
 
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
 			divMessage.innerHTML = `
-<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
-${ ( place ? "place: " + place + "<br>" : "" ) }
-country: ${ country }<br>
-cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
-cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
-deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
-deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
-recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
-deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
-<hr>
-deaths/100K persons: ${ d2Pop }<br>
-cases/(gdp/pop): ${ d2Gdp }<br>
-<b title="Latest day at top" >New cases per day</b><br>
-${ getBars2D( casesNew ) }
+<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a> - updates ??<br>
+country: ${ line[ 0 ] }<br>
+cases: ${ Number( line[ 1 ] ).toLocaleString() }<br>
+deaths: ${ Number( line[ 2 ] ).toLocaleString() }<br>
+recoveries: ${ Number( line[ 3 ] ).toLocaleString() }<br>
+
 `;
 
 		}
@@ -668,24 +457,5 @@ ${ getBars2D( casesNew ) }
 		divMessage.innerHTML = "";
 
 	}
-
-
-	function getBars2D ( arr ) {
-
-		arr.reverse();
-
-		const max = Math.max( ...arr );
-		const scale = 200 / max;
-		const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
-
-		const bars = arr.map( ( item"," index ) =>
-		`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
-					title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>`
-			).join( "" );
-
-		return `<div style=background-color:#ddd title="New cases per day. Latest at top.The curve you hope to see flatten!" >${ bars }</div>`;
-
-	}
-
 
 }

@@ -60,24 +60,16 @@
 
 		</header>
 
-		<p class=navLegend style=background-color:cyan; title="The flare indicates high number of new cases">
-			<button id=butNew  class=butLegend onclick=toggleBars(groupCasesNew) style=background-color:cyan;color:black; >
-				New cases today&nbsp;</button></p>
-
 		<p class=navLegend style=background-color:red; >
-			<button id=butCases  class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white; >
+			<button id=butCases  class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
 				Confirmed cases&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
-			<button id=butDeaths  class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white; >
+			<button id=butDeaths  class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
 				Deaths&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:lavender; >
-			<button id=butDeathsNew  class=butLegend onclick=toggleBars(groupDeathsNew) style=background-color:lavender; >
-				New deaths today&nbsp;</button></p>
-
 		<p class=navLegend style=background-color:limegreen; >
-			<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries) style+=background-color:limegreen; >
+			<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries) style=background-color:limegreen;width:100%; >
 				Recoveries&nbsp;</button></p>
 
 		<div id=divDates style=background-color:white;padding:1ch;></div>
@@ -115,6 +107,8 @@
 </footer>
 
 <script src="main.js"></script>
+<script src="fw-fetch-wikipedia.js"></script>
+<script src="countries-places-lat-lon.js"></script>
 <script src="../js/glo-globe.js"></script>
 <script src="../js/spk-speak.js"></script>
 

@@ -101,6 +101,7 @@ function onLoadRecovered ( xhr ) {
 function updateBars ( length ) {
 
 	//console.log( 'length ', length );
+
 	if ( !linesCases ) { console.log( 'linesCases', linesCases );}
 
 	resetGroups();
@@ -108,36 +109,38 @@ function updateBars ( length ) {
 	const heightsCases = linesCases.slice( 1, -1 ).map( line => Number( line[ length - 1 ] ) );
 	//console.log( 'heightsCases', heightsCases );
 
-	const meshesCases = linesCases.slice( 1, -1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
+	const meshesCases = linesCases.slice( 1, -1 ).map( ( line, index ) =>
+		addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ], 0, 12, 1, false ) );
 
 	groupCases.add( ...meshesCases );
 
 
-	const heightsCasesNew = linesCases.slice( 1, -1 ).map( line => Math.sqrt( line[ length - 1 ] - line[ length - 2 ] ) );
+	const heightsCasesNew = linesCases.slice( 1, -1 ).map( line => line[ length - 1 ] - line[ length - 2 ] );
 	//console.log( 'heightsCasesNew ', heightsCasesNew );
 
-	const offsetsCasesNew = heightsCases.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsCasesNew[ index ] ) );
+	const offsetsCasesNew = heightsCases.map( ( height, index ) => scaleHeights * ( height - heightsCasesNew[ index ] ) );
 
-	const meshesCasesNew = linesCases.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNew[ index ], offsetsCasesNew[ index ] ) );
+	const meshesCasesNew = linesCases.slice( 1 ).map( ( line, index ) =>
+		addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.45, heightsCasesNew[ index ], 0.001 + offsetsCasesNew[ index ], 12, 1, false ) );
 
 	groupCasesNew.add( ...meshesCasesNew );
-
-
 
 
 	const heightsDeaths = linesDeaths.slice( 1 ).map( line => Number( line[ length - 1 ] ) );
 	//console.log( 'heightsDeaths', linesDeaths.slice( 1 )[ 225 ], heightsDeaths[ 225 ] );
 
-	const meshesDeath = linesDeaths.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
+	const meshesDeath = linesDeaths.slice( 1 ).map( ( line, index ) =>
+		addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
 
 	groupDeaths.add( ...meshesDeath );
 
 
 	const heightsDeathsNew = linesDeaths.slice( 1 ).map( line => line[ length - 1 ] - line[ length - 2 ] );
 
-	const offsetsDeathsNew = heightsDeaths.map( ( height, index ) => 0.2 * Math.sqrt( height ) - 0.2 * Math.sqrt( heightsDeathsNew[ index ] ) );
+	const offsetsDeathsNew = heightsDeaths.map( ( height, index ) => scaleHeights * ( height - heightsDeathsNew[ index ] ) );
 
-	const meshesDeathsNew = linesDeaths.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
+	const meshesDeathsNew = linesDeaths.slice( 1 ).map( ( line, index ) =>
+		addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsDeathsNew[ index ], offsetsDeathsNew[ index ] ) );
 
 	groupDeathsNew.add( ...meshesDeathsNew );
 
@@ -147,7 +150,8 @@ function updateBars ( length ) {
 	//console.log( 'heightsRec', linesRecoveries.slice( 1 )[ 225 ],
 	//	linesRecoveries.slice( 1 )[ 225 ][ 68 ], heightsDeaths[ 69 ] );
 
-	const meshesRecoveries = linesRecoveries.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green", 0.45, heightsRecoveries[ index ] ) );
+	const meshesRecoveries = linesRecoveries.slice( 1 ).map( ( line, index ) =>
+		addBar( line[ 2 ], line[ 3 ], index, "green", 0.45, heightsRecoveries[ index ] ) );
 
 	groupRecoveries.add( ...meshesRecoveries );
 
@@ -248,5 +252,122 @@ function getStats () {
 	];
 
 	displayStats( totalsGlobal, totalsChina, totalsEurope, totalsUsa, totalsRow );
+
+}
+
+
+
+function onDocumentMouseMove ( event ) {
+
+	//event.preventDefault();
+
+	const mouse = new THREE.Vector2();
+	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+	const raycaster = new THREE.Raycaster();
+	raycaster.setFromCamera( mouse, camera );
+
+	const intersects = raycaster.intersectObjects( groupCases.children );
+
+	if ( intersects.length > 0 ) {
+
+		if ( intersected !== intersects[ 0 ].object ) {
+
+			intersected = intersects[ 0 ].object;
+
+			const index = intersected.userData + 1;
+
+			const line = linesCases[ index ];
+			//console.log( 'line', line );
+
+			const lineDeaths = linesDeaths[ index ];
+
+			const lineRecoveries = linesRecoveries[ index ];
+			//console.log( 'lineRecoveries', lineRecoveries );
+
+			const casesNew = line.slice( 5 ).map( ( cases, index ) => cases - line[ 5 + index - 1 ] );
+			//console.log( 'cb', casesNew );
+
+			const dateIndex = selDate.selectedIndex > -1 ? 4 + selDate.selectedIndex : line.length - 1;
+
+			let country = line[ 1 ];
+			const place = line[ 0 ];
+
+			if ( country === "US" ) { country = "United States of America"; }
+
+			const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
+			//console.log( 'arr', arr );
+
+			const feature = arr.length ? arr[ 0 ] : undefined;
+			//console.log( 'feature', feature );
+
+			let d2Pop, d2Gdp;
+
+			if ( feature ) {
+
+				const population = feature.properties.POP_EST;
+				const gdp = feature.properties.GDP_MD_EST;
+				const name = feature.properties.NAME;
+
+				//console.log( 'gdp/pop', 1000000 * gdp / population  );
+				d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
+				d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
+
+			} else {
+
+				d2Pop = "not available";
+				d2Gdp = "not available";
+
+			}
+
+			divMessage.hidden = false;
+			divMessage.style.left = event.clientX + "px";
+			divMessage.style.top = event.clientY + "px";
+			divMessage.innerHTML = `
+<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
+${ ( place ? "place: " + place + "<br>" : "" ) }
+country: ${ country }<br>
+cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
+cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
+deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
+deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
+recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
+deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
+<hr>
+deaths/100K persons: ${ d2Pop }<br>
+cases/(gdp/pop): ${ d2Gdp }<br>
+<b title="Latest day at top" >New cases per day</b><br>
+${ getBars2D( casesNew ) }
+`;
+
+		}
+
+	} else {
+
+		intersected = null;
+		divMessage.hidden = true;
+		divMessage.innerHTML = "";
+
+	}
+
+
+		function getBars2D ( arr ) {
+
+			arr.reverse();
+
+			const max = Math.max( ...arr );
+			const scale = 200 / max;
+			const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
+
+			const bars = arr.map( ( item, index ) =>
+				`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
+					title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>`
+			).join( "" );
+
+			return `<div style=background-color:#ddd title="New cases per day. Latest at top.The curve you hope to see flatten!" >${ bars }</div>`;
+
+		}
+
 
 }

@@ -237,7 +237,11 @@ geoJson useful
 
 ### 2020-03-28 ~ Theo
 
-covid-19-viz-3d v-2020-03-28-10-19
+covid-19-viz-3d v-2020-03-28-12-40-dev
+
+* Bars now scaled linearly
+* "New cases today" appear on ground
+* Update splash screen
 
 covid-19-viz-3d-jhu-daily.html
 

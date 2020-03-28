@@ -19,6 +19,7 @@ sVersion.innerHTML = version ? version.content : "";
 let group = new THREE.Group();
 let groupCases = new THREE.Group();
 let groupCasesNew = new THREE.Group();
+let groupCasesNewGrounded = new THREE.Group();
 let groupRecoveries = new THREE.Group();
 let groupDeaths = new THREE.Group();
 let groupDeathsNew = new THREE.Group();
@@ -37,6 +38,8 @@ let intersected;
 let mesh;
 let scene, camera, controls, renderer;
 
+
+let scaleHeights = 0.0007;
 
 THR.init();
 THR.animate();
@@ -99,18 +102,19 @@ function requestFile ( url, callback ) {
 
 function resetGroups () {
 
-	scene.remove( group, groupCases, groupCasesNew, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.remove( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
 
 	group = new THREE.Group();
 	groupCases = new THREE.Group();
 	groupCasesNew = new THREE.Group();
+	groupCasesNewGrounded = new THREE.Group();
 	groupDeaths = new THREE.Group();
 	groupDeathsNew = new THREE.Group();
 	groupRecoveries = new THREE.Group();
 	groupPlacards = new THREE.Group();
 	groupLines = new THREE.Group();
 
-	scene.add( group, groupCases, groupCasesNew, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.add( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
 
 }
 
@@ -129,6 +133,10 @@ function toggleBars ( group = groupCases ) {
 		groupDeathsNew.visible = true;
 		groupRecoveries.visible = true;
 
+		groupCasesNewGrounded.visible = false;
+
+		group = undefined;
+
 	} else {
 
 		groupCases.visible = false;
@@ -136,8 +144,10 @@ function toggleBars ( group = groupCases ) {
 		groupDeaths.visible = false;
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
+		groupCasesNewGrounded.visible = false;
 
 		group.visible = true;
+
 	}
 
 	groupPrevious = group;
@@ -145,27 +155,58 @@ function toggleBars ( group = groupCases ) {
 }
 
 
+function toggleNewCases ( group = groupCases ) {
 
+	if ( group === window.groupPrevious ) {
+		
+		groupCases.visible = true;
+		groupCasesNew.visible = true;
+		groupDeaths.visible = true;
+		groupDeathsNew.visible = true;
+		groupRecoveries.visible = true;
 
+		groupCasesNewGrounded.visible = false;
 
+		group = undefined;
 
+	} else {
 
-function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0 ) {
+		groupCases.visible = false;
+		groupCasesNew.visible = false;
+		groupDeaths.visible = false;
+		groupDeathsNew.visible = false;
+		groupRecoveries.visible = false;
+		groupCasesNewGrounded.visible = true;
+		if ( !groupCasesNewGrounded.children.length  ) {
 
-	heightScaled = 0.2 * Math.sqrt( height );
+			const heightsCasesNewGrounded = linesCases.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
 
-	if ( !heightScaled || heightScaled < 0.0001 ) {
+			const meshesCasesNewGrounded = linesCases.slice( 1 ).map( ( line, index ) =>
+			addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, 3 * heightsCasesNewGrounded[ index ], 0, 12, 1, false ) );
 
-		//console.log( '', color, linesCases[ index ] );
+			groupCasesNewGrounded.add( ...meshesCasesNewGrounded );
 
-		return new THREE.Mesh();
+		}
 
 	}
+
+	groupPrevious = group;
+
+}
+
+
+function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0, radialSegments = 12, heightSegments = 1, openEnded = true ) {
+
+	if ( !height || height === 0 ) { return new THREE.Mesh(); }
+
+	const heightScaled = scaleHeights * height;
 
 	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
 	let p2 = THR.latLonToXYZ( 100, lat, lon );
 
-	let geometry = new THREE.CylinderGeometry( radius, radius, heightScaled, 12, 1, true );
+	if ( color === "blue" ) { console.log( '', color, radius, height, offset, radialSegments, heightSegments, openEnded  );}
+
+	let geometry = new THREE.CylinderGeometry( radius, radius, heightScaled, radialSegments, heightSegments, openEnded );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	let material = new THREE.MeshPhongMaterial( { color: color, side: 2 } );
 	let mesh = new THREE.Mesh( geometry, material );
@@ -356,118 +397,3 @@ function onDocumentTouchStart ( event ) {
 }
 
 
-
-function onDocumentMouseMove ( event ) {
-
-	//event.preventDefault();
-
-	const mouse = new THREE.Vector2();
-	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
-
-	const raycaster = new THREE.Raycaster();
-	raycaster.setFromCamera( mouse, camera );
-
-	const intersects = raycaster.intersectObjects( groupCases.children );
-
-	if ( intersects.length > 0 ) {
-
-		if ( intersected !== intersects[ 0 ].object ) {
-
-			intersected = intersects[ 0 ].object;
-
-			const index = intersected.userData + 1;
-
-			const line = linesCases[ index ];
-			//console.log( 'line', line );
-
-			const lineDeaths = linesDeaths[ index ];
-
-			const lineRecoveries = linesRecoveries[ index ];
-			//console.log( 'lineRecoveries', lineRecoveries );
-
-			const casesNew = line.slice( 5 ).map( ( cases, index ) => cases - line[ 5 + index - 1 ] );
-			//console.log( 'cb', casesNew );
-
-			const dateIndex = selDate.selectedIndex > -1 ? 4 + selDate.selectedIndex : line.length - 1;
-
-			let country = line[ 1 ];
-			const place = line[ 0 ];
-
-			if ( country === "US" ) { country = "United States of America"; }
-
-			const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
-			//console.log( 'arr', arr );
-
-			const feature = arr.length ? arr[ 0 ] : undefined;
-			//console.log( 'feature', feature );
-
-			let d2Pop, d2Gdp;
-
-			if ( feature ) {
-
-				const population = feature.properties.POP_EST;
-				const gdp = feature.properties.GDP_MD_EST;
-				const name = feature.properties.NAME;
-
-				//console.log( 'gdp/pop', 1000000 * gdp / population  );
-				d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
-				d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
-
-			} else {
-
-				d2Pop = "not available";
-				d2Gdp = "not available";
-
-			}
-
-			divMessage.hidden = false;
-			divMessage.style.left = event.clientX + "px";
-			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `
-<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
-${ ( place ? "place: " + place + "<br>" : "" ) }
-country: ${ country }<br>
-cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
-cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
-deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
-deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
-recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
-deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
-<hr>
-deaths/100K persons: ${ d2Pop }<br>
-cases/(gdp/pop): ${ d2Gdp }<br>
-<b title="Latest day at top" >New cases per day</b><br>
-${ getBars2D( casesNew ) }
-`;
-
-		}
-
-	} else {
-
-		intersected = null;
-		divMessage.hidden = true;
-		divMessage.innerHTML = "";
-
-	}
-
-
-		function getBars2D ( arr ) {
-
-			arr.reverse();
-
-			const max = Math.max( ...arr );
-			const scale = 200 / max;
-			const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
-
-			const bars = arr.map( ( item, index ) =>
-				`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
-					title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>`
-			).join( "" );
-
-			return `<div style=background-color:#ddd title="New cases per day. Latest at top.The curve you hope to see flatten!" >${ bars }</div>`;
-
-		}
-
-
-}

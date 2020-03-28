@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
 <meta name=description
-	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
+	content="View the COVID-19 data from in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-25-22-24">
+<meta name=version content="2020-2020-03-273-dev">
 
-<title>COVID-19 Viz3D</title>
+<title>COVID-19 Viz3D template</title>
 
-<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="../style.css">
 
 </head>
 
@@ -20,8 +20,8 @@
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
 
 
-<script src="js/thr-three.js"></script>
-<script src="js/threeGeoJSON.js"></script>
+<script src="../js/thr-three.js"></script>
+<script src="../js/threeGeoJSON.js"></script>
 <script>
 
 
@@ -47,8 +47,8 @@
 				</a>
 
 				<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
-					View the COVID-19 data from the John Hopkins University
-					<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
+					View the COVID-19 data from
+					<a href="" target="_blank">XXXXX</a>
 					in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
 					WebGL tools.
 				</span></span>
@@ -60,21 +60,19 @@
 
 		</header>
 
-		<p class=navLegend style=background-color:cyan; title="The flare indicates high number of new cases">
-			<button id=butNew onclick=toggleBars(groupCasesNew) style=background-color:cyan;color:black;width:100%; >
-				New cases today&nbsp;</button></p>
+		<div id=MASdivMenuAppSwitch > </div>
 
 		<p class=navLegend style=background-color:red; >
-			<button id=butCases onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
+			<button id=butCases  class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
 				Confirmed cases&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
-			<button id=butDeaths onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
+			<button id=butDeaths  class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
 				Deaths&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:lavender; >
-			<button id=butRecoveries onclick=toggleBars(groupDeathsNew) style=background-color:lavender;width:100%; >
-				New deaths today&nbsp;</button></p>
+		<p class=navLegend style=background-color:limegreen; >
+			<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries) style=background-color:limegreen;width:100%; >
+				Recoveries&nbsp;</button></p>
 
 		<div id=divDates style=background-color:white;padding:1ch;></div>
 
@@ -90,11 +88,12 @@
 
 
 <div id=divMessage style=max-width:250px; >
-	<mark>New database format. JHU made a silly update. No more green bars for the moment. Not to worry. There's a new version every day.</mark><br>
-	Touch the screen to stop rotation<br>
-	Click or touch a country "stick" to pop-up statistics<br>
-	Two fingers or mousewheel to zoom<br>
-	<b style=background:red >2020-03-25 ~ If no red bars appear, reload the page.</b>
+	<mark> 2020-03-27: A brand new page - with issues</mark><br>
+	Displays the case data for over 3,000 US counties.
+	Touch the screen to stop rotation,<br>
+	Two fingers or mousewheel to zoom.<br>
+	Click or touch the bar in a country to pop-up statistics.<br>
+	Remember: There's a new version every day!<br>
 </div>
 
 <footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
@@ -107,26 +106,26 @@
 	<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards"  class=ftrButton >&sdotb;</button>
 	&nbsp;
 	<button onclick=sayThis(); title="Can you hear me now?"  class=ftrButton >&phone;</button>
+	
 
 </footer>
 
-<script src="js/main.js"></script>
-<script src="js/glo-globe.js"></script>
-<script src="js/spk-speak.js"></script>
-<!--
+<script src="main.js"></script>
+<script src="template.js"></script>
+<script src="../js/mas-menu-app-switch.js"></script>
+<script src="../js/glo-globe.js"></script>
+<script src="../js/spk-speak.js"></script>
 
-	<script src="js/ncd-new-cases-date.js"></script>
--->
 
 <script>
 
 // change in html of stable
-pathAssets = "../assets/";
+pathAssets = "../../../assets/";
 
 init();
 
 // keep address bar pointed to latest dev. change in html of stable
-window.history.pushState( '', '', '/spider-covid-19-viz-3d/' );
+//window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );
 
 </script>
 </body>

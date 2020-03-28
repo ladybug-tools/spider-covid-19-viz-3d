@@ -7,11 +7,11 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-27-16-28">
+<meta name=version content="2020-03-26-15-03-dev">
 
-<title>COVID-19 Viz3D</title>
+<title>COVID-19 Viz3D JHU Daily</title>
 
-<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="../../style.css">
 
 </head>
 
@@ -20,8 +20,8 @@
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
 
 
-<script src="js/thr-three.js"></script>
-<script src="js/threeGeoJSON.js"></script>
+<script src="../../js/thr-three.js"></script>
+<script src="../../js/threeGeoJSON.js"></script>
 <script>
 
 
@@ -47,8 +47,8 @@
 				</a>
 
 				<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
-					View the COVID-19 data from the Johns Hopkins University
-					<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
+					View the COVID-19 data from
+					<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports" target="_blank">Johns Hopkis University</a>
 					in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
 					WebGL tools.
 				</span></span>
@@ -62,21 +62,13 @@
 
 		<div id=MASdivMenuAppSwitch > </div>
 
-		<p class=navLegend style=background-color:cyan; title="The flare indicates high number of new cases">
-			<button id=butNew class=butLegend onclick=toggleBars(groupCasesNew) style=background-color:cyan;color:black;width:100%; >
-				New cases today&nbsp;</button></p>
-
 		<p class=navLegend style=background-color:red; >
-			<button id=butCases class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
+			<button id=butCases  class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
 				Confirmed cases&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
-			<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
+			<button id=butDeaths  class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
 				Deaths&nbsp;</button></p>
-
-		<p class=navLegend style=background-color:lavender; >
-			<button id=butDeathsNew class=butLegend onclick=toggleBars(groupDeathsNew) style=background-color:lavender;width:100%; >
-				New deaths today&nbsp;</button></p>
 
 		<p class=navLegend style=background-color:limegreen; >
 			<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries) style=background-color:limegreen;width:100%; >
@@ -96,7 +88,8 @@
 
 
 <div id=divMessage style=max-width:250px; >
-	<mark>2020-03-27: Select a chart to view from top left menu</mark><hr>
+	<mark> 2020-03-27: A brand new page - with bugs & issues</mark><br>
+	Display case data for the world and over 3,000 US counties.<hr>
 	Touch the screen to stop rotation.<br>
 	Two fingers or mouse wheel to zoom.<br>
 	Click or touch the bar in a country to pop-up statistics.<hr>
@@ -116,26 +109,24 @@
 
 </footer>
 
-<script src="js/main.js"></script>
-<script src="js/mas-menu-app-switch.js"></script>
-<script src="js/glo-globe.js"></script>
-<script src="js/spk-speak.js"></script>
-<!--
+<script src="main.js"></script>
+<script src="xjd-xhr-jhu-daily.js"></script>
+<script src="../../js/mas-menu-app-switch.js"></script>
+<script src="../../js/glo-globe.js"></script>
+<script src="../../js/spk-speak.js"></script>
 
-	<script src="js/ncd-new-cases-date.js"></script>
--->
 
 <script>
 
 // change in html of stable
-pathAssets = "../assets/";
+pathAssets = "../../../assets/";
 
 init();
 
-MASselApp.selectedIndex = 0;
+MASselApp.selectedIndex = 2;
 
 // keep address bar pointed to latest dev. change in html of stable
-window.history.pushState( '', '', '/spider-covid-19-viz-3d/' );
+//window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );
 
 </script>
 </body>

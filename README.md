@@ -242,6 +242,7 @@ covid-19-viz-3d v-2020-03-28-10-19
 covid-19-viz-3d-jhu-daily.html
 
 * Fix display of stats in left menu
+* Add use GH API to get name of latest file in JHU folder
 
 
 ### 2020-03-28 ~ Theo

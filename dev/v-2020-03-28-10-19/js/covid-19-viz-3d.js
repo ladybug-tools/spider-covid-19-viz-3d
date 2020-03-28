@@ -1,7 +1,12 @@
+// copyright 2020 Spider contributors. MIT license.
+// 2020-03-26
+/* globals THREE, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
+// jshint esversion: 6
+// jshint loopfunc: true
+
 
 
 function initViz3d() {
-
 
 	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
@@ -49,8 +54,6 @@ function onLoadDeaths ( xhr ) {
 	linesDeaths = xhr.target.response.split( "\n" ).map( line => line.split( "," ) );
 	//console.log( 'linesDeaths', linesDeaths );
 
-
-
 	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
 	const dataJhuRecovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
 
@@ -92,6 +95,8 @@ function onLoadRecovered ( xhr ) {
 	getCountries();
 
 }
+
+
 
 function updateBars ( length ) {
 

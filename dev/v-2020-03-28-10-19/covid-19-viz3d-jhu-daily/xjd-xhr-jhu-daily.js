@@ -1,5 +1,47 @@
+// copyright 2020 Spider contributors. MIT license.
+// 2020-03-28
+/* globals THREE, renderer, camera, divMessage, intersected, requestFile, resetGroups, addBar, groupCases, groupsCases, groupsRecoveries */
+// jshint esversion: 6
+// jshint loopfunc: true
 
-// https://stackoverflow.com/questions/53127383/how-to-pull-data-from-wikipedia-page
+
+let today;
+let rows;
+
+// https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports
+
+function initXjd() {
+
+
+	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+	//const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
+
+	// requestFile( dataJhu, onLoadDailyReport );
+
+
+	const url = "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports";
+
+	requestFile( url, onLoadContents );
+
+}
+
+
+
+function onLoadContents ( xhr ) {
+
+	const dataJhu =
+"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
+
+	const json = JSON.parse( xhr.target.response );
+
+	const names = json.map( json => json.name );
+
+	today = names[ names.length - 2 ];
+	console.log( today );
+
+	requestFile( dataJhu + today, onLoadDailyReport );
+
+}
 
 
 function onLoadDailyReport( xhr ) {
@@ -11,19 +53,18 @@ function onLoadDailyReport( xhr ) {
 
 	rows = response.split( "\n" ).map( line => line.split( "," ) );
 
-	updateBars ( rows )
+	updateBars( rows );
+
 }
+
 
 
 function updateBars ( rows) {
 
 	resetGroups();
 
-	//console.log( 'rows', rows );
-
 	const heightsCases = rows.slice( 1 ).map( line => Number( line[ 7 ] ) );
 	//console.log( 'heightsCases', heightsCases );
-
 
 	const meshesCases = rows.slice( 1 ).map( ( line, index ) => addBar( line[ 5 ], line[ 6 ],
 		index, "red", ( index < 3168 ? 0.1 : 0.4 ), heightsCases[ index ] ) );
@@ -82,7 +123,7 @@ function getStats () {
 
 
 	const totalsGlobal = [
-		`Global totals`,
+		`Global totals ${ today }`,
 		`cases: ${ globalCases.toLocaleString() }`,
 		`deaths: ${ globalDeaths.toLocaleString() }`,
 		`recoveries: ${ globalRecoveries.toLocaleString() }`
@@ -116,10 +157,10 @@ function getStats () {
 		`recoveries: ${ rowRecoveries.toLocaleString() }`,
 	];
 
-
 	displayStats( totalsGlobal, totalsChina, totalsEurope, totalsUsa, totalsRow );
 
 }
+
 
 
 function onDocumentMouseMove ( event ) {

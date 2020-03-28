@@ -5,11 +5,11 @@
 // jshint loopfunc: true
 
 
-let pathAssets = "../../../assets/"; // change in html of stable
+let pathAssets = "../assets/"; // change in html of stable
 
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
-imgIcon.src = pathAssets + "images/github-mark-32.png";
+imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
 
 sTitle.innerHTML = document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
@@ -53,12 +53,6 @@ function init () {
 	renderer = THR.renderer;
 
 
-	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-	//const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
-	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
-
-	requestFile( dataJhu, onLoadDailyReport );
-
 
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
 
@@ -78,6 +72,9 @@ function init () {
 	addGlobe();
 
 	addSkyBox();
+
+	getNotes();
+
 
 	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
@@ -118,6 +115,8 @@ function resetGroups () {
 }
 
 
+
+
 //////////
 
 function toggleBars ( group = groupCases ) {
@@ -149,6 +148,8 @@ function toggleBars ( group = groupCases ) {
 
 
 
+
+
 function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0 ) {
 
 	heightScaled = 0.2 * Math.sqrt( height );
@@ -164,7 +165,7 @@ function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offs
 	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
 	let p2 = THR.latLonToXYZ( 100, lat, lon );
 
-	let geometry = new THREE.CylinderBufferGeometry( radius, radius, heightScaled, 5, 1, false );
+	let geometry = new THREE.CylinderGeometry( radius, radius, heightScaled, 12, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	let material = new THREE.MeshPhongMaterial( { color: color, side: 2 } );
 	let mesh = new THREE.Mesh( geometry, material );
@@ -180,75 +181,12 @@ function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offs
 
 /////////
 
-function getStats () {
-
-	rows = lines;
-
-	const europe = [ "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "EstoniaF", "Finland", "France", "Georgia", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Holy See" ];
-
-	//const index = 4 + selDate.selectedIndex;
-
-	const globalCases = Number( rows[ 0 ][ 0 ] );
-	const globalDeaths = Number( rows[ 0 ][ 1 ] );
-	const globalRecoveries = Number( rows[ 0 ][ 2 ] );
-
-	const chinaCases = Number( rows[ 34 ][ 1 ] ).toLocaleString();
-	const chinaDeaths =  Number( rows[ 34 ][ 2 ] ).toLocaleString();
-	const chinaRecoveries =  Number( rows[ 34 ][ 3 ] ).toLocaleString();
-
-	const europeCases = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 1 ] ) : 0, 0 );
-	const europeDeaths = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 2 ] ) : 0, 0 );
-	const europeRecoveries = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 3 ] ) : 0, 0 );
-
-	const usaCases = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 1 ] ) : 0, 0 );
-	const usaDeaths = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 2 ] ) : 0, 0 );
-	const usaRecoveries = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 3 ] ) : 0, 0 );
-
-	const rowCases = globalCases - chinaCases - europeCases - usaCases;
-	const rowDeaths = globalDeaths - chinaDeaths - europeDeaths - usaDeaths;
-	const rowRecoveries = globalRecoveries - chinaRecoveries - europeRecoveries - usaRecoveries;
-
-
-	const totalsGlobal = [
-		`Global totals`,
-		`cases: ${ globalCases.toLocaleString() }`,
-		`deaths: ${ globalDeaths.toLocaleString() }`,
-		`recoveries: ${ globalRecoveries.toLocaleString() }`
-	];
-
-	totalsChina = [
-		`China`,
-		`cases: ${ chinaCases }`,
-		`deaths: ${ chinaDeaths }`,
-		`recoveries: ${ chinaRecoveries }`,
-
-	];
-
-	const totalsEurope = [
-		`Europe`,
-			`cases: ${ europeCases.toLocaleString() }`,
-			`deaths: ${ europeDeaths.toLocaleString() }`,
-			`recoveries: ${ europeRecoveries.toLocaleString() }`,
-	];
-
-	const totalsUsa = [
-		`USA`,
-			`cases: ${ usaCases.toLocaleString() }`,
-			`deaths: ${ usaDeaths.toLocaleString() }`,
-			`recoveries: ${ usaRecoveries.toLocaleString() }`,
-	];
-
-	const totalsRow = [
-		`Rest of World`,
-			`cases: ${ rowCases.toLocaleString() }`,
-			`deaths: ${ rowDeaths.toLocaleString() }`,
-			`recoveries: ${ rowRecoveries.toLocaleString() }`,
-	];
+function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, totalsRow ) {
 
 	// [text], scale, color, x, y, z )
 	// groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
 
-	vGlo = THR.latLonToXYZ( 75, 65, - 20 );
+	vGlo = THR.latLonToXYZ( 75, 65, -20 );
 	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
 
 	vChi = THR.latLonToXYZ( 85, 50, 110 );
@@ -257,7 +195,7 @@ function getStats () {
 	const vEur = THR.latLonToXYZ( 80, 60, 20 );
 	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
 
-	const vUsa = THR.latLonToXYZ( 80, 40, - 120 );
+	const vUsa = THR.latLonToXYZ( 80, 40, -120 );
 	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
 
 	const vRow = THR.latLonToXYZ( 90, 30, 180 );
@@ -265,7 +203,7 @@ function getStats () {
 
 
 	divStats.innerHTML = `
-<details id=detStats open>
+<details id=detStats >
 
 	<summary><b>global data </b></summary>
 
@@ -303,7 +241,7 @@ function getCountries () {
 
 	let countries = linesCases.map( line => line[ 1 ] );
 
-	countries = [ ...new Set( countries ) ];
+	countries = [ ...new Set( countries ) ]
 
 	//console.log( 'countries', countries );
 
@@ -330,7 +268,7 @@ function getProvince ( country ) {
 
 	if ( provinces[ 0 ][ 0 ] === "" ) {
 
-		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) );
+		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) )
 
 		divProvinces.innerHTML = "";
 
@@ -357,6 +295,53 @@ function getPlace ( province ) {
 
 
 
+function getNotes () {
+
+	divSettings.innerHTML = `<details id=detSettings ontoggle=getNotesContent() >
+
+		<summary><b>notes & settings</b></summary>
+
+		<div id=divNoteSettings ></div>
+
+	</details>`;
+
+}
+
+
+
+function getNotesContent () {
+
+
+	divNoteSettings.innerHTML = `
+
+	<p><i>Why are there messages in the background?</i></p>
+	<p>
+		An early visitor to our tracker raised this issue
+		"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
+		Oleg askeg "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
+	</p>
+
+	<p>
+		What you see is our first attempt to give Oleg some delight.<br>
+		&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
+		&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
+	</p>
+
+	<hr>
+
+	<p>US States new cases data coming soon</p>
+
+	<p>Black bar flare indicates high deaths to cases ratio.</p>
+
+	<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
+
+	<p>
+		Not all populations and GDPs are reported.
+	</p>`;
+
+}
+
+
 //////////
 
 function onDocumentTouchStart ( event ) {
@@ -371,3 +356,118 @@ function onDocumentTouchStart ( event ) {
 }
 
 
+
+function onDocumentMouseMove ( event ) {
+
+	//event.preventDefault();
+
+	const mouse = new THREE.Vector2();
+	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+	const raycaster = new THREE.Raycaster();
+	raycaster.setFromCamera( mouse, camera );
+
+	const intersects = raycaster.intersectObjects( groupCases.children );
+
+	if ( intersects.length > 0 ) {
+
+		if ( intersected !== intersects[ 0 ].object ) {
+
+			intersected = intersects[ 0 ].object;
+
+			const index = intersected.userData + 1;
+
+			const line = linesCases[ index ];
+			//console.log( 'line', line );
+
+			const lineDeaths = linesDeaths[ index ];
+
+			const lineRecoveries = linesRecoveries[ index ];
+			//console.log( 'lineRecoveries', lineRecoveries );
+
+			const casesNew = line.slice( 5 ).map( ( cases, index ) => cases - line[ 5 + index - 1 ] );
+			//console.log( 'cb', casesNew );
+
+			const dateIndex = selDate.selectedIndex > -1 ? 4 + selDate.selectedIndex : line.length - 1;
+
+			let country = line[ 1 ];
+			const place = line[ 0 ];
+
+			if ( country === "US" ) { country = "United States of America"; }
+
+			const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
+			//console.log( 'arr', arr );
+
+			const feature = arr.length ? arr[ 0 ] : undefined;
+			//console.log( 'feature', feature );
+
+			let d2Pop, d2Gdp;
+
+			if ( feature ) {
+
+				const population = feature.properties.POP_EST;
+				const gdp = feature.properties.GDP_MD_EST;
+				const name = feature.properties.NAME;
+
+				//console.log( 'gdp/pop', 1000000 * gdp / population  );
+				d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
+				d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
+
+			} else {
+
+				d2Pop = "not available";
+				d2Gdp = "not available";
+
+			}
+
+			divMessage.hidden = false;
+			divMessage.style.left = event.clientX + "px";
+			divMessage.style.top = event.clientY + "px";
+			divMessage.innerHTML = `
+<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
+${ ( place ? "place: " + place + "<br>" : "" ) }
+country: ${ country }<br>
+cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
+cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
+deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
+deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
+recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
+deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
+<hr>
+deaths/100K persons: ${ d2Pop }<br>
+cases/(gdp/pop): ${ d2Gdp }<br>
+<b title="Latest day at top" >New cases per day</b><br>
+${ getBars2D( casesNew ) }
+`;
+
+		}
+
+	} else {
+
+		intersected = null;
+		divMessage.hidden = true;
+		divMessage.innerHTML = "";
+
+	}
+
+
+		function getBars2D ( arr ) {
+
+			arr.reverse();
+
+			const max = Math.max( ...arr );
+			const scale = 200 / max;
+			const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
+
+			const bars = arr.map( ( item, index ) =>
+				`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
+					title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>`
+			).join( "" );
+
+			return `<div style=background-color:#ddd title="New cases per day. Latest at top.The curve you hope to see flatten!" >${ bars }</div>`;
+
+		}
+
+
+}

@@ -21,8 +21,14 @@ _covid 19 viz 3d - touch me!_
 The concept of the web page is to show you the current COVID-19 situation around the entire world in 3 seconds or less.
 
 * View the latest COVID-19 data from John Hopkins University [GitHub repository]( https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data ) with interactive 3D
-Provide entry-level programming code - plain-vanilla JavaScript - anybody can copy and make better
-Display all the data in seconds on any device then zoom and rotate and click to see the cases in 3D
+* Provide entry-level programming code - plain-vanilla JavaScript - anybody can copy and make better
+* Display all the data in seconds on any device then zoom and rotate and click to see the cases in 3D
+
+The general idea is
+
+* You want to access the latest global data
+* You want to access the latest data for where you live
+* You want to access "an expression of hope" even if the data is nasty
 
 Mentions
 
@@ -47,7 +53,7 @@ Messages of hope to add
 
 * “Do what you can, where you are, with what you have.”
 
-### Burning Man / Wikd Wild West / Fair
+### Burning Man / Wild Wild West / Fair
 
 Most of the time I try to create very simple, clean user experiences. Think Google's Material Design and Apple. I generally build tech stuff for techies.
 
@@ -228,6 +234,21 @@ geoJson useful
 
 <details open >
 <summary>Change log </summary>
+
+### 2020-03-28 ~ Theo
+
+covid-19-viz-3d v-2020-03-28-10-19
+
+covid-19-viz-3d-jhu-daily.html
+
+* Fix display of stats in left menu
+
+
+### 2020-03-28 ~ Theo
+
+v-2020-03-27-09-53
+
+* Four charts to stable
 
 ### 2020-03-26 ~ Theo
 

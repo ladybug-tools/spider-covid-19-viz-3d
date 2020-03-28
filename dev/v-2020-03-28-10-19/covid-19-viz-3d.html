@@ -7,7 +7,7 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-27-16-28-dev">
+<meta name=version content="2020-03-27-10-19-dev">
 
 <title>COVID-19 Viz3D</title>
 
@@ -117,6 +117,7 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script src="js/covid-19-viz-3d.js" ></script>
 <script src="js/mas-menu-app-switch.js"></script>
 <script src="js/glo-globe.js"></script>
 <script src="js/spk-speak.js"></script>
@@ -132,10 +133,12 @@ pathAssets = "../../assets/";
 
 init();
 
+initViz3d();
+
 MASselApp.selectedIndex = 1;
 
 // keep address bar pointed to latest dev. change in html of stable
-window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );
+//window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );
 
 </script>
 </body>

@@ -52,14 +52,14 @@ function init () {
 	controls = THR.controls;
 	renderer = THR.renderer;
 
-
-
+	// https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports
 
 	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-	//const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
-	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
+	//const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
+	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-27-2020.csv";
 
 	requestFile( dataJhu, onLoadDailyReport );
+
 
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
 
@@ -148,8 +148,6 @@ function toggleBars ( group = groupCases ) {
 
 
 
-
-
 function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0 ) {
 
 	heightScaled = 0.2 * Math.sqrt( height );
@@ -178,71 +176,10 @@ function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offs
 }
 
 
-
 /////////
 
-function getStats () {
 
-	const europe = [ "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "EstoniaF", "Finland", "France", "Georgia", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Holy See" ];
-
-	//const index = 4 + selDate.selectedIndex;
-
-	const globalCases = Number( rows[ 0 ][ 0 ] );
-	const globalDeaths = Number( rows[ 0 ][ 1 ] );
-	const globalRecoveries = Number( rows[ 0 ][ 2 ] );
-
-	const chinaCases = Number( rows[ 34 ][ 1 ] ).toLocaleString();
-	const chinaDeaths =  Number( rows[ 34 ][ 2 ] ).toLocaleString();
-	const chinaRecoveries =  Number( rows[ 34 ][ 3 ] ).toLocaleString();
-
-	const europeCases = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 1 ] ) : 0, 0 );
-	const europeDeaths = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 2 ] ) : 0, 0 );
-	const europeRecoveries = rows.reduce( ( sum, line ) => sum += europe.includes( line[ 0 ] ) ? Number( line[ 3 ] ) : 0, 0 );
-
-	const usaCases = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 1 ] ) : 0, 0 );
-	const usaDeaths = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 2 ] ) : 0, 0 );
-	const usaRecoveries = rows.reduce( ( sum, line ) => sum += line[ 0 ] === "United States" ? Number( line[ 3 ] ) : 0, 0 );
-
-	const rowCases = globalCases - chinaCases - europeCases - usaCases;
-	const rowDeaths = globalDeaths - chinaDeaths - europeDeaths - usaDeaths;
-	const rowRecoveries = globalRecoveries - chinaRecoveries - europeRecoveries - usaRecoveries;
-
-
-	const totalsGlobal = [
-		`Global totals`,
-		`cases: ${ globalCases.toLocaleString() }`,
-		`deaths: ${ globalDeaths.toLocaleString() }`,
-		`recoveries: ${ globalRecoveries.toLocaleString() }`
-	];
-
-	totalsChina = [
-		`China`,
-		`cases: ${ chinaCases }`,
-		`deaths: ${ chinaDeaths }`,
-		`recoveries: ${ chinaRecoveries }`,
-
-	];
-
-	const totalsEurope = [
-		`Europe`,
-			`cases: ${ europeCases.toLocaleString() }`,
-			`deaths: ${ europeDeaths.toLocaleString() }`,
-			`recoveries: ${ europeRecoveries.toLocaleString() }`,
-	];
-
-	const totalsUsa = [
-		`USA`,
-			`cases: ${ usaCases.toLocaleString() }`,
-			`deaths: ${ usaDeaths.toLocaleString() }`,
-			`recoveries: ${ usaRecoveries.toLocaleString() }`,
-	];
-
-	const totalsRow = [
-		`Rest of World`,
-			`cases: ${ rowCases.toLocaleString() }`,
-			`deaths: ${ rowDeaths.toLocaleString() }`,
-			`recoveries: ${ rowRecoveries.toLocaleString() }`,
-	];
+function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, totalsRow ) {
 
 	// [text], scale, color, x, y, z )
 	// groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
@@ -291,8 +228,6 @@ function getStats () {
 </details>`;
 
 	//detStats.open = window.innerWidth > 640;
-
-
 
 }
 
@@ -370,53 +305,3 @@ function onDocumentTouchStart ( event ) {
 }
 
 
-
-function onDocumentMouseMove ( event ) {
-
-	//event.preventDefault();
-
-	const mouse = new THREE.Vector2();
-	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
-
-	const raycaster = new THREE.Raycaster();
-	raycaster.setFromCamera( mouse, camera );
-
-	const intersects = raycaster.intersectObjects( groupCases.children );
-
-	if ( intersects.length > 0 ) {
-
-		if ( intersected !== intersects[ 0 ].object ) {
-
-			intersected = intersects[ 0 ].object;
-
-			const index = intersected.userData + 1;
-
-			const line = lines[ index ];
-			console.log( 'line', line );
-
-			divMessage.hidden = false;
-			divMessage.style.left = event.clientX + "px";
-			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `
-<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a> - updates ??<br>
-county: ${ line[ 1 ] }<br>
-state: ${ line[ 2 ] }<br>
-state: ${ line[ 3 ] }<br>
-cases: ${ Number( line[ 7 ] ).toLocaleString() }<br>
-deaths: ${ Number( line[ 8 ] ).toLocaleString() }<br>
-recoveries: ${ Number( line[ 9 ] ).toLocaleString() }<br>
-
-`;
-
-		}
-
-	} else {
-
-		intersected = null;
-		divMessage.hidden = true;
-		divMessage.innerHTML = "";
-
-	}
-
-}

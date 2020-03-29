@@ -1,26 +1,18 @@
 
-// https://stackoverfl
-let rows = [];
-let ln = 0;
+// https://stackoverflow.com/questions/53127383/how-to-pull-data-from-wikipedia-page
 
 function initFw() {
 
 	const api = "https://en.wikipedia.org/w/api.php?action=parse&format=json&origin=*&page=";
-	const url1 = "2019–20_coronavirus_pandemic_by_country_and_territory";
-	//const url = "2020_coronavirus_pandemic_in_the_United_States";
+	const url = "2019–20_coronavirus_pandemic_by_country_and_territory";
 
-	resetGroups();
+	fetchUrlWikipediaApi( api + url );
 
-	fetchUrlWikipediaApi( api + url1, 0, 0 );
-
-	const url2 = "2020_coronavirus_pandemic_in_the_United_States";
-
-	fetchUrlWikipediaApi( api + url2, 1, 1 );
 }
 
 
 
-function fetchUrlWikipediaApi ( url, table, column ) {
+function fetchUrlWikipediaApi ( url ) {
 
 	fetch( url )
 		.then( function ( response ) {
@@ -35,34 +27,35 @@ function fetchUrlWikipediaApi ( url, table, column ) {
 
 			//console.log(tables[ 0 ]);
 
-			const trs = tables[ table ].querySelectorAll( "tr" );
+			const trs = tables[ 0 ].querySelectorAll( "tr" );
 
 			//console.log( 'trs', trs );
 
-			const items = Array.from( trs ).slice( 1, - 3 ).map( tr => tr.innerText.trim()
+			rows = Array.from( trs ).slice( 1, - 3 ).map( tr => tr.innerText.trim()
 				.replace( /\[(.*?)\]/g, "" )
 				.replace( /,/g, "" )
 				.split( "\n\n" )
 				//.slice( 0, - 1 )
 			).sort();
 
-			updateBars( items, column );
+			updateBars( rows );
 
-			rows.push( ...items );
 		} );
 
 }
 
 
+function updateBars ( rows ) {
+	//console.log( 'rows', rows );
 
-function updateBars ( items, column ) {
-	console.log( 'rows', items );
+	resetGroups();
 
-	lines = items.map( row => {
 
-		country = countries.find( country => country[ column ] === row[ 0 ] )
+	lines = rows.map( row => {
 
-		if ( !country ) { console.log( 'row lost', row );}
+		country = countries.find( country => country[ 1 ] === row[ 0 ] )
+
+		//if ( !country ) { console.log( 'row lost', row );}
 
 		return country ? country.concat( row ) : row
 
@@ -73,10 +66,8 @@ function updateBars ( items, column ) {
 	const heightsCases = lines.slice( 1 ).map( line => Number( line[ 5 ] ) );
 	//console.log( 'heightsCases', heightsCases );
 
-
-
 	const meshesCases = lines.slice( 1 ).map( ( line, index ) =>
-		addBar( line[ 2 ], line[ 3 ], ( ln + index ), "red", 0.4, heightsCases[ index ], 0, 12, 1, false ) );
+		addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ], 0, 12, 1, false ) );
 
 	groupCases.add( ...meshesCases );
 
@@ -84,8 +75,7 @@ function updateBars ( items, column ) {
 	const heightsDeaths = lines.slice( 1 ).map( line => Number( line[ 6 ] ) );
 	//console.log( 'heightsDeaths', heightsDeaths );
 
-	const meshesDeaths = lines.slice( 1 ).map( ( line, index ) =>
-		addBar( line[ 2 ], line[ 3 ], ln + index, "black", 0.5, heightsDeaths[ index ] ) );
+	const meshesDeaths = lines.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "black", 0.5, heightsDeaths[ index ] ) );
 
 	groupDeaths.add( ...meshesDeaths );
 
@@ -93,13 +83,11 @@ function updateBars ( items, column ) {
 	const heightsRecoveries = lines.slice( 1 ).map( line => Number( line[ 7 ] ) );
 	//console.log( 'heightsRecoveries', heightsRecoveries );
 
-	const meshesRecoveries = lines.slice( 1 ).map( ( line, index ) =>
-		addBar( line[ 2 ], line[ 3 ], ln + index, "green", 0.45, heightsRecoveries[ index ] ) );
+	const meshesRecoveries = lines.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "green", 0.45, heightsRecoveries[ index ] ) );
 
 	groupRecoveries.add( ...meshesRecoveries );
 
-	ln += items.length;
-	//getStats();
+	getStats();
 
 }
 

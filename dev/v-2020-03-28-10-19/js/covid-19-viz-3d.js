@@ -36,7 +36,7 @@ function onLoadCases ( xhr ) {
 
 	const dates = linesCases[ 0 ].slice( 4 );
 
-	selDate.innerHTML = dates.map( date => `<option>${ date }</option>` );
+	selDate.innerHTML = dates.map( date => `<option>${ date }</option>` ).join("");
 
 	selDate.selectedIndex = dates.length - 1;
 
@@ -73,7 +73,6 @@ function onLoadRecovered ( xhr ) {
 	linesRecoveries = linesCases.map( ( lineC, index ) => {
 
 		const lineF = lines.find( ( line, index ) => line[ 0 ] === lineC[ 0 ] && line[ 1 ] === lineC[ 1 ] );
-
 	//	console.log( 'lineF', lineF );
 
 		const lineNew = !!lineF ? lineF : lineC.slice( 0, 4 ).concat( arrEmpty );
@@ -214,7 +213,7 @@ function getStats () {
 	totalsChina = [
 		`China`,
 		`cases: ${ chinaCases.toLocaleString() }`,
-		`cases today: ${ chinaCasesNew.toLocaleString() }`,
+		`cases new: ${ chinaCasesNew.toLocaleString() }`,
 		`deaths: ${ chinaDeaths.toLocaleString() }`,
 		`deaths new: ${ chinaDeathsNew.toLocaleString() }`,
 		`recoveries: ${ chinaRecoveries.toLocaleString() }`,
@@ -224,7 +223,7 @@ function getStats () {
 	const totalsEurope = [
 		`Europe`,
 		`cases: ${ europeCases.toLocaleString() }`,
-		`cases today: ${ europeCasesNew.toLocaleString() }`,
+		`cases new: ${ europeCasesNew.toLocaleString() }`,
 		`deaths: ${ europeDeaths.toLocaleString() }`,
 		`deaths new: ${ europeDeathsNew.toLocaleString() }`,
 		`recoveries: ${ europeRecoveries.toLocaleString() }`,
@@ -234,7 +233,7 @@ function getStats () {
 	const totalsUsa = [
 		`USA`,
 		`cases: ${ usaCases.toLocaleString() }`,
-		`cases today: ${ usaCasesNew.toLocaleString() }`,
+		`cases new: ${ usaCasesNew.toLocaleString() }`,
 		`deaths: ${ usaDeaths.toLocaleString() }`,
 		`deaths new: ${ usaDeathsNew.toLocaleString() }`,
 		`recoveries: ${ usaRecoveries.toLocaleString() }`,
@@ -244,7 +243,7 @@ function getStats () {
 	const totalsRow = [
 		`Rest of World`,
 		`cases: ${ rowCases.toLocaleString() }`,
-		`cases today: ${ rowCasesNew.toLocaleString() }`,
+		`cases new: ${ rowCasesNew.toLocaleString() }`,
 		`deaths: ${ rowDeaths.toLocaleString() }`,
 		`deaths new: ${ rowDeathsNew.toLocaleString() }`,
 		`recoveries: ${ rowRecoveries.toLocaleString() }`,

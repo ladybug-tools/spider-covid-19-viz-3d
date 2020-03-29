@@ -1,6 +1,14 @@
 
 // https://stackoverflow.com/questions/53127383/how-to-pull-data-from-wikipedia-page
 
+function initFw() {
+
+	const api = "https://en.wikipedia.org/w/api.php?";
+	const url = "action=parse&format=json&origin=*&page=2019–20_coronavirus_pandemic_by_country_and_territory";
+
+	fetchUrlWikipediaApi( api + url );
+
+}
 
 function fetchUrlWikipediaApi ( url ) {
 
@@ -26,12 +34,7 @@ function fetchUrlWikipediaApi ( url ) {
 				.replace( /,/g, "" )
 				.split( "\n\n" )
 				//.slice( 0, - 1 )
-			)
-				.sort();
-
-			//console.log( 'rows', rows );
-
-			//divContent.innerHTML = vals.join( "<br>" );
+			).sort();
 
 			updateBars( rows );
 
@@ -41,10 +44,10 @@ function fetchUrlWikipediaApi ( url ) {
 
 
 function updateBars ( rows ) {
+	//console.log( 'rows', rows );
 
 	resetGroups();
 
-	//console.log( 'rows', rows );
 
 	lines = rows.map( row => {
 
@@ -61,7 +64,8 @@ function updateBars ( rows ) {
 	const heightsCases = lines.slice( 1 ).map( line => Number( line[ 5 ] ) );
 	//console.log( 'heightsCases', heightsCases );
 
-	const meshesCases = lines.slice( 1 ).map( ( line, index ) => addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ] ) );
+	const meshesCases = lines.slice( 1 ).map( ( line, index ) =>
+		addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ], 0, 12, 1, false ) );
 
 	groupCases.add( ...meshesCases );
 
@@ -157,54 +161,11 @@ function getStats () {
 			`recoveries: ${ rowRecoveries.toLocaleString() }`,
 	];
 
-	// [text], scale, color, x, y, z )
-	// groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
 
-	vGlo = THR.latLonToXYZ( 75, 65, - 20 );
-	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
+	displayStats( totalsGlobal, totalsChina, totalsEurope, totalsUsa, totalsRow );
 
-	vChi = THR.latLonToXYZ( 85, 50, 110 );
-	groupPlacards.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
-
-	const vEur = THR.latLonToXYZ( 80, 60, 20 );
-	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
-
-	const vUsa = THR.latLonToXYZ( 80, 40, - 120 );
-	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
-
-	const vRow = THR.latLonToXYZ( 90, 30, 180 );
-	groupPlacards.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
-
-
-	divStats.innerHTML = `
-<details id=detStats open>
-
-	<summary><b>global data </b></summary>
-
-	<p>
-		${ totalsGlobal.join( "<br>" ).replace( /Global totals/, "<b>Global totals</b>" ) }
-	</p>
-
-	<p>
-		${ totalsChina.join( "<br>" ).replace( /China/, "<b>China</b>" ) }
-	</p>
-
-	<p>
-		${ totalsEurope.join( "<br>" ).replace( /Europe/, "<b>Europe</b>" ) }
-	</p>
-
-	<p>
-		${ totalsUsa.join( "<br>" ).replace( /USA/, "<b>USA</b>" ) }
-	</p>
-
-	<p>
-		${ totalsRow.join( "<br>" ).replace( /Rest of World/, "<b>Rest of World</b>" ) }
-	</p>
-
-</details>`;
-
-	//detStats.open = window.innerWidth > 640;
-
+	detStats.open = window.innerWidth > 640;
+	
 }
 
 

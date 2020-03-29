@@ -159,6 +159,8 @@ function getStats () {
 
 	displayStats( totalsGlobal, totalsChina, totalsEurope, totalsUsa, totalsRow );
 
+	detStats.open = window.innerWidth > 640;
+	
 }
 
 

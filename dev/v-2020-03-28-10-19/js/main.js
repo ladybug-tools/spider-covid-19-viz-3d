@@ -158,7 +158,7 @@ function toggleBars ( group = groupCases ) {
 function toggleNewCases ( group = groupCases ) {
 
 	if ( group === window.groupPrevious ) {
-		
+
 		groupCases.visible = true;
 		groupCasesNew.visible = true;
 		groupDeaths.visible = true;
@@ -271,8 +271,6 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 </details>`;
 
 	//detStats.open = window.innerWidth > 640;
-
-
 
 }
 

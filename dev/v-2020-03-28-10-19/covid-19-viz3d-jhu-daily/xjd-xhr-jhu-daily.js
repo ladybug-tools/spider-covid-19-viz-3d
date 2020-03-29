@@ -66,8 +66,9 @@ function updateBars ( rows) {
 	const heightsCases = rows.slice( 1 ).map( line => Number( line[ 7 ] ) );
 	//console.log( 'heightsCases', heightsCases );
 
-	const meshesCases = rows.slice( 1 ).map( ( line, index ) => addBar( line[ 5 ], line[ 6 ],
-		index, "red", ( index < 3168 ? 0.1 : 0.4 ), heightsCases[ index ] ) );
+	const meshesCases = rows.slice( 1 ).map( ( line, index ) =>
+		addBar( line[ 5 ], line[ 6 ],
+		index, "red", ( index < 3168 ? 0.1 : 0.4 ), heightsCases[ index ], 0, 3, 1, false ) );
 
 	groupCases.add( ...meshesCases );
 
@@ -76,7 +77,7 @@ function updateBars ( rows) {
 	//console.log( 'heightsDeaths', heightsDeaths );
 
 	const meshesDeaths = rows.slice( 1 ).map( ( line, index ) => addBar( line[ 5 ], line[ 6 ],
-		index, "black", ( index < 3168 ? 0.15 : 0.47 ), heightsDeaths[ index ] ) );
+		index, "black", ( index < 3168 ? 0.15 : 0.47 ), heightsDeaths[ index ], 0, 3, 1, true ) );
 
 	groupDeaths.add( ...meshesDeaths );
 
@@ -85,7 +86,7 @@ function updateBars ( rows) {
 	//console.log( 'heightsRecoveries', heightsRecoveries );
 
 	const meshesRecoveries = rows.slice( 1 ).map( ( line, index ) => addBar( line[ 5 ], line[ 6 ],
-		index, "green", ( index < 3168 ? 0.15 : 0.45 ), heightsRecoveries[ index ] ) );
+		index, "green", ( index < 3168 ? 0.15 : 0.45 ), heightsRecoveries[ index ], 0, 3, 1, true ) );
 
 	groupRecoveries.add( ...meshesRecoveries );
 
@@ -97,7 +98,6 @@ function updateBars ( rows) {
 
 
 function getStats () {
-
 
 	const europe = [ "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "EstoniaF", "Finland", "France", "Georgia", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "United Kingdom", "Holy See" ];
 

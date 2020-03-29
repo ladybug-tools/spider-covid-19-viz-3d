@@ -24,26 +24,7 @@ MAS.arrApps = [
 		url: "../covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html",
 		title: "Data from Wikipedia that appears to be update more frequently than the JHU data"
 	}
-	/*
-	{
-		text: "Spider home page", url: "https://www.ladybug.tools/spider/",
-		title: "3D interactive analysis in your browser mostly written around the Three.js JavaScript library"
-	}
 
-
-	{
-		text: "Ladybug Tools home page", url: "https://www.ladybug.tools",
-		title: "free computer applications that support environmental design and education"
-	},
-	{
-		text: "Ladybug Tools GitHub", url: "https://github.com/ladybug-tools",
-		title: "Source code repositories"
-	},
-	{
-		text: "Spider gbXML tools", url: "https://www.ladybug.tools/spider-gbxml-tools/",
-		title: "Home page for tools to help you find, load, examine and edit gbXML files - in large numbers and sizes"
-	},
-	*/
 ];
 
 

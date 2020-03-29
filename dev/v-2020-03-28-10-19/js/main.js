@@ -182,7 +182,7 @@ function toggleNewCases ( group = groupCases ) {
 			const heightsCasesNewGrounded = linesCases.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
 
 			const meshesCasesNewGrounded = linesCases.slice( 1 ).map( ( line, index ) =>
-			addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, 3 * heightsCasesNewGrounded[ index ], 0, 12, 1, false ) );
+			addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNewGrounded[ index ], 0, 12, 1, false ) );
 
 			groupCasesNewGrounded.add( ...meshesCasesNewGrounded );
 

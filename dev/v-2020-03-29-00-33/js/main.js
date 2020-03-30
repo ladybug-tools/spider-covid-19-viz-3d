@@ -5,7 +5,7 @@
 // jshint loopfunc: true
 
 
-let pathAssets = "../assets/"; // change in html of stable
+let pathAssets = "../../../assets/"; // change in html of stable
 
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";

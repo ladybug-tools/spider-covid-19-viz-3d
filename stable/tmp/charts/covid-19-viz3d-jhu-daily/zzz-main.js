@@ -5,11 +5,11 @@
 // jshint loopfunc: true
 
 
-let pathAssets = "../../assets/"; // change in html of stable
+let pathAssets = "../../../assets/"; // change in html of stable
 
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
-imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
+imgIcon.src = pathAssets + "images/github-mark-32.png";
 
 sTitle.innerHTML = document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
@@ -19,7 +19,6 @@ sVersion.innerHTML = version ? version.content : "";
 let group = new THREE.Group();
 let groupCases = new THREE.Group();
 let groupCasesNew = new THREE.Group();
-let groupCasesNewGrounded = new THREE.Group();
 let groupRecoveries = new THREE.Group();
 let groupDeaths = new THREE.Group();
 let groupDeathsNew = new THREE.Group();
@@ -39,8 +38,6 @@ let mesh;
 let scene, camera, controls, renderer;
 
 
-let scaleHeights = 0.0007;
-
 THR.init();
 THR.animate();
 
@@ -54,6 +51,7 @@ function init () {
 	camera = THR.camera;
 	controls = THR.controls;
 	renderer = THR.renderer;
+
 
 
 
@@ -75,9 +73,6 @@ function init () {
 	addGlobe();
 
 	addSkyBox();
-
-	getNotes();
-
 
 	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
@@ -102,23 +97,20 @@ function requestFile ( url, callback ) {
 
 function resetGroups () {
 
-	scene.remove( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.remove( group, groupCases, groupCasesNew, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
 
 	group = new THREE.Group();
 	groupCases = new THREE.Group();
 	groupCasesNew = new THREE.Group();
-	groupCasesNewGrounded = new THREE.Group();
 	groupDeaths = new THREE.Group();
 	groupDeathsNew = new THREE.Group();
 	groupRecoveries = new THREE.Group();
 	groupPlacards = new THREE.Group();
 	groupLines = new THREE.Group();
 
-	scene.add( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.add( group, groupCases, groupCasesNew, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
 
 }
-
-
 
 
 //////////
@@ -133,10 +125,6 @@ function toggleBars ( group = groupCases ) {
 		groupDeathsNew.visible = true;
 		groupRecoveries.visible = true;
 
-		groupCasesNewGrounded.visible = false;
-
-		group = undefined;
-
 	} else {
 
 		groupCases.visible = false;
@@ -144,10 +132,8 @@ function toggleBars ( group = groupCases ) {
 		groupDeaths.visible = false;
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
-		groupCasesNewGrounded.visible = false;
 
 		group.visible = true;
-
 	}
 
 	groupPrevious = group;
@@ -155,80 +141,44 @@ function toggleBars ( group = groupCases ) {
 }
 
 
-function toggleNewCases ( group = groupCases ) {
 
-	if ( group === window.groupPrevious ) {
+function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0 ) {
 
-		groupCases.visible = true;
-		groupCasesNew.visible = true;
-		groupDeaths.visible = true;
-		groupDeathsNew.visible = true;
-		groupRecoveries.visible = true;
+	heightScaled = 0.2 * Math.sqrt( height );
 
-		groupCasesNewGrounded.visible = false;
+	if ( !heightScaled || heightScaled < 0.0001 ) {
 
-		group = undefined;
+		//console.log( '', color, linesCases[ index ] );
 
-	} else {
-
-		groupCases.visible = false;
-		groupCasesNew.visible = false;
-		groupDeaths.visible = false;
-		groupDeathsNew.visible = false;
-		groupRecoveries.visible = false;
-		groupCasesNewGrounded.visible = true;
-		if ( !groupCasesNewGrounded.children.length  ) {
-
-			const heightsCasesNewGrounded = linesCases.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
-
-			const meshesCasesNewGrounded = linesCases.slice( 1 ).map( ( line, index ) =>
-			addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNewGrounded[ index ], 0, 12, 1, false ) );
-
-			groupCasesNewGrounded.add( ...meshesCasesNewGrounded );
-
-		}
+		return new THREE.Mesh();
 
 	}
-
-	groupPrevious = group;
-
-}
-
-
-function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0, radialSegments = 12, heightSegments = 1, openEnded = true ) {
-
-	if ( !height || height === 0 ) { return new THREE.Mesh(); }
-
-	const heightScaled = scaleHeights * height;
 
 	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
 	let p2 = THR.latLonToXYZ( 100, lat, lon );
 
-	if ( color === "blue" ) { console.log( '', color, radius, height, offset, radialSegments, heightSegments, openEnded  );}
-
-	let geometry = new THREE.CylinderGeometry( radius, radius, heightScaled, radialSegments, heightSegments, openEnded );
+	let geometry = new THREE.CylinderBufferGeometry( radius, radius, heightScaled, 5, 1, false );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 	let material = new THREE.MeshPhongMaterial( { color: color, side: 2 } );
 	let mesh = new THREE.Mesh( geometry, material );
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );
 	mesh.userData = index;
-	//mesh.name = rows[ index ][ 0 ];
 
 	return mesh;
 
 }
 
 
-
 /////////
+
 
 function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, totalsRow ) {
 
 	// [text], scale, color, x, y, z )
 	// groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
 
-	vGlo = THR.latLonToXYZ( 75, 65, -20 );
+	vGlo = THR.latLonToXYZ( 75, 65, - 20 );
 	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
 
 	vChi = THR.latLonToXYZ( 85, 50, 110 );
@@ -237,7 +187,7 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 	const vEur = THR.latLonToXYZ( 80, 60, 20 );
 	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
 
-	const vUsa = THR.latLonToXYZ( 80, 40, -120 );
+	const vUsa = THR.latLonToXYZ( 80, 40, - 120 );
 	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
 
 	const vRow = THR.latLonToXYZ( 90, 30, 180 );
@@ -245,7 +195,7 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 
 
 	divStats.innerHTML = `
-<details id=detStats >
+<details id=detStats open>
 
 	<summary><b>global data </b></summary>
 
@@ -281,7 +231,7 @@ function getCountries () {
 
 	let countries = linesCases.map( line => line[ 1 ] );
 
-	countries = [ ...new Set( countries ) ]
+	countries = [ ...new Set( countries ) ];
 
 	//console.log( 'countries', countries );
 
@@ -308,7 +258,7 @@ function getProvince ( country ) {
 
 	if ( provinces[ 0 ][ 0 ] === "" ) {
 
-		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) )
+		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) );
 
 		divProvinces.innerHTML = "";
 
@@ -335,53 +285,6 @@ function getPlace ( province ) {
 
 
 
-function getNotes () {
-
-	divSettings.innerHTML = `<details id=detSettings ontoggle=getNotesContent() >
-
-		<summary><b>notes & settings</b></summary>
-
-		<div id=divNoteSettings ></div>
-
-	</details>`;
-
-}
-
-
-
-function getNotesContent () {
-
-
-	divNoteSettings.innerHTML = `
-
-	<p><i>Why are there messages in the background?</i></p>
-	<p>
-		An early visitor to our tracker raised this issue
-		"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
-		Oleg askeg "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
-	</p>
-
-	<p>
-		What you see is our first attempt to give Oleg some delight.<br>
-		&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
-		&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
-	</p>
-
-	<hr>
-
-	<p>US States new cases data coming soon</p>
-
-	<p>Black bar flare indicates high deaths to cases ratio.</p>
-
-	<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
-
-	<p>
-		Not all populations and GDPs are reported.
-	</p>`;
-
-}
-
-
 //////////
 
 function onDocumentTouchStart ( event ) {
@@ -394,3 +297,5 @@ function onDocumentTouchStart ( event ) {
 	onDocumentMouseMove( event );
 
 }
+
+

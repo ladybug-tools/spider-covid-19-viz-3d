@@ -7,9 +7,9 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-29-00-33-dev">
+<meta name=version content="2020-03-29-13-26-dev">
 
-<title>Viz3D JHU Dates</title>
+<title>Viz3D Wikipedia</title>
 
 <link rel="stylesheet" type="text/css" href="../style.css">
 
@@ -47,8 +47,8 @@
 				</a>
 
 				<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
-					View the COVID-19 data from the Johns Hopkins University
-					<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">GitHub repository</a>
+					View the COVID-19 data from
+					<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia</a>
 					in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
 					WebGL tools.
 				</span></span>
@@ -62,34 +62,21 @@
 
 		<div id=MASdivMenuAppSwitch > </div>
 
-		<p class=navLegend style=background-color:cyan; title="Heights displayed 3X scale">
-			<button id=butNew class=butLegend onclick=toggleNewCases(groupCasesNew) style=background-color:cyan;color:black;width:100%; >
-			New cases today&nbsp;</button>
-		</p>
+		<p class=navLegend style=background-color:red; >
+			<button id=butCases  class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
+				Confirmed cases&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:red; title=";-("  >
-			<button id=butCases class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
-			Confirmed cases&nbsp;</button>
-		</p>
+		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
+			<button id=butDeaths  class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
+				Deaths&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:black; title=";-(" >
-			<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
-			Deaths&nbsp;</button>
-		</p>
-
-		<p class=navLegend style=background-color:lavender; title="Will behave like new cases today in future version" >
-			<button id=butDeathsNew class=butLegend onclick=toggleBars(groupDeathsNew) style=background-color:lavender;width:100%; >
-			New deaths today&nbsp;</button>
-		</p>
-
-		<p class=navLegend style=background-color:limegreen; title=";-)">
+		<p class=navLegend style=background-color:limegreen; >
 			<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries) style=background-color:limegreen;width:100%; >
-			Recoveries&nbsp;</button>
-		</p>
-
+				Recoveries&nbsp;</button></p>
+<!--
 		<div id=divDates style=background-color:white;padding:1ch;></div>
-
 		<div id=divCountries style=background-color:white;padding:1ch;></div>
+-->
 
 		<div id=divStats style=background-color:white;padding:1ch;></div>
 
@@ -98,8 +85,6 @@
 	</details>
 
 </nav>
-
-
 
 <footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
 
@@ -114,35 +99,32 @@
 
 </footer>
 
-<!--
-<div id=divMessage style=max-width:42ch; >
-	<div style=max-width:42ch; >
-		<mark>"Flagship" chart - most authoritative data and least likely to crash</mark><br>
-		Johns Hopkins data for 230+ locations with 60+ day timelines
+
+
+<!-- <div id=divMessage style=max-width:250px; >
+	<mark> 2020-03-27: A brand new page - with some fairly obvious issues</mark><br>
+	Wikipedia data looks like it is updated more frequently during the day than Johns Hopkins data.
+	<hr>
+	Touch the screen to stop rotation.<br>
+	Two fingers or mouse wheel to zoom.<br>
+	Click or touch the bar in a country to pop-up statistics.<hr>
+	<small>Come back! See new version every day!</small>
+</div> -->
+
+
+
+<div id=divMessage  >
+	<div style=width:42ch >
+		<mark>"Fresh Data" - Frequent updates during the day</mark><br>
+		Wikipedia data for 230++ locations
 		<hr>
 		* Touch the screen to stop rotation.<br>
 		* Two fingers or mouse wheel to zoom.<br>
 		* Click or touch the bar in a country to pop-up statistics.<hr>
 		<mark>New for 2020-03-29<br>
-			* All the new features today are in the Wikipedia chart.<br>
-			* Includes much more state or privince data</mark><hr>
-		<small>Come back! See new version every day!</small>
-	</div>
-</div>
--->
-
-
-<div id=divMessage >
-	<div style=max-width:42ch; >
-		<mark>"Beta version" chart - newest features and likely to have issues</mark><br>
-		Johns Hopkins data for 230+ locations with 60+ day timelines
-		<hr>
-		* Touch the screen to stop rotation.<br>
-		* Two fingers or mouse wheel to zoom.<br>
-		* Click or touch the bar in a country to pop-up statistics.<hr>
-		<mark>New for 2020-03-29<br>
-			* New features today are in the Wikipedia chart.<br>
-			* Includes more states or provinces data</mark><hr>
+			* Add states to USA<br>
+			* Pop-ups beginning to show local data
+		</mark><hr>
 		<small>Come back! See new version every day!</small>
 	</div>
 </div>
@@ -150,28 +132,25 @@
 
 
 <script src="../js/main.js"></script>
-<script src="covid-19-viz-3d.js" ></script>
+<script src="fw-fetch-wikipedia.js"></script>
+<script src="places-2020-03-29.js"></script>
 <script src="../js/mas-menu-app-switch.js"></script>
 <script src="../js/glo-globe.js"></script>
 <script src="../js/spk-speak.js"></script>
-<!--
 
-	<script src="js/ncd-new-cases-date.js"></script>
--->
 
 <script>
 
 // change in html of stable
-pathAssets = "../../../assets/";
+//pathAssets = "../../../assets/";
 
 init();
+initFw();
 
-initViz3d();
-
-MASselApp.selectedIndex = 1;
+MASselApp.selectedIndex = 3;
 
 // keep address bar pointed to latest dev. change in html of stable
-window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );
+//window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );
 
 </script>
 </body>

@@ -25,9 +25,15 @@ js/mas...js
 
 * fix links
 
+14:30 ~
 
+places-2020-03-29.js
 
+* Rename and add places that ere missing
 
+fw-fetch-wikipedia.js
+
+* Add global data stats to left menu
 
 ***
 

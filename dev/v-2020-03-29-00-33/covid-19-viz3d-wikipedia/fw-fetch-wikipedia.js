@@ -322,10 +322,12 @@ function fetchUrlWikipediaApiPlace ( url, table = 0, rowStart = 0, column = 0 ) 
 			const html_code = response[ "parse" ][ "text" ][ "*" ];
 			const parser = new DOMParser();
 			const html = parser.parseFromString( html_code, "text/html" );
+			//console.log( 'html', html );
 			const tables = html.querySelectorAll( ".wikitable" );
 
-			const trs = tables[ table ].querySelectorAll( "tr" );
-			console.log( 'trs', trs );
+			if ( !tables ) { alert( "there seems to be an issue here\n\nTry another place" ); return; }
+			const trs = tables[ 0 ].querySelectorAll( "tr" );
+			//console.log( 'trs', trs );
 
 			const rows = Array.from( trs ).slice( rowStart ).map( tr => tr.innerText.trim()
 				.replace( /\[(.*?)\]/g, "" )
@@ -334,7 +336,7 @@ function fetchUrlWikipediaApiPlace ( url, table = 0, rowStart = 0, column = 0 ) 
 				//.slice( 0, - 1 )
 			)//.sort();
 
-			console.log( 'rt', rows );
+			//console.log( 'rt', rows );
 
 			const htm = rows.map( row => `${ row.join( " " ) }` )
 

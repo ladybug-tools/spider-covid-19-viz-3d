@@ -213,7 +213,7 @@ function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offs
 	mesh.position.copy( p1 );
 	mesh.lookAt( p2 );
 	mesh.userData = index;
-	mesh.name = rows[ index ][ 0 ];
+	//mesh.name = rows[ index ][ 0 ];
 
 	return mesh;
 

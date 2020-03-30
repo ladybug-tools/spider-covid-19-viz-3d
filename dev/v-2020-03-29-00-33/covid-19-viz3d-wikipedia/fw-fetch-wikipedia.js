@@ -22,7 +22,7 @@ function initFw() {
 
 	fetchUrlWikipediaApi( wikiPages[ 0 ], 0, 1, 0);
 
-	fetchUrlWikipediaApi( wikiPages[ 1 ], 1, 3, 1 );
+	fetchUrlWikipediaApi( wikiPages[ 1 ], 0, 3, 1 );
 
 
 }
@@ -46,7 +46,7 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 			//console.log(tables[ 0 ]);
 
 			const trs = tables[ table ].querySelectorAll( "tr" );
-			console.log( 'trs', trs );
+			//console.log( 'trs', trs );
 
 			const rowsTmp = Array.from( trs ).slice( rowStart ).map( tr => tr.innerText.trim()
 				.replace( /\[(.*?)\]/g, "" )
@@ -78,8 +78,8 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 				rows.forEach( ( line ) => line[ iCase ] = isNaN( Number( line[ iCase ] ) ) ? "0" : line[ iCase ] );
 				rows.forEach( ( line ) => line[ iDeath ] = isNaN( Number( line[ iDeath ] ) ) ? "0" : line[ iDeath ] );
 				rows.forEach( ( line ) => line[ iRecover ] = isNaN( Number( line[ iRecover ] ) ) ? "0" : line[ iRecover ] );
-
 				//console.log( 'rows', rows );
+
 				updateBars( rows );
 				getStats();
 
@@ -276,7 +276,8 @@ recoveries: ${ Number( line[ iRecover ] ).toLocaleString() }<br>
 wikipedia pandemic page:<br>
 <a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ place }" target="_blank">${ place }</a>
 <p><button onclick=showLocation("${ place }"); >show ${ place } statistics </button></p>
-<div id=popStats style="height:30ch;overflow:auto;resize:both;"></div>
+<div id=popStats style="max-height:40ch;max-width:50ch;overflow:auto;resize:both;">2020-03-30 Effort just beginning.<br>
+mot working in many countries.<br> Often shows wrong table.</div>
 `;
 		}
 
@@ -290,7 +291,7 @@ wikipedia pandemic page:<br>
 
 }
 
-function showLocation ( place, table = 0 ) {
+function showLocation ( place, table = 1 ) {
 
 
 

@@ -86,6 +86,20 @@
 
 </nav>
 
+<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
+
+	<button onclick=controls.reset(); class=ftrButton title="reset the view" >&CirclePlus;</button>
+	&nbsp;
+	<button onclick=THR.controls.autoRotate=!THR.controls.autoRatate title="stop the rotation"
+	class=ftrButton "Stop all rotation" >&circlearrowright;</button>
+	&nbsp;
+	<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards"  class=ftrButton >&sdotb;</button>
+	&nbsp;
+	<button onclick=sayThis(); title="Can you hear me now?"  class=ftrButton >&phone;</button>
+
+</footer>
+
+
 
 <!-- <div id=divMessage style=max-width:250px; >
 	<mark> 2020-03-27: A brand new page - with some fairly obvious issues</mark><br>
@@ -100,30 +114,21 @@
 
 
 <div id=divMessage  >
-	<mark>"Fresh Data" chart - frequent updates during the day</mark><br>
-	Wikipedia data for 180+ locations
-	<hr>
-	* Touch the screen to stop rotation.<br>
-	* Two fingers or mouse wheel to zoom.<br>
-	* Click or touch the bar in a country to pop-up statistics.<hr>
-	<mark>New for 2020-03-29<br>
-		* Add states to USA<br>
-	</mark><hr>
-	<small>Come back! See new version every day!</small>
+	<div style=width:42ch >
+		<mark>"Fresh Data" - Frequent updates during the day</mark><br>
+		Wikipedia data for 180+ locations
+		<hr>
+		* Touch the screen to stop rotation.<br>
+		* Two fingers or mouse wheel to zoom.<br>
+		* Click or touch the bar in a country to pop-up statistics.<hr>
+		<mark>New for 2020-03-29<br>
+			* Add states to USA<br>
+		</mark><hr>
+		<small>Come back! See new version every day!</small>
+	</div>
 </div>
 
-<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
 
-	<button onclick=controls.reset(); class=ftrButton title="reset the view" >&CirclePlus;</button>
-	&nbsp;
-	<button onclick=THR.controls.autoRotate=!THR.controls.autoRatate title="stop the rotation"
-	class=ftrButton "Stop all rotation" >&circlearrowright;</button>
-	&nbsp;
-	<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards"  class=ftrButton >&sdotb;</button>
-	&nbsp;
-	<button onclick=sayThis(); title="Can you hear me now?"  class=ftrButton >&phone;</button>
-
-</footer>
 
 <script src="../js/main.js"></script>
 <script src="fw-fetch-wikipedia.js"></script>

@@ -11,7 +11,7 @@ let pathAssets = "../../../assets/"; // change in html of stable
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = pathAssets + "images/github-mark-32.png";
 
-sTitle.innerHTML = document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+sTitle.innerHTML = document.title ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
 const version = document.head.querySelector( "[ name=version ]" );
 sVersion.innerHTML = version ? version.content : "";
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
@@ -31,6 +31,7 @@ let linesCases;
 let linesCasesNew;
 let linesRecoveries;
 let linesDeaths;
+
 let linesDeathsNew;
 
 let intersected;
@@ -79,8 +80,8 @@ function init () {
 
 
 	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseMove, false );
-	renderer.domElement.addEventListener( 'touchstart', onDocumentTouchStart, false );
+	renderer.domElement.addEventListener( "mousedown", onDocumentMouseMove, false );
+	renderer.domElement.addEventListener( "touchstart", onDocumentTouchStart, false );
 
 }
 
@@ -89,8 +90,8 @@ function init () {
 function requestFile ( url, callback ) {
 
 	const xhr = new XMLHttpRequest();
-	xhr.open( 'GET', url, true );
-	xhr.onerror = ( xhr ) => console.log( 'error:', xhr );
+	xhr.open( "GET", url, true );
+	xhr.onerror = ( xhr ) => console.log( "error:", xhr );
 	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
 	xhr.onload = callback;
 	xhr.send( null );

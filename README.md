@@ -79,10 +79,13 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 
 ### Generally / Short term
 
+* 2020-03-30 ~ Theo ~ Multiple charts per pop-up
+* 2020-03-30 ~ Theo ~ Drag and resize pop-up
 * 2020-03-24 ~ Theo ~ use Three.js fonts??
+* 2020-03-30 ~ Theo ~ Better maps for globe
 * Better display of text in placards??
 * Location hash goes to place and set language and other aspects
-* Globe rotates to the lat/lon indicated by your browser location
+* Globe rotates to the lat/lon onload as set and saved in localStorage
 * Days since last new case indicated as color or opacity
 * Dark mode?
 
@@ -234,6 +237,8 @@ geoJson useful
 
 <details open >
 <summary>Change log </summary>
+
+_Change logs are now in the de/dates/ folders._
 
 ### 2020-03-28 ~ Theo
 

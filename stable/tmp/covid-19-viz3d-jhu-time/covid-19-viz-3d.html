@@ -7,11 +7,11 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-28-18-43">
+<meta name=version content="2020-03-29-00-33-dev">
 
 <title>Viz3D JHU Dates</title>
 
-<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="../style.css">
 
 </head>
 
@@ -20,8 +20,8 @@
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
 
 
-<script src="js/thr-three.js"></script>
-<script src="js/threeGeoJSON.js"></script>
+<script src="../js/thr-three.js"></script>
+<script src="../js/threeGeoJSON.js"></script>
 <script>
 
 
@@ -100,28 +100,6 @@
 </nav>
 
 
-<div id=divMessage style=max-width:42ch; >
-	<mark>"Flagship" chart - most authoritative data and least likely to crash</mark><br>
-	Johns Hopkins data for 230+ locations with 60+ day timelines
-	<hr>
-	* Touch the screen to stop rotation.<br>
-	* Two fingers or mouse wheel to zoom.<br>
-	* Click or touch the bar in a country to pop-up statistics.<hr>
-	<mark>New for 2020-03-28<br>* Bars now scaled linearly<br>* "New cases today" appear on ground</mark><hr>
-	<small>Come back! See new version every day!</small>
-</div>
-
-
-<!-- <div id=divMessage style=max-width:42ch; >
-	<mark>"Beta version" chart - newest features and likely to have issues</mark><br>
-	Johns Hopkins data for 230+ locations with 60+ day timelines
-	<hr>
-	* Touch the screen to stop rotation.<br>
-	* Two fingers or mouse wheel to zoom.<br>
-	* Click or touch the bar in a country to pop-up statistics.<hr>
-	<mark>New for 2020-03-28<br>* Bars now scaled linearly<br>* "New cases today" appear on ground</mark><hr>
-	<small>Come back! See new version every day!</small>
-</div> -->
 
 <footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
 
@@ -136,11 +114,46 @@
 
 </footer>
 
-<script src="js/main.js"></script>
-<script src="js/covid-19-viz-3d.js" ></script>
-<script src="js/mas-menu-app-switch.js"></script>
-<script src="js/glo-globe.js"></script>
-<script src="js/spk-speak.js"></script>
+
+<div id=divMessage style=max-width:42ch; >
+	<div style=max-width:42ch; >
+		<mark>"Flagship" chart - most authoritative data and least likely to crash</mark><br>
+		Johns Hopkins data for 230+ locations with 60+ day timelines
+		<hr>
+		* Touch the screen to stop rotation.<br>
+		* Two fingers or mouse wheel to zoom.<br>
+		* Click or touch the bar in a country to pop-up statistics.<hr>
+		<mark>New for 2020-03-29<br>
+			* All the new features today are in the Wikipedia chart.<br>
+			* Includes more states or provinces data</mark><hr>
+		<small>Come back! See new version every day!</small>
+	</div>
+</div>
+
+
+<!--
+<div id=divMessage >
+	<div style=max-width:42ch; >
+		<mark>"Beta version" chart - newest features and likely to have issues</mark><br>
+		Johns Hopkins data for 230+ locations with 60+ day timelines
+		<hr>
+		* Touch the screen to stop rotation.<br>
+		* Two fingers or mouse wheel to zoom.<br>
+		* Click or touch the bar in a country to pop-up statistics.<hr>
+		<mark>New for 2020-03-29<br>
+			* New features today are in the Wikipedia chart.<br>
+			* Includes more states or provinces data</mark><hr>
+		<small>Come back! See new version every day!</small>
+	</div>
+</div> -->
+
+
+
+<script src="../js/main.js"></script>
+<script src="covid-19-viz-3d.js" ></script>
+<script src="../js/mas-menu-app-switch.js"></script>
+<script src="../js/glo-globe.js"></script>
+<script src="../js/spk-speak.js"></script>
 <!--
 
 	<script src="js/ncd-new-cases-date.js"></script>
@@ -149,7 +162,7 @@
 <script>
 
 // change in html of stable
-pathAssets = "../assets/";
+pathAssets = "../../assets/";
 
 init();
 

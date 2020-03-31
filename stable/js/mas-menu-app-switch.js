@@ -1,8 +1,13 @@
+// copyright 2020 Spider contributors. MIT license.
+// 2020-03-30
+/* globals MASdivMenuAppSwitch */
+// jshint esversion: 6
+// jshint loopfunc: true
 
 
-MAS = {}
 
-// https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-29-00-33
+const MAS = {};
+
 
 MAS.arrApps = [
 
@@ -16,27 +21,30 @@ MAS.arrApps = [
 	},
 	{
 		text: "JHU Daily Reports Global+USA",
-		url: "https://ladybug.tools/spider-covid-19-viz-3d/stable/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html",
+		url: "https://ladybug.tools/spider-covid-19-viz-3d/v-2020-03-30-12-00/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html",
 		title: "JHU data with the daily reports for over 3,000 US counties"
 	},
 	{
 		text: "Wikipedia Global",
-		url: "https://ladybug.tools/spider-covid-19-viz-3d/stable/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html",
+		url: "https://ladybug.tools/spider-covid-19-viz-3d/v-2020-03-30-12-00/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html",
 		title: "Data from Wikipedia that appears to be update more frequently than the JHU data"
 	}
 
 ];
 
 
+
 MAS.getMenuAppSwitch = function () {
 
 	const options = MAS.arrApps.map( item =>
-		`<option value="${item.url}" title="${item.title}" >${item.text}</option>` );
+		`<option value="${ item.url }" title="${ item.title }" >${ item.text }</option>` );
 
-	const htm = `<select id=MASselApp oninput=window.location.href=this.value style=width:100%; size=4 >${ options }</select>`;
+	const htm = `<select id=MASselMenuAppSelect oninput=window.location.href=this.value style=width:100%; size=4 >${ options }</select>`;
 
 	MASdivMenuAppSwitch.innerHTML = htm;
 
-}
+};
 
-MAS.getMenuAppSwitch()
+
+
+MAS.getMenuAppSwitch();

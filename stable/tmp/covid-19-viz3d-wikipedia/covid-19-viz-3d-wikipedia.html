@@ -7,11 +7,11 @@
 <meta name=description
 	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-26-15-03-dev">
+<meta name=version content="2020-03-29-13-26-dev">
 
 <title>Viz3D Wikipedia</title>
 
-<link rel="stylesheet" type="text/css" href="../../style.css">
+<link rel="stylesheet" type="text/css" href="../style.css">
 
 </head>
 
@@ -20,8 +20,8 @@
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
 
 
-<script src="../../js/thr-three.js"></script>
-<script src="../../js/threeGeoJSON.js"></script>
+<script src="../js/thr-three.js"></script>
+<script src="../js/threeGeoJSON.js"></script>
 <script>
 
 
@@ -86,32 +86,6 @@
 
 </nav>
 
-
-<!-- <div id=divMessage style=max-width:250px; >
-	<mark> 2020-03-27: A brand new page - with some fairly obvious issues</mark><br>
-	Wikipedia data looks like it is updated more frequently during the day than Johns Hopkins data.
-	<hr>
-	Touch the screen to stop rotation.<br>
-	Two fingers or mouse wheel to zoom.<br>
-	Click or touch the bar in a country to pop-up statistics.<hr>
-	<small>Come back! See new version every day!</small>
-</div> -->
-
-
-
-<div id=divMessage style=max-width:42ch; >
-	<mark>"Fresh Data" chart - frequent updates during the day</mark><br>
-	Wikipedia data for 180+ locations
-	<hr>
-	* Touch the screen to stop rotation.<br>
-	* Two fingers or mouse wheel to zoom.<br>
-	* Click or touch the bar in a country to pop-up statistics.<hr>
-	<mark>New for 2020-03-28<br>
-		* Bars now scaled linearly<br>
-	</mark><hr>
-	<small>Come back! See new version every day!</small>
-</div>
-
 <footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
 
 	<button onclick=controls.reset(); class=ftrButton title="reset the view" >&CirclePlus;</button>
@@ -125,18 +99,50 @@
 
 </footer>
 
-<script src="../../js/main.js"></script>
+
+
+<!-- <div id=divMessage style=max-width:250px; >
+	<mark> 2020-03-27: A brand new page - with some fairly obvious issues</mark><br>
+	Wikipedia data looks like it is updated more frequently during the day than Johns Hopkins data.
+	<hr>
+	Touch the screen to stop rotation.<br>
+	Two fingers or mouse wheel to zoom.<br>
+	Click or touch the bar in a country to pop-up statistics.<hr>
+	<small>Come back! See new version every day!</small>
+</div> -->
+
+
+
+<div id=divMessage  >
+	<div style=width:42ch >
+		<mark>"Fresh Data" - Frequent updates during the day</mark><br>
+		Wikipedia data for 230++ locations
+		<hr>
+		* Touch the screen to stop rotation.<br>
+		* Two fingers or mouse wheel to zoom.<br>
+		* Click or touch the bar in a country to pop-up statistics.<hr>
+		<mark>New for 2020-03-29<br>
+			* Add states to USA<br>
+			* Pop-ups beginning to show local data
+		</mark><hr>
+		<small>Come back! See new version every day!</small>
+	</div>
+</div>
+
+
+
+<script src="../js/main.js"></script>
 <script src="fw-fetch-wikipedia.js"></script>
-<script src="countries-places-lat-lon.js"></script>
-<script src="../../js/mas-menu-app-switch.js"></script>
-<script src="../../js/glo-globe.js"></script>
-<script src="../../js/spk-speak.js"></script>
+<script src="places-2020-03-29.js"></script>
+<script src="../js/mas-menu-app-switch.js"></script>
+<script src="../js/glo-globe.js"></script>
+<script src="../js/spk-speak.js"></script>
 
 
 <script>
 
 // change in html of stable
-pathAssets = "../../../assets/";
+//pathAssets = "../../../assets/";
 
 init();
 initFw();

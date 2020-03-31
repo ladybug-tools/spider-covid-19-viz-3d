@@ -21,12 +21,12 @@ MAS.arrApps = [
 	},
 	{
 		text: "JHU Daily Reports Global+USA",
-		url: "https://ladybug.tools/spider-covid-19-viz-3d/v-2020-03-30-12-00/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html",
+		url: "https://ladybug.tools/spider-covid-19-viz-3d/stable/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html",
 		title: "JHU data with the daily reports for over 3,000 US counties"
 	},
 	{
 		text: "Wikipedia Global",
-		url: "https://ladybug.tools/spider-covid-19-viz-3d/v-2020-03-30-12-00/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html",
+		url: "https://ladybug.tools/spider-covid-19-viz-3d/stable/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html",
 		title: "Data from Wikipedia that appears to be update more frequently than the JHU data"
 	}
 

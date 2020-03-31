@@ -18,13 +18,16 @@ index.html
 
 js/mas...js
 
+* Fix menu links - but not so dev friendly
+* Clean & jsHint
+* Ren global to MASselMenuAppSelect
 
 places-2020-03-29.js
 
 
 fw-fetch-wikipedia.js
 
-* Scraping tables from Wikepedia nicely
+* Scraping tables from Wikipedia nicely
 * Pop-up better CSS
 * Mostly pass jsHint
 

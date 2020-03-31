@@ -1,8 +1,13 @@
+// copyright 2020 Spider contributors. MIT license.
+// 2020-03-30
+/* globals MASdivMenuAppSwitch */
+// jshint esversion: 6
+// jshint loopfunc: true
 
 
-MAS = {}
 
-// https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-29-00-33
+const MAS = {};
+
 
 MAS.arrApps = [
 
@@ -28,15 +33,18 @@ MAS.arrApps = [
 ];
 
 
+
 MAS.getMenuAppSwitch = function () {
 
 	const options = MAS.arrApps.map( item =>
-		`<option value="${item.url}" title="${item.title}" >${item.text}</option>` );
+		`<option value="${ item.url }" title="${ item.title }" >${ item.text }</option>` );
 
-	const htm = `<select id=MASselApp oninput=window.location.href=this.value style=width:100%; size=4 >${ options }</select>`;
+	const htm = `<select id=MASselMenuAppSelect oninput=window.location.href=this.value style=width:100%; size=4 >${ options }</select>`;
 
 	MASdivMenuAppSwitch.innerHTML = htm;
 
-}
+};
 
-MAS.getMenuAppSwitch()
+
+
+MAS.getMenuAppSwitch();

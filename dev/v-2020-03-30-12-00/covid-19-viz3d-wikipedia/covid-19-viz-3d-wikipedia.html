@@ -2,110 +2,117 @@
 <html lang="en">
 
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
-<meta name=description
-	content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
-<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-30-12-00-dev">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+	<meta name=description
+		content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
+	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+	<meta name=version content="2020-03-30-12-00-dev">
 
-<title>Viz3D Wikipedia</title>
+	<title>Viz3D Wikipedia</title>
 
-<link rel="stylesheet" type="text/css" href="../style.css">
-<style>
+	<link rel="stylesheet" type="text/css" href="../style.css">
+	<style>
+		.references,
+		.plainlinks {
+			display: none;
+		}
 
-
-.references, .plainlinks { display: none; }
-</style>
+	</style>
 </head>
 
 <body>
-<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
 
 
-<script src="../js/thr-three.js"></script>
-<script src="../js/threeGeoJSON.js"></script>
-<script>
+	<script src="../js/thr-three.js"></script>
+	<script src="../js/threeGeoJSON.js"></script>
+	<script>
 
 
-</script>
+	</script>
 
-<nav id="navMenu">
+	<nav id="navMenu">
 
-	<br>
+		<br>
 
-	<details open>
+		<details open>
 
-		<summary>hide menu</summary>
+			<summary>hide menu</summary>
 
-		<header id="hdrTitle">
+			<header id="hdrTitle">
 
-			<h2>
-				<a id=aSource target=_top title="Ladybug Tools / Spider readme & source code on GitHub" >
-					<img id=imgIcon height=18 style=opacity:0.5; >
-				</a>
+				<h2>
+					<a id=aSource target=_top title="Ladybug Tools / Spider readme & source code on GitHub">
+						<img id=imgIcon height=18 style=opacity:0.5;>
+					</a>
 
-				<a href="" title="Click to reload this page" >
-					<span id=sTitle ></span>&nbsp;
-				</a>
+					<a href="" title="Click to reload this page">
+						<span id=sTitle></span>&nbsp;
+					</a>
 
-				<span class="couponcode" >&#x24d8;<span id=divDescription class="coupontooltip" >
-					View the COVID-19 data from
-					<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia</a>
-					in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a>
-					WebGL tools.
-				</span></span>
-			</h2>
+					<span class="couponcode">&#x24d8;<span id=divDescription class="coupontooltip">
+							View the COVID-19 data from
+							<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
+								target="_blank">Wikipedia</a>
+							in interactive 3D using JavaScript <a href="https://threeja.org"
+								target="_blank">Three.js</a>
+							WebGL tools.
+						</span></span>
+				</h2>
 
-			<div>
-				v-<span id=sVersion ></span>
-			</div>
+				<div>
+					v-<span id=sVersion></span>
+				</div>
 
-		</header>
+			</header>
 
-		<div id=MASdivMenuAppSwitch > </div>
+			<div id=MASdivMenuAppSwitch> </div>
 
-		<p class=navLegend style=background-color:red; >
-			<button id=butCases  class=butLegend onclick=toggleBars(groupCases) style=background-color:red;color:white;width:100%; >
-				Confirmed cases&nbsp;</button></p>
+			<p class=navLegend style=background-color:red;>
+				<button id=butCases class=butLegend onclick=toggleBars(groupCases)
+					style=background-color:red;color:white;width:100%;>
+					Confirmed cases&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios" >
-			<button id=butDeaths  class=butLegend onclick=toggleBars(groupDeaths) style=background-color:black;color:white;width:100%; >
-				Deaths&nbsp;</button></p>
+			<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios">
+				<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths)
+					style=background-color:black;color:white;width:100%;>
+					Deaths&nbsp;</button></p>
 
-		<p class=navLegend style=background-color:limegreen; >
-			<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries) style=background-color:limegreen;width:100%; >
-				Recoveries&nbsp;</button></p>
-<!--
+			<p class=navLegend style=background-color:limegreen;>
+				<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries)
+					style=background-color:limegreen;width:100%;>
+					Recoveries&nbsp;</button></p>
+			<!--
 		<div id=divDates style=background-color:white;padding:1ch;></div>
 		<div id=divCountries style=background-color:white;padding:1ch;></div>
 -->
 
-		<div id=divStats style=background-color:white;padding:1ch;></div>
+			<div id=divStats style=background-color:white;padding:1ch;></div>
 
-		<div id=divSettings style=background-color:white;padding:1ch; ></div>
+			<div id=divSettings style=background-color:white;padding:1ch;></div>
 
-	</details>
+		</details>
 
-</nav>
+	</nav>
 
-<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center; >
+	<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center;>
 
-	<button onclick=controls.reset(); class=ftrButton title="reset the view" >&CirclePlus;</button>
-	&nbsp;
-	<button onclick=THR.controls.autoRotate=!THR.controls.autoRatate title="stop the rotation"
-	class=ftrButton "Stop all rotation" >&circlearrowright;</button>
-	&nbsp;
-	<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards"  class=ftrButton >&sdotb;</button>
-	&nbsp;
-	<button onclick=sayThis(); title="Can you hear me now?"  class=ftrButton >&phone;</button>
+		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
+		&nbsp;
+		<button onclick=THR.controls.autoRotate=!THR.controls.autoRatate title="stop the rotation"
+			class=ftrButton "Stop all rotation">&circlearrowright;</button>
+		&nbsp;
+		<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards"
+			class=ftrButton>&sdotb;</button>
+		&nbsp;
+		<button onclick=sayThis(); title="Can you hear me now?" class=ftrButton>&phone;</button>
 
-</footer>
+	</footer>
 
 
-
-<!-- <div id=divMessage style=max-width:250px; >
+	<!-- <div id=divMessage style=max-width:250px; >
 	<mark> 2020-03-27: A brand new page - with some fairly obvious issues</mark><br>
 	Wikipedia data looks like it is updated more frequently during the day than Johns Hopkins data.
 	<hr>
@@ -116,46 +123,46 @@
 </div> -->
 
 
-
-<div id=divMessage  style=overflow:auto;resize:both;>
-	<div style=width:42ch >
-		<mark>"Fresh Data" - Frequent updates during the day</mark><br>
-		Wikipedia data for 230++ locations
-		<hr>
-		* Touch the screen to stop rotation.<br>
-		* Two fingers or mouse wheel to zoom.<br>
-		* Click or touch the bar in a country to pop-up statistics.<hr>
-		<mark>New for 2020-03-30<br>
-			* Scraping tables and charts from Wikipedia<br>
-			* Pop-ups beginning to show WP tables and charts
-		</mark><hr>
-		<small>Come back! See new version every day!</small>
+	<div id=divMessage style=overflow:auto;resize:both;>
+		<div style=width:42ch>
+			<mark>"Fresh Data" - Frequent updates during the day</mark><br>
+			Wikipedia data for 230++ locations
+			<hr>
+			* Touch the screen to stop rotation.<br>
+			* Two fingers or mouse wheel to zoom.<br>
+			* Click or touch the bar in a country to pop-up statistics.
+			<hr>
+			<mark>New for 2020-03-30<br>
+				* Scraping tables and charts from Wikipedia<br>
+				* Pop-ups beginning to show WP tables and charts
+			</mark>
+			<hr>
+			<small>Come back! See new version every day!</small>
+		</div>
 	</div>
-</div>
 
 
+	<script src="../js/main.js"></script>
+	<script src="fw-fetch-wikipedia.js"></script>
+	<script src="places-2020-03-29.js"></script>
+	<script src="../js/mas-menu-app-switch.js"></script>
+	<script src="../js/glo-globe.js"></script>
+	<script src="../js/spk-speak.js"></script>
 
-<script src="../js/main.js"></script>
-<script src="fw-fetch-wikipedia.js"></script>
-<script src="places-2020-03-29.js"></script>
-<script src="../js/mas-menu-app-switch.js"></script>
-<script src="../js/glo-globe.js"></script>
-<script src="../js/spk-speak.js"></script>
 
+	<script>
 
-<script>
+		MASselMenuAppSelect.selectedIndex = 3;
 
-// change in html of stable
-//pathAssets = "../../assets/";
+		init();
 
-init();
-initFw();
+		initFw();
 
-MASselApp.selectedIndex = 3;
 
 // keep address bar pointed to latest dev. change in html of stable
-//window.history.pushState( '', '', '/spider-covid-19-viz-3d/dev/' );
+//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 
-</script>
+	</script>
 </body>
+
 </html>

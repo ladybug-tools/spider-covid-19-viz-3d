@@ -323,6 +323,7 @@ function onDocumentMouseMove ( event ) {
 			divMessage.hidden = false;
 			divMessage.style.left = event.clientX + "px";
 			divMessage.style.top = event.clientY + "px";
+			divMessage.style.width = "250px";
 			divMessage.innerHTML = `
 <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
 ${ ( place ? "place: " + place + "<br>" : "" ) }

@@ -9,7 +9,7 @@ let pathAssets = "../../../assets/"; // change in html of stable
 
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
-imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
+imgIcon.src = pathAssets + "images/github-mark-32.png";
 
 sTitle.innerHTML = document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
@@ -39,7 +39,7 @@ let mesh;
 let scene, camera, controls, renderer;
 
 
-let scaleHeights = 0.0007;
+let scaleHeights = 0.0003;
 
 THR.init();
 THR.animate();
@@ -54,7 +54,6 @@ function init () {
 	camera = THR.camera;
 	controls = THR.controls;
 	renderer = THR.renderer;
-
 
 
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
@@ -155,6 +154,7 @@ function toggleBars ( group = groupCases ) {
 }
 
 
+
 function toggleNewCases ( group = groupCases ) {
 
 	if ( group === window.groupPrevious ) {
@@ -177,12 +177,12 @@ function toggleNewCases ( group = groupCases ) {
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
 		groupCasesNewGrounded.visible = true;
-		if ( !groupCasesNewGrounded.children.length  ) {
+		if ( !groupCasesNewGrounded.children.length ) {
 
 			const heightsCasesNewGrounded = linesCases.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
 
 			const meshesCasesNewGrounded = linesCases.slice( 1 ).map( ( line, index ) =>
-			addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNewGrounded[ index ], 0, 12, 1, false ) );
+				addBar( line[ 2 ], line[ 3 ], index, "cyan", 0.6, heightsCasesNewGrounded[ index ], 0, 12, 1, false ) );
 
 			groupCasesNewGrounded.add( ...meshesCasesNewGrounded );
 
@@ -195,6 +195,7 @@ function toggleNewCases ( group = groupCases ) {
 }
 
 
+
 function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0, radialSegments = 12, heightSegments = 1, openEnded = true ) {
 
 	if ( !height || height === 0 ) { return new THREE.Mesh(); }
@@ -203,8 +204,6 @@ function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offs
 
 	let p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
 	let p2 = THR.latLonToXYZ( 100, lat, lon );
-
-	if ( color === "blue" ) { console.log( '', color, radius, height, offset, radialSegments, heightSegments, openEnded  );}
 
 	let geometry = new THREE.CylinderGeometry( radius, radius, heightScaled, radialSegments, heightSegments, openEnded );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
@@ -277,11 +276,13 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 
 
 
+//////////
+
 function getCountries () {
 
 	let countries = linesCases.map( line => line[ 1 ] );
 
-	countries = [ ...new Set( countries ) ]
+	countries = [ ...new Set( countries ) ];
 
 	//console.log( 'countries', countries );
 
@@ -291,6 +292,7 @@ function getCountries () {
 <select id=selCountries onchange=getProvince(this.value) >${ options }</select>
 <div id=divProvinces > </div>
 `;
+
 }
 
 
@@ -308,7 +310,7 @@ function getProvince ( country ) {
 
 	if ( provinces[ 0 ][ 0 ] === "" ) {
 
-		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) )
+		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) );
 
 		divProvinces.innerHTML = "";
 
@@ -335,6 +337,8 @@ function getPlace ( province ) {
 
 
 
+//////////
+
 function getNotes () {
 
 	divSettings.innerHTML = `<details id=detSettings ontoggle=getNotesContent() >
@@ -351,35 +355,40 @@ function getNotes () {
 
 function getNotesContent () {
 
+	divMessage.innerHTML = `
 
-	divNoteSettings.innerHTML = `
+	<div >
 
-	<p><i>Why are there messages in the background?</i></p>
-	<p>
-		An early visitor to our tracker raised this issue
-		"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
-		Oleg askeg "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
-	</p>
+		<p>
+			<i>Why are there messages in the background?</i></p>
+		<p>
+			An early visitor to our tracker raised this issue
+			"<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5" target="_blank">Expressions of Hope</a>"<br>
+			Oleg asked "I wonder if we could show positive tweets and expressions of hope and gratitude for the courage of health workers around the world."
+		</p>
 
-	<p>
-		What you see is our first attempt to give Oleg some delight.<br>
-		&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
-		&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
-	</p>
+		<p>
+			What you see is our first attempt to provide Oleg with some delight.<br>
+			&bull; Zoom out then rotate. Trying to read the messages on a phone is a little guessing game.<br>
+			&bull; The text is huge and leaves much white space. This is so you are not totally distracted while looking at the data.
+		</p>
 
-	<hr>
+		<hr>
 
-	<p>US States new cases data coming soon</p>
+		<p>US States new cases data coming soon</p>
 
-	<p>Black bar flare indicates high deaths to cases ratio.</p>
+		<p>Black bar flare indicates high deaths to cases ratio.</p>
 
-	<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
+		<p>Cyan bar flare indicates rapid increase in new cases compared to number of previous cases.</p>
 
-	<p>
-		Not all populations and GDPs are reported.
-	</p>`;
+		<p>
+			Not all populations and GDPs are reported.
+		</p>
+
+	</div>`;
 
 }
+
 
 
 //////////
@@ -394,5 +403,3 @@ function onDocumentTouchStart ( event ) {
 	onDocumentMouseMove( event );
 
 }
-
-

@@ -11,9 +11,13 @@ are now in a GitHub web page view - Click this button to view this read me file 
 
 ## dev folder
 
-* Add readme and readme html
 
-index.html
+add index.html to dated folder
+
+js/main.js
+
+* Smaller scaling for the bars
+* Notes display in pop-up
 
 
 js/mas...js

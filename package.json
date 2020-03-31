@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ladybug-tools/spider-covid-19-viz-3d#readme",
   "devDependencies": {
-    "eslint": "^6.8.0"
+    "eslint": "^6.8.0",
+    "eslint-config-mdcs": "^4.2.3"
   }
 }

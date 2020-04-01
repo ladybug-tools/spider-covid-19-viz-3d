@@ -303,6 +303,7 @@ function displayMessage () {
 
 	}
 
+	DMTdragParent.style.overflow = "auto";
 	DMTdragParent.hidden = false;
 
 	DMT.setTranslate( 0, 0, DMTdragItem );
@@ -311,22 +312,32 @@ function displayMessage () {
 	DMTdragParent.style.top = event.clientY + "px";
 
 	DMTdragParent.style.width = "40ch";
+
+	// DMTdragParent.hidden = false;
+
+	// DMT.setTranslate( 0, 0, DMTdragItem );
+
+	// DMTdragParent.style.overflow = "auto";
+	// DMTdragParent.style.left = ( event.clientX ) + "px";
+	// DMTdragParent.style.top = event.clientY + "px";
+
+	// DMTdragParent.style.width = "40ch";
 	divMessage.innerHTML = `
-<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
-${ ( place ? "place: " + place + "<br>" : "" ) }
-country: ${ country }<br>
-cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
-cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
-deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
-deaths new: ${ ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
-recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
-deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
-<hr>
-deaths/100K persons: ${ d2Pop }<br>
-cases/(gdp/pop): ${ d2Gdp }<br>
-<b title="Latest day at top" >New cases per day</b><br>
-${ getBars2D( casesNew ) }
-<br>
+		<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
+		${ ( place ? "place: " + place + "<br>" : "" ) }
+		country: ${ country }<br>
+		cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
+		cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
+		deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
+		deaths new: ${ ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
+		recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
+		deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
+		<hr>
+		deaths/100K persons: ${ d2Pop }<br>
+		cases/(gdp/pop): ${ d2Gdp }<br>
+		<b title="Latest day at top" >New cases per day</b><br>
+		${ getBars2D( casesNew ) }
+		<br>
 `;
 
 }

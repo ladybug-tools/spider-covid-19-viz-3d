@@ -4,9 +4,7 @@
 
 
 
-let pathAssets = "../../assets/"; // change in html of stable
-
-console.log( 'pathAssets1', pathAssets );
+let pathAssets = "../../../assets/"; // change in html of stable
 
 let messageOfTheDay = `
 <mark>New for 2020-03-31<br>
@@ -82,7 +80,6 @@ function init() {
 
 	requestFile( urlJson, onLoadGeoJson );
 
-	console.log( 'pathAssets3', pathAssets );
 
 	addLights();
 

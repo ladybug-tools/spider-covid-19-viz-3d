@@ -326,6 +326,7 @@ deaths/100K persons: ${ d2Pop }<br>
 cases/(gdp/pop): ${ d2Gdp }<br>
 <b title="Latest day at top" >New cases per day</b><br>
 ${ getBars2D( casesNew ) }
+<br>
 `;
 
 }

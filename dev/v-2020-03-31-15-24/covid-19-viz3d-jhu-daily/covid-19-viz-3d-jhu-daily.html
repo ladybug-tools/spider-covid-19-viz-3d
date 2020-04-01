@@ -7,7 +7,7 @@
 	<meta name=description
 		content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-	<meta name=version content="2020-03-30-12-00-dev">
+	<meta name=version content="2020-03-31-15-24-dev">
 
 	<title>Viz3D JHU Daily</title>
 
@@ -22,18 +22,16 @@
 
 	<script src="../js/thr-three.js"></script>
 	<script src="../js/threeGeoJSON.js"></script>
-	<script>
+	<script src="../js/dmt-div-move-touch.js"></script>
 
-
-	</script>
 
 	<nav id="navMenu">
 
 		<br>
 
-		<details open>
+		<details id=detNavMenu >
 
-			<summary>hide menu</summary>
+			<summary>show or hide menu</summary>
 
 			<header id="hdrTitle">
 
@@ -92,33 +90,6 @@
 	</nav>
 
 
-	<!-- <div id=divMessage style=max-width:250px; >
-	<mark> 2020-03-28: Fixed display of global statistics</mark><br>
-	Display case data for the world and over 3,000 US counties.<hr>
-	Touch the screen to stop rotation.<br>
-	Two fingers or mouse wheel to zoom.<br>
-	Click or touch the bar in a country to pop-up statistics.<hr>
-	<small>Come back! See new version every day!</small>
-</div> -->
-
-
-	<div id=divMessage style=max-width:42ch;>
-		<mark>"Big Data" chart - authoritative data</mark><br>
-		Johns Hopkins data for 3,500 locations but no timelines
-		<hr>
-		* Touch the screen to stop rotation.<br>
-		* Two fingers or mouse wheel to zoom.<br>
-		* Click or touch the bar in a country to pop-up statistics.
-		<hr>
-		<mark>New for 2020-03-30<br>
-			* New features today: "<a
-				href="https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-30-12-00/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html"
-				target="_blank">Wikipedia Global</a>".<br>
-			* Includes detailed data in pop-ups</mark>
-		<hr>
-		<small>Come back! See new version every day!</small>
-	</div>
-
 	<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center;>
 
 		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
@@ -133,6 +104,30 @@
 
 	</footer>
 
+
+
+	<div id="DMTdragParent" >
+		<div id="DMTdragItem" >
+			<img src="../../../assets/spider.ico" height=24 >
+			<span onclick=DMTdragParent.hidden=true; style=float:right>[ x ]</span>
+		</div>
+		<div id="DMTdragContent" >
+				<div id=divMessage >
+					<div id=divMessageTitle ></div>
+					<mark>"Big Data" chart - authoritative data</mark><br>
+					View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">Johns Hopkins University COVID-19 data</a> for 2,435 locations but no timelines
+					<hr>
+					* Touch the screen to stop rotation.<br>
+					* Two fingers or mouse wheel to zoom.<br>
+					* Click or touch the bar in a country to pop-up statistics.
+					<hr>
+					<div id=divMessageOfTheDay ></div>
+					<hr>
+					<small>Come back! See new version every day!</small>
+				</div>
+		</div>
+	</div>
+
 	<script src="../js/main.js"></script>
 	<script src="xjd-xhr-jhu-daily.js"></script>
 	<script src="../js/mas-menu-app-switch.js"></script>
@@ -144,13 +139,18 @@
 
 		MASselMenuAppSelect.selectedIndex = 2;
 
+		divMessageOfTheDay.innerHTML = messageOfTheDay;
+
+		detNavMenu.open = window.innerWidth > 640;
+
 		init();
 
 		initXjd();
 
+		DMT.init();
 
-// keep address bar pointed to latest dev. change in html of stable
-//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
+		// keep address bar pointed to latest dev.
+		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 
 	</script>
 </body>

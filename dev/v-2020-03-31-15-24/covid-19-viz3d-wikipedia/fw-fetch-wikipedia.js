@@ -269,6 +269,7 @@ function displayMessage () {
 	// divMessage.style.top = event.clientY + "px";
 
 
+	DMTdragParent.style.overflow = "auto";
 	DMTdragParent.hidden = false;
 
 	DMT.setTranslate( 0, 0, DMTdragItem );
@@ -287,7 +288,7 @@ recoveries: ${ Number( line[ iRecover ] ).toLocaleString() }<br>
 wikipedia pandemic page:<br>
 <a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
 <p><button onclick=showLocation("${ placeWP }","${ line[ 4 ] }"); >show ${ place } Wikipedia statistics </button></p>
-<div id=popStats style="bottom: 1ch; max-height:50ch;max-width:100%;overflow:auto;">
+<div id=popStats >
 2020-03-30 Effort beginning to work.<br>
 Works in many countries.<br>
 Could show better tables.<br>

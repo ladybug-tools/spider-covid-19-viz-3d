@@ -13,11 +13,6 @@
 
 	<link rel="stylesheet" type="text/css" href="../style.css">
 
-	<style>
-
-
-
-	</style>
 </head>
 
 <body>
@@ -101,9 +96,9 @@
 
 			<div id=divCountries style=background-color:white;padding:1ch;></div>
 
-			<div id=divStats style=background-color:white;padding:0ch;></div>
+			<div id=divStats style=background-color:white;padding:1ch;></div>
 
-			<div id=divSettings style=background-color:white;padding:0ch;></div>
+			<div id=divSettings style=background-color:white;padding:1ch;></div>
 
 		</details>
 
@@ -124,67 +119,26 @@
 
 	</footer>
 
-<!--
-<div id=divMessage style=max-width:42ch; >
-	<div style=max-width:42ch; >
-		<mark>"Flagship" chart - most authoritative data and least likely to crash</mark><br>
-		Johns Hopkins data for 230+ locations with 60+ day timelines
-		<hr>
-		* Touch the screen to stop rotation.<br>
-		* Two fingers or mouse wheel to zoom.<br>
-		* Click or touch the bar in a country to pop-up statistics.<hr>
-		<mark>New for 2020-03-30<br>
-			* New features today: "<a href="https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-30-12-00/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html" target="_blank">Wikipedia Global</a>".<br>
-			* Includes detailed data in pop-ups</mark><hr>
-		<small>Come back! See new version every day!</small>
-	</div>
-</div>
--->
-
-
-<!-- <div id=divMessage>
-	<div style=max-width:42ch;>
-		<mark>"Beta version" chart - newest features and likely to have issues</mark><br>
-		Johns Hopkins data for 230+ locations with 60+ day timelines
-		<hr>
-		* Touch the screen to stop rotation.<br>
-		* Two fingers or mouse wheel to zoom.<br>
-		* Click or touch the bar in a country to pop-up statistics.
-		<hr>
-		<mark>New for 2020-03-30<br>
-			* New features today: "<a
-				href="https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-30-12-00/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html"
-				target="_blank">Wikipedia Global</a>".<br>
-			* Includes detailed data in pop-ups</mark>
-		<hr>
-		<small>Come back! See new version every day!</small>
-	</div>
-</div> -->
-
 
 	<div id="DMTdragParent" >
-		<div id="DMTdragItem" ><img src="../../../assets/spider.ico" height=24 >
+		<div id="DMTdragItem" >
+			<img src="../../../assets/spider.ico" height=24 >
 			<span onclick=DMTdragParent.hidden=true; style=float:right>[ x ]</span>
 		</div>
 		<div id="DMTdragContent" >
 				<div id=divMessage >
-					<mark>"Beta version" chart - newest features and likely to have issues</mark><br>
-					Johns Hopkins data for 230+ locations with 60+ day timelines
+					<div id=divMessageTitle ></div>
+					<mark>"Beta version" - chart with newest features and likely to have issues</mark><br>
+					View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">Johns Hopkins University COVID-19 data</a> for 230+ locations with 60+ day timelines
 					<hr>
 					* Touch the screen to stop rotation.<br>
 					* Two fingers or mouse wheel to zoom.<br>
 					* Click or touch the bar in a country to pop-up statistics.
 					<hr>
-					<mark>New for 2020-03-31<br>
-						* New features today: "<a
-							href="https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-31-15-24/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html"
-							target="_blank">Wikipedia Global</a>".<br>
-						* Includes detailed data in pop-ups</mark>
+					<div id=divMessageOfTheDay ></div>
 					<hr>
 					<small>Come back! See new version every day!</small>
 				</div>
-
-
 		</div>
 	</div>
 
@@ -199,6 +153,8 @@
 	<script>
 
 		MASselMenuAppSelect.selectedIndex = 1;
+
+		divMessageOfTheDay.innerHTML = messageOfTheDay;
 
 		detNavMenu.open = window.innerWidth > 640;
 

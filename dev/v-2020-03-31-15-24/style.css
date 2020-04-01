@@ -113,20 +113,22 @@ input[ type=range]::-webkit-slider-thumb {
 	border-radius: 1rem;
 	border: 1px solid rgba(136, 136, 136, .5);
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
-	height: 45ch;
+	height: 48ch;
 	left: 50%;
 	margin: auto;
-	overflow: hidden;
+	/* overflow: auto; */
+	padding: 0;
 	position: absolute;
 	top: 65%;
 	transform: translate(-50%, -50%);
 	resize: both;
-	width: 45ch;
+	width: 50ch;
 	z-index: 5;
 }
 
 #DMTdragItem {
 	background-color: #aaa;
+	border-radius: 1rem 1rem 0 0;
 	color: white;
 	cursor: move;
 	touch-action: none;
@@ -140,12 +142,19 @@ input[ type=range]::-webkit-slider-thumb {
 }
 
 #DMTdragParent:hover {
-	border-width: -2px;
+	/* border-width: -2px; */
 }
 
 #DMTdragContent {
 	height: 100%;
 	margin: 1ch;
-	overflow: auto;
+	/* overflow: auto; */
 	width: 100%;
+}
+
+
+@media all and (max-width: 640px) {
+
+	#DMTdragParent { width:40ch;
+
 }

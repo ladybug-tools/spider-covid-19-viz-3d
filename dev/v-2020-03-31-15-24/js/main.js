@@ -1,17 +1,25 @@
 // copyright 2020 Spider contributors. MIT license.
 // 2020-03-26
-/* globals THREE, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
-// jshint esversion: 6
-// jshint loopfunc: true
+/* global THREE, controls, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
+
 
 
 let pathAssets = "../../../assets/"; // change in html of stable
+
+let messageOfTheDay = `
+<mark>New for 2020-03-31<br>
+* "<a
+	href="https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-31-15-24/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html"
+	target="_blank">Wikipedia Global</a>".<br>
+* Includes detailed data in pop-ups</mark>
+`;
+
 
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = pathAssets + "images/github-mark-32.png";
 
-sTitle.innerHTML = document.title ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
+sTitle.innerHTML = document.title; // ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
 const version = document.head.querySelector( "[ name=version ]" );
 sVersion.innerHTML = version ? version.content : "";
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
@@ -25,6 +33,7 @@ let groupDeaths = new THREE.Group();
 let groupDeathsNew = new THREE.Group();
 let groupPlacards = new THREE.Group();
 let groupLines = new THREE.Group();
+let groupPrevious;
 
 let geoJsonArray = {};
 
@@ -49,13 +58,15 @@ THR.animate();
 
 
 
-function init () {
+function init() {
 
 	scene = THR.scene;
 	camera = THR.camera;
 	controls = THR.controls;
 	renderer = THR.renderer;
 
+
+	divMessageTitle.innerHTML = `<b>${ document.title } - ${ version.content }</b>`;
 
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
 
@@ -87,7 +98,7 @@ function init () {
 
 
 
-function requestFile ( url, callback ) {
+function requestFile( url, callback ) {
 
 	const xhr = new XMLHttpRequest();
 	xhr.open( "GET", url, true );
@@ -123,7 +134,7 @@ function resetGroups () {
 
 //////////
 
-function toggleBars ( group = groupCases ) {
+function toggleBars( group = groupCases ) {
 
 	if ( group === window.groupPrevious ) {
 
@@ -158,7 +169,7 @@ function toggleBars ( group = groupCases ) {
 
 function toggleNewCases ( group = groupCases ) {
 
-	if ( group === window.groupPrevious ) {
+	if ( group === groupPrevious ) {
 
 		groupCases.visible = true;
 		groupCasesNew.visible = true;
@@ -178,7 +189,7 @@ function toggleNewCases ( group = groupCases ) {
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
 		groupCasesNewGrounded.visible = true;
-		if ( !groupCasesNewGrounded.children.length ) {
+		if ( ! groupCasesNewGrounded.children.length ) {
 
 			const heightsCasesNewGrounded = linesCases.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
 
@@ -197,9 +208,10 @@ function toggleNewCases ( group = groupCases ) {
 
 
 
-function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0, radialSegments = 12, heightSegments = 1, openEnded = true ) {
+function addBar( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0, radialSegments = 12, heightSegments = 1, openEnded = true ) {
 
-	if ( !height || height === 0 ) { return new THREE.Mesh(); }
+	//console.log( 'rad', radius );
+	if ( ! height || height === 0 ) { return new THREE.Mesh(); }
 
 	const heightScaled = scaleHeights * height;
 
@@ -290,7 +302,7 @@ function getCountries () {
 	const options = countries.map( country => `<option>${ country }</option>` );
 
 	divCountries.innerHTML = `
-<select id=selCountries onchange=getProvince(this.value) >${ options }</select>
+<select id=selCountries onchange=getProvince(this.value) style=width:100%; >${ options }</select>
 <div id=divProvinces > </div>
 `;
 
@@ -355,6 +367,8 @@ function getNotes () {
 
 
 function getNotesContent () {
+
+	DMTdragParent.hidden = !DMTdragParent.hidden;
 
 	divMessage.innerHTML = `
 

@@ -1,8 +1,7 @@
 // copyright 2020 Spider contributors. MIT license.
 // 2020-03-28
-/* globals THREE, renderer, camera, divMessage, intersected, requestFile, resetGroups, addBar, groupCases, groupsCases, groupsRecoveries */
-// jshint esversion: 6
-// jshint loopfunc: true
+/* global THREE, renderer, camera, divMessage, intersected, requestFile, resetGroups, addBar, groupCases, groupsCases, groupsRecoveries */
+
 
 
 let today;
@@ -13,10 +12,6 @@ let rows;
 function initXjd() {
 
 
-	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-	//const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
-
-	// requestFile( dataJhu, onLoadDailyReport );
 
 
 	const url = "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports";
@@ -27,7 +22,7 @@ function initXjd() {
 
 
 
-function onLoadContents ( xhr ) {
+function onLoadContents( xhr ) {
 
 	const dataJhu =
 "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
@@ -36,7 +31,7 @@ function onLoadContents ( xhr ) {
 
 	const names = json.map( json => json.name );
 
-	today = names[ names.length - 2 ];
+	today = names[ names.length - 3 ];
 	console.log( today );
 
 	requestFile( dataJhu + today, onLoadDailyReport );
@@ -59,7 +54,7 @@ function onLoadDailyReport( xhr ) {
 
 
 
-function updateBars ( rows) {
+function updateBars( rows ) {
 
 	resetGroups();
 
@@ -68,7 +63,11 @@ function updateBars ( rows) {
 
 	const meshesCases = rows.slice( 1 ).map( ( line, index ) =>
 		addBar( line[ 5 ], line[ 6 ],
-		index, "red", ( index < 3168 ? 0.1 : 0.4 ), heightsCases[ index ], 0, 3, 1, false ) );
+			index, "red", ( line[ 0 ] > 0 ? 0.1 : 0.4 ), heightsCases[ index ], 0, 3, 1, false ) );
+
+	const ccc = rows.slice( 1 ).map( ( line, index ) =>
+		console.log( '', ( !! line[ 1 ] ? 0.1 : 0.4 ) ) );
+
 
 	groupCases.add( ...meshesCases );
 
@@ -77,7 +76,7 @@ function updateBars ( rows) {
 	//console.log( 'heightsDeaths', heightsDeaths );
 
 	const meshesDeaths = rows.slice( 1 ).map( ( line, index ) => addBar( line[ 5 ], line[ 6 ],
-		index, "black", ( index < 3168 ? 0.15 : 0.47 ), heightsDeaths[ index ], 0, 3, 1, true ) );
+		index, "black", ( !! line[ 1 ] ? 0.15 : 0.47 ), heightsDeaths[ index ], 0, 3, 1, true ) );
 
 	groupDeaths.add( ...meshesDeaths );
 
@@ -86,7 +85,7 @@ function updateBars ( rows) {
 	//console.log( 'heightsRecoveries', heightsRecoveries );
 
 	const meshesRecoveries = rows.slice( 1 ).map( ( line, index ) => addBar( line[ 5 ], line[ 6 ],
-		index, "green", ( index < 3168 ? 0.15 : 0.45 ), heightsRecoveries[ index ], 0, 3, 1, true ) );
+		index, "green", ( !! line[ 1 ] ? 0.15 : 0.45 ), heightsRecoveries[ index ], 0, 3, 1, true ) );
 
 	groupRecoveries.add( ...meshesRecoveries );
 
@@ -160,12 +159,12 @@ function getStats () {
 	displayStats( totalsGlobal, totalsChina, totalsEurope, totalsUsa, totalsRow );
 
 	detStats.open = window.innerWidth > 640;
-	
+
 }
 
 
 
-function onDocumentMouseMove ( event ) {
+function xxxonDocumentMouseMove ( event ) {
 
 	//event.preventDefault();
 
@@ -212,5 +211,41 @@ recoveries: ${ Number( line[ 9 ] ).toLocaleString() }<br>
 		divMessage.innerHTML = "";
 
 	}
+
+}
+
+
+
+function displayMessage () {
+
+	const index = intersected.userData + 1;
+
+	const line = rows[ index ];
+	console.log( 'line', line );
+
+	// divMessage.hidden = false;
+	// divMessage.style.left = event.clientX + "px";
+	// divMessage.style.top = event.clientY + "px";
+
+
+	DMTdragParent.hidden = false;
+
+	DMT.setTranslate( 0, 0, DMTdragItem );
+
+	DMTdragParent.style.left = ( event.clientX ) + "px";
+	DMTdragParent.style.top = event.clientY + "px";
+
+	DMTdragParent.style.width = "40ch";
+
+	divMessage.innerHTML = `
+<a href="https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_daily_reports/03-31-2020.csv" target="_blank">JHU data</a> - updates daily<br>
+county: ${ line[ 1 ] }<br>
+state: ${ line[ 2 ] }<br>
+state: ${ line[ 3 ] }<br>
+cases: ${ Number( line[ 7 ] ).toLocaleString() }<br>
+deaths: ${ Number( line[ 8 ] ).toLocaleString() }<br>
+recoveries: ${ Number( line[ 9 ] ).toLocaleString() }<br>
+
+`;
 
 }

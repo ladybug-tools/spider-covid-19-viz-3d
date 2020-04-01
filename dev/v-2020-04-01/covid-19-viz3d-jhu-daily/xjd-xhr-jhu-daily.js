@@ -65,8 +65,8 @@ function updateBars( rows ) {
 		addBar( line[ 5 ], line[ 6 ],
 			index, "red", ( line[ 0 ] > 0 ? 0.1 : 0.4 ), heightsCases[ index ], 0, 3, 1, false ) );
 
-	const ccc = rows.slice( 1 ).map( ( line, index ) =>
-		console.log( '', ( !! line[ 1 ] ? 0.1 : 0.4 ) ) );
+	// const ccc = rows.slice( 1 ).map( ( line, index ) =>
+	// 	console.log( '', ( !! line[ 1 ] ? 0.1 : 0.4 ) ) );
 
 
 	groupCases.add( ...meshesCases );

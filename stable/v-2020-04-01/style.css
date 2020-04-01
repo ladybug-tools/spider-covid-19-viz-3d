@@ -1,4 +1,5 @@
 /* Copyright 2020 Spider contributors. MIT License */
+/* order tags, classes, IDs  - each in alphabetical order after <body> */
 
 :root {
 	font: 100% monospace;
@@ -55,6 +56,8 @@ input[ type=range]::-webkit-slider-thumb {
 	height: 18px;
 	width: 10px;
 }
+select { width: 100%; }
+
 
 .help {
 	float: right;
@@ -82,6 +85,7 @@ input[ type=range]::-webkit-slider-thumb {
 	z-index: 1000;
 }
 
+
 #navMenu {
 	margin: 0 20px;
 	max-height: 100vh;
@@ -90,20 +94,71 @@ input[ type=range]::-webkit-slider-thumb {
 	position: absolute;
 }
 
-#divMessage {
-	background-color: #eee;
-	border-radius: 1rem;
-	left: calc( 50% - 125px );
-	padding: 1rem;
-	overflow: auto;
-	position: absolute;
-	top: 60%;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
-	resize: both;
+.navLegend {
+	border-radius: 5px;
+	padding: 0.5ch;
 }
 
-.navLegend { border-radius:5px; padding: 0.5ch; }
+.buLegend {
+	width: 100%;
+}
 
-.buLegend { width:100%; }
+.ftrButton {
+	background-color: #eee;
+	border-radius: 5px;
+	font-size: 200%;
+	margin: auto;
+}
 
-.ftrButton { background-color:#eee; border-radius:5px; font-size:200%; margin:auto; }
+
+
+#DMTdragParent {
+	background-color: #eee;
+	border-radius: 1rem;
+	border: 1px solid rgba(136, 136, 136, .5);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
+	height: 50ch;
+	left: 50%;
+	margin: auto;
+	/* overflow: auto; */
+	padding: 0;
+	position: absolute;
+	top: 65%;
+	transform: translate(-50%, -50%);
+	resize: both;
+	width: 50ch;
+	z-index: 5;
+}
+
+#DMTdragItem {
+	background-color: #aaa;
+	border-radius: 1rem 1rem 0 0;
+	color: white;
+	cursor: move;
+	touch-action: none;
+	user-select: none;
+	padding: 1ch;
+	height: 4ch;
+}
+
+#DMTdragParent:active {
+	background-color: #efefef;
+}
+
+#DMTdragParent:hover {
+	/* border-width: -2px; */
+}
+
+#DMTdragContent {
+	border: 0px solid red;
+	padding: 1ch;
+}
+
+
+@media all and (max-width: 640px) {
+
+	#DMTdragParent {
+		width: 40ch;
+	}
+
+}

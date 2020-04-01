@@ -1,19 +1,31 @@
 // copyright 2020 Spider contributors. MIT license.
 // 2020-03-26
-/* globals THREE, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
-// jshint esversion: 6
-// jshint loopfunc: true
+/* global THREE, controls, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
 
 
-let pathAssets = "../../assets/"; // change in html of stable
+
+let pathAssets = "../../../assets/";
+
+let version = "v-2020-04-01";
+
+let timeStamp = "16-08";
+
+let build = "stable";
+
+let messageOfTheDay = `
+<mark>New for 2020-04-01<br>
+* More descriptive text for selecting chart web pages.<br>
+* Pop-ups are movable on computer and phone. Resizable on computer.</mark>
+`;
+
 
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = pathAssets + "images/github-mark-32.png";
 
-sTitle.innerHTML = document.title ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
-const version = document.head.querySelector( "[ name=version ]" );
-sVersion.innerHTML = version ? version.content : "";
+sTitle.innerHTML = document.title; // ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
+const versionStr = version + "-" + timeStamp + "-" + build;
+sVersion.innerHTML = versionStr;
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 
 let group = new THREE.Group();
@@ -25,18 +37,19 @@ let groupDeaths = new THREE.Group();
 let groupDeathsNew = new THREE.Group();
 let groupPlacards = new THREE.Group();
 let groupLines = new THREE.Group();
+let groupPrevious;
 
 let geoJsonArray = {};
+
 let linesCases;
 let linesCasesNew;
 let linesRecoveries;
 let linesDeaths;
-
 let linesDeathsNew;
 
 let intersected;
 
-let mesh;
+//let mesh;
 let scene, camera, controls, renderer;
 
 
@@ -49,13 +62,15 @@ THR.animate();
 
 
 
-function init () {
+function init() {
 
 	scene = THR.scene;
 	camera = THR.camera;
 	controls = THR.controls;
 	renderer = THR.renderer;
 
+
+	divMessageTitle.innerHTML = `<b>${ document.title } - ${ versionStr }</b>`;
 
 	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
 
@@ -78,6 +93,7 @@ function init () {
 
 	getNotes();
 
+	// For Three.js intersected;
 
 	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	renderer.domElement.addEventListener( "mousedown", onDocumentMouseMove, false );
@@ -87,7 +103,7 @@ function init () {
 
 
 
-function requestFile ( url, callback ) {
+function requestFile( url, callback ) {
 
 	const xhr = new XMLHttpRequest();
 	xhr.open( "GET", url, true );
@@ -123,7 +139,7 @@ function resetGroups () {
 
 //////////
 
-function toggleBars ( group = groupCases ) {
+function toggleBars( group = groupCases ) {
 
 	if ( group === window.groupPrevious ) {
 
@@ -158,7 +174,7 @@ function toggleBars ( group = groupCases ) {
 
 function toggleNewCases ( group = groupCases ) {
 
-	if ( group === window.groupPrevious ) {
+	if ( group === groupPrevious ) {
 
 		groupCases.visible = true;
 		groupCasesNew.visible = true;
@@ -178,7 +194,7 @@ function toggleNewCases ( group = groupCases ) {
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
 		groupCasesNewGrounded.visible = true;
-		if ( !groupCasesNewGrounded.children.length ) {
+		if ( ! groupCasesNewGrounded.children.length ) {
 
 			const heightsCasesNewGrounded = linesCases.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
 
@@ -197,9 +213,10 @@ function toggleNewCases ( group = groupCases ) {
 
 
 
-function addBar ( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0, radialSegments = 12, heightSegments = 1, openEnded = true ) {
+function addBar( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0, radialSegments = 12, heightSegments = 1, openEnded = true ) {
 
-	if ( !height || height === 0 ) { return new THREE.Mesh(); }
+	//console.log( 'rad', radius );
+	if ( ! height || height === 0 ) { return new THREE.Mesh(); }
 
 	const heightScaled = scaleHeights * height;
 
@@ -271,7 +288,7 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 
 </details>`;
 
-	//detStats.open = window.innerWidth > 640;
+	detStats.open = window.innerWidth > 640;
 
 }
 
@@ -290,7 +307,7 @@ function getCountries () {
 	const options = countries.map( country => `<option>${ country }</option>` );
 
 	divCountries.innerHTML = `
-<select id=selCountries onchange=getProvince(this.value) >${ options }</select>
+<select id=selCountries onchange=getProvince(this.value) style=width:100%; >${ options }</select>
 <div id=divProvinces > </div>
 `;
 
@@ -356,6 +373,8 @@ function getNotes () {
 
 function getNotesContent () {
 
+	DMTdragParent.hidden = !DMTdragParent.hidden;
+
 	divMessage.innerHTML = `
 
 	<div >
@@ -402,5 +421,73 @@ function onDocumentTouchStart ( event ) {
 	event.clientY = event.touches[ 0 ].clientY;
 
 	onDocumentMouseMove( event );
+
+}
+
+
+function onDocumentMouseMove ( event ) {
+	//console.log( 'event THR ', event.target, event.target.id );
+
+	//event.preventDefault();
+
+	if ( event.target.id ) { return; }
+
+	const mouse = new THREE.Vector2();
+	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+	const raycaster = new THREE.Raycaster();
+	raycaster.setFromCamera( mouse, camera );
+
+	const intersects = raycaster.intersectObjects( groupCases.children );
+
+	if ( intersects.length > 0 ) {
+
+		if ( intersected !== intersects[ 0 ].object ) {
+
+			intersected = intersects[ 0 ].object;
+
+			DMTdragParent.style.overflow = "auto";
+			DMTdragParent.hidden = false;
+
+			DMT.setTranslate( 0, 0, DMTdragItem );
+
+			DMTdragParent.style.left = ( event.clientX ) + "px";
+			DMTdragParent.style.top = event.clientY + "px";
+
+			DMTdragParent.style.width = "40ch";
+
+			displayMessage();
+
+		}
+
+	} else {
+
+		intersected = null;
+		DMTdragParent.hidden = true;
+		divMessage.innerHTML = "";
+
+	}
+
+}
+
+
+
+function getBars2D ( arr ) {
+
+	arr.reverse();
+
+	const max = Math.max( ...arr );
+	const scale = 100 / max;
+	const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
+
+	const bars = arr.map( ( item, index ) =>
+		`<div style="background-color: cyan; color: black; margin-top:1px; height:1ch; width:${ scale * item }%;"
+			title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>`
+	).join( "" );
+
+	return `<div style="background-color:pink;width:95%;"
+		title="New cases per day. Latest at top.The curve you hope to see flatten!" >${ bars }
+	</div>`;
 
 }

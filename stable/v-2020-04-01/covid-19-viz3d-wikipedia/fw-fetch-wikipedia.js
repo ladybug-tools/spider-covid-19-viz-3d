@@ -8,6 +8,7 @@
 let wikiPages = [
 
 	"2019–20_coronavirus_pandemic_by_country_and_territory",
+	//"List_of_cases_of_2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory",
 	"2020_coronavirus_pandemic_in_the_United_States"
 ];
 
@@ -28,7 +29,35 @@ function initFw() {
 
 	fetchUrlWikipediaApi( wikiPages[ 1 ], 0, 3, 1 );
 
+	// wip: requestFile( api + wikiPages[ 0 ], cb )
 
+}
+
+function cb ( xhr ) {
+
+	const response = xhr.target.response;
+
+	//console.log( 'response', response  );
+	//[ "parse" ][ "text" ][ "*" ];
+
+	json = JSON.parse( response )
+	console.log( 'json', json );
+
+	parse = json.parse;
+	console.log( 'parse', parse );
+
+
+	text = parse.text;
+	console.log( 'text', text );
+
+	html_code = text["*"];
+	console.log( 'html_code',  html_code  );
+
+	const parser = new DOMParser();
+	const html = parser.parseFromString( html_code, "text/html" );
+	console.log( 'html', html );
+
+	// WIP
 }
 
 
@@ -42,22 +71,24 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 		.then( function ( response ) {
 
 			const html_code = response[ "parse" ][ "text" ][ "*" ];
+
 			const parser = new DOMParser();
 			const html = parser.parseFromString( html_code, "text/html" );
-			const tables = html.querySelectorAll( ".wikitable" );
+			//console.log( 'html', html );
 
-			let rowsCovid = [];
-			//console.log(tables[ 0 ]);
+			tables = html.querySelectorAll( ".wikitable" );
 
-			const trs = tables[ table ].querySelectorAll( "tr" );
+			tablesArr = Array.from( tables ); // Array.isArray( tables ) ? tables : [ tables ];
+			//console.log( "tablesArr 0 ", tablesArr );
+
+			const trs = tablesArr[ table ].querySelectorAll( "tr" );
 			//console.log( 'trs', trs );
 
 			const rowsTmp = Array.from( trs ).slice( rowStart ).map( tr => tr.innerText.trim()
 				.replace( /\[(.*?)\]/g, "" )
 				.replace( /,/g, "" )
 				.split( "\n\n" )
-				//.slice( 0, - 1 )
-			); //.sort();
+			);
 
 			if ( url === wikiPages[ 0 ] ) {
 
@@ -94,6 +125,9 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 
 
 
+
+
+
 function combineLists ( rowsCvd, column) {
 	//console.log( 'rows covid', column, rowsCvd,  );
 
@@ -108,6 +142,7 @@ function combineLists ( rowsCvd, column) {
 	}
 
 }
+
 
 
 function updateBars ( items ) {
@@ -213,41 +248,35 @@ function getStats () {
 
 
 
-function onDocumentMouseMove ( event ) {
 
-	//event.preventDefault();
 
-	const mouse = new THREE.Vector2();
-	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+function displayMessage () {
 
-	const raycaster = new THREE.Raycaster();
-	raycaster.setFromCamera( mouse, camera );
 
-	const intersects = raycaster.intersectObjects( groupCases.children );
+	const index = intersected.userData;
 
-	if ( intersects.length > 0 ) {
+	const line = rows[ index ];
+	console.log( 'line', line );
 
-		if ( intersected !== intersects[ 0 ].object ) {
+	let place = line[ 1 ] ? line[ 1 ] : line[ 0 ];
 
-			intersected = intersects[ 0 ].object;
+	placeWP = place
+		.replace( /United/g, "the_United" )
+		.replace( / /g, "_" )
+		.replace( /New_York/, "New_York_(state)" )
+		.replace( /Georgia/, "Georgia_(U.S._state)" );
 
-			const index = intersected.userData;
 
-			const line = rows[ index ];
-			console.log( 'line', line );
+	// DMTdragParent.style.overflow = "auto";
+	// DMTdragParent.hidden = false;
 
-			let place = line[ 1 ] ? line[ 1 ] : line[ 0 ];
+	// DMT.setTranslate( 0, 0, DMTdragItem );
 
-			placeWP = place
-				.replace( /United/g, "the_United" )
-				.replace( / /g, "_" )
-				.replace( /New_York/, "New_York_(state)");
+	// DMTdragParent.style.left = ( event.clientX ) + "px";
+	// DMTdragParent.style.top = event.clientY + "px";
 
-			divMessage.hidden = false;
-			divMessage.style.left = ( 10 + event.clientX )+ "px";
-			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `
+	// DMTdragParent.style.width = "40ch";
+	divMessage.innerHTML = `
 <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a><br>
 country: ${ line[ 0 ] }<br>
 place: ${ line[ 1 ] }<br>
@@ -257,23 +286,16 @@ recoveries: ${ Number( line[ iRecover ] ).toLocaleString() }<br>
 wikipedia pandemic page:<br>
 <a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
 <p><button onclick=showLocation("${ placeWP }","${ line[ 4 ] }"); >show ${ place } Wikipedia statistics </button></p>
-<div id=popStats style="bottom: 1ch; max-height:50ch;max-width:100%;">
+<div id=popStats >
 2020-03-30 Effort beginning to work.<br>
 Works in many countries.<br>
 Could show better tables.<br>
 Needs better styling and parsing</div>
 `;
-		}
-
-	} else {
-
-		intersected = null;
-		divMessage.hidden = true;
-		divMessage.innerHTML = "";
-
-	}
 
 }
+
+
 
 function showLocation ( place, table ) {
 
@@ -308,16 +330,21 @@ function fetchUrlWikipediaApiPlace ( url, tab = 0, rowStart = 0, column = 0 ) {
 		} )
 		.then( function ( response ) {
 
-			const html_code = response[ "parse" ][ "text" ][ "*" ];
+			let html_code = response[ "parse" ][ "text" ][ "*" ];
+
+			html_code = html_code
+				.replace( /\<img (.*?)>/gi, "" )
+				.replace( /\<a href(.*?)>/gi, "" );
+
 			const parser = new DOMParser();
 			const html = parser.parseFromString( html_code, "text/html" );
 			//console.log( 'html', html );
 			const tables = html.querySelectorAll( ".wikitable,.barbox" );
 
-			const ttab = tables[ tab ];
+			ttab = tables[ tab ];
 
 			if ( ! ttab ) { alert( "There seem to be no charts or tables we can access here.\n\nTry another place" ); return; }
-
+			//popStats.style.maxWidth = "300px";
 
 			const s = new XMLSerializer();
 			const str = s.serializeToString( ttab).replace( /\[(.*?)\]/g, "" );

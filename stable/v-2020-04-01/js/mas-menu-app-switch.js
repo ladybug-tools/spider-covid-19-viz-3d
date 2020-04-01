@@ -64,21 +64,17 @@ MAS.getMenuAppSwitch = function () {
 	// 	${ item.text }</${ item.tag }>` );
 
 	const options = `
-		<optgroup label="Stable versions" title: "Fewest errors" >
-			<option value="../../../stable/v-2020-04-01/covid-19-viz3d-jhu-time/covid-19-viz-3d.html" title="" >
-				JHU Time Series Global</option>
-			<option value="../../../stable/v-2020-04-01/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html" title="" >
-				JHU Daily Reports G+USA</option>
-			<option value="../../../stable/v-2020-04-01/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html" title="" >Wikipedia Global</option>
-		</optgroup>
-		<optgroup label="Under construction 'Beta' version" title: "Curious things may happen here">
-			<option value="../../../dev/v-2020-04-01/covid-19-viz3d-jhu-time/covid-19-viz-3d.html" title="" >
-				JHU Time Series Global</option>
-			<option value="../../../dev/v-2020-04-01/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html" title="" >
-				JHU Daily Reports G+USA</option>
-			<option value="../../../dev/v-2020-04-01/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html" title="" >Wikipedia Global</option>
-		</optgroup>
-	`;
+<optgroup label="Stable versions" title: "Fewest errors" >
+<option value="../../../stable/v-2020-04-01/covid-19-viz3d-jhu-time/covid-19-viz-3d.html" title="" >JHU Time Series Global</option>
+<option value="../../../stable/v-2020-04-01/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html" title="" >JHU Daily Reports G+USA</option>
+<option value="../../../stable/v-2020-04-01/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html" title="" >Wikipedia Global</option>
+</optgroup>
+<optgroup label="Under construction 'Beta' version" title: "Curious things may happen here">
+<option value="../../../dev/v-2020-04-01/covid-19-viz3d-jhu-time/covid-19-viz-3d.html" title="" >JHU Time Series Global</option>
+<option value="../../../dev/v-2020-04-01/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html" title="" >JHU Daily Reports G+USA</option>
+<option value="../../../dev/v-2020-04-01/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html" title="" >Wikipedia Global</option>
+</optgroup>
+`;
 
 	const htm = `<select id=MASselMenuAppSelect oninput=window.location.href=this.value size=8 >${ options }</select>`;
 

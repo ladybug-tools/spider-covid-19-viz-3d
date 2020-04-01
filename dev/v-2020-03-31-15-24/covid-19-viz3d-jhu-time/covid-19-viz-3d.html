@@ -194,10 +194,13 @@
 	<script src="../js/mas-menu-app-switch.js"></script>
 	<script src="../js/glo-globe.js"></script>
 	<script src="../js/spk-speak.js"></script>
+	
 
 	<script>
 
 		MASselMenuAppSelect.selectedIndex = 1;
+
+		detNavMenu.open = window.innerWidth > 640;
 
 		init();
 
@@ -205,11 +208,8 @@
 
 		DMT.init();
 
-
-		detNavMenu.open = window.innerWidth > 640;
-
 		// keep address bar pointed to latest dev. change in html of stable
-		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
+		window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 
 	</script>
 </body>

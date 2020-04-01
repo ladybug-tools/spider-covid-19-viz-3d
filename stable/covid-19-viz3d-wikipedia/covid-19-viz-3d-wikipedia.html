@@ -7,7 +7,7 @@
 	<meta name=description
 		content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-	<meta name=version content="2020-03-30-12-00-dev">
+	<meta name=version content="2020-03-31-15-14-dev">
 
 	<title>Viz3D Wikipedia</title>
 
@@ -28,18 +28,16 @@
 
 	<script src="../js/thr-three.js"></script>
 	<script src="../js/threeGeoJSON.js"></script>
-	<script>
+	<script src="../js/dmt-div-move-touch.js"></script>
 
-
-	</script>
 
 	<nav id="navMenu">
 
 		<br>
 
-		<details open>
+		<details id=detNavMenu >
 
-			<summary>hide menu</summary>
+			<summary>show or hide menu</summary>
 
 			<header id="hdrTitle">
 
@@ -89,7 +87,7 @@
 		<div id=divCountries style=background-color:white;padding:1ch;></div>
 -->
 
-			<div id=divStats style=background-color:white;padding:ch;></div>
+			<div id=divStats style=background-color:white;padding:0ch;></div>
 
 			<div id=divSettings style=background-color:white;padding:0ch;></div>
 
@@ -123,7 +121,7 @@
 </div> -->
 
 
-	<div id=divMessage style=overflow:auto;resize:both;>
+	<!-- <div id=divMessage style=overflow:auto;resize:both;>
 		<div style=width:42ch>
 			<mark>"Fresh Data" - Frequent updates during the day</mark><br>
 			Wikipedia data for 230++ locations
@@ -139,8 +137,35 @@
 			<hr>
 			<small>Come back! See new version every day!</small>
 		</div>
-	</div>
+	</div> -->
 
+
+	<div id="DMTdragParent" >
+		<div id="DMTdragItem" ><img src="../../../assets/spider.ico" height=24 >
+			<span onclick=DMTdragParent.hidden=true; style=float:right>[ x ]</span>
+		</div>
+		<div id="DMTdragContent" >
+				<div id=divMessage >
+					<div id=divMessageTitle ></div>
+					<mark>"Wik" chart - newest features and likely to have issues</mark><br>
+					Johns Hopkins data for 230+ locations with 60+ day timelines
+					<hr>
+					* Touch the screen to stop rotation.<br>
+					* Two fingers or mouse wheel to zoom.<br>
+					* Click or touch the bar in a country to pop-up statistics.
+					<hr>
+					<mark>New for 2020-03-31<br>
+						* New features today: "<a
+							href="https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-03-30-12-00/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html"
+							target="_blank">Wikipedia Global</a>".<br>
+						* Pop-ups are draggable and resizable</mark>
+					<hr>
+					<small>Come back! See new version every day!</small>
+				</div>
+
+
+		</div>
+	</div>
 
 	<script src="../js/main.js"></script>
 	<script src="fw-fetch-wikipedia.js"></script>
@@ -158,6 +183,10 @@
 
 		initFw();
 
+
+		DMT.init();
+
+		detNavMenu.open = window.innerWidth > 640;
 
 // keep address bar pointed to latest dev. change in html of stable
 //window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );

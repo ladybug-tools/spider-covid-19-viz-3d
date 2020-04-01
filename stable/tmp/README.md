@@ -1,39 +1,40 @@
 are now in a GitHub web page view - Click this button to view this read me file as source code' ></div>
 -->
 
-# [2020-03-29 Read Me]( #README.md )
+# [2020-03-30 Read Me]( #README.md )
 
 13:19
 
 ## root folder
 
-* Add archive folder
-* Move older files to archive folder
-* Add 404 file point to index.html
-	* fingers crossed it catches all th old files moved to archive
 
 
 ## dev folder
 
-* Add readme and readme html
 
-index.html
+add index.html to dated folder
 
-* fix link
+js/main.js
+
+* Smaller scaling for the bars
+* Notes display in pop-up
+
 
 js/mas...js
 
-* fix links
-
-14:30 ~
+* Fix menu links - but not so dev friendly
+* Clean & jsHint
+* Ren global to MASselMenuAppSelect
 
 places-2020-03-29.js
 
-* Rename and add places that ere missing
 
 fw-fetch-wikipedia.js
 
-* Add global data stats to left menu
+* Scraping tables from Wikipedia nicely
+* Pop-up better CSS
+* Mostly pass jsHint
+
 
 ***
 

@@ -1,9 +1,6 @@
 // copyright 2020 Spider contributors. MIT license.
 // 2020-03-26
-/* globals THREE, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
-// jshint esversion: 6
-// jshint loopfunc: true
-
+/* global THREE, camera, renderer,intersected, linecases, DMTdragParent, divMessage */
 
 
 function initViz3d() {
@@ -256,118 +253,91 @@ function getStats () {
 
 
 
-function onDocumentMouseMove ( event ) {
 
-	//event.preventDefault();
 
-	const mouse = new THREE.Vector2();
-	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
 
-	const raycaster = new THREE.Raycaster();
-	raycaster.setFromCamera( mouse, camera );
+function displayMessage () {
 
-	const intersects = raycaster.intersectObjects( groupCases.children );
+	const index = intersected.userData + 1;
 
-	if ( intersects.length > 0 ) {
+	const line = linesCases[ index ];
+	//console.log( 'line', line );
 
-		if ( intersected !== intersects[ 0 ].object ) {
+	const lineDeaths = linesDeaths[ index ];
 
-			intersected = intersects[ 0 ].object;
+	const lineRecoveries = linesRecoveries[ index ];
+	//console.log( 'lineRecoveries', lineRecoveries );
 
-			const index = intersected.userData + 1;
+	const casesNew = line.slice( 5 ).map( ( cases, index ) => cases - line[ 5 + index - 1 ] );
+	//console.log( 'cb', casesNew );
 
-			const line = linesCases[ index ];
-			//console.log( 'line', line );
+	const dateIndex = selDate.selectedIndex > - 1 ? 4 + selDate.selectedIndex : line.length - 1;
 
-			const lineDeaths = linesDeaths[ index ];
+	let country = line[ 1 ];
+	const place = line[ 0 ];
 
-			const lineRecoveries = linesRecoveries[ index ];
-			//console.log( 'lineRecoveries', lineRecoveries );
+	if ( country === "US" ) { country = "United States of America"; }
 
-			const casesNew = line.slice( 5 ).map( ( cases, index ) => cases - line[ 5 + index - 1 ] );
-			//console.log( 'cb', casesNew );
+	const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
+	//console.log( 'arr', arr );
 
-			const dateIndex = selDate.selectedIndex > -1 ? 4 + selDate.selectedIndex : line.length - 1;
+	const feature = arr.length ? arr[ 0 ] : undefined;
+	//console.log( 'feature', feature );
 
-			let country = line[ 1 ];
-			const place = line[ 0 ];
+	let d2Pop, d2Gdp;
 
-			if ( country === "US" ) { country = "United States of America"; }
+	if ( feature ) {
 
-			const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
-			//console.log( 'arr', arr );
+		const population = feature.properties.POP_EST;
+		const gdp = feature.properties.GDP_MD_EST;
+		//const name = feature.properties.NAME;
 
-			const feature = arr.length ? arr[ 0 ] : undefined;
-			//console.log( 'feature', feature );
-
-			let d2Pop, d2Gdp;
-
-			if ( feature ) {
-
-				const population = feature.properties.POP_EST;
-				const gdp = feature.properties.GDP_MD_EST;
-				const name = feature.properties.NAME;
-
-				//console.log( 'gdp/pop', 1000000 * gdp / population  );
-				d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
-				d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
-
-			} else {
-
-				d2Pop = "not available";
-				d2Gdp = "not available";
-
-			}
-
-			divMessage.hidden = false;
-			divMessage.style.left = event.clientX + "px";
-			divMessage.style.top = event.clientY + "px";
-			divMessage.style.width = "250px";
-			divMessage.innerHTML = `
-<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
-${ ( place ? "place: " + place + "<br>" : "" ) }
-country: ${ country }<br>
-cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
-cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
-deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
-deaths new: ${  ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
-recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
-deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
-<hr>
-deaths/100K persons: ${ d2Pop }<br>
-cases/(gdp/pop): ${ d2Gdp }<br>
-<b title="Latest day at top" >New cases per day</b><br>
-${ getBars2D( casesNew ) }
-`;
-
-		}
+		//console.log( 'gdp/pop', 1000000 * gdp / population  );
+		d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
+		d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
 
 	} else {
 
-		intersected = null;
-		divMessage.hidden = true;
-		divMessage.innerHTML = "";
+		d2Pop = "not available";
+		d2Gdp = "not available";
 
 	}
 
+	DMTdragParent.style.overflow = "auto";
+	DMTdragParent.hidden = false;
 
-		function getBars2D ( arr ) {
+	DMT.setTranslate( 0, 0, DMTdragItem );
 
-			arr.reverse();
+	DMTdragParent.style.left = ( event.clientX ) + "px";
+	DMTdragParent.style.top = event.clientY + "px";
 
-			const max = Math.max( ...arr );
-			const scale = 200 / max;
-			const dateStrings = linesCases[ 0 ].slice( 4 ).reverse();
+	DMTdragParent.style.width = "40ch";
 
-			const bars = arr.map( ( item, index ) =>
-				`<div style="background-color: cyan; color: black; margin-top:1px; height:0.5ch; width:${ scale * item }px;"
-					title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>`
-			).join( "" );
+	// DMTdragParent.hidden = false;
 
-			return `<div style=background-color:#ddd title="New cases per day. Latest at top.The curve you hope to see flatten!" >${ bars }</div>`;
+	// DMT.setTranslate( 0, 0, DMTdragItem );
 
-		}
+	// DMTdragParent.style.overflow = "auto";
+	// DMTdragParent.style.left = ( event.clientX ) + "px";
+	// DMTdragParent.style.top = event.clientY + "px";
 
+	// DMTdragParent.style.width = "40ch";
+	divMessage.innerHTML = `
+		<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
+		${ ( place ? "place: " + place + "<br>" : "" ) }
+		country: ${ country }<br>
+		cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
+		cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
+		deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
+		deaths new: ${ ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
+		recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
+		deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
+		<hr>
+		deaths/100K persons: ${ d2Pop }<br>
+		cases/(gdp/pop): ${ d2Gdp }<br>
+		<b title="Latest day at top" >New cases per day</b><br>
+		${ getBars2D( casesNew ) }
+		<br>
+`;
 
 }

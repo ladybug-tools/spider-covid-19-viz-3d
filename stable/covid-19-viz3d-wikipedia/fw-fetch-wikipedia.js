@@ -110,6 +110,7 @@ function combineLists ( rowsCvd, column) {
 }
 
 
+
 function updateBars ( items ) {
 
 	const heightsCases = items.map( line => Number( line[ iCase ] ) );
@@ -213,7 +214,7 @@ function getStats () {
 
 
 
-function onDocumentMouseMove ( event ) {
+function nnnnonDocumentMouseMove ( event ) {
 
 	//event.preventDefault();
 
@@ -232,37 +233,6 @@ function onDocumentMouseMove ( event ) {
 
 			intersected = intersects[ 0 ].object;
 
-			const index = intersected.userData;
-
-			const line = rows[ index ];
-			console.log( 'line', line );
-
-			let place = line[ 1 ] ? line[ 1 ] : line[ 0 ];
-
-			placeWP = place
-				.replace( /United/g, "the_United" )
-				.replace( / /g, "_" )
-				.replace( /New_York/, "New_York_(state)");
-
-			divMessage.hidden = false;
-			divMessage.style.left = ( 10 + event.clientX )+ "px";
-			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `
-<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a><br>
-country: ${ line[ 0 ] }<br>
-place: ${ line[ 1 ] }<br>
-cases: ${ Number( line[ iCase ] ).toLocaleString() }<br>
-deaths: ${ Number( line[ iDeath ] ).toLocaleString() }<br>
-recoveries: ${ Number( line[ iRecover ] ).toLocaleString() }<br>
-wikipedia pandemic page:<br>
-<a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
-<p><button onclick=showLocation("${ placeWP }","${ line[ 4 ] }"); >show ${ place } Wikipedia statistics </button></p>
-<div id=popStats style="bottom: 1ch; max-height:50ch;max-width:100%;">
-2020-03-30 Effort beginning to work.<br>
-Works in many countries.<br>
-Could show better tables.<br>
-Needs better styling and parsing</div>
-`;
 		}
 
 	} else {
@@ -274,6 +244,60 @@ Needs better styling and parsing</div>
 	}
 
 }
+
+
+
+
+function displayMessage () {
+
+
+	const index = intersected.userData;
+
+	const line = rows[ index ];
+	console.log( 'line', line );
+
+	let place = line[ 1 ] ? line[ 1 ] : line[ 0 ];
+
+	placeWP = place
+		.replace( /United/g, "the_United" )
+		.replace( / /g, "_" )
+		.replace( /New_York/, "New_York_(state)" )
+		.replace( /Georgia/, "Georgia_(U.S._state)" );
+
+	// divMessage.hidden = false;
+	// divMessage.style.left = ( 10 + event.clientX )+ "px";
+	// divMessage.style.top = event.clientY + "px";
+
+
+	DMTdragParent.style.overflow = "auto";
+	DMTdragParent.hidden = false;
+
+	DMT.setTranslate( 0, 0, DMTdragItem );
+
+	DMTdragParent.style.left = ( event.clientX ) + "px";
+	DMTdragParent.style.top = event.clientY + "px";
+
+	DMTdragParent.style.width = "40ch";
+	divMessage.innerHTML = `
+<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a><br>
+country: ${ line[ 0 ] }<br>
+place: ${ line[ 1 ] }<br>
+cases: ${ Number( line[ iCase ] ).toLocaleString() }<br>
+deaths: ${ Number( line[ iDeath ] ).toLocaleString() }<br>
+recoveries: ${ Number( line[ iRecover ] ).toLocaleString() }<br>
+wikipedia pandemic page:<br>
+<a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
+<p><button onclick=showLocation("${ placeWP }","${ line[ 4 ] }"); >show ${ place } Wikipedia statistics </button></p>
+<div id=popStats >
+2020-03-30 Effort beginning to work.<br>
+Works in many countries.<br>
+Could show better tables.<br>
+Needs better styling and parsing</div>
+`;
+
+}
+
+
 
 function showLocation ( place, table ) {
 
@@ -308,16 +332,21 @@ function fetchUrlWikipediaApiPlace ( url, tab = 0, rowStart = 0, column = 0 ) {
 		} )
 		.then( function ( response ) {
 
-			const html_code = response[ "parse" ][ "text" ][ "*" ];
+			let html_code = response[ "parse" ][ "text" ][ "*" ];
+
+			html_code = html_code
+				.replace( /\<img (.*?)>/gi, "" )
+				.replace( /\<a href(.*?)>/gi, "" );
+
 			const parser = new DOMParser();
 			const html = parser.parseFromString( html_code, "text/html" );
 			//console.log( 'html', html );
 			const tables = html.querySelectorAll( ".wikitable,.barbox" );
 
-			const ttab = tables[ tab ];
+			ttab = tables[ tab ];
 
 			if ( ! ttab ) { alert( "There seem to be no charts or tables we can access here.\n\nTry another place" ); return; }
-
+			//popStats.style.maxWidth = "300px";
 
 			const s = new XMLSerializer();
 			const str = s.serializeToString( ttab).replace( /\[(.*?)\]/g, "" );

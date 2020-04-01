@@ -1,4 +1,8 @@
-
+// copyright 2020 Spider contributors. MIT license.
+// 2020-03-26
+/* globals THREE, addBar, displayStats, detStats, resetGroups, groupCases, groupDeaths, groupRecoveries, globals, places, popStats, renderer, camera, intersected, divMessage*/
+// jshint esversion: 6
+// jshint loopfunc: true
 
 
 let wikiPages = [
@@ -10,13 +14,13 @@ let wikiPages = [
 const api = "https://en.wikipedia.org/w/api.php?action=parse&format=json&origin=*&page=";
 
 const iCase = 6;
-const iDeath = 7
+const iDeath = 7;
 const iRecover = 8;
 
 let rows = [];
+let placeWP;
 
 function initFw() {
-
 
 	resetGroups();
 
@@ -53,12 +57,11 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 				.replace( /,/g, "" )
 				.split( "\n\n" )
 				//.slice( 0, - 1 )
-			)//.sort();
+			); //.sort();
 
 			if ( url === wikiPages[ 0 ] ) {
 
 				globals = rowsTmp[ 0 ];
-
 				//console.log( 'globals', globals );
 
 				rowsTmp.shift();
@@ -69,11 +72,11 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 
 			if ( !window.filesLoaded ) {
 
-				filesLoaded = 1;
+				window.filesLoaded = 1;
 
-			} else { filesLoaded++; }
+			} else { window.filesLoaded++; }
 
-			if ( filesLoaded === wikiPages.length ) {
+			if ( window.filesLoaded === wikiPages.length ) {
 
 				rows.forEach( ( line ) => line[ iCase ] = isNaN( Number( line[ iCase ] ) ) ? "0" : line[ iCase ] );
 				rows.forEach( ( line ) => line[ iDeath ] = isNaN( Number( line[ iDeath ] ) ) ? "0" : line[ iDeath ] );
@@ -90,43 +93,19 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 }
 
 
-const tt = []
 
 function combineLists ( rowsCvd, column) {
 	//console.log( 'rows covid', column, rowsCvd,  );
 
-	for ( let i = 0; i < rowsCvd.length; i++ ) {
+	for ( let row of rowsCvd ) {
 
-		const row = rowsCvd[ i ];
-
-		const place = places.find( place => place[ column ] === row[ 0 ] )
+		const place = places.find( place => place[ column ] === row[ 0 ] );
 
 		if ( !place ) { continue; }
 
 		rows.push( [ ...place, ...row ] );
 
 	}
-
-	// rowsTmp = rowsCvd.map( ( row, index ) => {
-
-	// 	const place = places.map( place => place[ column ] === row[ 0 ] );
-
-	// 	if ( !place ) {
-
-	// 		console.log( 'place lost', index, row );
-
-	// 		return;
-
-	// 	}
-
-	// 	return place.push( ...row );
-
-	// } )//.filter( items => items );
-
-	// console.log( 'rowsTmp', rowsTmp );
-	// rows.push( ... rowsTmp );
-
-	//console.log( 'rows', rows );
 
 }
 
@@ -135,7 +114,6 @@ function updateBars ( items ) {
 
 	const heightsCases = items.map( line => Number( line[ iCase ] ) );
 	//console.log( 'heightsCases', heightsCases );
-
 
 	const meshesCases = items.map( ( line, index ) =>
 		addBar( line[ 2 ], line[ 3 ], index, "red", 0.4, heightsCases[ index ], 0, 12, 1, false ) );
@@ -161,8 +139,6 @@ function updateBars ( items ) {
 	groupRecoveries.add( ...meshesRecoveries );
 
 }
-
-
 
 
 
@@ -199,7 +175,7 @@ function getStats () {
 		`recoveries: ${ globalRecoveries.toLocaleString() }`
 	];
 
-	totalsChina = [
+	const totalsChina = [
 		`China`,
 		`cases: ${ chinaCases.toLocaleString() }`,
 		`deaths: ${ chinaDeaths.toLocaleString() }`,
@@ -209,23 +185,23 @@ function getStats () {
 
 	const totalsEurope = [
 		`Europe`,
-			`cases: ${ europeCases.toLocaleString() }`,
-			`deaths: ${ europeDeaths.toLocaleString() }`,
-			`recoveries: ${ europeRecoveries.toLocaleString() }`,
+		`cases: ${ europeCases.toLocaleString() }`,
+		`deaths: ${ europeDeaths.toLocaleString() }`,
+		`recoveries: ${ europeRecoveries.toLocaleString() }`,
 	];
 
 	const totalsUsa = [
 		`USA`,
-			`cases: ${ usaCases.toLocaleString() }`,
-			`deaths: ${ usaDeaths.toLocaleString() }`,
-			`recoveries: ${ usaRecoveries.toLocaleString() }`,
+		`cases: ${ usaCases.toLocaleString() }`,
+		`deaths: ${ usaDeaths.toLocaleString() }`,
+		`recoveries: ${ usaRecoveries.toLocaleString() }`,
 	];
 
 	const totalsRow = [
 		`Rest of World`,
-			`cases: ${ rowCases.toLocaleString() }`,
-			`deaths: ${ rowDeaths.toLocaleString() }`,
-			`recoveries: ${ rowRecoveries.toLocaleString() }`,
+		`cases: ${ rowCases.toLocaleString() }`,
+		`deaths: ${ rowDeaths.toLocaleString() }`,
+		`recoveries: ${ rowRecoveries.toLocaleString() }`,
 	];
 
 
@@ -261,10 +237,15 @@ function onDocumentMouseMove ( event ) {
 			const line = rows[ index ];
 			console.log( 'line', line );
 
-			const place = line[ 1 ] ? line[ 1 ] : line[ 0 ];
+			let place = line[ 1 ] ? line[ 1 ] : line[ 0 ];
+
+			placeWP = place
+				.replace( /United/g, "the_United" )
+				.replace( / /g, "_" )
+				.replace( /New_York/, "New_York_(state)");
 
 			divMessage.hidden = false;
-			divMessage.style.left = event.clientX + "px";
+			divMessage.style.left = ( 10 + event.clientX )+ "px";
 			divMessage.style.top = event.clientY + "px";
 			divMessage.innerHTML = `
 <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a><br>
@@ -274,10 +255,13 @@ cases: ${ Number( line[ iCase ] ).toLocaleString() }<br>
 deaths: ${ Number( line[ iDeath ] ).toLocaleString() }<br>
 recoveries: ${ Number( line[ iRecover ] ).toLocaleString() }<br>
 wikipedia pandemic page:<br>
-<a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ place }" target="_blank">${ place }</a>
-<p><button onclick=showLocation("${ place }"); >show ${ place } statistics </button></p>
-<div id=popStats style="max-height:40ch;max-width:50ch;overflow:auto;resize:both;">2020-03-30 Effort just beginning.<br>
-Not working in many countries.<br> Often shows wrong table.</div>
+<a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
+<p><button onclick=showLocation("${ placeWP }","${ line[ 4 ] }"); >show ${ place } Wikipedia statistics </button></p>
+<div id=popStats style="bottom: 1ch; max-height:50ch;max-width:100%;">
+2020-03-30 Effort beginning to work.<br>
+Works in many countries.<br>
+Could show better tables.<br>
+Needs better styling and parsing</div>
 `;
 		}
 
@@ -291,9 +275,9 @@ Not working in many countries.<br> Often shows wrong table.</div>
 
 }
 
-function showLocation ( place, table = 1 ) {
+function showLocation ( place, table ) {
 
-
+	console.log( 'place', place );
 
 	if ( place  === "" ) {
 
@@ -301,17 +285,22 @@ function showLocation ( place, table = 1 ) {
 
 	} else {
 
-		url = "2020_coronavirus_pandemic_in_" + place;
+		const url = "2020_coronavirus_pandemic_in_" + placeWP;
 
-		fetchUrlWikipediaApiPlace ( url, table )
+		fetchUrlWikipediaApiPlace( url, table );
 
 	}
-
 
 }
 
 
-function fetchUrlWikipediaApiPlace ( url, table = 0, rowStart = 0, column = 0 ) {
+
+function fetchUrlWikipediaApiPlace ( url, tab = 0, rowStart = 0, column = 0 ) {
+
+	tab = !tab ? 0 : tab;
+
+	//console.log( 'api', tab,  api + url );
+	//console.log( 'tab', tab );
 
 	fetch( api + url )
 		.then( function ( response ) {
@@ -323,24 +312,33 @@ function fetchUrlWikipediaApiPlace ( url, table = 0, rowStart = 0, column = 0 ) 
 			const parser = new DOMParser();
 			const html = parser.parseFromString( html_code, "text/html" );
 			//console.log( 'html', html );
-			const tables = html.querySelectorAll( ".wikitable" );
+			const tables = html.querySelectorAll( ".wikitable,.barbox" );
 
-			if ( !tables ) { alert( "there seems to be an issue here\n\nTry another place" ); return; }
-			const trs = tables[ 0 ].querySelectorAll( "tr" );
-			//console.log( 'trs', trs );
+			const ttab = tables[ tab ];
 
-			const rows = Array.from( trs ).slice( rowStart ).map( tr => tr.innerText.trim()
-				.replace( /\[(.*?)\]/g, "" )
-				.replace( /,/g, "" )
-				.split( "\n\n" )
-				//.slice( 0, - 1 )
-			)//.sort();
+			if ( ! ttab ) { alert( "There seem to be no charts or tables we can access here.\n\nTry another place" ); return; }
 
-			//console.log( 'rt', rows );
 
-			const htm = rows.map( row => `${ row.join( " " ) }` )
+			const s = new XMLSerializer();
+			const str = s.serializeToString( ttab).replace( /\[(.*?)\]/g, "" );
 
-			popStats.innerHTML = htm.join( "<br>" );
+			popStats.innerHTML = str;
+
+			// const trs = tables[ table ].querySelectorAll( "tr" );
+			// //console.log( 'trs', trs );
+
+			// const rows = Array.from( trs ).slice( rowStart ).map( tr => tr.innerText.trim()
+			// 	.replace( /\[(.*?)\]/g, "" )
+			// 	.replace( /,/g, "" )
+			// 	.split( "\n\n" )
+			// 	//.slice( 0, - 1 )
+			// )//.sort();
+
+			// //console.log( 'rt', rows );
+
+			// const htm = rows.map( row => `${ row.join( " " ) }` )
+
+			// popStats.innerHTML = htm.join( "<br>" );
 
 		} );
 

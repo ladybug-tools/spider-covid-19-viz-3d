@@ -13,7 +13,7 @@ THR.suspendTimer = undefined;
 THR.init = function () {
 
 	const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 1000 );
-	camera.position.set( 100, 0, 100 );
+	camera.position.set( 100, 0, 65 );
 	camera.up.set( 0, 0, 1 );
 
 	const scene = new THREE.Scene();

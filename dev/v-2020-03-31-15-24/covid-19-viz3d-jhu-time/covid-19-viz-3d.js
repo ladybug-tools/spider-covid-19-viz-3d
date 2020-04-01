@@ -253,9 +253,6 @@ function getStats () {
 
 
 
-
-
-
 function displayMessage () {
 
 	const index = intersected.userData + 1;

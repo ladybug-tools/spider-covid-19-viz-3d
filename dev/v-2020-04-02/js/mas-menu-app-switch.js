@@ -25,9 +25,9 @@ MAS.getMenuAppSwitch = function () {
 		<ul style="margin:0 0 1ch 0;padding:0 2ch;" >
 			<li><a href="../../../dev/v-2020-04-01/covid-19-viz3d-jhu-time/covid-19-viz-3d.html" title="" >
 				JHU Time Series Global<a></li>
-			<li><a href="../../../dev/v-2020-04-01/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html" title="" >
+			<li><a href="https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-04-01/covid-19-viz3d-jhu-daily/covid-19-viz-3d-jhu-daily.html" title="" >
 				JHU Daily Reports G+USA</a></li>
-			<li><a href="../../../dev/v-2020-04-01/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html" title="" >Wikipedia Global</a></li>
+			<li><a href="https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-04-01/covid-19-viz3d-wikipedia/covid-19-viz-3d-wikipedia.html" title="" >Wikipedia Global</a></li>
 		</ul>
 	</div>`;
 

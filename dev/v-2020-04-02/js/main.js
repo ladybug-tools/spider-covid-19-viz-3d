@@ -6,16 +6,16 @@
 
 let pathAssets = "../../../assets/";
 
-let version = "v-2020-04-02";
+let version = "v-2020-04-01";
 
-let timeStamp = "21-41";
+let timeStamp = "10-02";
 
 let build = "dev";
 
 let messageOfTheDay = `
-<mark>New for 2020-04-02<br>
-* Much clearer and more defined map with place names<br>
-* Menu now uses links to load chart web pages</mark>
+<mark>New for 2020-04-01<br>
+* More descriptive text for selecting chart web pages.<br>
+* Pop-ups are movable on computer and phone. Resizable on computer.</mark>
 `;
 
 
@@ -87,7 +87,9 @@ function init() {
 
 	addLights();
 
-	addGlobe();
+	//addGlobe();
+
+	loadGlobeWithMapTextures();
 
 	addSkyBox();
 
@@ -101,6 +103,67 @@ function init() {
 
 }
 
+
+
+function loadGlobeWithMapTextures() {
+
+	const radius = 50;  // earth
+
+	const pi = Math.PI, pi2 = 0.5 * Math.PI;
+	const d2r = pi / 180;
+
+	const xStart = 0
+	const yStart = 0;
+	const xFinish = 32;
+	const yFinish = 32;
+	const zoom = 5;
+	const deltaPhi = 2.0 * pi / Math.pow( 2, zoom );
+	const steps = Math.floor( 18 / zoom );
+
+	const loader = new THREE.TextureLoader();
+	group2 = new THREE.Object3D();
+	group2.rotation.x = pi2;
+	group2.rotation.y = pi;
+
+	for ( let y = yStart; y < yFinish; y++ ) {
+
+		const lat1 = tile2lat( y, zoom );
+		const lat2 = tile2lat( y + 1, zoom );
+		const deltaTheta = ( lat1 - lat2 ) * d2r;
+		const theta = pi2 - lat1 * d2r;
+
+		for ( let x = xStart; x < xFinish; x++ ) {
+
+			const src = "https://mt1.google.com/vt/lyrs=y&x=" + x + "&y=" + y + "&z=" + zoom;
+			//const src = "https://mt1.google.com/vt/lyrs=t&x=" + x + "&y=" + y + "&z=" + zoom;
+			//const src = "https://mt1.google.com/vt/lyrs=s&x=" + x + "&y=" + y + "&z=" + zoom;
+			//const src = "https://mt1.google.com/vt/x=" + x + "&y=" + y + "&z=" + zoom;
+			//const src = "http://b.tile.openstreetmap.org/" + zoom + "/" + x + "/" + y + ".png";
+			//const src = "https://maps.wikimedia.org/osm-intl/" + zoom + "/" + x + "/" + y + ".png";
+			//const src = "http://tile.stamen.com/terrain-background/" + zoom + "/" + x + "/" + y + ".jpg";
+			//const src = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/" + zoom + "/" + y + "/" + x  + ".jpg";
+			// not const src = "http://s3.amazonaws.com/com.modestmaps.bluemarble/" + zoom + "-r" + y + "-c" + x + ".jpg";
+
+			const texture = loader.load( src );
+			const material = new THREE.MeshBasicMaterial( { map: texture } );
+			const geometry = new THREE.SphereBufferGeometry( radius, steps, steps, x * deltaPhi - pi, deltaPhi, theta, deltaTheta );
+			const mesh = new THREE.Mesh( geometry, material );
+
+			group2.add( mesh );
+			group2.name = "globe"
+
+		}
+	}
+	THR.scene.add( group2 );
+
+		function tile2lat( y, z ) {
+
+			const n = pi - 2 * pi * y / Math.pow( 2, z );
+			return ( 180 / pi * Math.atan( 0.5 * ( Math.exp( n ) - Math.exp( -n ) ) ) );
+
+		}
+
+}
 
 
 function requestFile( url, callback ) {
@@ -245,19 +308,19 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 	// [text], scale, color, x, y, z )
 	// groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
 
-	vGlo = THR.latLonToXYZ( 75, 65, -20 );
+	vGlo = THR.latLonToXYZ( 65, 50, -20 );
 	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
 
-	vChi = THR.latLonToXYZ( 85, 50, 110 );
+	vChi = THR.latLonToXYZ( 70, 45, 110 );
 	groupPlacards.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
 
-	const vEur = THR.latLonToXYZ( 80, 60, 20 );
+	const vEur = THR.latLonToXYZ( 60, 55, 20 );
 	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
 
-	const vUsa = THR.latLonToXYZ( 80, 40, -120 );
+	const vUsa = THR.latLonToXYZ( 60, 40, -120 );
 	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
 
-	const vRow = THR.latLonToXYZ( 90, 30, 180 );
+	const vRow = THR.latLonToXYZ( 55, 30, 180 );
 	groupPlacards.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
 
 

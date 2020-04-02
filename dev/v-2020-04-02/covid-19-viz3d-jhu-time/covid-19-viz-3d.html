@@ -7,18 +7,12 @@
 	<meta name=description
 		content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+	<meta name=version content="2020-04-01">
 
-
-	<title>Viz3D Wikipedia</title>
+	<title>Viz3D JHU TSG </title>
 
 	<link rel="stylesheet" type="text/css" href="../style.css">
-	<style>
-		.references,
-		.plainlinks {
-			display: none;
-		}
 
-	</style>
 </head>
 
 <body>
@@ -30,18 +24,17 @@
 	<script src="../js/threeGeoJSON.js"></script>
 	<script src="../js/dmt-div-move-touch.js"></script>
 
-
 	<nav id="navMenu">
 
 		<br>
 
-		<details id=detNavMenu >
+		<details id=detNavMenu>
 
 			<summary>show or hide menu</summary>
 
-			<header id="hdrTitle">
+			<header id="hdrTitle" >
 
-				<h2>
+				<h2 style=margin-bottom:0; >
 					<a id=aSource target=_top title="Ladybug Tools / Spider readme & source code on GitHub">
 						<img id=imgIcon height=18 style=opacity:0.5;>
 					</a>
@@ -51,9 +44,9 @@
 					</a>
 
 					<span class="couponcode">&#x24d8;<span id=divDescription class="coupontooltip">
-							View the COVID-19 data from
-							<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
-								target="_blank">Wikipedia</a>
+							View the COVID-19 data from the Johns Hopkins University
+							<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data"
+								target="_blank">GitHub repository</a>
 							in interactive 3D using JavaScript <a href="https://threeja.org"
 								target="_blank">Three.js</a>
 							WebGL tools.
@@ -66,26 +59,44 @@
 
 			</header>
 
+			<hr>
+
 			<div id=MASdivMenuAppSwitch> </div>
 
-			<p class=navLegend style=background-color:red;>
+			<p class=navLegend style=background-color:cyan; title="Heights displayed 3X scale">
+				<button id=butNew class=butLegend onclick=toggleNewCases(groupCasesNew)
+					style=background-color:cyan;color:black;width:100%;>
+					New cases today&nbsp;</button>
+			</p>
+
+			<p class=navLegend style=background-color:red; title=";-(">
 				<button id=butCases class=butLegend onclick=toggleBars(groupCases)
 					style=background-color:red;color:white;width:100%;>
-					Confirmed cases&nbsp;</button></p>
+					Confirmed cases&nbsp;</button>
+			</p>
 
-			<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios">
+			<p class=navLegend style=background-color:black; title=";-(">
 				<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths)
 					style=background-color:black;color:white;width:100%;>
-					Deaths&nbsp;</button></p>
+					Deaths&nbsp;</button>
+			</p>
 
-			<p class=navLegend style=background-color:limegreen;>
+			<p class=navLegend style=background-color:lavender;
+				title="Will behave like new cases today in future version">
+				<button id=butDeathsNew class=butLegend onclick=toggleBars(groupDeathsNew)
+					style=background-color:lavender;width:100%;>
+					New deaths today&nbsp;</button>
+			</p>
+
+			<p class=navLegend style=background-color:limegreen; title=";-)">
 				<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries)
 					style=background-color:limegreen;width:100%;>
-					Recoveries&nbsp;</button></p>
-			<!--
-		<div id=divDates style=background-color:white;padding:1ch;></div>
-		<div id=divCountries style=background-color:white;padding:1ch;></div>
--->
+					Recoveries&nbsp;</button>
+			</p>
+
+			<div id=divDates style=background-color:white;padding:1ch;></div>
+
+			<div id=divCountries style=background-color:white;padding:1ch;></div>
 
 			<div id=divStats style=background-color:white;padding:1ch;></div>
 
@@ -94,6 +105,7 @@
 		</details>
 
 	</nav>
+
 
 	<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center;>
 
@@ -111,16 +123,15 @@
 
 
 	<div id="DMTdragParent" >
-		<div id="DMTdragItem" ><img src="../../../assets/spider.ico" height=24 >
+		<div id="DMTdragItem" >
+			<img src="../../../assets/spider.ico" height=24 >
 			<span onclick=DMTdragParent.hidden=true; style=float:right>[ x ]</span>
 		</div>
 		<div id="DMTdragContent" >
 				<div id=divMessage >
 					<div id=divMessageTitle ></div>
-					<mark>"Wikipedia" chart - has most up-to-date stats</mark><br>
-					Access to data from Wikipedia <a
-					href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
-					target="_blank">2019–20 coronavirus pandemic by country and territory</a> and hundreds of related articles
+					<mark>"Beta version" - chart with newest features and likely to have issues</mark><br>
+					View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
 					<hr>
 					* Touch the screen to stop rotation.<br>
 					* Two fingers or mouse wheel to zoom.<br>
@@ -130,14 +141,12 @@
 					<hr>
 					<small>Come back! See new version every day!</small>
 				</div>
-
-
 		</div>
 	</div>
 
+
 	<script src="../js/main.js"></script>
-	<script src="fw-fetch-wikipedia.js"></script>
-	<script src="places-2020-03-29.js"></script>
+	<script src="covid-19-viz-3d.js"></script>
 	<script src="../js/mas-menu-app-switch.js"></script>
 	<script src="../js/glo-globe.js"></script>
 	<script src="../js/spk-speak.js"></script>
@@ -145,23 +154,21 @@
 
 	<script>
 
-		MASselMenuAppSelect.selectedIndex = 2;
+		//MASselMenuAppSelect.selectedIndex = 3;
 
 		divMessageOfTheDay.innerHTML = messageOfTheDay;
 
+		detNavMenu.open = window.innerWidth > 640;
+
 		init();
 
-		initFw();
-
+		initViz3d();
 
 		DMT.init();
 
-		detNavMenu.open = window.innerWidth > 640;
-
 		// keep address bar pointed to latest dev. change in html of stable
-		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
+		window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 
 	</script>
 </body>
-
 </html>

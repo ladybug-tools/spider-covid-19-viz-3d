@@ -173,6 +173,12 @@ About Covid
 * https://xapix-io.github.io/covid-data/
 * https://covidnearyou.org/#!/
 
+Map Tile Server lists
+
+* https://www.trailnotes.org/FetchMap/TileServeSource.html
+* http://geo.inge.org.uk/gme_maps.htm
+* https://wiki.openstreetmap.org/wiki/Tile_servers
+
 Dependencies
 
 * https://threejs.org

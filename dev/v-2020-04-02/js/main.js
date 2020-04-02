@@ -6,16 +6,16 @@
 
 let pathAssets = "../../../assets/";
 
-let version = "v-2020-04-01";
+let version = "v-2020-04-02";
 
-let timeStamp = "10-02";
+let timeStamp = "21-41";
 
 let build = "dev";
 
 let messageOfTheDay = `
-<mark>New for 2020-04-01<br>
-* More descriptive text for selecting chart web pages.<br>
-* Pop-ups are movable on computer and phone. Resizable on computer.</mark>
+<mark>New for 2020-04-02<br>
+* Much clearer and more defined map with place names<br>
+* Menu now uses links to load chart web pages</mark>
 `;
 
 

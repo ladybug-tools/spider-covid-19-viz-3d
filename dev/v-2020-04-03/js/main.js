@@ -6,13 +6,13 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "18-03";
+let timeStamp = "18:15";
 
 let versionStable = "v-2020-04-02";
 let versionDev = "v-2020-04-03";
 
 let messageOfTheDayStable = `
-<mark>New for 2020-04-02<br>
+<mark>New for 2020-04-03<br>
 * Clearer and more defined map with place names<br>
 * Menu now uses links to load chart web pages</mark>
 `;

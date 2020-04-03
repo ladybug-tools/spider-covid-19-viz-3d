@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+	<meta name=description
+		content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
+	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+
+	<title>viz3D JHU Daily Reports</title>
+
+	<link rel="stylesheet" type="text/css" href="../style.css">
+
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+
+
+	<script src="../js/thr-three.js"></script>
+	<script src="../js/threeGeoJSON.js"></script>
+	<script src="../js/dmt-div-move-touch.js"></script>
+
+
+	<nav id="navMenu">
+
+		<br>
+
+		<details id=detNavMenu >
+
+			<summary>show or hide menu</summary>
+
+			<header id="hdrTitle">
+
+				<h2>
+					<a id=aSource target=_top title="Ladybug Tools / Spider readme & source code on GitHub">
+						<img id=imgIcon height=18 style=opacity:0.5;>
+					</a>
+
+					<a href="" title="Click to reload this page">
+						<span id=sTitle></span>&nbsp;
+					</a>
+
+					<span class="couponcode">&#x24d8;<span id=divDescription class="coupontooltip">
+							View the COVID-19 data from
+							<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports"
+								target="_blank">Johns Hopkins University</a>
+							in interactive 3D using JavaScript <a href="https://threeja.org"
+								target="_blank">Three.js</a>
+							WebGL tools.
+						</span></span>
+				</h2>
+
+				<div>
+					<span id=sVersion></span>
+				</div>
+
+			</header>
+
+			<div id=MASdivMenuAppSwitch> </div>
+
+			<p class=navLegend style=background-color:red;>
+				<button id=butCases class=butLegend onclick=toggleBars(groupCases)
+					style=background-color:red;color:white;width:100%;>
+					Confirmed cases&nbsp;</button></p>
+
+			<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios">
+				<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths)
+					style=background-color:black;color:white;width:100%;>
+					Deaths&nbsp;</button></p>
+
+			<p class=navLegend style=background-color:limegreen;>
+				<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries)
+					style=background-color:limegreen;width:100%;>
+					Recoveries&nbsp;</button></p>
+
+			<div id=divDates style=background-color:white;padding:1ch;></div>
+
+			<div id=divCountries style=background-color:white;padding:1ch;></div>
+
+			<div id=divStats style=background-color:white;padding:1ch;></div>
+
+			<div id=divSettings style=background-color:white;padding:1ch;></div>
+
+		</details>
+
+	</nav>
+
+
+	<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center;>
+
+		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
+		&nbsp;
+		<button onclick=THR.controls.autoRotate=!THR.controls.autoRatate title="stop the rotation"
+			class=ftrButton "Stop all rotation">&circlearrowright;</button>
+		&nbsp;
+		<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards"
+			class=ftrButton>&sdotb;</button>
+		&nbsp;
+		<button onclick=sayThis(); title="Can you hear me now?" class=ftrButton>&phone;</button>
+
+	</footer>
+
+
+
+	<div id="DMTdragParent" >
+		<div id="DMTdragItem" >
+			<img src="../../../assets/spider.ico" height=24 >
+			<span onclick=DMTdragParent.hidden=true; style=float:right>[ x ]</span>
+		</div>
+		<div id="DMTdragContent" >
+				<div id=divMessage >
+					<div id=divMessageTitle ></div>
+					<div id=divReleaseText ></div>
+					View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">Johns Hopkins University COVID-19 data</a> for 2,435 locations but no timelines
+					<hr>
+					* Touch the screen to stop rotation.<br>
+					* Two fingers or mouse wheel to zoom.<br>
+					* Click or touch the bar in a country to pop-up statistics.
+					<hr>
+					<div id=divMessageOfTheDay ></div>
+					<hr>
+					<small>Come back! See new version every day!</small>
+				</div>
+		</div>
+	</div>
+
+	<script src="../js/main.js"></script>
+	<script src="jdr-daily-reports.js"></script>
+	<script src="../js/mas-menu-app-switch.js"></script>
+	<script src="../js/glo-globe.js"></script>
+	<script src="../js/spk-speak.js"></script>
+
+
+	<script>
+
+		divMessageTitle.innerHTML = `<b>${ document.title }~${ versionStr }</b>`;
+
+		if ( build === "stable" ) {
+
+			MASliJDRstable.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = '<mark>"Big Data" chart - bug: bars not sized correctly</mark>';
+			divMessageOfTheDay.innerHTML = messageOfTheDayStable;
+
+		} else {
+
+			MASliJDRdev.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<mark>Dev "Big Data" chart - bug: bars not sized correctly</mark>`
+			divMessageOfTheDay.innerHTML = messageOfTheDayDev;
+
+		}
+
+
+		detNavMenu.open = window.innerWidth > 640;
+
+		init();
+
+		initXjd();
+
+		DMT.init();
+
+		// keep address bar pointed to latest dev.
+		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
+
+	</script>
+</body>
+
+</html>

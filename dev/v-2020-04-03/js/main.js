@@ -6,7 +6,7 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "19:33";
+let timeStamp = "20:38";
 
 let versionStable = "v-2020-04-02";
 let versionDev = "v-2020-04-03";
@@ -19,7 +19,7 @@ let messageOfTheDayStable = `
 
 let messageOfTheDayDev = `
 <mark>New for 2020-04-03<br>
-* No new features yet<br>
+* Add If iOS load simple globe<br>
 * What would *you* like to see here?
 `;
 

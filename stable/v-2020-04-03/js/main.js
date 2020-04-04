@@ -1,30 +1,39 @@
 // copyright 2020 Spider contributors. MIT license.
-// 2020-03-26
+// 2020-04-02
 /* global THREE, controls, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
 
+
+let build = "stable";
+//let build = "dev";
+
+let timeStamp = "12:21";
+
+let versionStable = "v-2020-04-03";
+let versionDev = "v-2020-04-04";
+let version = versionStable;
+
+let messageOfTheDayStable = `
+<mark>New for 2020-04-03<br>
+* Add If iOS then load simple globe<br>
+* Pop-ups appear when you mouse over them
+* Increased Frames/Second by 5 or so
+</mark>
+`;
+
+let messageOfTheDayDev = `
+<mark>New for 2020-04-04<br>
+* Now new features yet<br>
+* What would *you* like to see here?
+`;
 
 
 let pathAssets = "../../../assets/";
 
-let version = "v-2020-04-01";
-
-let timeStamp = "16-08";
-
-let build = "stable";
-
-let messageOfTheDay = `
-<mark>New for 2020-04-01<br>
-* More descriptive text for selecting chart web pages.<br>
-* Pop-ups are movable on computer and phone. Resizable on computer.</mark>
-`;
-
-
-
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = pathAssets + "images/github-mark-32.png";
+const versionStr = version + "-" + timeStamp + "-" + build;
 
 sTitle.innerHTML = document.title; // ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
-const versionStr = version + "-" + timeStamp + "-" + build;
 sVersion.innerHTML = versionStr;
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 
@@ -47,9 +56,11 @@ let linesRecoveries;
 let linesDeaths;
 let linesDeathsNew;
 
+let today;
+
 let intersected;
 
-//let mesh;
+
 let scene, camera, controls, renderer;
 
 
@@ -70,36 +81,16 @@ function init() {
 	renderer = THR.renderer;
 
 
-	divMessageTitle.innerHTML = `<b>${ document.title } - ${ versionStr }</b>`;
+	GLO.addLights();
 
-	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
+	GLO.addGlobe();
 
-	requestFile( urlJsonStatesProvinces, onLoadGeoJson );
-
-	const urlJsonChina = pathAssets + "json/china.geojson";
-
-	requestFile( urlJsonChina, onLoadGeoJson );
-
-	const urlJson = pathAssets + "json/ne_110m_admin_0_countries_lakes.geojson";
-
-	requestFile( urlJson, onLoadGeoJson );
-
-
-	addLights();
-
-	addGlobe();
-
-	addSkyBox();
+	GLO.addSkyBox();
 
 	getNotes();
 
-	// For Three.js intersected;
-
-	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	renderer.domElement.addEventListener( "mousedown", onDocumentMouseMove, false );
-	renderer.domElement.addEventListener( "touchstart", onDocumentTouchStart, false );
-
 }
+
 
 
 
@@ -139,9 +130,10 @@ function resetGroups () {
 
 //////////
 
-function toggleBars( group = groupCases ) {
+function toggleBars ( group = groupCases ) {
+	console.log( 'group', group  );
 
-	if ( group === window.groupPrevious ) {
+	if ( group === groupPrevious ) {
 
 		groupCases.visible = true;
 		groupCasesNew.visible = true;
@@ -164,9 +156,10 @@ function toggleBars( group = groupCases ) {
 
 		group.visible = true;
 
+		groupPrevious = group;
+
 	}
 
-	groupPrevious = group;
 
 }
 
@@ -245,33 +238,29 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 	// [text], scale, color, x, y, z )
 	// groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
 
-	vGlo = THR.latLonToXYZ( 75, 65, -20 );
+	vGlo = THR.latLonToXYZ( 65, 50, -20 );
 	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
 
-	vChi = THR.latLonToXYZ( 85, 50, 110 );
+	vChi = THR.latLonToXYZ( 70, 45, 110 );
 	groupPlacards.add( THR.drawPlacard( totalsChina, "0.02", 1, vChi.x, vChi.y, vChi.z ) );
 
-	const vEur = THR.latLonToXYZ( 80, 60, 20 );
+	const vEur = THR.latLonToXYZ( 60, 55, 20 );
 	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
 
-	const vUsa = THR.latLonToXYZ( 80, 40, -120 );
+	const vUsa = THR.latLonToXYZ( 60, 40, -120 );
 	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
 
-	const vRow = THR.latLonToXYZ( 90, 30, 180 );
+	const vRow = THR.latLonToXYZ( 55, 30, 180 );
 	groupPlacards.add( THR.drawPlacard( totalsRow, "0.02", 180, vRow.x, vRow.y, vRow.z ) );
 
 
 	divStats.innerHTML = `
 <details id=detStats >
 
-	<summary><b>global data </b></summary>
+	<summary id=sumStats ><b>global data ${ today || "" }</b></summary>
 
 	<p>
 		${ totalsGlobal.join( "<br>" ).replace( /Global totals/, "<b>Global totals</b>" ) }
-	</p>
-
-	<p>
-		${ totalsChina.join( "<br>" ).replace( /China/, "<b>China</b>" ) }
 	</p>
 
 	<p>
@@ -284,6 +273,10 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 
 	<p>
 		${ totalsRow.join( "<br>" ).replace( /Rest of World/, "<b>Rest of World</b>" ) }
+	</p>
+
+	<p>
+		${ totalsChina.join( "<br>" ).replace( /China/, "<b>China</b>" ) }
 	</p>
 
 </details>`;
@@ -412,64 +405,6 @@ function getNotesContent () {
 
 
 //////////
-
-function onDocumentTouchStart ( event ) {
-
-	//event.preventDefault();
-
-	event.clientX = event.touches[ 0 ].clientX;
-	event.clientY = event.touches[ 0 ].clientY;
-
-	onDocumentMouseMove( event );
-
-}
-
-
-function onDocumentMouseMove ( event ) {
-	//console.log( 'event THR ', event.target, event.target.id );
-
-	//event.preventDefault();
-
-	if ( event.target.id ) { return; }
-
-	const mouse = new THREE.Vector2();
-	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
-
-	const raycaster = new THREE.Raycaster();
-	raycaster.setFromCamera( mouse, camera );
-
-	const intersects = raycaster.intersectObjects( groupCases.children );
-
-	if ( intersects.length > 0 ) {
-
-		if ( intersected !== intersects[ 0 ].object ) {
-
-			intersected = intersects[ 0 ].object;
-
-			DMTdragParent.style.overflow = "auto";
-			DMTdragParent.hidden = false;
-
-			DMT.setTranslate( 0, 0, DMTdragItem );
-
-			DMTdragParent.style.left = ( event.clientX ) + "px";
-			DMTdragParent.style.top = event.clientY + "px";
-
-			DMTdragParent.style.width = "40ch";
-
-			displayMessage();
-
-		}
-
-	} else {
-
-		intersected = null;
-		DMTdragParent.hidden = true;
-		divMessage.innerHTML = "";
-
-	}
-
-}
 
 
 

@@ -9,7 +9,7 @@
 	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
 
 
-	<title>Viz3D Wikipedia</title>
+	<title>viz3D Wikipedia</title>
 
 	<link rel="stylesheet" type="text/css" href="../style.css">
 	<style>
@@ -110,17 +110,16 @@
 	</footer>
 
 
-	<div id="DMTdragParent" >
-		<div id="DMTdragItem" ><img src="../../../assets/spider.ico" height=24 >
-			<span onclick=DMTdragParent.hidden=true; style=float:right>[ x ]</span>
+	<div id="DMTdivParent" >
+		<div id="DMTdivHeader" >
+			<img src="../../../assets/spider.ico" height=24 >
+			<span onclick=DMTdivParent.hidden=true; style=float:right>[ x ]</span>
 		</div>
-		<div id="DMTdragContent" >
-				<div id=divMessage >
+		<div id="DMTdivContainer" >
+				<div id=DMTdivContent >
 					<div id=divMessageTitle ></div>
-					<mark>"Wikipedia" chart - has most up-to-date stats</mark><br>
-					Access to data from Wikipedia <a
-					href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
-					target="_blank">2019–20 coronavirus pandemic by country and territory</a> and hundreds of related articles
+					<div id=divReleaseText >dev</div>
+					View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
 					<hr>
 					* Touch the screen to stop rotation.<br>
 					* Two fingers or mouse wheel to zoom.<br>
@@ -130,13 +129,12 @@
 					<hr>
 					<small>Come back! See new version every day!</small>
 				</div>
-
-
 		</div>
 	</div>
 
+
 	<script src="../js/main.js"></script>
-	<script src="fw-fetch-wikipedia.js"></script>
+	<script src="wp-wikipedia.js"></script>
 	<script src="places-2020-03-29.js"></script>
 	<script src="../js/mas-menu-app-switch.js"></script>
 	<script src="../js/glo-globe.js"></script>
@@ -145,16 +143,25 @@
 
 	<script>
 
-		MASselMenuAppSelect.selectedIndex = 2;
+		divMessageTitle.innerHTML = `<b>${ document.title } ~ ${ versionStr }</b>`;
 
-		divMessageOfTheDay.innerHTML = messageOfTheDay;
+		if ( build === "stable" ) {
+
+			MASliWPstable.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<p><mark>"Wikipedia" chart - frequent updates during day</mark></p>`;
+			divMessageOfTheDay.innerHTML = messageOfTheDayStable;
+
+		} else {
+
+			MASliWPdev.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<p><mark>Most recent development has been for this chart</mark></p>`;
+			divMessageOfTheDay.innerHTML = messageOfTheDayDev;
+
+		}
 
 		init();
 
 		initFw();
-
-
-		DMT.init();
 
 		detNavMenu.open = window.innerWidth > 640;
 

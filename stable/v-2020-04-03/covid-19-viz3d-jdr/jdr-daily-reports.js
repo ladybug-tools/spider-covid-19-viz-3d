@@ -3,16 +3,11 @@
 /* global THREE, renderer, camera, divMessage, intersected, requestFile, resetGroups, addBar, groupCases, groupsCases, groupsRecoveries */
 
 
-
-let today;
 let rows;
 
 // https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports
 
 function initXjd() {
-
-
-
 
 	const url = "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_daily_reports";
 
@@ -164,58 +159,6 @@ function getStats () {
 
 
 
-function xxxonDocumentMouseMove ( event ) {
-
-	//event.preventDefault();
-
-	const mouse = new THREE.Vector2();
-	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
-
-	const raycaster = new THREE.Raycaster();
-	raycaster.setFromCamera( mouse, camera );
-
-	const intersects = raycaster.intersectObjects( groupCases.children );
-
-	if ( intersects.length > 0 ) {
-
-		if ( intersected !== intersects[ 0 ].object ) {
-
-			intersected = intersects[ 0 ].object;
-
-			const index = intersected.userData + 1;
-
-			const line = rows[ index ];
-			console.log( 'line', line );
-
-			divMessage.hidden = false;
-			divMessage.style.left = event.clientX + "px";
-			divMessage.style.top = event.clientY + "px";
-			divMessage.innerHTML = `
-<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a> - updates ??<br>
-county: ${ line[ 1 ] }<br>
-state: ${ line[ 2 ] }<br>
-state: ${ line[ 3 ] }<br>
-cases: ${ Number( line[ 7 ] ).toLocaleString() }<br>
-deaths: ${ Number( line[ 8 ] ).toLocaleString() }<br>
-recoveries: ${ Number( line[ 9 ] ).toLocaleString() }<br>
-
-`;
-
-		}
-
-	} else {
-
-		intersected = null;
-		divMessage.hidden = true;
-		divMessage.innerHTML = "";
-
-	}
-
-}
-
-
-
 function displayMessage () {
 
 	const index = intersected.userData + 1;
@@ -223,21 +166,7 @@ function displayMessage () {
 	const line = rows[ index ];
 	console.log( 'line', line );
 
-	// divMessage.hidden = false;
-	// divMessage.style.left = event.clientX + "px";
-	// divMessage.style.top = event.clientY + "px";
-
-
-	DMTdragParent.hidden = false;
-
-	DMT.setTranslate( 0, 0, DMTdragItem );
-
-	DMTdragParent.style.left = ( event.clientX ) + "px";
-	DMTdragParent.style.top = event.clientY + "px";
-
-	DMTdragParent.style.width = "40ch";
-
-	divMessage.innerHTML = `
+	DMTdivContent.innerHTML = `
 <a href="https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_daily_reports/03-31-2020.csv" target="_blank">JHU data</a> - updates daily<br>
 county: ${ line[ 1 ] }<br>
 state: ${ line[ 2 ] }<br>
@@ -245,7 +174,6 @@ state: ${ line[ 3 ] }<br>
 cases: ${ Number( line[ 7 ] ).toLocaleString() }<br>
 deaths: ${ Number( line[ 8 ] ).toLocaleString() }<br>
 recoveries: ${ Number( line[ 9 ] ).toLocaleString() }<br>
-
 `;
 
 }

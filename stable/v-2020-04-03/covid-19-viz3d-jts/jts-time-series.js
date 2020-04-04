@@ -3,7 +3,9 @@
 /* global THREE, camera, renderer,intersected, linecases, DMTdragParent, divMessage */
 
 
-function initViz3d() {
+
+
+function initJts() {
 
 	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
@@ -36,6 +38,8 @@ function onLoadCases ( xhr ) {
 	selDate.innerHTML = dates.map( date => `<option>${ date }</option>` ).join("");
 
 	selDate.selectedIndex = dates.length - 1;
+
+	today = dates[ dates.length - 1 ];
 
 	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
@@ -273,54 +277,34 @@ function displayMessage () {
 	let country = line[ 1 ];
 	const place = line[ 0 ];
 
-	if ( country === "US" ) { country = "United States of America"; }
+	// if ( country === "US" ) { country = "United States of America"; }
 
-	const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
-	//console.log( 'arr', arr );
+	// const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
+	// //console.log( 'arr', arr );
 
-	const feature = arr.length ? arr[ 0 ] : undefined;
-	//console.log( 'feature', feature );
+	// const feature = arr.length ? arr[ 0 ] : undefined;
+	// //console.log( 'feature', feature );
 
-	let d2Pop, d2Gdp;
+	// let d2Pop, d2Gdp;
 
-	if ( feature ) {
+	// if ( feature ) {
 
-		const population = feature.properties.POP_EST;
-		const gdp = feature.properties.GDP_MD_EST;
-		//const name = feature.properties.NAME;
+	// 	const population = feature.properties.POP_EST;
+	// 	const gdp = feature.properties.GDP_MD_EST;
+	// 	//const name = feature.properties.NAME;
 
-		//console.log( 'gdp/pop', 1000000 * gdp / population  );
-		d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
-		d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
+	// 	//console.log( 'gdp/pop', 1000000 * gdp / population  );
+	// 	d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
+	// 	d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
 
-	} else {
+	// } else {
 
-		d2Pop = "not available";
-		d2Gdp = "not available";
+	// 	d2Pop = "not available";
+	// 	d2Gdp = "not available";
 
-	}
+	// }
 
-	// DMTdragParent.style.overflow = "auto";
-	// DMTdragParent.hidden = false;
-
-	// DMT.setTranslate( 0, 0, DMTdragItem );
-
-	// DMTdragParent.style.left = ( event.clientX ) + "px";
-	// DMTdragParent.style.top = event.clientY + "px";
-
-	// DMTdragParent.style.width = "40ch";
-
-	// DMTdragParent.hidden = false;
-
-	// DMT.setTranslate( 0, 0, DMTdragItem );
-
-	// DMTdragParent.style.overflow = "auto";
-	// DMTdragParent.style.left = ( event.clientX ) + "px";
-	// DMTdragParent.style.top = event.clientY + "px";
-
-	// DMTdragParent.style.width = "40ch";
-	
-	divMessage.innerHTML = `
+	DMTdivContent.innerHTML = `
 		<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
 		${ ( place ? "place: " + place + "<br>" : "" ) }
 		country: ${ country }<br>
@@ -331,11 +315,13 @@ function displayMessage () {
 		recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
 		deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 		<hr>
-		deaths/100K persons: ${ d2Pop }<br>
-		cases/(gdp/pop): ${ d2Gdp }<br>
+
 		<b title="Latest day at top" >New cases per day</b><br>
 		${ getBars2D( casesNew ) }
 		<br>
 `;
 
+
+// <!-- deaths/100K persons: ${ d2Pop }<br>
+// cases/(gdp/pop): ${ d2Gdp }<br> -->
 }

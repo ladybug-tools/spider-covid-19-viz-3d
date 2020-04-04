@@ -276,7 +276,7 @@ const places = [
 	[ "United States", "District of Columbia", "38.8993487", "-77.0145666", "" ],
 	[ "United States", "Florida", "27.9757279", "-83.8330166", "" ],
 	[ "United States", "Georgia", "32.6781248", "-83.2229757", "" ],
-	[ "United States", "Guam", "13.4443", "144.7937"],
+	[ "United States", "Guam", "13.4443", "144.7937", ""],
 	[ "United States", "Hawaii", "20.46", "-157.505", "" ],
 	[ "United States", "Idaho", "45.4945756", "-114.1424303", "" ],
 	[ "United States", "Illinois", "39.739318", "-89.504139", "" ],
@@ -306,7 +306,7 @@ const places = [
 	[ "United States", "Oklahoma", "35.3097654", "-98.7165585", "" ],
 	[ "United States", "Oregon", "44.1419049", "-120.5380993", "" ],
 	[ "United States", "Pennsylvania", "40.9945928", "-77.6046984", "" ],
-	[ "United States", "Puerto Rico", "18.2208", "66.5901"],
+	[ "United States", "Puerto Rico", "18.2208", "66.5901", ""],
 	[ "United States", "Rhode Island", "41.5827282", "-71.5064508", "" ],
 	[ "United States", "South Carolina", "33.62505", "-80.9470381", "" ],
 	[ "United States", "South Dakota", "44.2126995", "-100.2471641", "" ],
@@ -319,5 +319,5 @@ const places = [
 	[ "United States", "Washington", "38.8993487", "-77.0145665", "" ],
 	[ "United States", "West Virginia", "38.9201705", "-80.1816905", "" ],
 	[ "United States", "Wisconsin", "44.7862968", "-89.8267049", "" ],
-	[ "United States", "Wyoming", "43.000325", "-107.5545669" ]
+	[ "United States", "Wyoming", "43.000325", "-107.5545669", "" ]
 ]

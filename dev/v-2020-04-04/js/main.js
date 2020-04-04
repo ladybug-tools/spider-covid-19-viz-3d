@@ -10,6 +10,7 @@ let timeStamp = "00:03";
 
 let versionStable = "v-2020-04-03";
 let versionDev = "v-2020-04-04";
+let version = versionStable;
 
 let messageOfTheDayStable = `
 <mark>New for 2020-04-03<br>
@@ -32,7 +33,7 @@ aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = pathAssets + "images/github-mark-32.png";
 
 sTitle.innerHTML = document.title; // ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
-const versionStr = versionDev + "-" + timeStamp + "-" + build;
+const versionStr = version + "-" + timeStamp + "-" + build;
 sVersion.innerHTML = versionStr;
 //divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 

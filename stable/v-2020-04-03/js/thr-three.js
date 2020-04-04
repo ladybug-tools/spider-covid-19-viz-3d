@@ -81,6 +81,18 @@ THR.onStart = function () {
 
 	//THR.suspendTimer = setTimeout( () => { THR.controls.autoRotate = true; }, 5000 );
 
+
+	window.removeEventListener( 'keydown', THR.onStart );
+	renderer.domElement.removeEventListener( 'mousedown', THR.onStart );
+	renderer.domElement.removeEventListener( 'mousemove', THR.onStart );
+	renderer.domElement.removeEventListener( 'wheel', THR.onStart );
+
+	renderer.domElement.removeEventListener( 'touchstart', THR.onStart );
+	renderer.domElement.removeEventListener( 'touchmove', THR.onStart );
+	renderer.domElement.removeEventListener( 'touchend', THR.onStart );
+
+	DMT.init()
+
 };
 
 
@@ -101,11 +113,13 @@ THR.onStop = function () {
 	renderer.domElement.removeEventListener( 'touchmove', THR.onStart );
 	renderer.domElement.removeEventListener( 'touchend', THR.onStart );
 
-}
+
+
+};
 
 
 
-THR.latLonToXYZ = function( radius, lat, lon ) {
+THR.latLonToXYZ = function ( radius, lat, lon ) {
 
 	const pi2 = Math.PI / 2;
 
@@ -119,23 +133,23 @@ THR.latLonToXYZ = function( radius, lat, lon ) {
 
 	return new THREE.Vector3( x, y, z );
 
-}
+};
 
-THR.drawPlacard = function( text = ["abc", "testing 123" ], scale = "0.2", color = 20, x = 20, y = 20, z = 20 ) {
+THR.drawPlacard = function ( text = [ "abc", "testing 123" ], scale = "0.2", color = 20, x = 20, y = 20, z = 20 ) {
 
 	// [text], scale, color, x, y, z )
 	const placard = new THREE.Object3D();
 	const v = ( x, y, z ) => new THREE.Vector3( x, y, z );
 
-	const texture = canvasMultilineText( text, { backgroundColor: color }   );
+	const texture = canvasMultilineText( text, { backgroundColor: color } );
 	//const spriteMaterial = new THREE.SpriteMaterial( { map: texture, opacity: 0.9, transparent: true } );
 	const spriteMaterial = new THREE.SpriteMaterial( { map: texture } );
 	const sprite = new THREE.Sprite( spriteMaterial );
-	sprite.position.set( x, y, z ) ;
+	sprite.position.set( x, y, z );
 	sprite.scale.set( scale * texture.image.width, scale * texture.image.height );
 
 	const geometry = new THREE.Geometry();
-	geometry.vertices = [ v( 0, 0, z ),  v( x, 0, z ) ];
+	geometry.vertices = [ v( 0, 0, z ), v( x, 0, z ) ];
 	const material = new THREE.LineBasicMaterial( { color: 0xaaaaaa } );
 	const line = new THREE.Line( geometry, material );
 
@@ -144,42 +158,42 @@ THR.drawPlacard = function( text = ["abc", "testing 123" ], scale = "0.2", color
 	return placard;
 
 
-	function canvasMultilineText( textArray, parameters ) {
+	function canvasMultilineText ( textArray, parameters ) {
 
-		parameters = parameters || {} ;
+		parameters = parameters || {};
 
 		const canvas = document.createElement( 'canvas' );
 		const context = canvas.getContext( '2d' );
 		let width = parameters.width ? parameters.width : 0;
 		const font = parameters.font ? parameters.font : '48px monospace';
-		const color = parameters.backgroundColor ? parameters.backgroundColor : 120 ;
+		const color = parameters.backgroundColor ? parameters.backgroundColor : 120;
 
 		if ( typeof textArray === 'string' ) textArray = [ textArray ];
 
 		context.font = font;
 
-		for ( let i = 0; i < textArray.length; i++) {
+		for ( let i = 0; i < textArray.length; i++ ) {
 
 			width = context.measureText( textArray[ i ] ).width > width ? context.measureText( textArray[ i ] ).width : width;
 
 		}
 
 		canvas.width = width + 20;
-		canvas.height =  parameters.height ? parameters.height : textArray.length * 60;
+		canvas.height = parameters.height ? parameters.height : textArray.length * 60;
 
-		context.fillStyle = 'hsl( ' + color + ', 80%, 50% )' ;
-		context.fillRect( 0, 0, canvas.width, canvas.height);
+		context.fillStyle = 'hsl( ' + color + ', 80%, 50% )';
+		context.fillRect( 0, 0, canvas.width, canvas.height );
 
-		context.lineWidth = 1 ;
+		context.lineWidth = 1;
 		context.strokeStyle = '#000';
 		context.strokeRect( 0, 0, canvas.width, canvas.height );
 
-		context.fillStyle = '#000' ;
+		context.fillStyle = '#000';
 		context.font = font;
 
-		for ( let i = 0; i < textArray.length; i++) {
+		for ( let i = 0; i < textArray.length; i++ ) {
 
-			context.fillText( textArray[ i ], 10, 48  + i * 60 );
+			context.fillText( textArray[ i ], 10, 48 + i * 60 );
 
 		}
 
@@ -191,7 +205,7 @@ THR.drawPlacard = function( text = ["abc", "testing 123" ], scale = "0.2", color
 
 	}
 
-}
+};
 
 
 THR.onWindowResize = function () {
@@ -209,7 +223,7 @@ THR.onWindowResize = function () {
 
 
 
-THR.animate = function() {
+THR.animate = function () {
 
 	requestAnimationFrame( THR.animate );
 	THR.renderer.render( THR.scene, THR.camera );

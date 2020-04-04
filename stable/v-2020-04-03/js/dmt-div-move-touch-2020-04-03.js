@@ -73,6 +73,7 @@ DMT.dragEnd = function ( e ) {
 
 DMT.drag = function ( e ) {
 
+	console.log( 'e', e );
 	if ( DMT.active ) {
 
 		e.preventDefault();

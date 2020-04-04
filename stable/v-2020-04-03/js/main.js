@@ -15,7 +15,7 @@ let version = versionStable;
 let messageOfTheDayStable = `
 <mark>New for 2020-04-03<br>
 * Add If iOS then load simple globe<br>
-* Pop-ups appear when you mouse over them
+* Pop-ups appear when you mouse over them<br>
 * Increased Frames/Second by 5 or so
 </mark>
 `;

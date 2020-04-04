@@ -254,8 +254,7 @@ function getStats () {
 
 function displayMessage () {
 
-
-	const index = intersected.userData;
+	const index = DMT.intersected.userData;
 
 	const line = rows[ index ];
 	console.log( 'line', line );

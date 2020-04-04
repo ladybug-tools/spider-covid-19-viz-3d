@@ -4,8 +4,6 @@
 
 Issues
 
-
-
 * Pop-ups go to WP directly
 
 
@@ -20,7 +18,12 @@ Issues
 
 * Stable looking good
 
+2020-04-04
 
+16:44
+
+* pop-ups working better
+* New cases button grounding bars nicely
 
 
 

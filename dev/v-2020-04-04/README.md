@@ -7,7 +7,7 @@ Issues
 
 
 * Pop-ups go to WP directly
-* Mostapha ~ New cases not dropping
+
 
 
 2020-04-03

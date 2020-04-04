@@ -163,7 +163,6 @@ function toggleBars ( group = groupCases ) {
 
 	}
 
-
 }
 
 
@@ -190,6 +189,7 @@ function toggleNewCases ( group = groupCases ) {
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
 		groupCasesNewGrounded.visible = true;
+		
 		if ( ! groupCasesNewGrounded.children.length ) {
 
 			const heightsCasesNewGrounded = linesCases.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
@@ -201,9 +201,9 @@ function toggleNewCases ( group = groupCases ) {
 
 		}
 
-	}
+		groupPrevious = group;
 
-	groupPrevious = group;
+	}
 
 }
 

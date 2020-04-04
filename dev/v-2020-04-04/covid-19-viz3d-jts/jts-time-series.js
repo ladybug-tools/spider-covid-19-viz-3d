@@ -297,4 +297,5 @@ function displayMessage () {
 
 // <!-- deaths/100K persons: ${ d2Pop }<br>
 // cases/(gdp/pop): ${ d2Gdp }<br> -->
+	
 }

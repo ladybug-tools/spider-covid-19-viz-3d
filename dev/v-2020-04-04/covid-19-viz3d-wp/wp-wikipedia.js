@@ -93,9 +93,9 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 			if ( url === wikiPages[ 0 ] ) {
 
 				globals = rowsTmp[ 0 ];
-				console.log( 'globals', globals );
+				//console.log( 'globals', globals );
 
-				console.log( 'rt', rowsTmp );
+				//console.log( 'rt', rowsTmp );
 				rowsTmp.shift();
 
 			}
@@ -113,7 +113,7 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 				rows.forEach( ( line ) => line[ 6 ] = isNaN( Number( line[ 6 ] ) ) ? "0" : line[ 6 ] );
 				rows.forEach( ( line ) => line[ 7 ] = isNaN( Number( line[ 7 ] ) ) ? "0" : line[ 7 ] );
 				rows.forEach( ( line ) => line[ 8 ] = isNaN( Number( line[ 8 ] ) ) ? "0" : line[ 8 ] );
-				console.log( 'rows', rows );
+				//console.log( 'rows', rows );
 
 				updateBars( rows );
 

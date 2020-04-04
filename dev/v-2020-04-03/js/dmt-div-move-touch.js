@@ -1,107 +1,102 @@
 
-
 const DMT = {};
 
+DMT.x = 0;
+DMT.y = 0;
 
-DMT.active = false;
-DMT.currentX;
-DMT.currentY;
-DMT.initialX;
-DMT.initialY;
-DMT.xOffset = -200;
-DMT.yOffset = -200;
 
 
 DMT.init = function () {
 
-	document.body.addEventListener( "touchstart", DMT.dragStart, false );
-	document.body.addEventListener( "touchend", DMT.dragEnd, false );
-	document.body.addEventListener( "touchmove", DMT.drag, false );
+	DMTdivParent.hidden = true;
 
-	document.body.addEventListener( "mousedown", DMT.dragStart, false );
-	document.body.addEventListener( "mouseup", DMT.dragEnd, false );
-	document.body.addEventListener( "mousemove", DMT.drag, false );
+	DMTdivParent.style.width = "30ch";
+
+	renderer.domElement.addEventListener( "mouseover", DMT.onEvent );
+	renderer.domElement.addEventListener( "touchstart", DMT.onEvent );
+
+	DMT.onEvent(); // for mouse
+
+}
+
+
+DMT.onEvent = function( e ) {
+	//console.log( '', e );
+
+	renderer.domElement.addEventListener( "touchmove", DMT.onMove );
+	renderer.domElement.addEventListener( "touchend", DMT.onOut );
+	renderer.domElement.addEventListener( 'mousemove', DMT.onMove );
+	//renderer.domElement.addEventListener( 'mouseout', DMT.onOut );
+
+	DMT.onMove( e ); // for touch
+
+}
+
+
+
+DMT.onMove = function( e ) {
+	//console.log( 'e move', e );
+
+	if ( e ) { DMT.checkIntersect ( e ); }
+
+}
+
+
+
+DMT.onMouseOverOut = function () {
+
+	renderer.domElement.removeEventListener( "touchmove", DMT.onMove );
+	renderer.domElement.removeEventListener( "touchend", DMT.onOut );
+	renderer.domElement.removeEventListener( 'mousemove', DMT.onMove );
+	//renderer.domElement.removeEventListener( 'mouseup', DMT.onOut );
 
 };
 
 
 
-DMT.dragStart = function ( e ) {
-	//console.log( 'event DMT ', e.target.id );
-	//console.log( 'intersected', intersected );
+DMT.checkIntersect = function ( event ) {
+	//console.log( 'event chkInt ', event );
 
-	if ( intersected ) {
+	if ( event.type === "touchmove" || event.type === "touchstart" ) {
 
-		DMT.xOffset = 0;
-		DMT.yOffset = 0;
-
-	} else {
-
-		DMT.xOffset = -200;
-		DMT.yOffset = -200;
+		event.clientX = event.touches[ 0 ].clientX;
+		event.clientY = event.touches[ 0 ].clientY;
 
 	}
 
-	if ( e.type === "touchstart" ) {
+	const mouse = new THREE.Vector2();
+	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
 
-		DMT.initialX = e.touches[ 0 ].clientX - DMT.xOffset;
-		DMT.initialY = e.touches[ 0 ].clientY - DMT.yOffset;
+	const raycaster = new THREE.Raycaster();
+	raycaster.setFromCamera( mouse, camera );
 
-	} else {
+	const intersects = raycaster.intersectObjects( groupCases.children );
 
-		DMT.initialX = e.clientX - DMT.xOffset;
-		DMT.initialY = e.clientY - DMT.yOffset;
+	if ( intersects.length > 0 ) {
 
-	}
+		if ( intersected !== intersects[ 0 ].object ) {
 
-	if ( e.target === DMTdragItem ) { DMT.active = true; }
+			intersected = intersects[ 0 ].object;
+			//console.log( 'int', intersected );
 
-}
+			DMTdivParent.hidden = false;
+			DMTdivParent.style.left = event.clientX + "px";
+			DMTdivParent.style.top = event.clientY + "px";
 
+			// DMTdivContent.innerHTML = `
+			// <p>${ event.clientX } ${ event.clientY }
+			// <p>${ intersected.name }`;
 
-
-DMT.dragEnd = function ( e ) {
-
-	DMT.initialX = DMT.currentX;
-	DMT.initialY = DMT.currentY;
-
-	DMT.active = false;
-
-}
-
-
-
-DMT.drag = function ( e ) {
-
-	if ( DMT.active ) {
-
-		e.preventDefault();
-
-		if ( e.type === "touchmove" ) {
-
-			DMT.currentX = e.touches[ 0 ].clientX - DMT.initialX;
-			DMT.currentY = e.touches[ 0 ].clientY - DMT.initialY;
-
-		} else {
-
-			DMT.currentX = e.clientX - DMT.initialX;
-			DMT.currentY = e.clientY - DMT.initialY;
-
+			displayMessage();
 		}
 
-		DMT.xOffset = DMT.currentX;
-		DMT.yOffset = DMT.currentY;
+	} else {
 
-		DMT.setTranslate( DMT.currentX, DMT.currentY, DMTdragItem );
+		intersected = null;
+		DMTdivParent.hidden = true;
+		DMTdivContent.innerHTML = "";
 
 	}
 
 }
-
-
-
-DMT.setTranslate = function ( xPos, yPos, el ) {
-
-	el.parentNode.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
-
-};

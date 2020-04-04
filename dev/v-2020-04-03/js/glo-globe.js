@@ -44,6 +44,19 @@ GLO.addGlobe = function() {
 
 		GLO.loadGlobeBasic();
 
+
+		const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
+
+		requestFile( urlJsonStatesProvinces, GLO.onLoadGeoJson );
+
+		const urlJsonChina = pathAssets + "json/china.geojson";
+
+		requestFile( urlJsonChina, GLO.onLoadGeoJson );
+
+		const urlJson = pathAssets + "json/ne_110m_admin_0_countries_lakes.geojson";
+
+		requestFile( urlJson, GLO.onLoadGeoJson );
+
 	} else {
 
 		GLO.loadGlobeWithMapTextures();
@@ -70,6 +83,9 @@ GLO.loadGlobeBasic = function ( size = 50 ) {
 
 
 }
+
+
+
 GLO.loadGlobeWithMapTextures = function() {
 
 	const radius = 50;  // earth

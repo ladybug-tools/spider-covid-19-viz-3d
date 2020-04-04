@@ -81,6 +81,18 @@ THR.onStart = function () {
 
 	//THR.suspendTimer = setTimeout( () => { THR.controls.autoRotate = true; }, 5000 );
 
+
+	window.removeEventListener( 'keydown', THR.onStart );
+	renderer.domElement.removeEventListener( 'mousedown', THR.onStart );
+	renderer.domElement.removeEventListener( 'mousemove', THR.onStart );
+	renderer.domElement.removeEventListener( 'wheel', THR.onStart );
+
+	renderer.domElement.removeEventListener( 'touchstart', THR.onStart );
+	renderer.domElement.removeEventListener( 'touchmove', THR.onStart );
+	renderer.domElement.removeEventListener( 'touchend', THR.onStart );
+
+	DMT.init()
+
 };
 
 
@@ -100,6 +112,8 @@ THR.onStop = function () {
 	renderer.domElement.removeEventListener( 'touchstart', THR.onStart );
 	renderer.domElement.removeEventListener( 'touchmove', THR.onStart );
 	renderer.domElement.removeEventListener( 'touchend', THR.onStart );
+
+
 
 };
 

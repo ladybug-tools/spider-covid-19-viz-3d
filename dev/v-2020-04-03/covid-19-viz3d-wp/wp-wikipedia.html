@@ -110,17 +110,16 @@
 	</footer>
 
 
-	<div id="DMTdragParent" >
-		<div id="DMTdragItem" ><img src="../../../assets/spider.ico" height=24 >
-			<span onclick=DMTdragParent.hidden=true; style=float:right>[ x ]</span>
+	<div id="DMTdivParent" >
+		<div id="DMTdivHeader" >
+			<img src="../../../assets/spider.ico" height=24 >
+			<span onclick=DMTdivParent.hidden=true; style=float:right>[ x ]</span>
 		</div>
-		<div id="DMTdragContent" >
-				<div id=divMessage >
+		<div id="DMTdivContainer" >
+				<div id=DMTdivContent >
 					<div id=divMessageTitle ></div>
-					<div id=divReleaseText ></div>
-					Access to data from Wikipedia <a
-					href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
-					target="_blank">2019–20 coronavirus pandemic by country and territory</a> and 230++ related articles
+					<div id=divReleaseText >dev</div>
+					View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
 					<hr>
 					* Touch the screen to stop rotation.<br>
 					* Two fingers or mouse wheel to zoom.<br>
@@ -130,10 +129,9 @@
 					<hr>
 					<small>Come back! See new version every day!</small>
 				</div>
-
-
 		</div>
 	</div>
+
 
 	<script src="../js/main.js"></script>
 	<script src="wp-wikipedia.js"></script>
@@ -164,8 +162,6 @@
 		init();
 
 		initFw();
-
-		DMT.init();
 
 		detNavMenu.open = window.innerWidth > 640;
 

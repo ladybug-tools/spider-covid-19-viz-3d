@@ -6,20 +6,22 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "20:38";
+let timeStamp = "23:15";
 
-let versionStable = "v-2020-04-02";
-let versionDev = "v-2020-04-03";
+let versionStable = "v-2020-04-03";
+let versionDev = "v-2020-04-04";
 
 let messageOfTheDayStable = `
 <mark>New for 2020-04-03<br>
-* Clearer and more defined map with place names<br>
-* Menu now uses links to load chart web pages</mark>
+* Add If iOS then load simple globe<br>
+* Pop-ups appear when you mouse over them
+* Increased Frames/Second by 5 or so
+</mark>
 `;
 
 let messageOfTheDayDev = `
-<mark>New for 2020-04-03<br>
-* Add If iOS load simple globe<br>
+<mark>New for 2020-04-04<br>
+* Now new features yet<br>
 * What would *you* like to see here?
 `;
 
@@ -57,7 +59,7 @@ let today;
 
 let intersected;
 
-//let mesh;
+
 let scene, camera, controls, renderer;
 
 
@@ -78,34 +80,13 @@ function init() {
 	renderer = THR.renderer;
 
 
-	const urlJsonStatesProvinces = pathAssets + "json/ne_50m_admin_1_states_provinces_lines.geojson";
-
-	requestFile( urlJsonStatesProvinces, GLO.onLoadGeoJson );
-
-	const urlJsonChina = pathAssets + "json/china.geojson";
-
-	requestFile( urlJsonChina, GLO.onLoadGeoJson );
-
-	const urlJson = pathAssets + "json/ne_110m_admin_0_countries_lakes.geojson";
-
-	requestFile( urlJson, GLO.onLoadGeoJson );
-
-
 	GLO.addLights();
 
 	GLO.addGlobe();
 
-	//GLO.loadGlobeWithMapTextures();
-
 	GLO.addSkyBox();
 
 	getNotes();
-
-	// For Three.js intersected;
-
-	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	renderer.domElement.addEventListener( "mousedown", onDocumentMouseMove, false );
-	renderer.domElement.addEventListener( "touchstart", onDocumentTouchStart, false );
 
 }
 
@@ -148,9 +129,10 @@ function resetGroups () {
 
 //////////
 
-function toggleBars( group = groupCases ) {
+function toggleBars ( group = groupCases ) {
+	console.log( 'group', group  );
 
-	if ( group === window.groupPrevious ) {
+	if ( group === groupPrevious ) {
 
 		groupCases.visible = true;
 		groupCasesNew.visible = true;
@@ -173,9 +155,10 @@ function toggleBars( group = groupCases ) {
 
 		group.visible = true;
 
+		groupPrevious = group;
+
 	}
 
-	groupPrevious = group;
 
 }
 
@@ -421,64 +404,6 @@ function getNotesContent () {
 
 
 //////////
-
-function onDocumentTouchStart ( event ) {
-
-	//event.preventDefault();
-
-	event.clientX = event.touches[ 0 ].clientX;
-	event.clientY = event.touches[ 0 ].clientY;
-
-	onDocumentMouseMove( event );
-
-}
-
-
-function onDocumentMouseMove ( event ) {
-	//console.log( 'event THR ', event.target, event.target.id );
-
-	//event.preventDefault();
-
-	if ( event.target.id ) { return; }
-
-	const mouse = new THREE.Vector2();
-	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
-
-	const raycaster = new THREE.Raycaster();
-	raycaster.setFromCamera( mouse, camera );
-
-	const intersects = raycaster.intersectObjects( groupCases.children );
-
-	if ( intersects.length > 0 ) {
-
-		if ( intersected !== intersects[ 0 ].object ) {
-
-			intersected = intersects[ 0 ].object;
-
-			DMTdragParent.style.overflow = "auto";
-			DMTdragParent.hidden = false;
-
-			DMT.setTranslate( 0, 0, DMTdragItem );
-
-			DMTdragParent.style.left = ( event.clientX ) + "px";
-			DMTdragParent.style.top = event.clientY + "px";
-
-			DMTdragParent.style.width = "40ch";
-
-			displayMessage();
-
-		}
-
-	} else {
-
-		intersected = null;
-		DMTdragParent.hidden = true;
-		divMessage.innerHTML = "";
-
-	}
-
-}
 
 
 

@@ -34,7 +34,7 @@
 
 			<header id="hdrTitle" >
 
-				<h2 style=margin:0; >
+				<h2>
 					<a id=aSource target=_top title="Ladybug Tools / Spider readme & source code on GitHub">
 						<img id=imgIcon height=18 style=opacity:0.5;></a>
 					<a href="" title="Click to reload this page">
@@ -118,13 +118,13 @@
 	</footer>
 
 
-	<div id="DMTdragParent" >
-		<div id="DMTdragItem" >
+	<div id="DMTdivParent" >
+		<div id="DMTdivHeader" >
 			<img src="../../../assets/spider.ico" height=24 >
-			<span onclick=DMTdragParent.hidden=true; style=float:right>[ x ]</span>
+			<span onclick=DMTdivParent.hidden=true; style=float:right>[ x ]</span>
 		</div>
-		<div id="DMTdragContent" >
-				<div id=divMessage >
+		<div id="DMTdivContainer" >
+				<div id=DMTdivContent >
 					<div id=divMessageTitle ></div>
 					<div id=divReleaseText >dev</div>
 					View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
@@ -168,14 +168,12 @@
 
 		detNavMenu.open = window.innerWidth > 640;
 
-		init();
+		init(); // in main.js
 
-		initViz3d();
-
-		DMT.init();
+		initJts();
 
 		// keeps address bar pointed to latest dev. can comment out while developing locally to stop annoying message
-		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/" );
+		window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 
 	</script>
 </body>

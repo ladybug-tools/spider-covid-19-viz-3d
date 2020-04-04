@@ -10,7 +10,8 @@ let timeStamp = "00:03";
 
 let versionStable = "v-2020-04-03";
 let versionDev = "v-2020-04-04";
-let version = versionStable;
+
+let version = build === "dev" ? versionDev : versionStable;
 
 let messageOfTheDayStable = `
 <mark>New for 2020-04-03<br>
@@ -22,7 +23,7 @@ let messageOfTheDayStable = `
 
 let messageOfTheDayDev = `
 <mark>New for 2020-04-04<br>
-* Now new features yet<br>
+* 16:30 Pop-ups are movable and scroll nicely<br>
 * What would *you* like to see here?
 `;
 
@@ -88,6 +89,8 @@ function init() {
 	GLO.addSkyBox();
 
 	getNotes();
+
+	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
 
 }
 
@@ -356,7 +359,7 @@ function getNotes () {
 
 		<summary><b>notes & settings</b></summary>
 
-		<div id=divNoteSettings ></div>
+		<div id=divNoteSettings >&nbsp</div>
 
 	</details>`;
 
@@ -366,9 +369,9 @@ function getNotes () {
 
 function getNotesContent () {
 
-	DMTdragParent.hidden = !DMTdragParent.hidden;
+	DMTdivParent.hidden = !DMTdivParent.hidden;
 
-	divMessage.innerHTML = `
+	DMTdivContent.innerHTML = `
 
 	<div >
 
@@ -421,7 +424,9 @@ function getBars2D ( arr ) {
 			title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>`
 	).join( "" );
 
-	return `<div style="background-color:pink;width:95%;"
+	//ht = DMTdivContainer.clientHeight - 00 + "px";
+
+	return `<div style="background-color:pink;width:100%;"
 		title="New cases per day. Latest at top.The curve you hope to see flatten!" >${ bars }
 	</div>`;
 

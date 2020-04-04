@@ -259,7 +259,7 @@ function getStats () {
 
 function displayMessage () {
 
-	const index = intersected.userData + 1;
+	const index = DMT.intersected.userData + 1;
 
 	const line = linesCases[ index ];
 	//console.log( 'line', line );
@@ -276,33 +276,6 @@ function displayMessage () {
 
 	let country = line[ 1 ];
 	const place = line[ 0 ];
-
-	// if ( country === "US" ) { country = "United States of America"; }
-
-	// const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
-	// //console.log( 'arr', arr );
-
-	// const feature = arr.length ? arr[ 0 ] : undefined;
-	// //console.log( 'feature', feature );
-
-	// let d2Pop, d2Gdp;
-
-	// if ( feature ) {
-
-	// 	const population = feature.properties.POP_EST;
-	// 	const gdp = feature.properties.GDP_MD_EST;
-	// 	//const name = feature.properties.NAME;
-
-	// 	//console.log( 'gdp/pop', 1000000 * gdp / population  );
-	// 	d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
-	// 	d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
-
-	// } else {
-
-	// 	d2Pop = "not available";
-	// 	d2Gdp = "not available";
-
-	// }
 
 	DMTdivContent.innerHTML = `
 		<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>

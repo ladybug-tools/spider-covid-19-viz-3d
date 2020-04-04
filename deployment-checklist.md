@@ -24,5 +24,11 @@ Second check
 * dev/v-2020-xx-xx/ > copy folder to stable/v-2020-xx-xx/
 * stable/v-2020-xx-xx/js/main.ls > un-comment: ```let build = "stable";``` and comment ```let build = "dev";```
 * stable/v-2020-xx-xx/js/main.ls > update timeStamp and other date dependent vars
-		// keeps address bar pointed to latest dev. can comment out while developing locally to stop annoying message
-		window.history.pushState( "", "", "/spider-covid-19-viz-3d/" );
+		* Check push state:
+	window.history.pushState( "", "", "/spider-covid-19-viz-3d/" );
+
+"Landing: check
+
+* Clean up and redate readme
+* delete deprecates file
+* Archive what needs archiving

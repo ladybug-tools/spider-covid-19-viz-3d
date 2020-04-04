@@ -1,15 +1,20 @@
 
+
+/* globals THREE, DMTdivContent, DMTdivParent, renderer, camera, group, txt */
+// jshint esversion: 6
+// jshint loopfunc: true
+
 const DMT = {};
 
 DMT.x = 0;
 DMT.y = 0;
+DMT.intersected = undefined;
 
 
 
 DMT.init = function () {
 
 	DMTdivParent.hidden = true;
-
 	DMTdivParent.style.width = "30ch";
 
 	renderer.domElement.addEventListener( "mouseover", DMT.onEvent );
@@ -17,20 +22,22 @@ DMT.init = function () {
 
 	DMT.onEvent(); // for mouse
 
-}
+};
 
 
-DMT.onEvent = function( e ) {
-	//console.log( '', e );
+
+DMT.onEvent = function ( e ) {
+
+	//console.log( 'event', e );
 
 	renderer.domElement.addEventListener( "touchmove", DMT.onMove );
 	renderer.domElement.addEventListener( "touchend", DMT.onOut );
 	renderer.domElement.addEventListener( 'mousemove', DMT.onMove );
-	//renderer.domElement.addEventListener( 'mouseout', DMT.onOut );
+	renderer.domElement.addEventListener( 'mouseout', DMT.onOut );
 
 	DMT.onMove( e ); // for touch
 
-}
+};
 
 
 
@@ -39,7 +46,7 @@ DMT.onMove = function( e ) {
 
 	if ( e ) { DMT.checkIntersect ( e ); }
 
-}
+};
 
 
 
@@ -48,7 +55,7 @@ DMT.onMouseOverOut = function () {
 	renderer.domElement.removeEventListener( "touchmove", DMT.onMove );
 	renderer.domElement.removeEventListener( "touchend", DMT.onOut );
 	renderer.domElement.removeEventListener( 'mousemove', DMT.onMove );
-	//renderer.domElement.removeEventListener( 'mouseup', DMT.onOut );
+	renderer.domElement.removeEventListener( 'mouseup', DMT.onOut );
 
 };
 
@@ -75,28 +82,86 @@ DMT.checkIntersect = function ( event ) {
 
 	if ( intersects.length > 0 ) {
 
-		if ( intersected !== intersects[ 0 ].object ) {
+		if ( DMT.intersected !== intersects[ 0 ].object ) {
 
-			intersected = intersects[ 0 ].object;
-			//console.log( 'int', intersected );
+			DMT.intersected = intersects[ 0 ].object;
+			//console.log( 'int', DMT.intersected );
 
 			DMTdivParent.hidden = false;
 			DMTdivParent.style.left = event.clientX + "px";
 			DMTdivParent.style.top = event.clientY + "px";
+			DMTdivContainer.scrollTop = 0;
 
 			// DMTdivContent.innerHTML = `
 			// <p>${ event.clientX } ${ event.clientY }
-			// <p>${ intersected.name }`;
+			// <p>${ DMT.intersected.name }
+			// ${ txt }`;
 
 			displayMessage();
+
 		}
 
 	} else {
 
-		intersected = null;
+		DMT.intersected = null;
 		DMTdivParent.hidden = true;
 		DMTdivContent.innerHTML = "";
 
 	}
+
+};
+
+
+
+
+DMT.onMouseDown = function ( e ) {
+	//console.log( 'm down', e );
+
+	DMTdivHeader.addEventListener( "touchmove", DMT.onMouseDownMove );
+	DMTdivHeader.addEventListener( "touchend", DMT.onMouseDownOut );
+	DMTdivHeader.addEventListener( 'mousemove', DMT.onMouseDownMove );
+	DMTdivHeader.addEventListener( 'mouseup', DMT.onMouseDownOut );
+
+	DMT.onMouseDownMove( e ); // for touch
+
+
+};
+
+DMT.onMouseDownMove = function( e ) {
+
+	let dx, dy;
+
+	if ( e.type === "touchmove" ) {
+
+		dx = e.touches[ 0 ].clientX - DMT.x;
+		dy = e.touches[ 0 ].clientY - DMT.y;
+
+		DMT.x = e.touches[ 0 ].clientX;
+		DMT.y = e.touches[ 0 ].clientY;
+
+	} else {
+
+		dx = e.clientX - DMT.x;
+		dy = e.clientY - DMT.y;
+
+		DMT.x = e.clientX;
+		DMT.y = e.clientY;
+
+	}
+
+	//DMTdivParent.style.left = DMTdivHeader.offsetLeft + dx + "px";
+	//DMTdivParent.style.top = DMTdivHeader.offsetTop + dy + "px";
+
+	DMTdivParent.style.left = ( event.clientX - 15 ) + "px";
+	DMTdivParent.style.top = ( event.clientY - 15 ) + "px";
+
+}
+
+DMT.onMouseDownOut = function() {
+
+	DMTdivHeader.removeEventListener( "touchmove", DMT.onMouseDownMove );
+	DMTdivHeader.removeEventListener( "touchend", DMT.onMouseDownOut );
+	DMTdivHeader.removeEventListener( 'mousemove', DMT.onMouseDownMove );
+	DMTdivHeader.removeEventListener( 'mouseup', DMT.onMouseDownOut );
 
 }

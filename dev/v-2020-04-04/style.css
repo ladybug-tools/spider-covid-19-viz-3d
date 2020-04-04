@@ -18,7 +18,9 @@ a {
 	color: crimson;
 	text-decoration: none;
 }
-a:hover, a:focus, a:active {
+a:hover,
+a:focus,
+a:active {
 	background-color: yellow;
 	color: #aaa;
 	text-decoration: underline;
@@ -34,10 +36,10 @@ button {
 }
 button:hover {
 	background: #ccc;
-	color: #fff
+	color: #fff;
 }
 
-input[ type=range] {
+input[type="range"] {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	background-color: #ddd;
@@ -45,32 +47,43 @@ input[ type=range] {
 	height: 1.7ch;
 	width: 100%;
 }
-input[ type=range]::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
 	background-color: #888;
 	border-radius: 2;
 	width: 10px;
 }
-input[ type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	background-color: #888;
 	height: 18px;
 	width: 10px;
 }
-select { width: 100%; }
+select {
+	width: 100%;
+}
+ul {
+	margin: 0 0 1ch 0;
+	padding: 0 2ch;
+}
 
-
+.buLegend {
+	width: 100%;
+}
 .help {
 	float: right;
 }
-
 .couponcode {
-	float: right
+	float: right;
 }
-
-.couponcode:hover>.coupontooltip {
+.couponcode:hover > .coupontooltip {
 	display: block;
 }
-
+.ftrButton {
+	background-color: #eee;
+	border-radius: 5px;
+	font-size: 200%;
+	margin: auto;
+}
 .coupontooltip {
 	border: 0.8ch double #888;
 	background: white;
@@ -84,10 +97,14 @@ select { width: 100%; }
 	position: absolute;
 	z-index: 1000;
 }
-
+.navLegend {
+	border-radius: 5px;
+	margin: 1ch;
+	padding: 0.5ch;
+}
 
 #navMenu {
-	background-color: rgba(255,255,255,.85);
+	background-color: rgba(255, 255, 255, 0.85);
 	margin: 0 20px;
 	max-height: 100vh;
 	max-width: 25rem;
@@ -95,37 +112,19 @@ select { width: 100%; }
 	position: absolute;
 }
 
-#navMenu h2 { margin-bottom:0; }
-
-
-.navLegend {
-	border-radius: 5px;
-	margin: 1ch;
-	padding: 0.5ch;
+#navMenu h2 {
+	margin-bottom: 0;
 }
-
-.buLegend {
-	width: 100%;
-}
-
-.ftrButton {
-	background-color: #eee;
-	border-radius: 5px;
-	font-size: 200%;
-	margin: auto;
-}
-
-
 
 #DMTdivParent {
 	border: 1px solid#444;
-	border-radius: 1rem;
+	border-radius: 1rem 1rem 0 1rem;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
 	height: 50ch;
 	margin: -2ch;
 	overflow: hidden;
 	position: absolute;
-	left: calc( 50vw - 25ch );
+	left: calc(50vw - 25ch);
 	resize: both;
 	top: 50%;
 	/* transform: translate(-50% , -50%); */
@@ -141,16 +140,15 @@ select { width: 100%; }
 
 #DMTdivContainer {
 	background-color: white;
-	height: 98%;
+	/* border: 1px solid red; */
+	height: calc( 100% - 5ch );
 	overflow: auto;
 	padding: 1ch;
 }
 
 @media all and (max-width: 640px) {
-
 	#DMTdivParent {
-		left: calc( 50% - 19ch );
+		left: calc(50% - 19ch);
 		width: 42ch;
 	}
-
 }

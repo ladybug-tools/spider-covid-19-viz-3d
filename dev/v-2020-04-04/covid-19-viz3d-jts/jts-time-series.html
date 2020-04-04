@@ -121,7 +121,9 @@
 	<div id="DMTdivParent" >
 		<div id="DMTdivHeader" >
 			<img src="../../../assets/spider.ico" height=24 >
-			<span onclick=DMTdivParent.hidden=true; style=float:right>[ x ]</span>
+			<!--
+				<span onclick=DMTdivParent.hidden=true; style=float:right;z-index:20>[ x ]</span>
+			-->
 		</div>
 		<div id="DMTdivContainer" >
 				<div id=DMTdivContent >
@@ -129,9 +131,11 @@
 					<div id=divReleaseText >dev</div>
 					View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
 					<hr>
-					* Touch the screen to stop rotation.<br>
-					* Two fingers or mouse wheel to zoom.<br>
-					* Click or touch the bar in a country to pop-up statistics.
+					<ul>
+						<li>Touch the screen to stop rotating.</li>
+						<li>Two fingers or mouse wheel to zoom.</li>
+						<li>Touch the bar in a country to pop-up statistics.</li>
+					</ul>
 					<hr>
 					<div id=divMessageOfTheDay ></div>
 					<hr>
@@ -173,7 +177,7 @@
 		initJts();
 
 		// keeps address bar pointed to latest dev. can comment out while developing locally to stop annoying message
-		window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
+		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 
 	</script>
 </body>

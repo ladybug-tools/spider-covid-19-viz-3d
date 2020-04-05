@@ -6,7 +6,7 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "23:08";
+let timeStamp = "00:33 ~ ";
 
 let versionStable = "v-2020-04-04";
 let versionDev = "v-2020-04-05";

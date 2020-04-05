@@ -4,7 +4,6 @@
 
 Issues
 
-* Pop-ups go to WP directly
 
 
 
@@ -55,6 +54,7 @@ Issues
 
 ### ### wp-wikipedia.js
 
+* Pop-ups go to WP directly
 
 ### js/main.js
 
@@ -71,6 +71,7 @@ Dealing with yesterday issues
 * Cannot drag pop-up
 * Bars div in pop-up too long
 * Bars div - need scroll to top
+
 
 ### js/glo-globe.js
 

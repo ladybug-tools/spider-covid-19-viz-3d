@@ -6,12 +6,19 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "00:03";
+let timeStamp = "17:34";
 
 let versionStable = "v-2020-04-03";
 let versionDev = "v-2020-04-04";
 
 let version = build === "dev" ? versionDev : versionStable;
+
+let messageInfo = `
+<ul>
+<li title="Or press any key or scroll mouse">Touch the screen to stop rotating</li>
+<li title="Press left mouse or drag touch to rotate" >Two fingers or mouse wheel to zoom.</li>
+<li title="It may take a few seconds for data to arrive" >Touch the bars to pop-up statistics</li>
+</ul>`;
 
 let messageOfTheDayStable = `
 <mark>New for 2020-04-03<br>
@@ -24,6 +31,7 @@ let messageOfTheDayStable = `
 let messageOfTheDayDev = `
 <mark>New for 2020-04-04<br>
 * 16:30 Pop-ups are movable and scroll nicely<br>
+* 17:33 Wikipedia pop-ups load graphs immediately
 * What would *you* like to see here?
 `;
 
@@ -189,7 +197,7 @@ function toggleNewCases ( group = groupCases ) {
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
 		groupCasesNewGrounded.visible = true;
-		
+
 		if ( ! groupCasesNewGrounded.children.length ) {
 
 			const heightsCasesNewGrounded = linesCases.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );

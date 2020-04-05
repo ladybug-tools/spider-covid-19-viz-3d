@@ -107,22 +107,19 @@
 	<div id="DMTdivParent" >
 		<div id="DMTdivHeader" >
 			<img src="../../../assets/spider.ico" height=24 >
-			<span onclick=DMTdivParent.hidden=true; style=float:right>[ x ]</span>
-		</div>
-		<div id="DMTdivContainer" >
-				<div id=DMTdivContent >
-					<div id=divMessageTitle ></div>
-					<div id=divReleaseText >dev</div>
-					View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
-					<hr>
-					* Touch the screen to stop rotation.<br>
-					* Two fingers or mouse wheel to zoom.<br>
-					* Click or touch the bar in a country to pop-up statistics.
-					<hr>
-					<div id=divMessageOfTheDay ></div>
-					<hr>
-					<small>Come back! See new version every day!</small>
-				</div>
+	</div>
+	<div id="DMTdivContainer" >
+			<div id=DMTdivContent >
+				<div id=divMessageTitle ></div>
+				<div id=divReleaseText >dev</div>
+				View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
+				<hr>
+				<div id=divMessageInfo></div>
+				<hr>
+				<div id=divMessageOfTheDay ></div>
+				<hr>
+				<small>Come back! See new version every day!</small>
+			</div>
 		</div>
 	</div>
 
@@ -137,6 +134,8 @@
 	<script>
 
 		divMessageTitle.innerHTML = `<b>${ document.title }~${ versionStr }</b>`;
+
+		divMessageInfo.innerHTML = messageInfo;
 
 		if ( build === "stable" ) {
 

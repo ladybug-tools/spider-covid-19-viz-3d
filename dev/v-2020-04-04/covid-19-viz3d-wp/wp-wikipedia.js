@@ -16,6 +16,8 @@ WP.wikiPages = [
 
 ];
 
+WP.divGraph = undefined;
+
 const api = "https://en.wikipedia.org/w/api.php?action=parse&format=json&origin=*&page=";
 
 const iCase = 6;
@@ -260,6 +262,13 @@ function displayMessage () {
 
 	const index = DMT.intersected.userData;
 
+	DMTdivParent.style.width = "50ch";
+	DMTdivContent.innerHTML = `
+	<div id=WPdivNumbers></div>
+	<div id=WPdivGraph></div>
+	`
+	WP.divGraph = WPdivGraph;
+
 	const line = rows[ index ];
 	console.log( 'line', line );
 
@@ -271,7 +280,7 @@ function displayMessage () {
 		.replace( /New_York/, "New_York_(state)" )
 		.replace( /Georgia/, "Georgia_(U.S._state)" );
 
-	DMTdivContent.innerHTML = `
+		WPdivNumbers.innerHTML = `
 <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a><br>
 country: ${ line[ 0 ] }<br>
 place: ${ line[ 1 ] }<br>
@@ -282,7 +291,6 @@ wikipedia pandemic page:
 <p>
 	<a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
 </p>
-<div id=popStats ></div>
 `;
 
 	showLocation( placeWP, line[ 4 ] );
@@ -340,18 +348,17 @@ function fetchUrlWikipediaApiPlace ( url, tab = 0, rowStart = 0, column = 0 ) {
 			//console.log( 'html', html );
 			const tables = html.querySelectorAll( ".wikitable,.barbox" );
 
-			ttab = tables[ tab ];
+			const ttab = tables[ tab ];
 
 			if ( !ttab ) {
-				popStats.innerHTML = "There seem to be no charts or tables we can access here.\n\nTry another place";
+				WP.divGraph.innerHTML = "There seem to be no charts or tables we can access here.\n\nTry another place";
 				return;
 			}
-			//popStats.style.maxWidth = "300px";
 
 			const s = new XMLSerializer();
 			const str = s.serializeToString( ttab).replace( /\[(.*?)\]/g, "" );
 
-			popStats.innerHTML = str;
+			if ( WP.divGraph ) { WP.divGraph.innerHTML = str; }
 
 		} );
 

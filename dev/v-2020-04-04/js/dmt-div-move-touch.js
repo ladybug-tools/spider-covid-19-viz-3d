@@ -15,7 +15,9 @@ DMT.intersected = undefined;
 DMT.init = function () {
 
 	DMTdivParent.hidden = true;
-	DMTdivParent.style.width = "30ch";
+
+
+	DMTdivParent.style.width = WP.wikiPages ? "50ch" : "30ch";
 
 	renderer.domElement.addEventListener( "mouseover", DMT.onEvent );
 	renderer.domElement.addEventListener( "touchstart", DMT.onEvent );

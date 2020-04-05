@@ -4,12 +4,16 @@
 // jshint esversion: 6
 // jshint loopfunc: true
 
+const WP = {}; // Start of Wikipedia name space. ;-)
 
-let wikiPages = [
+
+
+WP.wikiPages = [
 
 	"2019–20_coronavirus_pandemic_by_country_and_territory",
 	//"List_of_cases_of_2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory",
 	"2020_coronavirus_pandemic_in_the_United_States"
+
 ];
 
 const api = "https://en.wikipedia.org/w/api.php?action=parse&format=json&origin=*&page=";
@@ -25,9 +29,9 @@ function initFw() {
 
 	resetGroups();
 
-	fetchUrlWikipediaApi( wikiPages[ 0 ], 0, 1, 0);
+	fetchUrlWikipediaApi( WP.wikiPages[ 0 ], 0, 1, 0);
 
-	fetchUrlWikipediaApi( wikiPages[ 1 ], 0, 3, 1 );
+	fetchUrlWikipediaApi( WP.wikiPages[ 1 ], 0, 3, 1 );
 
 	// wip: requestFile( api + wikiPages[ 0 ], cb )
 
@@ -90,7 +94,7 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 				.split( "\n\n" )
 			);
 
-			if ( url === wikiPages[ 0 ] ) {
+			if ( url === WP.wikiPages[ 0 ] ) {
 
 				globals = rowsTmp[ 0 ];
 				//console.log( 'globals', globals );
@@ -108,7 +112,7 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 
 			} else { window.filesLoaded++; }
 
-			if ( window.filesLoaded === wikiPages.length ) {
+			if ( window.filesLoaded === WP.wikiPages.length ) {
 
 				rows.forEach( ( line ) => line[ 6 ] = isNaN( Number( line[ 6 ] ) ) ? "0" : line[ 6 ] );
 				rows.forEach( ( line ) => line[ 7 ] = isNaN( Number( line[ 7 ] ) ) ? "0" : line[ 7 ] );
@@ -274,15 +278,19 @@ place: ${ line[ 1 ] }<br>
 cases: ${ Number( line[ iCase ] ).toLocaleString() }<br>
 deaths: ${ Number( line[ iDeath ] ).toLocaleString() }<br>
 recoveries: ${ Number( line[ iRecover ] ).toLocaleString() }<br>
-wikipedia pandemic page:<br>
-<a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
-<p><button onclick=showLocation("${ placeWP }","${ line[ 4 ] }"); >show ${ place } Wikipedia statistics </button></p>
-<div id=popStats >
-2020-03-30 Effort beginning to work.<br>
-Works in many countries.<br>
-Could show better tables.<br>
-Needs better styling and parsing</div>
+wikipedia pandemic page:
+<p>
+	<a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
+</p>
+<div id=popStats ></div>
 `;
+
+	showLocation( placeWP, line[ 4 ] );
+
+// <p>
+// <button onclick=showLocation("${ placeWP }","${ line[ 4 ] }"); >
+// show ${ place } Wikipedia statistics </button>
+// </p >
 
 }
 
@@ -334,7 +342,10 @@ function fetchUrlWikipediaApiPlace ( url, tab = 0, rowStart = 0, column = 0 ) {
 
 			ttab = tables[ tab ];
 
-			if ( ! ttab ) { alert( "There seem to be no charts or tables we can access here.\n\nTry another place" ); return; }
+			if ( !ttab ) {
+				popStats.innerHTML = "There seem to be no charts or tables we can access here.\n\nTry another place";
+				return;
+			}
 			//popStats.style.maxWidth = "300px";
 
 			const s = new XMLSerializer();

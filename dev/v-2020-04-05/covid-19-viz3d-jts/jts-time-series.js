@@ -281,7 +281,7 @@ function displayMessage ( index ) {
 	const place = line[ 0 ];
 
 	DMTdivContent.innerHTML = `
-		<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
+		<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - ${ selDate.value }<br>
 		${ ( place ? "place: " + place + "<br>" : "" ) }
 		country: ${ country }<br>
 		cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>

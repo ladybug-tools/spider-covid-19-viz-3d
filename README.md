@@ -80,8 +80,6 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 ### Generally / Short term
 
 * 2020-04-02 ~ Theo ~ Merge data from JHU and Wiki
-
-* 2020-04-02 ~ Theo ~ Charts appear in pop-up no click necessary
 * 2020-03-30 ~ Theo ~ Multiple charts per pop-up
 * 2020-03-24 ~ Theo ~ use Three.js fonts??
 * Better display of text in placards??
@@ -247,10 +245,12 @@ geoJson useful
 
 _Change logs are now in the de/dates/ folders._
 
+
 ### 2020-04-04
 
 Wish list items dealt with
 
+* 2020-04-02 ~ Theo ~ Wikipedia charts appear in pop-up no click necessary
 * 2020-04-02 ~ Theo ~ Mouse click AND mouse over
 
 ### 2020-04-02 ~ Theo

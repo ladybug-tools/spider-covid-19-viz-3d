@@ -12,6 +12,8 @@ function initJts() {
 
 	requestFile( dataJhu, onLoadCases );
 
+	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=3 style=width:100%;
+		title="Use the cursor keys to go back in time" ></select>`;
 }
 
 
@@ -30,16 +32,17 @@ function onLoadCases ( xhr ) {
 	// 	.replace( /"Bahamas, The"/, "The Bahamas" );
 	// .replace( /"Virgin Islands,/, "Virgin Islands");
 
-	linesCases = response.split( "\n" ).map( line => line.split( "," ) );
-	//console.log( 'lines', lines );
+	linesCases = response.split( "\n" ).map( line => line.split( "," ) ).slice( 0, -1 );
+	//console.log( 'linesCases', linesCases );
 
-	const dates = linesCases[ 0 ].slice( 4 );
+	const dateStrings = linesCases[ 0 ].slice( 4 );
+	//console.log( 'dates', dates );
 
-	selDate.innerHTML = dates.map( date => `<option>${ date }</option>` ).join("");
+	selDate.innerHTML = dateStrings.map( date => `<option>${ date }</option>` ).join("");
 
-	selDate.selectedIndex = dates.length - 1;
+	selDate.selectedIndex = dateStrings.length - 1;
 
-	today = dates[ dates.length - 1 ];
+	today = dateStrings[ dateStrings.length - 1 ];
 
 	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
@@ -89,8 +92,6 @@ function onLoadRecovered ( xhr ) {
 	//console.log( 'linesRecoveries', linesRecoveries );
 
 	updateBars( linesCases[ 1 ].length );
-
-	getStats();
 
 	getCountries();
 
@@ -155,6 +156,8 @@ function updateBars ( length ) {
 
 	groupRecoveries.add( ...meshesRecoveries );
 
+	getStats();
+
 }
 
 
@@ -202,7 +205,7 @@ function getStats () {
 
 
 	const totalsGlobal = [
-		`Global totals`,
+		`Global totals ${ selDate.value }`,
 		`cases: ${ globalCases.toLocaleString() }`,
 		`cases new: ${ globalCasesNew.toLocaleString() }`,
 		`deaths: ${ globalDeaths.toLocaleString() }`,
@@ -282,7 +285,7 @@ function displayMessage ( index ) {
 		${ ( place ? "place: " + place + "<br>" : "" ) }
 		country: ${ country }<br>
 		cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
-		cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
+		cases new: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
 		deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
 		deaths new: ${ ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
 		recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>

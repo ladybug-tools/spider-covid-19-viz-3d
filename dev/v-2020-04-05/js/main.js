@@ -267,7 +267,7 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 	divStats.innerHTML = `
 <details id=detStats >
 
-	<summary id=sumStats ><b>global data ${ today || "" }</b></summary>
+	<summary id=sumStats ><b>global data</b></summary>
 
 	<p>
 		${ totalsGlobal.join( "<br>" ).replace( /Global totals/, "<b>Global totals</b>" ) }

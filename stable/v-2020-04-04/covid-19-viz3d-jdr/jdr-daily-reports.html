@@ -8,17 +8,10 @@
 		content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
 	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
 
-
-	<title>viz3D Wikipedia</title>
+	<title>viz3D JHU Daily Reports</title>
 
 	<link rel="stylesheet" type="text/css" href="../style.css">
-	<style>
-		.references,
-		.plainlinks {
-			display: none;
-		}
 
-	</style>
 </head>
 
 <body>
@@ -52,8 +45,8 @@
 
 					<span class="couponcode">&#x24d8;<span id=divDescription class="coupontooltip">
 							View the COVID-19 data from
-							<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
-								target="_blank">Wikipedia</a>
+							<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports"
+								target="_blank">Johns Hopkins University</a>
 							in interactive 3D using JavaScript <a href="https://threeja.org"
 								target="_blank">Three.js</a>
 							WebGL tools.
@@ -82,10 +75,8 @@
 				<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries)
 					style=background-color:limegreen;width:100%;>
 					Recoveries&nbsp;</button></p>
-			<!--
-		<div id=divDates style=background-color:white;padding:1ch;></div>
-		<div id=divCountries style=background-color:white;padding:1ch;></div>
--->
+
+			<div id=divDates style=background-color:white;padding:1ch;></div>
 
 			<div id=divCountries style=background-color:white;padding:1ch;></div>
 
@@ -96,6 +87,7 @@
 		</details>
 
 	</nav>
+
 
 	<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center;>
 
@@ -115,14 +107,13 @@
 	<div id="DMTdivParent" >
 		<div id="DMTdivHeader" >
 			<img src="../../../assets/spider.ico" height=24 >
-		</div>
-		<div id="DMTdivContainer" >
+	</div>
+	<div id="DMTdivContainer" >
 			<div id=DMTdivContent >
 				<div id=divMessageTitle ></div>
-				<div id=divReleaseText >dev</div
-					Access to data from Wikipedia <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
-					target="_blank">
-					2019–20 coronavirus pandemic by country and territory</a> and 230++ related articles				<hr>
+				<div id=divReleaseText >dev</div>
+				View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
+				<hr>
 				<div id=divMessageInfo></div>
 				<hr>
 				<div id=divMessageOfTheDay ></div>
@@ -134,8 +125,7 @@
 
 
 	<script src="../js/main.js"></script>
-	<script src="wp-wikipedia.js"></script>
-	<script src="places-2020-03-29.js"></script>
+	<script src="jdr-daily-reports.js"></script>
 	<script src="../js/mas-menu-app-switch.js"></script>
 	<script src="../js/glo-globe.js"></script>
 	<script src="../js/spk-speak.js"></script>
@@ -143,31 +133,34 @@
 
 	<script>
 
-		divMessageTitle.innerHTML = `<b>${ document.title } ~ ${ versionStr }</b>`;
+		divMessageTitle.innerHTML = `<b>${ document.title }~${ versionStr }</b>`;
 
 		divMessageInfo.innerHTML = messageInfo;
 
 		if ( build === "stable" ) {
 
-			MASliWPstable.style.backgroundColor = "pink";
-			divReleaseText.innerHTML = `<p><mark>"Wikipedia" chart - frequent updates during day</mark></p>`;
+			MASliJDRstable.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = '<mark>"Big Data" chart - bug: bars not sized correctly</mark>';
 			divMessageOfTheDay.innerHTML = messageOfTheDayStable;
 
 		} else {
 
-			MASliWPdev.style.backgroundColor = "pink";
-			divReleaseText.innerHTML = `<p><mark>Most recent development has been for this chart</mark></p>`;
+			MASliJDRdev.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<mark>Dev "Big Data" chart - bug: bars not sized correctly</mark>`
 			divMessageOfTheDay.innerHTML = messageOfTheDayDev;
 
 		}
 
-		initMain();
-
-		initWp();
 
 		detNavMenu.open = window.innerWidth > 640;
 
-		// keep address bar pointed to latest dev. change in html of stable
+		initMain();
+
+		initJdr();
+
+		DMT.init();
+
+		// keep address bar pointed to latest dev.
 		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 
 	</script>

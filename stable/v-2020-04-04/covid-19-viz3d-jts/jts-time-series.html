@@ -9,16 +9,10 @@
 	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
 
 
-	<title>viz3D Wikipedia</title>
+	<title>v3D JHU TimeSeries </title>
 
 	<link rel="stylesheet" type="text/css" href="../style.css">
-	<style>
-		.references,
-		.plainlinks {
-			display: none;
-		}
 
-	</style>
 </head>
 
 <body>
@@ -30,30 +24,25 @@
 	<script src="../js/threeGeoJSON.js"></script>
 	<script src="../js/dmt-div-move-touch.js"></script>
 
-
 	<nav id="navMenu">
 
 		<br>
 
-		<details id=detNavMenu >
+		<details id=detNavMenu>
 
 			<summary>show or hide menu</summary>
 
-			<header id="hdrTitle">
+			<header id="hdrTitle" >
 
 				<h2>
 					<a id=aSource target=_top title="Ladybug Tools / Spider readme & source code on GitHub">
-						<img id=imgIcon height=18 style=opacity:0.5;>
-					</a>
-
+						<img id=imgIcon height=18 style=opacity:0.5;></a>
 					<a href="" title="Click to reload this page">
 						<span id=sTitle></span>&nbsp;
-					</a>
-
-					<span class="couponcode">&#x24d8;<span id=divDescription class="coupontooltip">
-							View the COVID-19 data from
-							<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
-								target="_blank">Wikipedia</a>
+					</a><span class="couponcode">&#x24d8;<span id=divDescription class="coupontooltip">
+							View the COVID-19 data from the Johns Hopkins University
+							<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data"
+								target="_blank">GitHub repository</a>
 							in interactive 3D using JavaScript <a href="https://threeja.org"
 								target="_blank">Three.js</a>
 							WebGL tools.
@@ -66,26 +55,42 @@
 
 			</header>
 
+			<hr>
+
 			<div id=MASdivMenuAppSwitch> </div>
 
-			<p class=navLegend style=background-color:red;>
+			<p class=navLegend style=background-color:cyan; title="Heights displayed 3X scale">
+				<button id=butNew class=butLegend onclick=toggleNewCases(groupCasesNew)
+					style=background-color:cyan;color:black;width:100%;>
+					New cases today&nbsp;</button>
+			</p>
+
+			<p class=navLegend style=background-color:red; title=";-(">
 				<button id=butCases class=butLegend onclick=toggleBars(groupCases)
 					style=background-color:red;color:white;width:100%;>
-					Confirmed cases&nbsp;</button></p>
+					Confirmed cases&nbsp;</button>
+			</p>
 
-			<p class=navLegend style=background-color:black; title="Flare indicates high deaths to cases ratios">
+			<p class=navLegend style=background-color:black; title=";-(">
 				<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths)
 					style=background-color:black;color:white;width:100%;>
-					Deaths&nbsp;</button></p>
+					Deaths&nbsp;</button>
+			</p>
 
-			<p class=navLegend style=background-color:limegreen;>
+			<p class=navLegend style=background-color:lavender;
+				title="Will behave like new cases today in future version">
+				<button id=butDeathsNew class=butLegend onclick=toggleBars(groupDeathsNew)
+					style=background-color:lavender;width:100%;>
+					New deaths today&nbsp;</button>
+			</p>
+
+			<p class=navLegend style=background-color:limegreen; title=";-)">
 				<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries)
 					style=background-color:limegreen;width:100%;>
-					Recoveries&nbsp;</button></p>
-			<!--
-		<div id=divDates style=background-color:white;padding:1ch;></div>
-		<div id=divCountries style=background-color:white;padding:1ch;></div>
--->
+					Recoveries&nbsp;</button>
+			</p>
+
+			<div id=divDates style=background-color:white;padding:1ch;></div>
 
 			<div id=divCountries style=background-color:white;padding:1ch;></div>
 
@@ -96,6 +101,7 @@
 		</details>
 
 	</nav>
+
 
 	<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center;>
 
@@ -115,15 +121,18 @@
 	<div id="DMTdivParent" >
 		<div id="DMTdivHeader" >
 			<img src="../../../assets/spider.ico" height=24 >
+			<!--
+				<span onclick=DMTdivParent.hidden=true; style=float:right;z-index:20>[ x ]</span>
+			-->
 		</div>
 		<div id="DMTdivContainer" >
 			<div id=DMTdivContent >
 				<div id=divMessageTitle ></div>
-				<div id=divReleaseText >dev</div
-					Access to data from Wikipedia <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
-					target="_blank">
-					2019–20 coronavirus pandemic by country and territory</a> and 230++ related articles				<hr>
+				<div id=divReleaseText >dev</div>
+				View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
+				<hr>
 				<div id=divMessageInfo></div>
+
 				<hr>
 				<div id=divMessageOfTheDay ></div>
 				<hr>
@@ -134,8 +143,7 @@
 
 
 	<script src="../js/main.js"></script>
-	<script src="wp-wikipedia.js"></script>
-	<script src="places-2020-03-29.js"></script>
+	<script src="jts-time-series.js"></script>
 	<script src="../js/mas-menu-app-switch.js"></script>
 	<script src="../js/glo-globe.js"></script>
 	<script src="../js/spk-speak.js"></script>
@@ -149,28 +157,27 @@
 
 		if ( build === "stable" ) {
 
-			MASliWPstable.style.backgroundColor = "pink";
-			divReleaseText.innerHTML = `<p><mark>"Wikipedia" chart - frequent updates during day</mark></p>`;
+			MASliJTSstable.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<p><mark>"Flagship" chart - most authoritative data and least likely to crash</mark></p>`
 			divMessageOfTheDay.innerHTML = messageOfTheDayStable;
 
 		} else {
 
-			MASliWPdev.style.backgroundColor = "pink";
-			divReleaseText.innerHTML = `<p><mark>Most recent development has been for this chart</mark></p>`;
+			MASliJTSdev.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<mark>"Beta version" - chart with new features and likely to have issues</mark>`;
 			divMessageOfTheDay.innerHTML = messageOfTheDayDev;
 
 		}
 
-		initMain();
-
-		initWp();
-
 		detNavMenu.open = window.innerWidth > 640;
 
-		// keep address bar pointed to latest dev. change in html of stable
-		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
+		initMain();
+
+		initJts();
+
+		// keeps address bar pointed to latest dev. can comment out while developing locally to stop annoying message
+		window.history.pushState( "", "", "/spider-covid-19-viz-3d/d" );
 
 	</script>
 </body>
-
 </html>

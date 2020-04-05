@@ -3,10 +3,10 @@
 /* global THREE, controls, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
 
 
-//let build = "stable";
-let build = "dev";
+let build = "stable";
+//let build = "dev";
 
-let timeStamp = "23:08";
+let timeStamp = "23:56";
 
 let versionStable = "v-2020-04-04";
 let versionDev = "v-2020-04-05";

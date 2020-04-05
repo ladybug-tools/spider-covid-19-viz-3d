@@ -11,7 +11,6 @@
 	window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 * dev/v-2020-xx-xx/ > copy folder to dev/v-2020-xx-xx+1/
 * main.js update dates and time
-* Check that dev/index.html links to today's calver folder: dev/v-2020-xx-xx+1/
 
 New dev first push
 
@@ -19,16 +18,23 @@ New dev first push
 	* Create a VS Code workspace just for the dev folder
 	* makes it easy to push just dev
 
+When OK
+
+* Edit ```dev/index.html``` so it links to today's calver folder: dev/v-2020-xx-xx+1/
+
 Second check
 
 * dev/v-2020-xx-xx/ > copy folder to stable/v-2020-xx-xx/
-* stable/v-2020-xx-xx/js/main.ls > un-comment: ```let build = "stable";``` and comment ```let build = "dev";```
+* stable/v-2020-xx-xx/js/main.ls
+	* un-comment: ```let build = "stable";``` and comment ```let build = "dev";```
 * stable/v-2020-xx-xx/js/main.ls > update timeStamp and other date dependent vars
 		* Check push state:
 	window.history.pushState( "", "", "/spider-covid-19-viz-3d/" );
 
-"Landing: check
+New stable first push
 
+
+"Landing: check
 * Clean up and redate readme
 * delete deprecates file
 * Archive what needs archiving

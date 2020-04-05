@@ -56,6 +56,7 @@ When OK
 
 "Landing" check
 
-* Clean up and redate readme
+* Clean up and re-date readme
 * delete deprecated files
 * Archive what needs archiving
+* Commit message: 2020-XX-XX dev clean up

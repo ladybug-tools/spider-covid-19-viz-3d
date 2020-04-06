@@ -5,13 +5,13 @@
 
 ////////// Deployment
 
-//let build = "stable";
-let build = "dev";
+let build = "stable";
+//let build = "dev";
 
-let timeStamp = "21:29";
+let timeStamp = "20:20";
 
-let versionStable = "v-2020-04-04";
-let versionDev = "v-2020-04-05";
+let versionStable = "v-2020-04-05";
+let versionDev = "v-2020-04-06";
 
 ////////// Menu title
 
@@ -48,20 +48,19 @@ let messageInfo = `
 
 let messageOfTheDayStable = `
 <mark>
-New for 2020-04-04<br>
-* 16:30 Pop-ups are movable and scroll nicely<br>
-* 17:33 Wikipedia pop-ups load graphs immediately<br>
-* 23:06 Select country works on all charts
+New for 2020-04-05
+	<li>Left menu reorganized, code cleaned</li>
+	<li>Add more info boxes</li>
+	<li>JHU TimeSeries: calculates and shows new percentages</li>
+</ul>
 </mark>
 `;
 
 let messageOfTheDayDev = `
 <mark>
+New for 2020-04-06
 <ul>
-	<li>New for 2020-04-05</li>
-	<li>Left menu reorganized, code cleaned</li>
-	<li>Add more info boxes</li>
-	<li>JHU TimeSeries: calculates and shows new percentages</li>
+	<li>Nothing new yet</li>
 	<li>What would *you* like to see here?</li>
 </ul>
 </mark>`;

@@ -52,8 +52,8 @@ When OK
 
 * Commit message: 2020-xx-xx+1 dev to stable first commit
 * Test by using:
-	*  https://www.ladybug.tools/spider-covid-19-viz-3d/stable/v-2020-XX-XX/covid-19-viz3d-jts/jts-time-series.html
-
+*  https://www.ladybug.tools/spider-covid-19-viz-3d/stable/v-2020-XX-XX/covid-19-viz3d-jts/jts-time-series.html
+ https://www.ladybug.tools/spider-covid-19-viz-3d/stable/v-2020-04-05/covid-19-viz3d-jts/jts-time-series.html
 
 ## New stable second push
 

@@ -10,9 +10,14 @@
 	* Line 170 un-commented:
 	// keeps address bar pointed to latest dev.
 	window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
-* dev/v-2020-xx-xx/ > copy folder to dev/v-2020-xx-xx+1/
-* main.js update dates and time
 
+If OK on Git
+
+* dev/v-2020-xx-xx/ > copy folder to dev/v-2020-xx-xx+1/
+* main.js > update dates and time
+* Clean up and re-date readme
+* delete deprecated files
+* Archive what needs archiving
 
 ## New dev first push
 
@@ -57,7 +62,5 @@ When OK
 
 "Landing" check
 
-* Clean up and re-date readme
-* delete deprecated files
-* Archive what needs archiving
+
 * Commit message: 2020-XX-XX dev clean up

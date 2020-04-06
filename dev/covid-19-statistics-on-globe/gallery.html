@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang = "en" >
+<head>
+<meta charset = "utf-8" >
+<meta name = "viewport" content= "width=device-width, initial-scale=1" >
+<meta name = "description" content = "Basic TooToo HTML template" >
+<meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
+<!-- <meta name=version content="2020-03-06">-->
+
+<title></title>
+
+<style>
+
+* { box-sizing: border-box; }
+
+:root { font: 100% monospace; --mnu-width: 22rem; --screen-width: calc( 100vw ); --headerHeight: 6rem; }
+
+html { height: 100%; }
+
+body { margin: 0; overflow: hidden; }
+
+a { color: crimson; text-decoration: none; }
+a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline }
+
+aside { border: 1px solid lightgray; margin-top: 15px; padding: 2px; }
+
+blockquote { background-color: #ddd; padding: 1ch; }
+
+button, input[type=button] { background-color: #ddd; border: none; color: #322; cursor: pointer; padding: 3px 5px; }
+button:hover { background: #ccc; color: #fff }
+
+code { background-color: #eee; }
+pre { background-color: #eee; padding: 5px; }
+
+input[type="range"] { -webkit-appearance: none; -moz-appearance: none; background-color: #ddd; height: 2ch;
+	width: 100%; }
+
+input[type="range"]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 0;
+	height: 3ch;
+	width: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 3ch;
+	width: 10px;
+}
+
+summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; }
+
+
+main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
+	padding: 0 1rem;  width: calc( 100% - var( --mnu-width ) );  }
+
+#navMenu { background-color: #eee; left: 0; margin: 0; padding: 0 1rem;
+	position: absolute; top: 0; width: var( --mnu-width ); }
+
+
+
+.couponcode { float: right }
+
+.couponcode:hover>.coupontooltip { display: block; }
+
+.coupontooltip { border: 0.8ch double #888; background: white; display: none;
+	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
+
+.sumMenuTitle {
+	background-color: #ccc;
+	color: #777;
+	margin: 10px 0;
+	text-align: center;
+}
+
+.sumMenuSecondary {
+	background-color: #ddd;
+	color: #888;
+	/*font-size: 0.9rem;*/
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+.sumMenuTertiary {
+	background-color: #e8e8e8;
+	color: #999;
+	font-size: 0.9rem;
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+
+#ifr { height: 100%; width: 100%;}
+
+</style>
+</head>
+<body>
+
+<nav id="navMenu" >
+
+	<header id="hdrTitle" >
+
+		<h2>
+			<a id=aSource target=_top title="Source code on GitHub" >
+				<img id=imgIcon height=18 style=opacity:0.5; >
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="couponcode" >??<span id=divDescription class="coupontooltip" ></span></span>
+
+		</h2>
+
+	</header>
+
+	<p>
+
+		View all the files for the first two days of programming for this project
+	</p>
+	<p>
+		<a href="#covid-19-statistics-on-globe-2020-03-14.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
+	</p>
+	<p>
+		<a href="#covid-19-statistics-on-globe-2020-03-15-12.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
+	</p>
+
+	<p>
+		<a href="#covid-19-statistics-on-globe-2020-03-15-13.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
+	</p>
+	<p>
+		<a href="#covid-19-statistics-on-globe-2020-03-15-15.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
+	</p>
+	<p>
+		<a href="#covid-19-statistics-on-globe-2020-03-15-16.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
+	</p>
+	<p>
+		<a href="#covid-19-statistics-on-globe-2020-03-15-17.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
+	</p>
+	<p>
+		<a href="#covid-19-statistics-on-globe-2020-03-15-20.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
+	</p>
+	<p>
+		<a href="#covid-19-statistics-on-globe-2020-03-15-22.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
+	</p>
+
+	<hr>
+	<center title="go to top of menu" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; >
+		❦❦
+	</center>
+</nav>
+
+<main>
+
+<iframe id=ifr ></iframe>
+
+</main>
+
+<script>
+
+aSource.href = "https://github.com/zzzzz/xxxxx.html";
+imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
+sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+const version = document.head.querySelector( "[ name=version ]" );
+sVersion.innerHTML = version ? version.content : "";
+divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+
+init();
+
+function init() {
+
+
+	url = location.hash ? location.hash.slice( 1 ) : "covid-19-statistics-on-globe-2020-03-14.html";
+	ifr.src= url;
+
+	window.addEventListener( "hashchange", () => { console.log( '', 23 );ifr.src = location.hash.slice( 1 ) });
+
+}
+
+
+function setIt() {
+
+	divContent.innerHTML += `<p>${ ( performance.now() ) } - Howdy! </p>`;
+
+}
+
+</script>
+</body>
+</html>

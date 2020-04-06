@@ -189,8 +189,6 @@ function getStats () {
 	const globalRecoveries = linesRecoveries.slice( 1 ).reduce( ( sum, line ) => sum + ( Number( line[ index - 1 ] ) || 0 ), 0 );
 	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
 
-	console.log( 'global', globalCasesNew / globalCases);
-
 	const chinaCases = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
 	const chinaCasesNew = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1 ] : 0, 0 );
 	const chinaDeaths = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
@@ -211,8 +209,6 @@ function getStats () {
 	const usaDeathsNew = linesDeaths.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? ( line[ index ] - line[ index - 1 ] ) : 0, 0 );
 	const usaRecoveries = linesRecoveries.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ index - 1 ] ) : 0, 0 );
 	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
-
-	console.log( 'usa', usaCasesNew / ( usaCases) );
 
 	const rowCases = globalCases - chinaCases - europeCases - usaCases;
 	const rowCasesNew = globalCasesNew - chinaCasesNew - europeCasesNew - usaCasesNew;
@@ -251,7 +247,7 @@ function getStats () {
 		`recoveries: ${ europeRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
 	];
- 
+
 	const totalsUsa = [
 		`USA`,
 		`cases: ${ usaCases.toLocaleString() }`,

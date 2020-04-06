@@ -95,9 +95,9 @@ GLO.loadGlobeWithMapTextures = function() {
 
 	const xStart = 0
 	const yStart = 0;
-	const xFinish = 32;
-	const yFinish = 32;
-	const zoom = 5;
+	const xFinish = 8;
+	const yFinish = 8;
+	const zoom = 3;
 	const deltaPhi = 2.0 * pi / Math.pow( 2, zoom );
 	const steps = Math.floor( 18 / zoom );
 

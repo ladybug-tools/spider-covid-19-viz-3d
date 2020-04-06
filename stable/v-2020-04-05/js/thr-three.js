@@ -75,12 +75,7 @@ THR.onLoad = function ( event ) {
 
 THR.onStart = function () {
 
-	//clearInterval( THR.suspendTimer );
-
 	THR.controls.autoRotate = false;
-
-	//THR.suspendTimer = setTimeout( () => { THR.controls.autoRotate = true; }, 5000 );
-
 
 	window.removeEventListener( 'keydown', THR.onStart );
 	renderer.domElement.removeEventListener( 'mousedown', THR.onStart );
@@ -92,28 +87,6 @@ THR.onStart = function () {
 	renderer.domElement.removeEventListener( 'touchend', THR.onStart );
 
 	DMT.init()
-
-};
-
-
-
-THR.onStop = function () {
-
-	window.removeEventListener( 'keydown', THR.onStart );
-
-	clearInterval( THR.suspendTimer );
-
-	THR.controls.autoRotate = false;
-
-	renderer.domElement.removeEventListener( 'mousedown', THR.onStart );
-	renderer.domElement.removeEventListener( 'mousemove', THR.onStart );
-	renderer.domElement.removeEventListener( 'wheel', THR.onStart );
-
-	renderer.domElement.removeEventListener( 'touchstart', THR.onStart );
-	renderer.domElement.removeEventListener( 'touchmove', THR.onStart );
-	renderer.domElement.removeEventListener( 'touchend', THR.onStart );
-
-
 
 };
 
@@ -206,6 +179,7 @@ THR.drawPlacard = function ( text = [ "abc", "testing 123" ], scale = "0.2", col
 	}
 
 };
+
 
 
 THR.onWindowResize = function () {

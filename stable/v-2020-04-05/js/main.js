@@ -1,41 +1,74 @@
 // copyright 2020 Spider contributors. MIT license.
-// 2020-04-02
+// 2020-04-05
 /* global THREE, controls, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
 
 
-let build = "stable";
-//let build = "dev";
+////////// Deployment
 
-let timeStamp = "12:21";
+//let build = "stable";
+let build = "dev";
 
-let versionStable = "v-2020-04-03";
-let versionDev = "v-2020-04-04";
-let version = versionStable;
+let timeStamp = "21:29";
+
+let versionStable = "v-2020-04-04";
+let versionDev = "v-2020-04-05";
+
+////////// Menu title
+
+let version = build === "dev" ? versionDev : versionStable;
+
+let pathAssets = "../../../assets/";
+imgIcon.src = pathAssets + "images/github-mark-32.png";
+
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
+
+spnTitle.innerHTML = document.title; // ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
+const versionStr = version + "-" + timeStamp + "-" + build;
+spnVersion.innerHTML = versionStr;
+//divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+spnDescription.innerHTML = `
+View and track <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic" target="_blank">COVID-19</a> pandemic data for the entire world
+sourced from multiple authoritative providers
+in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a> WebGL tools.
+`
+
+////////// Info messages
+
+
+
+////////// Pop-up messages
+
+let messageInfo = `
+<ul>
+	<li title="Or press any key or scroll mouse">Touch the screen to stop rotating</li>
+	<li title="Press left mouse or drag touch to rotate" >Two fingers or mouse wheel to zoom</li>
+	<li title="It may take a few seconds for data to arrive" >Touch the bars to pop-up statistics</li>
+</ul>`;
 
 let messageOfTheDayStable = `
-<mark>New for 2020-04-03<br>
-* Add If iOS then load simple globe<br>
-* Pop-ups appear when you mouse over them<br>
-* Increased Frames/Second by 5 or so
+<mark>
+New for 2020-04-04<br>
+* 16:30 Pop-ups are movable and scroll nicely<br>
+* 17:33 Wikipedia pop-ups load graphs immediately<br>
+* 23:06 Select country works on all charts
 </mark>
 `;
 
 let messageOfTheDayDev = `
-<mark>New for 2020-04-04<br>
-* Now new features yet<br>
-* What would *you* like to see here?
-`;
+<mark>
+<ul>
+	<li>New for 2020-04-05</li>
+	<li>Left menu reorganized, code cleaned</li>
+	<li>Add more info boxes</li>
+	<li>JHU TimeSeries: calculates and shows new percentages</li>
+	<li>What would *you* like to see here?</li>
+</ul>
+</mark>`;
 
 
-let pathAssets = "../../../assets/";
+//////////
 
-aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
-imgIcon.src = pathAssets + "images/github-mark-32.png";
-const versionStr = version + "-" + timeStamp + "-" + build;
-
-sTitle.innerHTML = document.title; // ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
-sVersion.innerHTML = versionStr;
-//divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 
 let group = new THREE.Group();
 let groupCases = new THREE.Group();
@@ -44,6 +77,7 @@ let groupCasesNewGrounded = new THREE.Group();
 let groupRecoveries = new THREE.Group();
 let groupDeaths = new THREE.Group();
 let groupDeathsNew = new THREE.Group();
+let groupDeathsNewGrounded = new THREE.Group();
 let groupPlacards = new THREE.Group();
 let groupLines = new THREE.Group();
 let groupPrevious;
@@ -58,22 +92,20 @@ let linesDeathsNew;
 
 let today;
 
-let intersected;
-
+//let intersected;
 
 let scene, camera, controls, renderer;
-
 
 let scaleHeights = 0.0003;
 
 THR.init();
 THR.animate();
 
-//init(); // see html
 
 
+//initMain(); // see html
 
-function init() {
+function initMain() {
 
 	scene = THR.scene;
 	camera = THR.camera;
@@ -88,6 +120,8 @@ function init() {
 	GLO.addSkyBox();
 
 	getNotes();
+
+	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
 
 }
 
@@ -109,7 +143,8 @@ function requestFile( url, callback ) {
 
 function resetGroups () {
 
-	scene.remove( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.remove( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries,
+		groupDeaths, groupDeathsNew, groupDeathsNewGrounded, groupPlacards, groupLines );
 
 	group = new THREE.Group();
 	groupCases = new THREE.Group();
@@ -117,21 +152,23 @@ function resetGroups () {
 	groupCasesNewGrounded = new THREE.Group();
 	groupDeaths = new THREE.Group();
 	groupDeathsNew = new THREE.Group();
+	groupDeathsNewGrounded = new THREE.Group();
 	groupRecoveries = new THREE.Group();
 	groupPlacards = new THREE.Group();
 	groupLines = new THREE.Group();
 
-	scene.add( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.add( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries,
+		groupDeaths, groupDeathsNew, groupDeathsNewGrounded, groupPlacards, groupLines );
 
 }
 
 
 
 
-//////////
+////////// Interactive Legend
 
 function toggleBars ( group = groupCases ) {
-	console.log( 'group', group  );
+	//console.log( 'group', group  );
 
 	if ( group === groupPrevious ) {
 
@@ -142,6 +179,7 @@ function toggleBars ( group = groupCases ) {
 		groupRecoveries.visible = true;
 
 		groupCasesNewGrounded.visible = false;
+		groupDeathsNewGrounded.visible = false;
 
 		group = undefined;
 
@@ -152,14 +190,15 @@ function toggleBars ( group = groupCases ) {
 		groupDeaths.visible = false;
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
+
 		groupCasesNewGrounded.visible = false;
+		groupDeathsNewGrounded.visible = false;
 
 		group.visible = true;
 
 		groupPrevious = group;
 
 	}
-
 
 }
 
@@ -176,6 +215,7 @@ function toggleNewCases ( group = groupCases ) {
 		groupRecoveries.visible = true;
 
 		groupCasesNewGrounded.visible = false;
+		groupDeathsNewGrounded.visible = false;
 
 		group = undefined;
 
@@ -186,7 +226,10 @@ function toggleNewCases ( group = groupCases ) {
 		groupDeaths.visible = false;
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
-		groupCasesNewGrounded.visible = true;
+
+		groupCasesNewGrounded.visible = group === groupCasesNewGrounded ? true : false;
+		groupDeathsNewGrounded.visible = group === groupDeathsNewGrounded ? true : false;
+
 		if ( ! groupCasesNewGrounded.children.length ) {
 
 			const heightsCasesNewGrounded = linesCases.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
@@ -198,13 +241,27 @@ function toggleNewCases ( group = groupCases ) {
 
 		}
 
-	}
+		if ( ! groupDeathsNewGrounded.children.length ) {
 
-	groupPrevious = group;
+			const heightsCasesDeathsNewGrounded = linesDeaths.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
+			console.log( 'heightsCasesDeathsNewGrounded', heightsCasesDeathsNewGrounded );
+
+			const meshesCasesDeathsNewGrounded = linesDeaths.slice( 1 ).map( ( line, index ) =>
+				addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsCasesDeathsNewGrounded[ index ], 0, 12, 1, false ) );
+
+			groupDeathsNewGrounded.add( ...meshesCasesDeathsNewGrounded );
+
+		}
+
+		groupPrevious = group;
+
+	}
 
 }
 
 
+
+//////////
 
 function addBar( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0, radialSegments = 12, heightSegments = 1, openEnded = true ) {
 
@@ -257,7 +314,13 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 	divStats.innerHTML = `
 <details id=detStats >
 
-	<summary id=sumStats ><b>global data ${ today || "" }</b></summary>
+	<summary id=sumStats >global data
+
+	<span class="couponcode">&#x24d8;<span id=spnDescription class="coupontooltip">
+		Data below is calculated by the script running in your browser and may not be accurate.
+	</span></span>
+
+	</summary>
 
 	<p>
 		${ totalsGlobal.join( "<br>" ).replace( /Global totals/, "<b>Global totals</b>" ) }
@@ -289,74 +352,15 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 
 //////////
 
-function getCountries () {
-
-	let countries = linesCases.map( line => line[ 1 ] );
-
-	countries = [ ...new Set( countries ) ];
-
-	//console.log( 'countries', countries );
-
-	const options = countries.map( country => `<option>${ country }</option>` );
-
-	divCountries.innerHTML = `
-<select id=selCountries onchange=getProvince(this.value) style=width:100%; >${ options }</select>
-<div id=divProvinces > </div>
-`;
-
-}
-
-
-
-function getProvince ( country ) {
-
-	THR.controls.autoRotate = false;
-
-	divMessage.hidden = true;
-	divMessage.innerHTML = "";
-
-	let provinces = linesCases.filter( line => line[ 1 ] === country );
-	//console.log( 'provinces', provinces );
-
-
-	if ( provinces[ 0 ][ 0 ] === "" ) {
-
-		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) );
-
-		divProvinces.innerHTML = "";
-
-	} else {
-
-		const options = provinces.map( province => `<option>${ province[ 0 ] || province[ 1 ] }</option>` );
-
-		divProvinces.innerHTML = `<p><select id=selProvinces onchange=getPlace(this.value) >${ options }</select></p>`;
-
-	}
-}
-
-
-
-function getPlace ( province ) {
-
-	const place = linesCases.find( line => line[ 0 ] === province );
-	//console.log( 'place', place );
-
-	camera.position.copy( THR.latLonToXYZ( 70, place[ 2 ], place[ 3 ] ) );
-
-
-}
-
-
-
-//////////
-
 function getNotes () {
 
 	divSettings.innerHTML = `<details id=detSettings ontoggle=getNotesContent() >
 
-		<summary><b>notes & settings</b></summary>
+		<summary>
+			notes & settings
+		</summary>
 
-		<div id=divNoteSettings ></div>
+		<div id=divNoteSettings >Nothing much here yet. Work-in-progress.</div>
 
 	</details>`;
 
@@ -366,9 +370,9 @@ function getNotes () {
 
 function getNotesContent () {
 
-	DMTdragParent.hidden = !DMTdragParent.hidden;
+	DMTdivParent.hidden = false
 
-	divMessage.innerHTML = `
+	DMTdivContent.innerHTML = `
 
 	<div >
 
@@ -406,8 +410,6 @@ function getNotesContent () {
 
 //////////
 
-
-
 function getBars2D ( arr ) {
 
 	arr.reverse();
@@ -421,7 +423,9 @@ function getBars2D ( arr ) {
 			title="date: ${ dateStrings[ index ] } new cases : ${ item.toLocaleString() }">&nbsp;</div>`
 	).join( "" );
 
-	return `<div style="background-color:pink;width:95%;"
+	//ht = DMTdivContainer.clientHeight - 00 + "px";
+
+	return `<div style="background-color:pink;width:100%;"
 		title="New cases per day. Latest at top.The curve you hope to see flatten!" >${ bars }
 	</div>`;
 

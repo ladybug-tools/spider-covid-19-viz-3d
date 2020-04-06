@@ -4,13 +4,19 @@
 // jshint esversion: 6
 // jshint loopfunc: true
 
+const WP = {}; // Start of Wikipedia name space. ;-)
 
-let wikiPages = [
+
+
+WP.wikiPages = [
 
 	"2019–20_coronavirus_pandemic_by_country_and_territory",
 	//"List_of_cases_of_2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory",
 	"2020_coronavirus_pandemic_in_the_United_States"
+
 ];
+
+WP.divGraph = undefined;
 
 const api = "https://en.wikipedia.org/w/api.php?action=parse&format=json&origin=*&page=";
 
@@ -21,17 +27,20 @@ const iRecover = 8;
 let rows = [];
 let placeWP;
 
-function initFw() {
+
+function initWp() {
 
 	resetGroups();
 
-	fetchUrlWikipediaApi( wikiPages[ 0 ], 0, 1, 0);
+	fetchUrlWikipediaApi( WP.wikiPages[ 0 ], 0, 1, 0);
 
-	fetchUrlWikipediaApi( wikiPages[ 1 ], 0, 3, 1 );
+	fetchUrlWikipediaApi( WP.wikiPages[ 1 ], 0, 3, 1 );
 
 	// wip: requestFile( api + wikiPages[ 0 ], cb )
 
 }
+
+
 
 function cb ( xhr ) {
 
@@ -90,11 +99,12 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 				.split( "\n\n" )
 			);
 
-			if ( url === wikiPages[ 0 ] ) {
+			if ( url === WP.wikiPages[ 0 ] ) {
 
 				globals = rowsTmp[ 0 ];
 				//console.log( 'globals', globals );
 
+				//console.log( 'rt', rowsTmp );
 				rowsTmp.shift();
 
 			}
@@ -107,15 +117,18 @@ function fetchUrlWikipediaApi ( url, table = 0, rowStart = 0, column = 0 ) {
 
 			} else { window.filesLoaded++; }
 
-			if ( window.filesLoaded === wikiPages.length ) {
+			if ( window.filesLoaded === WP.wikiPages.length ) {
 
-				rows.forEach( ( line ) => line[ iCase ] = isNaN( Number( line[ iCase ] ) ) ? "0" : line[ iCase ] );
-				rows.forEach( ( line ) => line[ iDeath ] = isNaN( Number( line[ iDeath ] ) ) ? "0" : line[ iDeath ] );
-				rows.forEach( ( line ) => line[ iRecover ] = isNaN( Number( line[ iRecover ] ) ) ? "0" : line[ iRecover ] );
+				rows.forEach( ( line ) => line[ 6 ] = isNaN( Number( line[ 6 ] ) ) ? "0" : line[ 6 ] );
+				rows.forEach( ( line ) => line[ 7 ] = isNaN( Number( line[ 7 ] ) ) ? "0" : line[ 7 ] );
+				rows.forEach( ( line ) => line[ 8 ] = isNaN( Number( line[ 8 ] ) ) ? "0" : line[ 8 ] );
 				//console.log( 'rows', rows );
 
 				updateBars( rows );
+
 				getStats();
+
+				getCountries();
 
 			}
 
@@ -248,14 +261,18 @@ function getStats () {
 
 
 
+function displayMessage ( index ) {
 
+	//const index = DMT.intersected.userData;
 
-function displayMessage () {
+	DMTdivParent.style.width = "50ch";
+	DMTdivContent.innerHTML = `
+	<div id=WPdivNumbers></div>
+	<div id=WPdivGraph></div>
+	`
+	WP.divGraph = WPdivGraph;
 
-
-	const index = intersected.userData;
-
-	const line = rows[ index ];
+	const line = rows[ index - 1 ];
 	console.log( 'line', line );
 
 	let place = line[ 1 ] ? line[ 1 ] : line[ 0 ];
@@ -266,32 +283,25 @@ function displayMessage () {
 		.replace( /New_York/, "New_York_(state)" )
 		.replace( /Georgia/, "Georgia_(U.S._state)" );
 
-
-	// DMTdragParent.style.overflow = "auto";
-	// DMTdragParent.hidden = false;
-
-	// DMT.setTranslate( 0, 0, DMTdragItem );
-
-	// DMTdragParent.style.left = ( event.clientX ) + "px";
-	// DMTdragParent.style.top = event.clientY + "px";
-
-	// DMTdragParent.style.width = "40ch";
-	divMessage.innerHTML = `
-<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Wikipedia data</a><br>
+		WPdivNumbers.innerHTML = `
+<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Global pandemic Wikipedia data</a><br>
 country: ${ line[ 0 ] }<br>
 place: ${ line[ 1 ] }<br>
 cases: ${ Number( line[ iCase ] ).toLocaleString() }<br>
 deaths: ${ Number( line[ iDeath ] ).toLocaleString() }<br>
 recoveries: ${ Number( line[ iRecover ] ).toLocaleString() }<br>
-wikipedia pandemic page:<br>
-<a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
-<p><button onclick=showLocation("${ placeWP }","${ line[ 4 ] }"); >show ${ place } Wikipedia statistics </button></p>
-<div id=popStats >
-2020-03-30 Effort beginning to work.<br>
-Works in many countries.<br>
-Could show better tables.<br>
-Needs better styling and parsing</div>
+wikipedia pandemic page for:
+<p>
+	<a href="https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${ placeWP }" target="_blank">${ place }</a>
+</p>
 `;
+
+	showLocation( placeWP, line[ 4 ] );
+
+// <p>
+// <button onclick=showLocation("${ placeWP }","${ line[ 4 ] }"); >
+// show ${ place } Wikipedia statistics </button>
+// </p >
 
 }
 
@@ -341,32 +351,83 @@ function fetchUrlWikipediaApiPlace ( url, tab = 0, rowStart = 0, column = 0 ) {
 			//console.log( 'html', html );
 			const tables = html.querySelectorAll( ".wikitable,.barbox" );
 
-			ttab = tables[ tab ];
+			const ttab = tables[ tab ];
 
-			if ( ! ttab ) { alert( "There seem to be no charts or tables we can access here.\n\nTry another place" ); return; }
-			//popStats.style.maxWidth = "300px";
+			if ( !ttab ) {
+				WP.divGraph.innerHTML = "There seem to be no charts or tables we can access here.\n\nTry another place";
+				return;
+			}
 
 			const s = new XMLSerializer();
 			const str = s.serializeToString( ttab).replace( /\[(.*?)\]/g, "" );
 
-			popStats.innerHTML = str;
-
-			// const trs = tables[ table ].querySelectorAll( "tr" );
-			// //console.log( 'trs', trs );
-
-			// const rows = Array.from( trs ).slice( rowStart ).map( tr => tr.innerText.trim()
-			// 	.replace( /\[(.*?)\]/g, "" )
-			// 	.replace( /,/g, "" )
-			// 	.split( "\n\n" )
-			// 	//.slice( 0, - 1 )
-			// )//.sort();
-
-			// //console.log( 'rt', rows );
-
-			// const htm = rows.map( row => `${ row.join( " " ) }` )
-
-			// popStats.innerHTML = htm.join( "<br>" );
+			if ( WP.divGraph ) { WP.divGraph.innerHTML = str; }
 
 		} );
 
+}
+
+
+//////////
+
+
+function getCountries () {
+
+	let countries = rows.map( row => row[ 0 ] );
+
+	countries = [ ...new Set( countries ) ].sort();
+
+	//console.log( 'countries', countries );
+
+	const options = countries.map( country => `<option>${ country }</option>` );
+
+	divCountries.innerHTML = `
+<details>
+	<summary>
+		gazetteer
+		<span class="couponcode">&#x24d8;<span id=GZTspn class="coupontooltip">
+			Select a country from the list below and view its statistics on the globe.
+			Use your computer cursor keys to scroll through the list and view results rapidly.
+		</span></span>
+	</summary>
+	<p>
+		<select id=selCountries onchange=getProvince(this.value) style=width:100%; >${ options }</select>
+	</p>
+	<div id=divProvinces > </div>
+	<hr>
+</details>
+`;
+
+}
+
+
+function getProvince ( country ) {
+
+	THR.controls.autoRotate = false;
+
+	DMTdivParent.hidden = false;
+	//divMessage.innerHTML = "";
+
+	let provinces = rows.filter( line => line[ 0 ] === country );
+	console.log( 'provinces', provinces );
+
+
+	if ( provinces[ 0 ][ 1 ] === "" ) {
+
+		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) );
+
+		divProvinces.innerHTML = "";
+
+		const index = rows.indexOf( provinces[ 0 ] );
+
+		displayMessage( index );
+
+
+	} else {
+
+		const options = provinces.map( province => `<option>${ province[ 0 ] || province[ 1 ] }</option>` );
+
+		divProvinces.innerHTML = `<p><select id=selProvinces onchange=getPlace(this.value) >${ options }</select></p>`;
+
+	}
 }

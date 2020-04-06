@@ -5,12 +5,13 @@
 
 
 
-function initViz3d() {
+function initJts() {
 
 	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+	const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 
 	requestFile( dataJhu, onLoadCases );
+
 
 }
 
@@ -20,9 +21,22 @@ function onLoadCases ( xhr ) {
 
 	resetGroups();
 
-	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=3 style=width:100%;
-		title="Use the cursor keys to go back in time" ></select>`;
+	divDates.innerHTML = `
+<details style="margin:0;" ontoggle=selDate.selectedOptions[0].scrollIntoView(false);>
+	<summary>timeline
+		<span class="couponcode">&#x24d8;<span id=spnTimeline class="coupontooltip">
+		Press the colored buttons to see selected items only. Press again to see all.
+	</span></span>
+	</summary>
+	<p>
 
+	Select a date to view
+	<select id=selDate onchange=updateBars(this.selectedIndex); size=8 style=width:100%;
+		title="Use the cursor keys to go back in time" ></select>
+	<p>
+	<hr>
+</details>
+`;
 	let response = xhr.target.response;
 
 	response = response.replace( /"Korea, South"/, "South Korea" );
@@ -30,19 +44,22 @@ function onLoadCases ( xhr ) {
 	// 	.replace( /"Bahamas, The"/, "The Bahamas" );
 	// .replace( /"Virgin Islands,/, "Virgin Islands");
 
-	linesCases = response.split( "\n" ).map( line => line.split( "," ) );
-	//console.log( 'lines', lines );
+	linesCases = response.split( "\n" ).map( line => line.split( "," ) ).slice( 0, -1 );
+	//console.log( 'linesCases', linesCases );
 
-	const dates = linesCases[ 0 ].slice( 4 );
+	const dateStrings = linesCases[ 0 ].slice( 4 );
+	//console.log( 'dates', dates );
 
-	selDate.innerHTML = dates.map( date => `<option>${ date }</option>` ).join("");
+	selDate.innerHTML = dateStrings.map( date => `<option>${ date }</option>` ).join("");
 
-	selDate.selectedIndex = dates.length - 1;
+	selDate.selectedIndex = dateStrings.length - 1;
 
-	today = dates[ dates.length - 1 ];
+	selDate.selectedOptions[ 0 ].scrollIntoView();
+
+	today = dateStrings[ dateStrings.length - 1 ];
 
 	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+	const dataJhuDeaths = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 
 	requestFile( dataJhuDeaths, onLoadDeaths );
 
@@ -56,7 +73,7 @@ function onLoadDeaths ( xhr ) {
 	//console.log( 'linesDeaths', linesDeaths );
 
 	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
-	const dataJhuRecovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
+	const dataJhuRecovered = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
 
 	requestFile( dataJhuRecovered, onLoadRecovered );
 
@@ -89,8 +106,6 @@ function onLoadRecovered ( xhr ) {
 	//console.log( 'linesRecoveries', linesRecoveries );
 
 	updateBars( linesCases[ 1 ].length );
-
-	getStats();
 
 	getCountries();
 
@@ -155,6 +170,8 @@ function updateBars ( length ) {
 
 	groupRecoveries.add( ...meshesRecoveries );
 
+	getStats();
+
 }
 
 
@@ -171,6 +188,8 @@ function getStats () {
 	const globalDeathsNew = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum + ( line[ index ] - line[ index - 1 ] || 0 ), 0 );
 	const globalRecoveries = linesRecoveries.slice( 1 ).reduce( ( sum, line ) => sum + ( Number( line[ index - 1 ] ) || 0 ), 0 );
 	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
+
+	console.log( 'global', globalCasesNew / globalCases);
 
 	const chinaCases = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
 	const chinaCasesNew = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1 ] : 0, 0 );
@@ -193,6 +212,8 @@ function getStats () {
 	const usaRecoveries = linesRecoveries.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ index - 1 ] ) : 0, 0 );
 	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
 
+	console.log( 'usa', usaCasesNew / ( usaCases) );
+
 	const rowCases = globalCases - chinaCases - europeCases - usaCases;
 	const rowCasesNew = globalCasesNew - chinaCasesNew - europeCasesNew - usaCasesNew;
 	const rowDeaths = globalDeaths - chinaDeaths - europeDeaths - usaDeaths;
@@ -202,11 +223,11 @@ function getStats () {
 
 
 	const totalsGlobal = [
-		`Global totals`,
+		`Global totals ${ selDate.value }`,
 		`cases: ${ globalCases.toLocaleString() }`,
-		`cases new: ${ globalCasesNew.toLocaleString() }`,
+		`cases new: ${ globalCasesNew.toLocaleString() } (${ ( 100 * globalCasesNew / globalCases).toLocaleString() }%)`,
 		`deaths: ${ globalDeaths.toLocaleString() }`,
-		`deaths new: ${ globalDeathsNew.toLocaleString() }`,
+		`deaths new: ${ globalDeathsNew.toLocaleString() } (${ ( 100 * globalDeathsNew / globalDeaths).toLocaleString() }%)`,
 		`recoveries: ${ globalRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ globalDeathsToCases.toLocaleString() }%`
 	];
@@ -214,9 +235,9 @@ function getStats () {
 	totalsChina = [
 		`China`,
 		`cases: ${ chinaCases.toLocaleString() }`,
-		`cases new: ${ chinaCasesNew.toLocaleString() }`,
+		`cases new: ${ chinaCasesNew.toLocaleString() } (${ ( 100 * chinaCasesNew / chinaCases).toLocaleString() }%)`,
 		`deaths: ${ chinaDeaths.toLocaleString() }`,
-		`deaths new: ${ chinaDeathsNew.toLocaleString() }`,
+		`deaths new: ${ chinaDeathsNew.toLocaleString() } (${ ( 100 * chinaDeathsNew / chinaDeaths).toLocaleString() }%)`,
 		`recoveries: ${ chinaRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%`
 	];
@@ -224,19 +245,19 @@ function getStats () {
 	const totalsEurope = [
 		`Europe`,
 		`cases: ${ europeCases.toLocaleString() }`,
-		`cases new: ${ europeCasesNew.toLocaleString() }`,
+		`cases new: ${ europeCasesNew.toLocaleString() } (${ ( 100 * europeCasesNew / europeCases).toLocaleString() }%)`,
 		`deaths: ${ europeDeaths.toLocaleString() }`,
-		`deaths new: ${ europeDeathsNew.toLocaleString() }`,
+		`deaths new: ${ europeDeathsNew.toLocaleString() }(${ ( 100 * europeDeathsNew / europeDeaths).toLocaleString() }%)`,
 		`recoveries: ${ europeRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
 	];
-
+ 
 	const totalsUsa = [
 		`USA`,
 		`cases: ${ usaCases.toLocaleString() }`,
-		`cases new: ${ usaCasesNew.toLocaleString() }`,
+		`cases new: ${ usaCasesNew.toLocaleString() } (${ ( 100 * usaCasesNew / usaCases).toLocaleString() }%)`,
 		`deaths: ${ usaDeaths.toLocaleString() }`,
-		`deaths new: ${ usaDeathsNew.toLocaleString() }`,
+		`deaths new: ${ usaDeathsNew.toLocaleString() } (${ ( 100 * usaDeathsNew / usaDeaths).toLocaleString() }%)`,
 		`recoveries: ${ usaRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ usaDeathsToCases.toLocaleString() }%`
 	];
@@ -244,9 +265,9 @@ function getStats () {
 	const totalsRow = [
 		`Rest of World`,
 		`cases: ${ rowCases.toLocaleString() }`,
-		`cases new: ${ rowCasesNew.toLocaleString() }`,
+		`cases new: ${ rowCasesNew.toLocaleString() } (${ ( 100 * rowCasesNew / rowCases).toLocaleString() }%)`,
 		`deaths: ${ rowDeaths.toLocaleString() }`,
-		`deaths new: ${ rowDeathsNew.toLocaleString() }`,
+		`deaths new: ${ rowDeathsNew.toLocaleString() } (${ ( 100 * rowDeathsNew / rowDeaths).toLocaleString() }%)`,
 		`recoveries: ${ rowRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ rowDeathsToCases.toLocaleString() }%`
 	];
@@ -257,9 +278,9 @@ function getStats () {
 
 
 
-function displayMessage () {
+function displayMessage ( index ) {
 
-	const index = intersected.userData + 1;
+	//const index = DMT.intersected.userData + 1;
 
 	const line = linesCases[ index ];
 	//console.log( 'line', line );
@@ -277,69 +298,103 @@ function displayMessage () {
 	let country = line[ 1 ];
 	const place = line[ 0 ];
 
-	if ( country === "US" ) { country = "United States of America"; }
-
-	const arr = geoJsonArray["ne_110m_admin_0_countries_lakes.geojson"].features.filter( feature => feature.properties.NAME === country );
-	//console.log( 'arr', arr );
-
-	const feature = arr.length ? arr[ 0 ] : undefined;
-	//console.log( 'feature', feature );
-
-	let d2Pop, d2Gdp;
-
-	if ( feature ) {
-
-		const population = feature.properties.POP_EST;
-		const gdp = feature.properties.GDP_MD_EST;
-		//const name = feature.properties.NAME;
-
-		//console.log( 'gdp/pop', 1000000 * gdp / population  );
-		d2Pop = ( ( lineDeaths[ dateIndex ] * 100000 / population ) ).toLocaleString();
-		d2Gdp = ( line[ dateIndex ] / ( 1000000 * gdp / population ) ).toLocaleString() + "";
-
-	} else {
-
-		d2Pop = "not available";
-		d2Gdp = "not available";
-
-	}
-
-	// DMTdragParent.style.overflow = "auto";
-	// DMTdragParent.hidden = false;
-
-	// DMT.setTranslate( 0, 0, DMTdragItem );
-
-	// DMTdragParent.style.left = ( event.clientX ) + "px";
-	// DMTdragParent.style.top = event.clientY + "px";
-
-	// DMTdragParent.style.width = "40ch";
-
-	// DMTdragParent.hidden = false;
-
-	// DMT.setTranslate( 0, 0, DMTdragItem );
-
-	// DMTdragParent.style.overflow = "auto";
-	// DMTdragParent.style.left = ( event.clientX ) + "px";
-	// DMTdragParent.style.top = event.clientY + "px";
-
-	// DMTdragParent.style.width = "40ch";
-
-	divMessage.innerHTML = `
-		<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - updates daily<br>
+	DMTdivContent.innerHTML = `
+		<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data" target="_blank">JHU data</a> - ${ selDate.value }<br>
 		${ ( place ? "place: " + place + "<br>" : "" ) }
 		country: ${ country }<br>
 		cases: ${ Number( line[ dateIndex ] ).toLocaleString() }<br>
-		cases today: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
+		cases new: <mark>${ ( line[ dateIndex ] - line[ dateIndex - 1 ] ).toLocaleString() }</mark><br>
 		deaths: ${ Number( lineDeaths[ dateIndex ] ).toLocaleString() }<br>
 		deaths new: ${ ( lineDeaths[ dateIndex ] - lineDeaths[ dateIndex - 1 ] ).toLocaleString() }<br>
 		recoveries: ${ Number( lineRecoveries[ dateIndex - 1 ] ).toLocaleString() }<br>
 		deaths/cases: ${ ( 100 * ( Number( lineDeaths[ dateIndex ] ) / Number( line[ dateIndex ] ) ) ).toLocaleString() }%<br>
 		<hr>
-		deaths/100K persons: ${ d2Pop }<br>
-		cases/(gdp/pop): ${ d2Gdp }<br>
+
 		<b title="Latest day at top" >New cases per day</b><br>
 		${ getBars2D( casesNew ) }
 		<br>
 `;
+
+
+// <!-- deaths/100K persons: ${ d2Pop }<br>
+// cases/(gdp/pop): ${ d2Gdp }<br> -->
+
+}
+
+
+//////////
+
+function getCountries () {
+
+	let countries = linesCases.map( line => line[ 1 ] );
+
+	countries = [ ...new Set( countries ) ];
+	//console.log( 'countries', countries );
+
+	const options = countries.map( country => `<option>${ country }</option>` );
+
+	divCountries.innerHTML = `
+<details>
+	<summary>gazetteer
+		<span class="couponcode">&#x24d8;<span id=GZTspn class="coupontooltip">
+			Select a country from the list below and view its statistics on the globe.
+			Use your computer cursor keys to scroll through the list and view results rapidly.
+		</span></span>
+	</summary>
+	<p>
+		Select a country
+		<select id=selCountries onchange=getProvince(this.value) style=width:100%; size=8 >${ options }</select>
+	</p>
+	<div id=divProvinces > </div>
+	<hr>
+`;
+
+}
+
+
+
+function getProvince ( country ) {
+
+	THR.controls.autoRotate = false;
+
+	DMTdivParent.hidden = false;
+	//divMessage.innerHTML = "";
+
+	let provinces = linesCases.filter( line => line[ 1 ] === country );
+	//console.log( 'provinces', provinces );
+
+
+	if ( provinces[ 0 ][ 0 ] === "" ) {
+
+		camera.position.copy( THR.latLonToXYZ( 70, provinces[ 0 ][ 2 ], provinces[ 0 ][ 3 ] ) );
+
+		divProvinces.innerHTML = "";
+
+		index = linesCases.indexOf( provinces[ 0 ] );
+
+		displayMessage( index );
+
+
+	} else {
+
+		const options = provinces.map( province => `<option>${ province[ 0 ] || province[ 1 ] }</option>` );
+
+		divProvinces.innerHTML = `<p><select id=selProvinces onchange=getPlace(this.value) >${ options }</select></p>`;
+
+	}
+}
+
+
+
+function getPlace ( province ) {
+
+	const place = linesCases.find( line => line[ 0 ] === province );
+	console.log( 'place', place );
+
+	camera.position.copy( THR.latLonToXYZ( 70, place[ 2 ], place[ 3 ] ) );
+
+	index = linesCases.indexOf( place );
+
+	displayMessage( index );
 
 }

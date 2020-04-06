@@ -42,7 +42,7 @@ in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank"
 let messageInfo = `
 <ul>
 	<li title="Or press any key or scroll mouse">Touch the screen to stop rotating</li>
-	<li title="Press left mouse or drag touch to rotate" >Two fingers or mouse wheel to zoom.</li>
+	<li title="Press left mouse or drag touch to rotate" >Two fingers or mouse wheel to zoom</li>
 	<li title="It may take a few seconds for data to arrive" >Touch the bars to pop-up statistics</li>
 </ul>`;
 
@@ -59,7 +59,9 @@ let messageOfTheDayDev = `
 <mark>
 <ul>
 	<li>New for 2020-04-05</li>
-	<li>Nothing new here yet</li>
+	<li>Left menu reorganized, code cleaned</li>
+	<li>Add more info boxes</li>
+	<li>JHU TimeSeries: calculates and shows new percentages</li>
 	<li>What would *you* like to see here?</li>
 </ul>
 </mark>`;

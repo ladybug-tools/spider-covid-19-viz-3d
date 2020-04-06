@@ -31,7 +31,7 @@ spnDescription.innerHTML = `
 View and track <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic" target="_blank">COVID-19</a> pandemic data for the entire world
 sourced from multiple authoritative providers
 in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a> WebGL tools.
-`
+`;
 
 ////////// Info messages
 
@@ -244,7 +244,7 @@ function toggleNewCases ( group = groupCases ) {
 		if ( ! groupDeathsNewGrounded.children.length ) {
 
 			const heightsCasesDeathsNewGrounded = linesDeaths.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
-			console.log( 'heightsCasesDeathsNewGrounded', heightsCasesDeathsNewGrounded );
+			console.log( "heightsCasesDeathsNewGrounded", heightsCasesDeathsNewGrounded );
 
 			const meshesCasesDeathsNewGrounded = linesDeaths.slice( 1 ).map( ( line, index ) =>
 				addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsCasesDeathsNewGrounded[ index ], 0, 12, 1, false ) );
@@ -370,7 +370,7 @@ function getNotes () {
 
 function getNotesContent () {
 
-	DMTdivParent.hidden = false
+	DMTdivParent.hidden = false;
 
 	DMTdivContent.innerHTML = `
 

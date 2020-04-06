@@ -1,27 +1,54 @@
 // copyright 2020 Spider contributors. MIT license.
-// 2020-04-02
+// 2020-04-05
 /* global THREE, controls, drawThreeGeo, aSource, imgIcon, sTitle, sVersion, divMessage, divStats, divSettings, detStats, navMenu, THR */
 
+
+////////// Deployment
 
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "00:33 ~ ";
+let timeStamp = "21:29";
 
 let versionStable = "v-2020-04-04";
 let versionDev = "v-2020-04-05";
 
+////////// Menu title
+
 let version = build === "dev" ? versionDev : versionStable;
+
+let pathAssets = "../../../assets/";
+imgIcon.src = pathAssets + "images/github-mark-32.png";
+
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
+
+spnTitle.innerHTML = document.title; // ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
+const versionStr = version + "-" + timeStamp + "-" + build;
+spnVersion.innerHTML = versionStr;
+//divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+spnDescription.innerHTML = `
+View and track <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic" target="_blank">COVID-19</a> pandemic data for the entire world
+sourced from multiple authoritative providers
+in interactive 3D using JavaScript <a href="https://threeja.org" target="_blank">Three.js</a> WebGL tools.
+`
+
+////////// Info messages
+
+
+
+////////// Pop-up messages
 
 let messageInfo = `
 <ul>
-<li title="Or press any key or scroll mouse">Touch the screen to stop rotating</li>
-<li title="Press left mouse or drag touch to rotate" >Two fingers or mouse wheel to zoom.</li>
-<li title="It may take a few seconds for data to arrive" >Touch the bars to pop-up statistics</li>
+	<li title="Or press any key or scroll mouse">Touch the screen to stop rotating</li>
+	<li title="Press left mouse or drag touch to rotate" >Two fingers or mouse wheel to zoom.</li>
+	<li title="It may take a few seconds for data to arrive" >Touch the bars to pop-up statistics</li>
 </ul>`;
 
 let messageOfTheDayStable = `
-<mark>New for 2020-04-04<br>
+<mark>
+New for 2020-04-04<br>
 * 16:30 Pop-ups are movable and scroll nicely<br>
 * 17:33 Wikipedia pop-ups load graphs immediately<br>
 * 23:06 Select country works on all charts
@@ -29,21 +56,17 @@ let messageOfTheDayStable = `
 `;
 
 let messageOfTheDayDev = `
-<mark>New for 2020-04-05<br>
-* Nothing new here yet
-* What would *you* like to see here?
-`;
+<mark>
+<ul>
+	<li>New for 2020-04-05</li>
+	<li>Nothing new here yet</li>
+	<li>What would *you* like to see here?</li>
+</ul>
+</mark>`;
 
 
-let pathAssets = "../../../assets/";
+//////////
 
-aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
-imgIcon.src = pathAssets + "images/github-mark-32.png";
-
-sTitle.innerHTML = document.title; // ? document.title : location.href.split( "/" ).pop().slice( 0, - 5 ).replace( /-/g, " " );
-const versionStr = version + "-" + timeStamp + "-" + build;
-sVersion.innerHTML = versionStr;
-//divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 
 let group = new THREE.Group();
 let groupCases = new THREE.Group();
@@ -52,6 +75,7 @@ let groupCasesNewGrounded = new THREE.Group();
 let groupRecoveries = new THREE.Group();
 let groupDeaths = new THREE.Group();
 let groupDeathsNew = new THREE.Group();
+let groupDeathsNewGrounded = new THREE.Group();
 let groupPlacards = new THREE.Group();
 let groupLines = new THREE.Group();
 let groupPrevious;
@@ -66,20 +90,18 @@ let linesDeathsNew;
 
 let today;
 
-let intersected;
-
+//let intersected;
 
 let scene, camera, controls, renderer;
-
 
 let scaleHeights = 0.0003;
 
 THR.init();
 THR.animate();
 
-//init(); // see html
 
 
+//initMain(); // see html
 
 function initMain() {
 
@@ -119,7 +141,8 @@ function requestFile( url, callback ) {
 
 function resetGroups () {
 
-	scene.remove( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.remove( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries,
+		groupDeaths, groupDeathsNew, groupDeathsNewGrounded, groupPlacards, groupLines );
 
 	group = new THREE.Group();
 	groupCases = new THREE.Group();
@@ -127,21 +150,23 @@ function resetGroups () {
 	groupCasesNewGrounded = new THREE.Group();
 	groupDeaths = new THREE.Group();
 	groupDeathsNew = new THREE.Group();
+	groupDeathsNewGrounded = new THREE.Group();
 	groupRecoveries = new THREE.Group();
 	groupPlacards = new THREE.Group();
 	groupLines = new THREE.Group();
 
-	scene.add( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries, groupDeaths, groupDeathsNew, groupPlacards, groupLines );
+	scene.add( group, groupCases, groupCasesNew, groupCasesNewGrounded, groupRecoveries,
+		groupDeaths, groupDeathsNew, groupDeathsNewGrounded, groupPlacards, groupLines );
 
 }
 
 
 
 
-//////////
+////////// Interactive Legend
 
 function toggleBars ( group = groupCases ) {
-	console.log( 'group', group  );
+	//console.log( 'group', group  );
 
 	if ( group === groupPrevious ) {
 
@@ -152,6 +177,7 @@ function toggleBars ( group = groupCases ) {
 		groupRecoveries.visible = true;
 
 		groupCasesNewGrounded.visible = false;
+		groupDeathsNewGrounded.visible = false;
 
 		group = undefined;
 
@@ -162,7 +188,9 @@ function toggleBars ( group = groupCases ) {
 		groupDeaths.visible = false;
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
+
 		groupCasesNewGrounded.visible = false;
+		groupDeathsNewGrounded.visible = false;
 
 		group.visible = true;
 
@@ -185,6 +213,7 @@ function toggleNewCases ( group = groupCases ) {
 		groupRecoveries.visible = true;
 
 		groupCasesNewGrounded.visible = false;
+		groupDeathsNewGrounded.visible = false;
 
 		group = undefined;
 
@@ -195,7 +224,9 @@ function toggleNewCases ( group = groupCases ) {
 		groupDeaths.visible = false;
 		groupDeathsNew.visible = false;
 		groupRecoveries.visible = false;
-		groupCasesNewGrounded.visible = true;
+
+		groupCasesNewGrounded.visible = group === groupCasesNewGrounded ? true : false;
+		groupDeathsNewGrounded.visible = group === groupDeathsNewGrounded ? true : false;
 
 		if ( ! groupCasesNewGrounded.children.length ) {
 
@@ -208,6 +239,18 @@ function toggleNewCases ( group = groupCases ) {
 
 		}
 
+		if ( ! groupDeathsNewGrounded.children.length ) {
+
+			const heightsCasesDeathsNewGrounded = linesDeaths.slice( 1 ).map( line => + line[ line.length - 1 ] - line[ line.length - 2 ] );
+			console.log( 'heightsCasesDeathsNewGrounded', heightsCasesDeathsNewGrounded );
+
+			const meshesCasesDeathsNewGrounded = linesDeaths.slice( 1 ).map( ( line, index ) =>
+				addBar( line[ 2 ], line[ 3 ], index, "gray", 0.6, heightsCasesDeathsNewGrounded[ index ], 0, 12, 1, false ) );
+
+			groupDeathsNewGrounded.add( ...meshesCasesDeathsNewGrounded );
+
+		}
+
 		groupPrevious = group;
 
 	}
@@ -215,6 +258,8 @@ function toggleNewCases ( group = groupCases ) {
 }
 
 
+
+//////////
 
 function addBar( lat, lon, index, color = "red", radius = 0.4, height = 0, offset = 0, radialSegments = 12, heightSegments = 1, openEnded = true ) {
 
@@ -267,7 +312,13 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 	divStats.innerHTML = `
 <details id=detStats >
 
-	<summary id=sumStats ><b>global data</b></summary>
+	<summary id=sumStats >global data
+
+	<span class="couponcode">&#x24d8;<span id=spnDescription class="coupontooltip">
+		Data below is calculated by the script running in your browser and may not be accurate.
+	</span></span>
+
+	</summary>
 
 	<p>
 		${ totalsGlobal.join( "<br>" ).replace( /Global totals/, "<b>Global totals</b>" ) }
@@ -303,9 +354,11 @@ function getNotes () {
 
 	divSettings.innerHTML = `<details id=detSettings ontoggle=getNotesContent() >
 
-		<summary><b>notes & settings</b></summary>
+		<summary>
+			notes & settings
+		</summary>
 
-		<div id=divNoteSettings >&nbsp</div>
+		<div id=divNoteSettings >Nothing much here yet. Work-in-progress.</div>
 
 	</details>`;
 
@@ -315,7 +368,7 @@ function getNotes () {
 
 function getNotesContent () {
 
-	DMTdivParent.hidden = !DMTdivParent.hidden;
+	DMTdivParent.hidden = false
 
 	DMTdivContent.innerHTML = `
 

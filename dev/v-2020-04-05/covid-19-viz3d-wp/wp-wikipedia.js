@@ -368,8 +368,10 @@ function fetchUrlWikipediaApiPlace ( url, tab = 0, rowStart = 0, column = 0 ) {
 }
 
 
-function getCountries () {
+//////////
 
+
+function getCountries () {
 
 	let countries = rows.map( row => row[ 0 ] );
 
@@ -380,8 +382,20 @@ function getCountries () {
 	const options = countries.map( country => `<option>${ country }</option>` );
 
 	divCountries.innerHTML = `
-<select id=selCountries onchange=getProvince(this.value) style=width:100%; >${ options }</select>
-<div id=divProvinces > </div>
+<details>
+	<summary>
+		gazetteer
+		<span class="couponcode">&#x24d8;<span id=GZTspn class="coupontooltip">
+			Select a country from the list below and view its statistics on the globe.
+			Use your computer cursor keys to scroll through the list and view results rapidly.
+		</span></span>
+	</summary>
+	<p>
+		<select id=selCountries onchange=getProvince(this.value) style=width:100%; >${ options }</select>
+	</p>
+	<div id=divProvinces > </div>
+	<hr>
+</details>
 `;
 
 }

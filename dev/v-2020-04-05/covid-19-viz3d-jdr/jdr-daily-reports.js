@@ -20,14 +20,14 @@ function initJdr() {
 function onLoadContents( xhr ) {
 
 	const dataJhu =
-"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
+"https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
 
 	const json = JSON.parse( xhr.target.response );
 
 	const names = json.map( json => json.name );
 
 	today = names[ names.length - 3 ];
-	console.log( today );
+	//console.log( today );
 
 	requestFile( dataJhu + today, onLoadDailyReport );
 
@@ -187,10 +187,20 @@ function getCountries () {
 	const options = countries.map( country => `<option>${ country }</option>` );
 
 	divCountries.innerHTML = `
-<select id=selCountries onchange=getCountry(this.value) style=width:100%; >${ options }</select>
-<br><br>USA States
-<div id=divStates > </div>
-<div id=divCounties > </div>
+<details>
+	<summary>
+		gazetteer
+		<span class="couponcode">&#x24d8;<span id=GZTspn class="coupontooltip">
+		Select a country from the list below and view its statistics on the globe.
+		Use your computer cursor keys to scroll through the list and view results rapidly.
+		</span></span>
+	</summary>
+	<p><select id=selCountries onchange=getCountry(this.value) style=width:100%; >${ options }</select>
+	<p>USA States
+	<div id=divStates > </div>
+	<div id=divCounties > </div>
+	<hr>
+</details>
 `;
 	//selCountries.selectedIndex = 171;
 
@@ -218,7 +228,7 @@ function getCountry ( country ) {
 
 function getState ( country ) {
 
-	THR.controls.autoRotate = false;
+	//THR.controls.autoRotate = false;
 
 	let usa = rows.filter( row => row[ 3 ] === "US" );
 	//console.log( 'statesAA', usa );

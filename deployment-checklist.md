@@ -4,6 +4,7 @@
 
 ## "Pre-flight" check
 
+* fetch what you have
 * dev/v-2020-xx-xx/js/main.js > Check vars for suitability
 * dev/v-2020-xx-xx/covid-19-viz3d-jts/jys-time-series.html
 	* Line 170 un-commented:

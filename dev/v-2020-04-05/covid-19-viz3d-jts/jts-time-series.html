@@ -5,9 +5,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
 	<meta name=description
-		content="View the COVID-19 data from John Hopkins University GitHub repository in interactive 3D">
-	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-
+		content="View and track COVID-19 data from multiple authoritative sources in interactive 3D in your browser">
+	<meta name=keywords content="COVID-19,Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
 
 	<title>v3D JHU TimeSeries </title>
 
@@ -28,77 +27,92 @@
 
 		<br>
 
-		<details id=detNavMenu>
+		<details id="detNavMenu" >
 
 			<summary>show or hide menu</summary>
 
 			<header id="hdrTitle" >
 
 				<h2>
-					<a id=aSource target=_top title="Ladybug Tools / Spider readme & source code on GitHub">
-						<img id=imgIcon height=18 style=opacity:0.5;></a>
+					<a id=aSource target="_top" title="Ladybug Tools / Spider readme & source code on GitHub">
+						<img id=imgIcon height=18 style=opacity:0.5; alt="octocat icon" ></a>
 					<a href="" title="Click to reload this page">
-						<span id=sTitle></span>&nbsp;
-					</a><span class="couponcode">&#x24d8;<span id=divDescription class="coupontooltip">
-							View the COVID-19 data from the Johns Hopkins University
-							<a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data"
-								target="_blank">GitHub repository</a>
-							in interactive 3D using JavaScript <a href="https://threeja.org"
-								target="_blank">Three.js</a>
-							WebGL tools.
-						</span></span>
+						<span id=spnTitle></span>&nbsp;
+					</a><span class="couponcode">&#x24d8;<span id=spnDescription class="coupontooltip">
+					</span></span>
 				</h2>
 
 				<div>
-					<span id=sVersion></span>
+					<span id="spnVersion" ></span>
 				</div>
 
 			</header>
 
 			<hr>
 
-			<div id=MASdivMenuAppSwitch> </div>
+			<div id="MASdivMenuAppSwitch" > </div>
 
-			<p class=navLegend style=background-color:cyan; title="Heights displayed 3X scale">
-				<button id=butNew class=butLegend onclick=toggleNewCases(groupCasesNew)
-					style=background-color:cyan;color:black;width:100%;>
-					New cases today&nbsp;</button>
-			</p>
 
-			<p class=navLegend style=background-color:red; title=";-(">
-				<button id=butCases class=butLegend onclick=toggleBars(groupCases)
-					style=background-color:red;color:white;width:100%;>
-					Confirmed cases&nbsp;</button>
-			</p>
+			<details open>
 
-			<p class=navLegend style=background-color:black; title=";-(">
-				<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths)
-					style=background-color:black;color:white;width:100%;>
-					Deaths&nbsp;</button>
-			</p>
+				<summary>interactive legend
 
-			<p class=navLegend style=background-color:lavender;
-				title="Will behave like new cases today in future version">
-				<button id=butDeathsNew class=butLegend onclick=toggleBars(groupDeathsNew)
-					style=background-color:lavender;width:100%;>
-					New deaths today&nbsp;</button>
-			</p>
+					<span class="couponcode">&#x24d8;<span id=spnInteractive class="coupontooltip">
+						Press the colored buttons to see selected items only. Press again to see all.
+					</span></span>
 
-			<p class=navLegend style=background-color:limegreen; title=";-)">
-				<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries)
-					style=background-color:limegreen;width:100%;>
-					Recoveries&nbsp;</button>
-			</p>
+					</summary>
+				<p class=navLegend style="background-color:cyan;" title=";-(">
+					<button id=butNew class=butLegend onclick=toggleNewCases(groupCasesNewGrounded)
+						style=background-color:cyan;color:black;width:100%;>
+						New cases&nbsp;</button>
+				</p>
 
-			<div id=divDates title="Use your cursor keys to speed through the dates" style=background-color:white;padding:1ch;></div>
+				<p class=navLegend style=background-color:red; title=";-(">
+					<button id=butCases class=butLegend onclick=toggleBars(groupCases)
+						style=background-color:red;color:white;width:100%;>
+						Confirmed cases&nbsp;</button>
+				</p>
 
-			<div id=divCountries title="Use your cursor keys to speed through the countries" style=background-color:white;padding:1ch;></div>
+				<p class=navLegend style=background-color:black; title=";-(">
+					<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths)
+						style=background-color:black;color:white;width:100%;>
+						Deaths&nbsp;</button>
+				</p>
 
-			<div id=divStats style=background-color:white;padding:1ch;></div>
+				<p class=navLegend style=background-color:lavender;
+					title="Will behave like new cases today in future version">
+					<button id=butDeathsNew class=butLegend onclick=toggleNewCases(groupDeathsNewGrounded)
+						style=background-color:lavender;width:100%;>
+						New deaths today&nbsp;</button>
+				</p>
+
+				<p class=navLegend style=background-color:limegreen; title=";-)">
+					<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries)
+						style=background-color:limegreen;width:100%;>
+						Recoveries&nbsp;
+					</button>
+				</p>
+
+				<hr>
+
+			</details>
+
+			<div id=divDates title="Use your cursor keys to speed through the dates"
+				class=navMenuItem ></div>
+
+			<div id=divCountries title="Use your cursor keys to speed through the countries"
+				style=background-color:white;padding:1ch;></div>
+
+			<div id=divStats style="background-color:white;padding:0 1ch;" ></div>
 
 			<div id=divSettings style=background-color:white;padding:1ch;></div>
 
 		</details>
+
+		<hr>
+
+		<center title="hello!" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; > <img src="../../../assets/spider.ico" alt="spider icon" height=24 > </a></center>
 
 	</nav>
 
@@ -107,11 +121,11 @@
 
 		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
 		&nbsp;
-		<button onclick=THR.controls.autoRotate=!THR.controls.autoRatate title="stop the rotation"
-			class=ftrButton "Stop all rotation">&circlearrowright;</button>
+		<button onclick="THR.controls.autoRotate=!THR.controls.autoRotate" title="stop the rotation"
+			class=ftrButton >&circlearrowright;</button>
 		&nbsp;
-		<button onclick=groupPlacards.visible=!groupPlacards.visible title="toggle placards"
-			class=ftrButton>&sdotb;</button>
+		<button onclick="groupPlacards.visible=!groupPlacards.visible" title="toggle placards"
+			class=ftrButton >&sdotb;</button>
 		&nbsp;
 		<button onclick=sayThis(); title="Can you hear me now?" class=ftrButton>&phone;</button>
 
@@ -120,7 +134,7 @@
 
 	<div id="DMTdivParent" >
 		<div id="DMTdivHeader" >
-			<img src="../../../assets/spider.ico" height=24 >
+			<img src="../../../assets/spider.ico" alt="Spider icon" height=24 >
 			<!--
 				<span onclick=DMTdivParent.hidden=true; style=float:right;z-index:20>[ x ]</span>
 			-->
@@ -129,7 +143,8 @@
 			<div id=DMTdivContent >
 				<div id=divMessageTitle ></div>
 				<div id=divReleaseText >dev</div>
-				View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
+				View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">
+					Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
 				<hr>
 				<div id=divMessageInfo></div>
 
@@ -176,7 +191,7 @@
 		initJts();
 
 		// keeps address bar pointed to latest dev. can comment out while developing locally to stop annoying message
-		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
+		window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 
 	</script>
 </body>

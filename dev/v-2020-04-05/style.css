@@ -97,6 +97,10 @@ ul {
 	position: absolute;
 	z-index: 1000;
 }
+.navMenuItem {
+	background-color:white;
+	padding:0 1ch;
+}
 .navLegend {
 	border-radius: 5px;
 	margin: 1ch;
@@ -114,6 +118,10 @@ ul {
 
 #navMenu h2 {
 	margin-bottom: 0;
+}
+
+#navMenu summary {
+	font-weight:bold;
 }
 
 #DMTdivParent {

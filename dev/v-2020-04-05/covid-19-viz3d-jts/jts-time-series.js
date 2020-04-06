@@ -8,12 +8,11 @@
 function initJts() {
 
 	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+	const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 
 	requestFile( dataJhu, onLoadCases );
 
-	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=3 style=width:100%;
-		title="Use the cursor keys to go back in time" ></select>`;
+
 }
 
 
@@ -22,9 +21,22 @@ function onLoadCases ( xhr ) {
 
 	resetGroups();
 
-	divDates.innerHTML = `<select id=selDate onchange=updateBars(this.selectedIndex); size=3 style=width:100%;
-		title="Use the cursor keys to go back in time" ></select>`;
+	divDates.innerHTML = `
+<details style="margin:0;" ontoggle=selDate.selectedOptions[0].scrollIntoView(false);>
+	<summary>timeline
+		<span class="couponcode">&#x24d8;<span id=spnTimeline class="coupontooltip">
+		Press the colored buttons to see selected items only. Press again to see all.
+	</span></span>
+	</summary>
+	<p>
 
+	Select a date to view
+	<select id=selDate onchange=updateBars(this.selectedIndex); size=8 style=width:100%;
+		title="Use the cursor keys to go back in time" ></select>
+	<p>
+	<hr>
+</details>
+`;
 	let response = xhr.target.response;
 
 	response = response.replace( /"Korea, South"/, "South Korea" );
@@ -42,10 +54,12 @@ function onLoadCases ( xhr ) {
 
 	selDate.selectedIndex = dateStrings.length - 1;
 
+	selDate.selectedOptions[ 0 ].scrollIntoView();
+
 	today = dateStrings[ dateStrings.length - 1 ];
 
 	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
-	const dataJhuDeaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+	const dataJhuDeaths = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
 
 	requestFile( dataJhuDeaths, onLoadDeaths );
 
@@ -59,7 +73,7 @@ function onLoadDeaths ( xhr ) {
 	//console.log( 'linesDeaths', linesDeaths );
 
 	//const dataJhuDeaths = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
-	const dataJhuRecovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
+	const dataJhuRecovered = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
 
 	requestFile( dataJhuRecovered, onLoadRecovered );
 
@@ -175,6 +189,8 @@ function getStats () {
 	const globalRecoveries = linesRecoveries.slice( 1 ).reduce( ( sum, line ) => sum + ( Number( line[ index - 1 ] ) || 0 ), 0 );
 	const globalDeathsToCases = 100 * ( globalDeaths / globalCases );
 
+	console.log( 'global', globalCasesNew / globalCases);
+
 	const chinaCases = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
 	const chinaCasesNew = linesCases.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? line[ index ] - line[ index - 1 ] : 0, 0 );
 	const chinaDeaths = linesDeaths.slice( 1 ).reduce( ( sum, line ) => sum += line[ 1 ] === "China" ? Number( line[ index ] ) : 0, 0 );
@@ -196,6 +212,8 @@ function getStats () {
 	const usaRecoveries = linesRecoveries.reduce( ( sum, line ) => sum += line[ 1 ] === "US" ? Number( line[ index - 1 ] ) : 0, 0 );
 	const usaDeathsToCases = 100 * ( usaDeaths / usaCases );
 
+	console.log( 'usa', usaCasesNew / ( usaCases) );
+
 	const rowCases = globalCases - chinaCases - europeCases - usaCases;
 	const rowCasesNew = globalCasesNew - chinaCasesNew - europeCasesNew - usaCasesNew;
 	const rowDeaths = globalDeaths - chinaDeaths - europeDeaths - usaDeaths;
@@ -207,9 +225,9 @@ function getStats () {
 	const totalsGlobal = [
 		`Global totals ${ selDate.value }`,
 		`cases: ${ globalCases.toLocaleString() }`,
-		`cases new: ${ globalCasesNew.toLocaleString() }`,
+		`cases new: ${ globalCasesNew.toLocaleString() } (${ ( 100 * globalCasesNew / globalCases).toLocaleString() }%)`,
 		`deaths: ${ globalDeaths.toLocaleString() }`,
-		`deaths new: ${ globalDeathsNew.toLocaleString() }`,
+		`deaths new: ${ globalDeathsNew.toLocaleString() } (${ ( 100 * globalDeathsNew / globalDeaths).toLocaleString() }%)`,
 		`recoveries: ${ globalRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ globalDeathsToCases.toLocaleString() }%`
 	];
@@ -217,9 +235,9 @@ function getStats () {
 	totalsChina = [
 		`China`,
 		`cases: ${ chinaCases.toLocaleString() }`,
-		`cases new: ${ chinaCasesNew.toLocaleString() }`,
+		`cases new: ${ chinaCasesNew.toLocaleString() } (${ ( 100 * chinaCasesNew / chinaCases).toLocaleString() }%)`,
 		`deaths: ${ chinaDeaths.toLocaleString() }`,
-		`deaths new: ${ chinaDeathsNew.toLocaleString() }`,
+		`deaths new: ${ chinaDeathsNew.toLocaleString() } (${ ( 100 * chinaDeathsNew / chinaDeaths).toLocaleString() }%)`,
 		`recoveries: ${ chinaRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ chinaDeathsToCases.toLocaleString() }%`
 	];
@@ -227,19 +245,19 @@ function getStats () {
 	const totalsEurope = [
 		`Europe`,
 		`cases: ${ europeCases.toLocaleString() }`,
-		`cases new: ${ europeCasesNew.toLocaleString() }`,
+		`cases new: ${ europeCasesNew.toLocaleString() } (${ ( 100 * europeCasesNew / europeCases).toLocaleString() }%)`,
 		`deaths: ${ europeDeaths.toLocaleString() }`,
-		`deaths new: ${ europeDeathsNew.toLocaleString() }`,
+		`deaths new: ${ europeDeathsNew.toLocaleString() }(${ ( 100 * europeDeathsNew / europeDeaths).toLocaleString() }%)`,
 		`recoveries: ${ europeRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ europeDeathsToCases.toLocaleString() }%`
 	];
-
+ 
 	const totalsUsa = [
 		`USA`,
 		`cases: ${ usaCases.toLocaleString() }`,
-		`cases new: ${ usaCasesNew.toLocaleString() }`,
+		`cases new: ${ usaCasesNew.toLocaleString() } (${ ( 100 * usaCasesNew / usaCases).toLocaleString() }%)`,
 		`deaths: ${ usaDeaths.toLocaleString() }`,
-		`deaths new: ${ usaDeathsNew.toLocaleString() }`,
+		`deaths new: ${ usaDeathsNew.toLocaleString() } (${ ( 100 * usaDeathsNew / usaDeaths).toLocaleString() }%)`,
 		`recoveries: ${ usaRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ usaDeathsToCases.toLocaleString() }%`
 	];
@@ -247,9 +265,9 @@ function getStats () {
 	const totalsRow = [
 		`Rest of World`,
 		`cases: ${ rowCases.toLocaleString() }`,
-		`cases new: ${ rowCasesNew.toLocaleString() }`,
+		`cases new: ${ rowCasesNew.toLocaleString() } (${ ( 100 * rowCasesNew / rowCases).toLocaleString() }%)`,
 		`deaths: ${ rowDeaths.toLocaleString() }`,
-		`deaths new: ${ rowDeathsNew.toLocaleString() }`,
+		`deaths new: ${ rowDeathsNew.toLocaleString() } (${ ( 100 * rowDeathsNew / rowDeaths).toLocaleString() }%)`,
 		`recoveries: ${ rowRecoveries.toLocaleString() }`,
 		`deaths/cases: ${ rowDeathsToCases.toLocaleString() }%`
 	];
@@ -311,14 +329,24 @@ function getCountries () {
 	let countries = linesCases.map( line => line[ 1 ] );
 
 	countries = [ ...new Set( countries ) ];
-
 	//console.log( 'countries', countries );
 
 	const options = countries.map( country => `<option>${ country }</option>` );
 
 	divCountries.innerHTML = `
-<select id=selCountries onchange=getProvince(this.value) style=width:100%; >${ options }</select>
-<div id=divProvinces > </div>
+<details>
+	<summary>gazetteer
+		<span class="couponcode">&#x24d8;<span id=GZTspn class="coupontooltip">
+			Select a country from the list below and view its statistics on the globe.
+			Use your computer cursor keys to scroll through the list and view results rapidly.
+		</span></span>
+	</summary>
+	<p>
+		Select a country
+		<select id=selCountries onchange=getProvince(this.value) style=width:100%; size=8 >${ options }</select>
+	</p>
+	<div id=divProvinces > </div>
+	<hr>
 `;
 
 }

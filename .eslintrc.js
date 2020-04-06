@@ -3,7 +3,7 @@ module.exports = {
 		"browser": true,
 		"es6": true
 	},
-	"extends": "mdcs",
+
 	"globals": {
 		"Atomics": "readonly",
 		"SharedArrayBuffer": "readonly"

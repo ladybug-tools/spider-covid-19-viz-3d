@@ -127,7 +127,7 @@ main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
 	<div id=divFiles ></div>
 	<hr>
 	<center title="go to top of menu" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; >
-		❦
+		<img src="../../assets/spider.ico" height=24 >
 	</center>
 </nav>
 
@@ -157,7 +157,7 @@ function init() {
 
 	const url = location.hash ? location.hash.slice( 1 ) : "v-2020-03-19/covid-19-viz-3d.html";
 
-	//ifr.src= url;
+	ifr.src= url;
 
 	window.addEventListener( "hashchange", () => { console.log( '', 23 );ifr.src = location.hash.slice( 1 ) });
 
@@ -181,7 +181,8 @@ function onLoad( xhr ) {
 
 	files = json.tree.filter( file => file.path.includes( "covid-19-viz-3d-archive" ) && file.path.endsWith( ".html" ) )
 	files = files.map( file => file.path )
-		.filter( file => file.includes( "template" ) === false && ! file.includes( "readme" ));
+		.filter( file => ! file.includes( "template" ) && ! file.includes( "gallery" )
+		&& ! file.includes( "index" ) && ! file.includes( "readme" ));
 
 	files = files.map( file => file.slice( 28 ) );
 	//console.log( 'files', files );
@@ -190,6 +191,7 @@ function onLoad( xhr ) {
 	divFiles.innerHTML = htm;
 
 }
+
 </script>
 </body>
 </html>

@@ -36,9 +36,8 @@ summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; outline: none; }
 // https://github.com/showdownjs/showdown
 // Canonical version: https://github.com/pushme-pullyou/templates-01/tree/master/open-markdown-or-html
 
-	let defaultScript = "readme.html";
-
-	defaultFile = "README.md";
+	let defaultFile = "readme.html";
+	location.hash = "README.md";
 
 	let contents;
 
@@ -48,9 +47,7 @@ summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; outline: none; }
 
 		showdown.setFlavor("github");
 
-		if ( ! location.hash ) { location.hash = defaultFile; }
-
-		location.hash.endsWith( ".md" ) ? onHashChange() : window.location.href = defaultScript + location.hash;
+		location.hash.endsWith( ".md" ) ? onHashChange() : window.location.href = defaultFile + location.hash;
 
 		window.addEventListener( "hashchange", onHashChange, false );
 

@@ -120,8 +120,10 @@ main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
 	</header>
 
 	<p>
-
 		View all the files for the first two days of programming for this project
+	</p>
+	<p>
+		<a href="https://www.ladybug.tools/spider-covid-19-viz-3d/dev/covid-19-statistics-on-globe/readme.html" target="_blank">Deprecated read me</a>
 	</p>
 	<p>
 		<a href="#covid-19-statistics-on-globe-2020-03-14.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
@@ -129,7 +131,6 @@ main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
 	<p>
 		<a href="#covid-19-statistics-on-globe-2020-03-15-12.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
 	</p>
-
 	<p>
 		<a href="#covid-19-statistics-on-globe-2020-03-15-13.html" >covid-19-statistics-on-globe-2020-03-15-12.html</a>
 	</p>
@@ -163,7 +164,7 @@ main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
 
 <script>
 
-aSource.href = "https://github.com/zzzzz/xxxxx.html";
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/dev/covid-19-statistics-on-globe";
 imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
 sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
@@ -176,7 +177,8 @@ init();
 function init() {
 
 
-	url = location.hash ? location.hash.slice( 1 ) : "covid-19-statistics-on-globe-2020-03-14.html";
+	const url = location.hash ? location.hash.slice( 1 ) : "covid-19-statistics-on-globe-2020-03-14.html";
+
 	ifr.src= url;
 
 	window.addEventListener( "hashchange", () => { console.log( '', 23 );ifr.src = location.hash.slice( 1 ) });

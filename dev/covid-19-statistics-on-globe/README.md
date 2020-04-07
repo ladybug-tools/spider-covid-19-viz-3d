@@ -1,9 +1,11 @@
 
 
-## Deprecated. <mark>See https://github.com/ladybug-tools/spider-covid-19-viz-3d/</mark>
+## <mark>Deprecated</mark>
+
+For newer readme see: https://github.com/ladybug-tools/spider-covid-19-viz-3d/
 
 
- To view all the archived pages - first day of programming for this project - in this folder: [Gallery]( https://www.ladybug.tools/spider-covid-19-viz-3d/dev/covid-19-statistics-on-globe/gallery.html)
+ To view all the archived pages in this folder - the files of first day of programming for this project: [Gallery 1]( https://www.ladybug.tools/spider-covid-19-viz-3d/dev/covid-19-statistics-on-globe/gallery-1.html)
 
 
 <hr>

@@ -3,7 +3,7 @@
 <head>
 <meta charset = "utf-8" >
 <meta name = "viewport" content= "width=device-width, initial-scale=1" >
-<meta name = "description" content = "Basic TooToo HTML template" >
+<meta name = "description" content = "Files for you to play with" >
 <meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
 <!-- <meta name=version content="2020-03-06">-->
 
@@ -17,7 +17,7 @@
 
 html { height: 100%; }
 
-body { margin: 0 auto; max-width: 80ch; padding: 0 0.5rem; }
+body { margin: 0; overflow: hidden; }
 
 a { color: crimson; text-decoration: none; }
 a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline }
@@ -51,13 +51,13 @@ input[type="range"]::-webkit-slider-thumb {
 
 summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; }
 
-/*
-main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
-	padding: 0 1rem; position: absolute; width: calc( 100% - var( --mnu-width ) );  }
 
-#navMenu { background-color: #eee; left: 0; margin: 0; padding: 0 1rem;
-	position: absolute; top: 0; width: var( --mnu-width ); }
-	*/
+main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
+	padding: 0 1rem;  width: calc( 100% - var( --mnu-width ) );  }
+
+#navMenu { background-color: #eee; height: 100vh; left: 0; margin: 0; padding: 0 1rem;
+	overflow: auto; position: absolute; top: 0; width: var( --mnu-width ); }
+
 
 
 .couponcode { float: right }
@@ -93,6 +93,8 @@ main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
 }
 
 
+#ifr { height: 100%; width: 100%;}
+
 </style>
 </head>
 <body>
@@ -117,74 +119,34 @@ main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
 
 	</header>
 
-	<p>See JavaScript developer console</p>
-<!--
 	<p>
-		<button id=but onclick=setIt(); >set it</button> <label><input type=checkbox > checkbox</label>
-		<output id=out >50</output><input type=range  oninput=out.value=this.value >
+		View all the HTML files in this folder. Not all files work as well as could be desired.
 	</p>
--->
 
-</nav>
-<!--
+	<p>
+		View <a href="https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/readme.html" >readme</a>
+	</p>
 
-
-<main>
-
-	<details open >
-
-		<summary class=sumMenuTitle >
-			Summary
-			<span class="couponcode" >??<span id=divDetails class="coupontooltip" >How can I help you?</span></span>
-		</summary>
-
-		<p>aaa bbb ccc 123</p>
-
-		<details open >
-
-			<summary class=sumMenuSecondary >summary secondary </summary>
-
-			<p>abcdefghijklmnopqrstuvwxyz</p>
-
-			<details open >
-
-				<summary class=sumMenuTertiary >summary tertiary </summary>
-
-				<p>abcdefghijklmnopqrstuvwxyz</p>
-
-			</details>
-
-		</details>
-
-	</details>
-
-	<br>
-
-	<div id="divContent" style=position:relative >
-
-		<span class="couponcode">??? <span class="coupontooltip"> Content 2</span></span>
-
-	</div>
-
-	<span class="couponcode">??? <span class="coupontooltip"> Content 3 abc testing</span></span>
-
-</main>
-
-<footer style=position:relative >
+	<div id=divFiles ></div>
 
 	<hr>
 
 	<center title="go to top of menu" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; >
-		❦❦
+		<img src="../assets/spider.ico" height=24 >
 	</center>
 
-</footer>
--->
+</nav>
+
+<main>
+
+<iframe id=ifr ></iframe>
+
+</main>
 
 <script>
 
-aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook";
-imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/";
+imgIcon.src = "../assets/images/github-mark-32.png";
 sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
 sVersion.innerHTML = version ? version.content : "";
@@ -195,35 +157,73 @@ init();
 
 function init() {
 
-	//divContent.innerHTML += `${ ( new Date ) }<p>lorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?</p>`;
+	const urlApi = "https://api.github.com/repos/ladybug-tools/spider-covid-19-viz-3d/git/trees/master?recursive=1"
 
-	//const dataJhu = "https://cdn.jsdelivr.net/gh/CSSEGISandData/COVID-19@master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
-	//const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
-	const dataJhu = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv";
+	requestFile( urlApi );
 
-	requestFile( dataJhu, onLoadDailyReport );
+	//const url = location.hash ? location.hash.slice( 1 ) : "v-2020-03-19/covid-19-viz-3d.html";
 
+	//ifr.src= url;
 
+	window.addEventListener( "hashchange", () => { console.log( '', 23 );ifr.src = location.hash.slice( 1 ) });
 
 }
 
 
-function requestFile( url, callback ) {
+function requestFile( url ) {
 
 	const xhr = new XMLHttpRequest();
 	xhr.open( 'GET', url, true );
 	xhr.onerror = ( xhr ) => console.log( 'error:', xhr  );
 	xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
-	xhr.onload = callback
+	xhr.onload = onLoad;
 	xhr.send( null );
 
 }
 
-function onLoadDailyReport( xhr ) {
+function onLoad( xhr ) {
 
-	lines = xhr.target.response.split( "\n" ).map( line => line.split( "," ) );
-	console.log( 'lines', lines );
+	const json = JSON.parse( xhr.target.response );
+
+	let files = json.tree.map( file => file.path )
+		.filter( file => file.includes( "cookbook" ) && file.endsWith( ".html" ) )
+	files = files.map( file => file.slice( 9 ) );
+	//console.log( 'files', files );
+
+	const folders = [];
+
+	const htm = files.map ( ( path, index )  => {
+
+		const strings = path.split( "/" )
+		const folder = strings[ 0 ];
+
+		let str = "";
+
+		if ( ! folders.includes( folder ) ) {
+
+			folders.push( folder );
+			str = `<h4 style=margin-bottom:0; >${ folder }</h4>`;
+
+		}
+
+		return `
+${ str }
+<div>${ index }
+	<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/blob/master/cookbook/${ path }" >
+		<img src="../assets/images/github-mark-32.png" height=12 style=opacity:0.5; ></a>
+	<a href="#${ path }" >${ strings.pop() }</a>
+	<a href="https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/${ path }" target="_blank">
+		<img src=../assets/images/Icon_External_Link.png></a>
+
+</div>`
+
+
+	} ).join( "" );
+
+	divFiles.innerHTML = htm;
+
 }
+
 </script>
 </body>
 </html>

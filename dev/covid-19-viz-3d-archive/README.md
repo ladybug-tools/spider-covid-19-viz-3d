@@ -11,7 +11,7 @@ value='You are now in a GitHub web page view - Click this button to view this re
 _basic-html.html_
 -->
 
-### Full Screen: [Archive Gallery 2]( https://www.ladybug.tools/spider-covid-19-viz-3d/dev/covid-19-viz-3d-archive )
+### Full Screen: [Archive Gallery 2]( https://www.ladybug.tools/spider-covid-19-viz-3d/dev/covid-19-viz-3d-archive/ )
 
 Browse and view all the files in the  archive
 

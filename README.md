@@ -13,6 +13,17 @@ _covid 19 viz 3d - touch me!_
 
 ### Full Screen latest: [covid 19 viz3d/dev ]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev/ )
 
+### [Cookbook]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/cookbook )
+
+* Demos of the various modules used to build the viewer
+
+### [Archive Gallery 2]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev/covid-19-viz-3d-archive )
+
+* Files for every daily project update since 200-03-19. Some files are better than others.
+
+### [Archive Gallery 1]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev/covid-19-statistics-on-globe )
+
+* Files from the first day of the project
 
 
 <details open >

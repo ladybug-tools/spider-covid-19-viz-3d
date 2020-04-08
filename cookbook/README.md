@@ -10,12 +10,18 @@ value='You are now in a GitHub web page view - Click this button to view this re
 <iframe src=https://pushme-pullyou.github.io/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
 _basic-html.html_
 
-### Full Screen: [ZZZZZ]( https://www.ladybug.tools/spider-covid-19-viz-3d//xxxxxx/xxxxxx.html )
 -->
+
+### [Cookbook Gallery]( https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/index.html )
 
 <details open >
 <summary>Concept</summary>
 
+Files in the Cookbook folder should be runnable, working as expected and self-evident
+
+Files in the Sandbox folder are experiments
+
+Currently this is not true.
 
 </details>
 
@@ -40,7 +46,7 @@ _basic-html.html_
 <details open >
 <summary>Change log </summary>
 
-### 123
+### 2020-04-07
 
 * First commit
 
@@ -48,4 +54,4 @@ _basic-html.html_
 
 ***
 
-# <center title="hello!" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; > <img src="../../assets/spider.ico" height=24 > </a></center>
+# <center title="hello!" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; > <img src="../assets/spider.ico" height=24 > </a></center>

@@ -79,7 +79,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 	<p>
 		<button onclick=controls.reset() >reset view</button>
-		<button onclick="sceneRotation = sceneRotation === 1 ? 0 : 1;">rotation</button>
+		<button onclick="controls.autoRotate = !controls.autoRotate">rotation</button>
 	</p>
 
 	<p>
@@ -151,6 +151,7 @@ function init() {
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
     controls.maxDistance = 25000;
     controls.autoRotate = true;
+    controls.enablePan = false;
 	controls.rotateSpeed = 2;
 	//controls.maxPolarAngle = Math.PI * 0.5;
 

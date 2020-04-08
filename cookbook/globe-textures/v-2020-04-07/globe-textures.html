@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+	<meta name=description
+		content="Real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library">
+	<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+	<meta name=version content="2020-04-07">
+
+
+	<title></title>
+
+	<style>
+		/* Copyright 2020 Theo Armour. MIT License */
+
+		:root {
+			font: 100% monospace;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			overflow: hidden;
+		}
+
+		a {
+			color: crimson;
+			text-decoration: none;
+		}
+
+		a:hover,
+		a:focus,
+		a:active {
+			background-color: yellow;
+			color: #aaa;
+			text-decoration: underline;
+		}
+
+		button {
+			background-color: #ddd;
+			border: none;
+			border-radius: 2px;
+			color: #322;
+			cursor: pointer;
+			padding: 3px 5px;
+		}
+
+		button:hover {
+			background: #ccc;
+			color: #fff
+		}
+
+		input[ type=range] {
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			background-color: #ddd;
+			border-radius: 2px;
+			height: 1.7ch;
+			width: 100%;
+		}
+
+		input[ type=range]::-moz-range-thumb {
+			background-color: #888;
+			border-radius: 2;
+			width: 10px;
+		}
+
+		input[ type=range]::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			background-color: #888;
+			height: 18px;
+			width: 10px;
+		}
+
+		.help {
+			float: right;
+		}
+
+		.couponcode {
+			float: right
+		}
+
+		.couponcode:hover>.coupontooltip {
+			display: block;
+		}
+
+		.coupontooltip {
+			border: 0.8ch double #888;
+			background: white;
+			display: none;
+			font: 100% monospace;
+			font-size: 1rem;
+			font-weight: normal;
+			/* unset summary settings */
+			margin-left: -20ch;
+			padding: 10px;
+			position: absolute;
+			z-index: 1000;
+		}
+
+		#navMenu {
+			margin: 0 20px;
+			max-width: 16rem;
+			position: absolute;
+		}
+
+	</style>
+
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+
+	<nav id="navMenu">
+
+		<header id="hdrTitle">
+
+			<h2>
+				<a id=aSource target=_top title="Source code on GitHub">
+					<img id=imgIcon height=18 style=opacity:0.5;>
+				</a>
+
+				<a href="" title="Click to reload this page">
+					<span id=sTitle></span>
+					<span id=sVersion></span>
+				</a>
+
+				<span class="couponcode">??<span id=divDescription class="coupontooltip"></span></span>
+
+			</h2>
+
+		</header>
+
+		<p>
+			<button onclick="addMeshes()">add meshes</button>
+		</p>
+
+
+		<p>
+			<button onclick=controls.reset()>reset view</button>
+			<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
+		</p>
+
+		<p>
+			<output id=outSpeed>50</output>
+			<input type="range" id="inpSpeed"
+				onclick="controls.autoRotateSpeed=0.05 * this.value;outSpeed.innerHTML=this.value;" />
+		</p>
+
+		<hr>
+
+		<h3>Bitmaps</h3>
+		<p><button onclick=loadGlobeWithBitmapTextures(0); >loadGlobeWithBitmapTextures 1</button></p>
+		<p><button onclick=loadGlobeWithBitmapTextures(1); >loadGlobeWithBitmapTextures 2</button></p>
+		<p><button onclick=loadGlobeWithBitmapTextures(2); >loadGlobeWithBitmapTextures 3</button></p>
+		<p><button onclick=loadGlobeWithBitmapTextures(3); >loadGlobeWithBitmapTextures 4</button></p>
+		<p><button onclick=loadGlobeWithBitmapTextures(4); >loadGlobeWithBitmapTextures 5</button></p>
+		<p><button onclick=loadGlobeWithBitmapTextures(5); >loadGlobeWithBitmapTextures 6</button></p>
+		<p><button onclick=loadGlobeWithBitmapTextures(6); >loadGlobeWithBitmapTextures 7</button></p>
+
+		<h3>Map Tiles</h3>
+		<p><button onclick="loadGlobeWithMapTilesTextures(1)" >zoom level 1 </button></p>
+		<p><button onclick="loadGlobeWithMapTilesTextures(2)" >zoom level 2 </button></p>
+		<p><button onclick="loadGlobeWithMapTilesTextures(3)" >zoom level 3 </button></p>
+		<p><button onclick="loadGlobeWithMapTilesTextures(4)" >zoom level 4 </button></p>
+		<p><button onclick="loadGlobeWithMapTilesTextures(5)" >zoom level 5 </button></p>
+		<p><button onclick="loadGlobeWithMapTilesTextures(6)" >zoom level 6 </button></p>
+
+		<div id="divLog"></div>
+
+	</nav>
+
+	<script>
+
+		let globe = new THREE.Group();
+
+		let bitmaps = [
+
+			"earth_atmos_2048.jpg",
+			"earth_atmos_4096.jpg",
+			"elevation.jpg",
+			"globalcolshade.jpg",
+			"world-map.jpg",
+			"world-topo-bathy.jpg",
+			"LARGE_elevation.jpg",
+		]
+
+		const pathAssets = "../../../assets/";
+
+		aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook";
+		imgIcon.src = pathAssets + "images/github-mark-32.png";
+
+		sTitle.innerHTML = document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+		const version = document.head.querySelector( "[ name=version ]" );
+		sVersion.innerHTML = version ? version.content : "";
+		divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+
+		let mesh, group, axesHelper, lightDirectional, cameraHelper;
+		let sceneRotation = 1;
+		let renderer, camera, controls, scene;
+
+		init();
+		animate();
+
+
+
+		function init() {
+
+			camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1000, 20000 );
+			camera.position.set( - 15000, 0, 0 );
+			camera.up.set( 0, 0, 1 );
+
+			scene = new THREE.Scene();
+			scene.background = new THREE.Color( 0xcce0ff );
+			//scene.fog = new THREE.Fog( 0xcce0ff, 550, 800 );
+			scene.add( camera )
+
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+			renderer.setPixelRatio( window.devicePixelRatio );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			renderer.outputEncoding = THREE.sRGBEncoding;
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+			controls = new THREE.OrbitControls( camera, renderer.domElement );
+			controls.maxDistance = 20000;
+			controls.minDistance = 8000;
+			controls.autoRotateSpeed = 2;
+			controls.enablePan = false;
+			//controls.maxPolarAngle = Math.PI * 0.5;
+
+
+			window.addEventListener( 'resize', onWindowResize, false );
+			window.addEventListener( 'orientationchange', onWindowResize, false );
+			window.addEventListener( 'keyup', () => sceneRotation = 0, false );
+			renderer.domElement.addEventListener( 'click', () => sceneRotation = 0, false );
+
+
+			axesHelper = new THREE.AxesHelper( 8000 );
+			scene.add( axesHelper );
+
+			loadGlobeWithMapTilesTextures();
+
+
+		}
+
+
+
+		function loadGlobeWithBitmapTextures( index ) {
+
+			scene.remove( globe );
+
+			const size = 6371
+			const geometry = new THREE.SphereGeometry( size, 50, 25 );
+			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
+			geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( Math.PI ) );
+
+			const url = pathAssets + "images/" + bitmaps[ index ];
+			var texture = new THREE.TextureLoader().load( url );
+
+			const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
+			globe = new THREE.Mesh( geometry, material );
+
+			globe.name = "globe";
+			scene.add( globe );
+
+		}
+
+
+		function loadGlobeWithMapTilesTextures( zoom = 3 ) {
+
+// https://www.trailnotes.org/FetchMap/TileServeSource.html
+// http://geo.inge.org.uk/gme_maps.htm
+// https://wiki.openstreetmap.org/wiki/Tile_servers
+
+			const radius = 6371;  // earth
+
+			const pi = Math.PI, pi2 = 0.5 * Math.PI;
+			const d2r = pi / 180;
+
+			const xStart = 0
+			const yStart = 0;
+			//const zoom = 3;
+			const xFinish = 2 ** zoom;
+			const yFinish = 2 ** zoom;
+			const deltaPhi = 2.0 * pi / Math.pow( 2, zoom );
+			const steps = Math.floor( 18 / zoom );
+
+			const loader = new THREE.TextureLoader();
+			scene.remove( globe )
+			globe = new THREE.Object3D();
+			globe.rotation.x = pi2;
+
+			for ( let y = yStart; y < yFinish; y++ ) {
+
+				const lat1 = tile2lat( y, zoom );
+				const lat2 = tile2lat( y + 1, zoom );
+				const deltaTheta = ( lat1 - lat2 ) * d2r;
+				const theta = pi2 - lat1 * d2r;
+
+				for ( let x = xStart; x < xFinish; x++ ) {
+
+					const src = "https://mt1.google.com/vt/lyrs=y&x=" + x + "&y=" + y + "&z=" + zoom;
+					//const src = "https://mt1.google.com/vt/lyrs=t&x=" + x + "&y=" + y + "&z=" + zoom;
+					//const src = "https://mt1.google.com/vt/lyrs=s&x=" + x + "&y=" + y + "&z=" + zoom;
+					//const src = "https://mt1.google.com/vt/x=" + x + "&y=" + y + "&z=" + zoom;
+					//const src = "http://b.tile.openstreetmap.org/" + zoom + "/" + x + "/" + y + ".png";
+					//const src = "https://maps.wikimedia.org/osm-intl/" + zoom + "/" + x + "/" + y + ".png";
+					//const src = "http://tile.stamen.com/terrain-background/" + zoom + "/" + x + "/" + y + ".jpg";
+					//const src = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/" + zoom + "/" + y + "/" + x  + ".jpg";
+					// not const src = "http://s3.amazonaws.com/com.modestmaps.bluemarble/" + zoom + "-r" + y + "-c" + x + ".jpg";
+
+					const texture = loader.load( src );
+					const material = new THREE.MeshBasicMaterial( { map: texture } );
+					const geometry = new THREE.SphereBufferGeometry( radius, steps, steps, x * deltaPhi - pi, deltaPhi, theta, deltaTheta );
+					const mesh = new THREE.Mesh( geometry, material );
+
+					globe.add( mesh );
+
+				}
+			}
+			scene.add( globe );
+
+				function tile2lat( y, z ) {
+
+					const n = pi - 2 * pi * y / Math.pow( 2, z );
+					return ( 180 / pi * Math.atan( 0.5 * ( Math.exp( n ) - Math.exp( -n ) ) ) );
+
+				}
+
+		}
+
+
+
+
+
+
+
+		function onWindowResize() {
+
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+
+			renderer.setSize( window.innerWidth, window.innerHeight );
+
+			controls.handleResize();
+
+			//console.log( 'onWindowResize  window.innerWidth', window.innerWidth );
+
+		}
+
+
+
+		function animate() {
+
+			requestAnimationFrame( animate );
+			renderer.render( scene, camera );
+			controls.update();
+
+
+		}
+
+	</script>
+</body>
+
+</html>

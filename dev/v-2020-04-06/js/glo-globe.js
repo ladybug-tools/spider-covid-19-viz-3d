@@ -81,7 +81,6 @@ GLO.loadGlobeBasic = function ( size = 50 ) {
 	mesh.name = "globe";
 	scene.add( mesh );
 
-
 }
 
 

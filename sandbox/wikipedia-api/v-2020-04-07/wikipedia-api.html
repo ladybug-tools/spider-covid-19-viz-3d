@@ -125,7 +125,7 @@ main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
 
 	<p><button onclick=mergePopulationPandemic(); >mergePopulationPandemic</button></p>
 
-
+	<p><button onclick="getCountriesLanLon()" >getCountriesLanLon</button></p>
 
 
 	<footer>
@@ -157,7 +157,7 @@ others = [
 
 	//	{ "country": , "region": , "population":  },
 
-	{ "country": "China (mainland)", "region": "Asia", "population": 1433783686 },
+	//{ "country": "China (mainland)", "region": "Asia", "population": 1433783686 },
 
 	{ "country": "Abkhazia", "region": "Asia", "population": 245246 },
 	{ "country": "Artsakh", "region": "Asia", "population": 150932 },
@@ -292,8 +292,7 @@ function onLoadPandemic( xhr ) {
 	//console.log(tables );
 
 	const trs = tables[ 0 ].querySelectorAll("tr");
-
-	console.log( 'trs', trs );
+	//console.log( 'trs', trs );
 
 	const vals = Array.from( trs ).slice( 2, -3 ).map( tr => tr.innerText.trim().replace( /\[(.*?)\]/g, "" ).split( "\n") ).sort();
 	//console.log( 'vals', vals );
@@ -301,8 +300,14 @@ function onLoadPandemic( xhr ) {
 	pandemic = vals.map( items => { return { "country": items[ 0 ], "cases": items[ 2 ],
 		"deaths": items[ 3 ], "recoveries": items[ 4 ] } } );
 
+	china = pandemic.find( country => country.country === "China (mainland)" );
 
-	//divContent.innerHTML = JSON.stringify( pandemic, null, "<br>"  );
+
+	china.country = china.country.replace( /China \(mainland\)/, "China" );
+
+	console.log( 'china', china );
+
+	divContent.innerHTML = JSON.stringify( pandemic, null, "<br>"  );
 	//console.log( 'pandemic', pandemic );
 
 	return pandemic;
@@ -318,9 +323,9 @@ function mergePopulationPandemic() {
 
 		if ( find ) {
 
-			find.cases = pandemic.cases;
-			find.deaths = pandemic.deaths;
-			find.recoveries = pandemic.recoveries;
+			find.cases = pandemic.cases.replace( /,/g, "");
+			find.deaths = pandemic.deaths.replace( /,/g, "");
+			find.recoveries = pandemic.recoveries.replace( /,/g, "");
 
 		} else {
 
@@ -328,11 +333,85 @@ function mergePopulationPandemic() {
 
 		}
 
-	})
+	} );
+
+	divContent.innerHTML = JSON.stringify( countries, null, "<br>"  );
 
 }
 
 
+function getCountriesLanLon() {
+
+	const dataJhu = "https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+
+	requestFile( dataJhu, onLoadJhu );
+
+
+}
+
+
+function onLoadJhu ( xhr ) {
+	//console.log( ' xhr.target.response',  xhr.target.response );
+
+	let response = xhr.target.response;
+
+	response = response
+		.replace( /"Korea, South"/, "South Korea" )
+		.replace( /Cabo Verde/, "Cape Verde" )
+		.replace( /Czechia/, "Czech Republic" )
+		.replace( /US/, "United States" )
+		.replace( /Taiwan\*/, "Taiwan" )
+		.replace( /Holy See/, "Vatican City" )
+
+		.replace( /Burma/, "Myanmar");
+
+	linesCases = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
+	//console.log( 'linesCases', linesCases );
+
+	linesCases.forEach( line => {
+
+		find = countries.find( country => country.country === line[ 1 ] )
+
+		if ( find ) {
+
+			if ( line[ 0 ] === "" ) {
+
+				find.latitude = line[ 2 ];
+				find.longitude = line[ 3 ];
+
+			} else if ( line[ 0 ] ) {
+
+				find2 = countries.find( country => country.country === line[ 0 ] )
+
+				if ( find2 ) {
+
+					console.log( 'line', line );
+					find2.latitude = line[ 2 ];
+					find2.longitude = line[ 3 ];
+				} else {
+
+					index = countries.indexOf( find );
+
+					element = { "country": line[ 1 ], "region": line[ 0 ], "latitude": line[ 2 ], "longitude": line[ 3 ] };
+					countries.splice( index, 0, element )
+
+				//console.log( 'find', line[ 1 ], line[ 0 ]);
+
+
+				}
+
+
+			}
+		} else {
+
+			console.log( 'no find', line[ 0 ], line[ 1 ] );
+		}
+
+	} );
+
+	divContent.innerHTML = JSON.stringify( countries, null, "<br>"  );
+
+}
 
 
 function getSovereignStates() {

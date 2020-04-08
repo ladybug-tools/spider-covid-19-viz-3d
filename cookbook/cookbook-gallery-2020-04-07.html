@@ -187,6 +187,7 @@ function onLoad( xhr ) {
 
 	let files = json.tree.map( file => file.path )
 		.filter( file => file.includes( "cookbook" ) && file.endsWith( ".html" ) )
+		.filter( file => ! file.includes( "index" ) && ! file.includes( "readme" ) )
 	files = files.map( file => file.slice( 9 ) );
 	//console.log( 'files', files );
 

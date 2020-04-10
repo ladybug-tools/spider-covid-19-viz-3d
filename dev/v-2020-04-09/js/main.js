@@ -63,7 +63,7 @@ New for 2020-04-09
 <ul>
 	<li>Work-in-progress</li>
 	<li>Process for gathering data being totally refactored</li>
-	<li>Bars once again hav flares and are scaled</li>
+	<li>Bars once again have flares and are scaled</li>
 	<li>And much more on the way</li>
 	<li>What would *you* like to see here?</li>
 </ul>

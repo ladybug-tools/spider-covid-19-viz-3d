@@ -19,6 +19,8 @@ If OK locally on Git
 * delete deprecated files
 * Archive what needs archiving
 
+
+
 ## New dev first push
 
 * Push dev folder only - and check things out online
@@ -28,6 +30,7 @@ If OK locally on Git
 * Test by using:
 	* https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-XX-XX/covid-19-viz3d-jts/jts-time-series.html
 	* https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-04-06/covid-19-viz3d-jts/jts-time-series.html
+	* https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-04-09/covid-19-remix/c19-remix.html
 
 ## New dev second push
 

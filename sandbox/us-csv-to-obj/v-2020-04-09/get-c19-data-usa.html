@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang = "en" >
+<head>
+<meta charset = "utf-8" >
+<meta name = "viewport" content= "width=device-width, initial-scale=1" >
+<meta name = "description" content = "Basic TooToo HTML template" >
+<meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
+<!-- <meta name=version content="2020-03-06">-->
+
+<title></title>
+
+<style>
+
+* { box-sizing: border-box; }
+
+:root { font: 100% monospace; --mnu-width: 22rem; --screen-width: calc( 100vw ); --headerHeight: 6rem; }
+
+html { height: 100%; }
+
+body { margin: 0 auto; max-width: 80ch; padding: 0 0.5rem; }
+
+a { color: crimson; text-decoration: none; }
+a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline }
+
+aside { border: 1px solid lightgray; margin-top: 15px; padding: 2px; }
+
+blockquote { background-color: #ddd; padding: 1ch; }
+
+button, input[type=button] { background-color: #ddd; border: none; color: #322; cursor: pointer; padding: 3px 5px; }
+button:hover { background: #ccc; color: #fff }
+
+code { background-color: #eee; }
+pre { background-color: #eee; padding: 5px; }
+
+input[type="range"] { -webkit-appearance: none; -moz-appearance: none; background-color: #ddd; height: 2ch;
+	width: 100%; }
+
+input[type="range"]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 0;
+	height: 3ch;
+	width: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 3ch;
+	width: 10px;
+}
+
+summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; }
+
+
+main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
+	padding: 0 1rem; position: absolute; width: calc( 100% - var( --mnu-width ) );  }
+
+#navMenu { background-color: #eee; left: 0; margin: 0; padding: 0 1rem;
+	position: absolute; top: 0; width: var( --mnu-width ); }
+
+
+.couponcode { float: right }
+
+.couponcode:hover>.coupontooltip { display: block; }
+
+.coupontooltip { border: 0.8ch double #888; background: white; display: none;
+	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
+
+.sumMenuTitle {
+	background-color: #ccc;
+	color: #777;
+	margin: 10px 0;
+	text-align: center;
+}
+
+.sumMenuSecondary {
+	background-color: #ddd;
+	color: #888;
+	/*font-size: 0.9rem;*/
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+.sumMenuTertiary {
+	background-color: #e8e8e8;
+	color: #999;
+	font-size: 0.9rem;
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+
+</style>
+</head>
+<body>
+
+
+	<script src="usa-states.js"></script>
+
+<nav id="navMenu" >
+
+	<header id="hdrTitle" >
+
+		<h2>
+			<a id=aSource target=_top title="Source code on GitHub" >
+				<img id=imgIcon height=18 style=opacity:0.5; >
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="couponcode" >??<span id=divDescription class="coupontooltip" ></span></span>
+
+		</h2>
+
+	</header>
+
+	<p>
+		<button id=but onclick=getPandemicDataUsa(); >getPandemicDataUsa</button>
+	</p>
+
+</nav>
+
+<main>
+
+	<details open >
+
+		<summary class=sumMenuTitle >
+			Summary
+			<span class="couponcode" >??<span id=divDetails class="coupontooltip" >How can I help you?</span></span>
+		</summary>
+
+	</details>
+
+		<div id=divContent ></div>
+
+		<span class="couponcode">??? <span class="coupontooltip"> Content 2</span></span>
+
+</main>
+
+<footer style=position:relative >
+
+	<hr>
+
+	<center title="go to top of menu" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; >
+		❦
+	</center>
+
+</footer>
+
+<script>
+
+aSource.href = "https://github.com/zzzzz/xxxxx.html";
+imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
+sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+const version = document.head.querySelector( "[ name=version ]" );
+sVersion.innerHTML = version ? version.content : "";
+divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+
+init();
+
+function init() {
+
+	//divContent.innerText = JSON.stringify( c19DataUsa, null, "" ).replace( /},/g, "},\n" );
+
+	timeStart = performance.now();
+
+	getPandemicDataUsa();
+
+}
+
+
+function getPandemicDataUsa() {
+
+	const api = "https://en.wikipedia.org/w/api.php?";
+
+	const query = "action=parse&format=json&page=";
+
+	const article = "Template:2019–20_coronavirus_pandemic_data/United_States_medical_cases_by_state"
+
+	requestFile( api + query + article, onLoadDataUsa )
+
+}
+
+
+function onLoadDataUsa ( xhr ) {
+	//console.log( '', xhr.target.response );
+
+	const response =  xhr.target.response;
+
+	const json = JSON.parse( response );
+	//console.log( 'json',json );
+
+	const text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	const parser = new DOMParser();
+	const html = parser.parseFromString( text, "text/html");
+
+	const tables = html.querySelectorAll(".wikitable");
+	//console.log(tables );
+
+	const trs = tables[ 0 ].querySelectorAll("tr");
+	//console.log( 'trs', trs );
+
+	const vals = Array.from( trs ).slice( 2, -2 ).map( tr => tr.innerText.trim().replace( /\[(.*?)\]/g, "" ).split( "\n") ).sort();
+	//console.log( 'vals', vals );
+
+	//let items = vals.map( items => { return { "state": items[ 0 ], "cases": items[ 2 ],
+	//	"deaths": items[ 3 ], "recoveries": items[ 4 ] } } );
+
+	c19DataUsa.forEach( state => {
+
+		const find = vals.find( items => items[ 0 ] === state.region )
+
+		state.cases = find[ 2 ].replace( /,/g, "" );
+		state.death = find[ 3 ].replace( /,/g, "" );
+		state.recoveries = find[ 4 ].replace( /,/g, "" );
+
+	})
+
+	console.log( 'time', performance.now() - timeStart );
+
+	divContent.innerText = JSON.stringify( c19DataUsa, null, "" ).replace( /},/g, "},\n" );
+
+}
+
+
+
+function requestFile( url, callback ) {
+
+	const xhr = new XMLHttpRequest();
+	xhr.open( 'GET', 'https://cors-anywhere.herokuapp.com/' + url, true );
+	xhr.onerror = ( xhr ) => console.log( 'error:', xhr  );
+	xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+	xhr.onload = callback;
+	xhr.send( null );
+
+}
+
+</script>
+</body>
+</html>

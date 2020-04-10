@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang = "en" >
+<head>
+<meta charset = "utf-8" >
+<meta name = "viewport" content= "width=device-width, initial-scale=1" >
+<meta name = "description" content = "Basic TooToo HTML template" >
+<meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
+<!-- <meta name=version content="2020-03-06">-->
+
+<title></title>
+
+<style>
+
+* { box-sizing: border-box; }
+
+:root { font: 100% monospace; --mnu-width: 22rem; --screen-width: calc( 100vw ); --headerHeight: 6rem; }
+
+html { height: 100%; }
+
+body { margin: 0 auto; max-width: 80ch; padding: 0 0.5rem; }
+
+a { color: crimson; text-decoration: none; }
+a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline }
+
+aside { border: 1px solid lightgray; margin-top: 15px; padding: 2px; }
+
+blockquote { background-color: #ddd; padding: 1ch; }
+
+button, input[type=button] { background-color: #ddd; border: none; color: #322; cursor: pointer; padding: 3px 5px; }
+button:hover { background: #ccc; color: #fff }
+
+code { background-color: #eee; }
+pre { background-color: #eee; padding: 5px; }
+
+input[type="range"] { -webkit-appearance: none; -moz-appearance: none; background-color: #ddd; height: 2ch;
+	width: 100%; }
+
+input[type="range"]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 0;
+	height: 3ch;
+	width: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 3ch;
+	width: 10px;
+}
+
+summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; }
+
+
+main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
+	padding: 0 1rem; position: absolute; width: calc( 100% - var( --mnu-width ) );  }
+
+#navMenu { background-color: #eee; left: 0; margin: 0; padding: 0 1rem;
+	position: absolute; top: 0; width: var( --mnu-width ); }
+
+
+
+.couponcode { float: right }
+
+.couponcode:hover>.coupontooltip { display: block; }
+
+.coupontooltip { border: 0.8ch double #888; background: white; display: none;
+	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
+
+.sumMenuTitle {
+	background-color: #ccc;
+	color: #777;
+	margin: 10px 0;
+	text-align: center;
+}
+
+.sumMenuSecondary {
+	background-color: #ddd;
+	color: #888;
+	/*font-size: 0.9rem;*/
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+.sumMenuTertiary {
+	background-color: #e8e8e8;
+	color: #999;
+	font-size: 0.9rem;
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+
+</style>
+</head>
+<body>
+
+<nav id="navMenu" >
+
+	<header id="hdrTitle" >
+
+		<h2>
+			<a id=aSource target=_top title="Source code on GitHub" >
+				<img id=imgIcon height=18 style=opacity:0.5; >
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="couponcode" >??<span id=divDescription class="coupontooltip" ></span></span>
+
+		</h2>
+
+	</header>
+
+	<p><button onclick="getCountriesLanLon()" >getCountriesLanLon</button></p>
+
+	<p><button onclick=getCountriesContinentPopulationUN(); >countries population UN</button></p>
+
+
+
+	<p><button onclick=testQuery(); >test query</button></p>
+
+	<p><button onclick=getJhuDailyStore(); >JHU Daily Store</button></p>
+
+	<p><button onclick=getPandemic(); >pandemic</button></p>
+
+	<p><button onclick=mergePopulationPandemic(); >mergePopulationPandemic</button></p>
+
+
+	<p><button onclick=getSovereignStates(); >sovereign states</button></p>
+
+	<footer>
+
+		<hr>
+
+		<center title="go to top of menu" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; >
+			<img src="../../../assets/spider.ico" height=24 >
+		</center>
+
+	</footer>
+</nav>
+
+<main>
+
+	<div id=divTitle ></div>
+	<div id=divContent ></div>
+
+</main>
+
+
+
+<script>
+
+let countries;
+let pandemic;
+
+others = [
+
+	//	{ "country": , "region": , "population":  },
+
+	//{ "country": "China (mainland)", "region": "Asia", "population": 1433783686 },
+
+	{ "country": "Abkhazia", "region": "Asia", "population": 245246 },
+	{ "country": "Artsakh", "region": "Asia", "population": 150932 },
+	{ "country": "Cook Islands", "region": "Oceania", "population": 15500 },
+	{ "country": "Kosovo", "region": "Europe", "population": 1810463 },
+	{ "country": "Nieu", "region": "Oceania", "population": 0 },
+	{ "country": "Northern Cyprus", "region": "Europe", "population": 0 },
+	{ "country": "Sahrawi Arab Democratic Republic", "region": "Africa", "population": 0 },
+	{ "country": "Somaliland", "region": "Africa", "population": 0 },
+	{ "country": "South Ossetia", "region": "Asia", "population": 0 },
+	{ "country": "Taiwan", "region": "Asia", "population": 0 },
+	{ "country": "Transnistria", "region": "Europe", "population": 469000 }
+
+];
+
+
+const api = "https://en.wikipedia.org/w/api.php?";
+
+//const query = "action=parse&format=json&origin=*&page=";
+const query = "action=parse&format=json&page=";
+
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/sandbox/";
+imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
+sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+const version = document.head.querySelector( "[ name=version ]" );
+sVersion.innerHTML = version ? version.content : "";
+divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+
+init();
+
+function init() {
+
+	getCountriesLanLon();
+
+	//getCountriesContinentPopulationUn();
+
+	//getSovereignStates();
+
+	//getPandemic();
+
+	//mergePopulationPandemic();
+
+}
+
+
+
+
+function getCountriesLanLon() {
+
+	// https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+
+
+	const dataJhu =
+
+	"https://raw.githack.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/" +
+	"time_series_covid19_confirmed_global.csv";
+
+	requestFile( dataJhu, onLoadJhu );
+
+}
+
+
+
+function onLoadJhu ( xhr ) {
+	//console.log( ' xhr.target.response',  xhr.target.response );
+
+	let response = xhr.target.response;
+
+	// .replace( //, "" )
+	response = response
+		.replace( /"Korea, South"/, "South Korea" )
+		.replace( /Cabo Verde/, "Cape Verde" )
+		.replace( /Cote d'Ivoire/, "Ivory Coast" )
+		.replace( /"Korea, North"/, "North Korea" )
+		.replace( /"Bonaire, Sint Eustatius and Saba"/, "Bonaire Sint Eustatius and Saba" )
+
+		.replace( /Falkland Islands \(Malvinas\)/, "Falkland Islands" )
+		.replace( /Czechia/, "Czech Republic" )
+		.replace( /US/, "United States" )
+		//.replace( /Reunion/, "Réunion" )
+		//.replace( /Sao Tome and Príncipe/, "São Tomé and Príncipe" )
+
+		.replace( /Timor-Leste/, "East Timor" )
+		.replace( /Taiwan\*/, "Taiwan" )
+		.replace( /Holy See/, "Vatican City" )
+		.replace( /Burma/, "Myanmar");
+
+	lines = response.split( "\n" ).map( line => line.split( "," ) ).slice( 1, -1 );
+	console.log( 'lines', lines );
+
+	countries = lines.map( line => { return { country: line[ 1 ], region: line[ 0 ], latitude: line[ 2 ], longitude: line[ 3 ] } } );
+
+	countries.push(
+		{ country: "Australia", region: "", latitude: "", longitude: "" },
+		{ country: "Canada", region: "", latitude: "", longitude: "" },
+		{ country: "China", region: "", latitude: "", longitude: "" }
+
+	)
+
+
+	//divContent.innerHTML = JSON.stringify( countries, null, "<br>"  );
+
+	divContent.innerText = JSON.stringify( countries, null, "" ).replace( /},/g, "},\n" );
+
+}
+
+
+
+
+function getCountriesContinentPopulationUN() {
+
+// https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population
+
+// https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)
+// https://en.wikipedia.org/wiki/List_of_sovereign_states
+
+	const article = "List_of_countries_by_population_(United_Nations)";
+
+	const callback = onLoadCountriesPopulationUN;
+
+	requestFile( api + query + article, callback );
+
+}
+
+
+
+function onLoadCountriesPopulationUN( xhr ) {
+
+	//console.log( ' xhr.target.response',  xhr.target.response );
+
+	xhr.target.response
+
+	json = JSON.parse( xhr.target.response );
+	//console.log( 'json',json );
+
+	divTitle.innerHTML = `<p>${ json.parse.title }</p>`;
+
+	text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	//divContent.innerHTML = text;
+
+	parser = new DOMParser();
+	html = parser.parseFromString(text, "text/html");
+
+	const tables = html.querySelectorAll(".wikitable");
+	//console.log(tables );
+
+	trs = tables[ 1 ].querySelectorAll("tr");
+
+	//console.log( 'trs', trs );
+
+	vals = Array.from( trs ).slice( 1, -1 ).map( tr => tr.innerText.trim().replace( /\[(.*?)\]/g, "" ).split( "\n") ).sort();
+
+	//vals = vals.map( items => `{ "country": ${ items[ 0 ] }, "region": ${ items[ 1 ] },
+	//	"population", ${items[ 4 ] } }` ).sort();
+
+	populations = vals.map( items => { return { "country": items[ 0 ], "continent": items[ 1 ],
+		"population": items[ 4 ].replace( /,/g, "") } } );
+
+	populations.push( ...others );
+
+
+	populations.forEach( population => {
+
+		find = countries.find( country => country.country === population.country && country.region === "" )
+
+		if ( find ) {
+
+			find.continent = population.continent;
+			find.population = population.population;
+
+		} else {
+
+
+			find2 = countries.find( country => country.region === population.country )
+
+			if ( find2 ) {
+
+				find2.continent = population.continent;
+				find2.population = population.population;
+
+			} else {
+
+
+			}
+
+			if ( ! find && ! find2 ) {
+
+				console.log( 'no finds', population.country  );
+			}
+
+		}
+
+		if ( population.country === "Australia" ) {
+			oz = countries.find( country => country.country === "Australia" && country.region === "" )
+			oz.continent = population.continent;
+			oz.population = population.population;
+
+		}
+
+	} );
+
+	//divContent.innerHTML = JSON.stringify( countries, null, "<br>"  );
+		divContent.innerText = JSON.stringify( countries, null, "" ).replace( /},/g, "},\n" );
+
+	//console.log( 'countries', countries );
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function testQuery() {
+
+	timeStart = performance.now();
+
+	const query = "action=parse&format=json&page=";
+
+	article = "2019–20_coronavirus_pandemic_by_country_and_territory";
+
+	article = "Template:2019–20_coronavirus_pandemic_data";
+
+
+	//const callback = onLoadTestQuery;
+	const callback = onLoadPandemic;
+
+
+	requestFile( api + query + article, callback );
+
+
+	url = "https://en.m.wikipedia.org/w/index.php?action=raw&title=2019–20_coronavirus_pandemic_by_country_and_territory";
+
+	url = "https://en.m.wikipedia.org/w/index.php?action=raw&title=Template:2019–20_coronavirus_pandemic_data";
+
+	//requestFile( url, callback );
+
+}
+
+
+function onLoadTestQuery ( xhr ) {
+	//console.log( 'xhr', xhr.target.response  );
+
+
+	json = JSON.parse( xhr.target.response );
+	//console.log( 'json',json );
+
+
+	divTitle.innerHTML = `<p>${ json.parse.title }</p>`;
+
+	const text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	//divContent.innerHTML = text;
+
+	const parser = new DOMParser();
+	const html = parser.parseFromString(text, "text/html");
+
+	const tables = html.querySelectorAll(".wikitable");
+	console.log(tables );
+
+	console.log( 'time', performance.now() - timeStart );
+
+}
+
+
+
+
+
+
+
+
+
+function getPandemic() {
+
+	timeStart = performance.now();
+
+	// https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic
+
+	//const article = "2019–20_coronavirus_pandemic_by_country_and_territory";
+
+	const article = "Template:2019–20_coronavirus_pandemic_data";
+
+	const callback = onLoadPandemic;
+
+	requestFile( api + query + article, callback );
+
+
+}
+
+
+
+function onLoadPandemic( xhr ) {
+	//console.log( ' xhr.target.response',  xhr.target.response );
+
+	const json = JSON.parse( xhr.target.response );
+	//console.log( 'json',json );
+
+	divTitle.innerHTML = `<p>${ json.parse.title }</p>`;
+
+	const text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	//divContent.innerHTML = text;
+
+	const parser = new DOMParser();
+	const html = parser.parseFromString(text, "text/html");
+
+	const tables = html.querySelectorAll(".wikitable");
+	//console.log(tables );
+
+	const trs = tables[ 0 ].querySelectorAll("tr");
+	//console.log( 'trs', trs );
+
+	const vals = Array.from( trs ).slice( 2, -3 ).map( tr => tr.innerText.trim().replace( /\[(.*?)\]/g, "" ).split( "\n") ).sort();
+	//console.log( 'vals', vals );
+
+	// global
+	pandemic = vals.map( items => { return { "country": items[ 0 ], "cases": items[ 2 ],
+		"deaths": items[ 3 ], "recoveries": items[ 4 ] } } );
+
+	const china = pandemic.find( country => country.country === "China (mainland)" );
+
+	china.country = china.country.replace( /China \(mainland\)/, "China" );
+
+	//console.log( 'china', china );
+
+	divContent.innerHTML = JSON.stringify( pandemic, null, "<br>"  );
+	//console.log( 'pandemic', pandemic );
+
+	console.log( 'time', performance.now() - timeStart );
+
+	return pandemic;
+
+}
+
+
+function mergePopulationPandemic() {
+
+	pandemic.forEach( pandemic => {
+
+		find = countries.find( country => country.country === pandemic.country )
+
+		if ( find ) {
+
+			find.cases = pandemic.cases.replace( /,/g, "");
+			find.deaths = pandemic.deaths.replace( /,/g, "");
+			find.recoveries = pandemic.recoveries.replace( /,/g, "");
+
+		} else {
+
+			console.log( 'find', pandemic.country);
+
+		}
+
+	} );
+
+	divContent.innerHTML = JSON.stringify( countries, null, "<br>"  );
+
+}
+
+
+
+
+function getSovereignStates() {
+
+		// column 1 is too complicated
+
+	const article = "List_of_sovereign_states";
+
+	const callback = onLoadSovereignStates;
+
+	requestFile( api + query + article, callback );
+
+}
+
+
+
+function onLoadSovereignStates( xhr ) {
+	//console.log( ' xhr.target.response',  xhr.target.response );
+
+	json = JSON.parse( xhr.target.response );
+	//console.log( 'json',json );
+
+	divTitle.innerHTML = `<p>${ json.parse.title }</p>`;
+
+	text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	//divContent.innerHTML = text;
+
+	parser = new DOMParser();
+	html = parser.parseFromString(text, "text/html");
+
+	const tables = html.querySelectorAll(".wikitable");
+	console.log(tables[ 0 ]);
+
+	trs = tables[ 0 ].querySelectorAll("tr");
+
+	//console.log( 'trs', trs );
+
+	vals = Array.from( trs ).slice( 1, -3 ).map( tr => tr.innerText.trim().replace( /\[(.*?)\]/g, "" ).split( "\n\n").slice( 0, -1 )).sort();
+
+	console.log( 'vals', vals.sort() );
+
+}
+
+
+
+
+
+
+function requestFile( url, callback ) {
+
+	const xhr = new XMLHttpRequest();
+	xhr.open( 'GET', 'https://cors-anywhere.herokuapp.com/' + url, true );
+	xhr.onerror = ( xhr ) => console.log( 'error:', xhr  );
+	xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+	xhr.onload = callback;
+	xhr.send( null );
+
+}
+
+</script>
+</body>
+</html>

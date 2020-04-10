@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+	<meta name=description
+		content="View and track COVID-19 data from multiple authoritative sources in interactive 3D in your browser">
+	<meta name=keywords content="COVID-19,Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+
+	<title>v3D Remix</title>
+
+	<link rel="stylesheet" type="text/css" href="../style.css">
+
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/controls/OrbitControls.js"></script>
+
+
+	<script src="get-data-usa.js"></script>
+	<script src="get-data-global.js"></script>
+	<script src="../js/thr-three.js"></script>
+
+	<script src="../js/dmt-div-move-touch.js"></script>
+
+	<nav id="navMenu">
+
+		<br>
+
+		<details id="detNavMenu" >
+
+			<summary>show or hide menu</summary>
+
+			<header id="hdrTitle" >
+
+				<h2>
+					<a id=aSource target="_top" title="Ladybug Tools / Spider readme & source code on GitHub">
+						<img id=imgIcon height=18 style=opacity:0.5; alt="octocat icon" ></a>
+					<a href="" title="Click to reload this page">
+						<span id=spnTitle></span>&nbsp;
+					</a><span class="couponcode">&#x24d8;<span id=spnDescription class="coupontooltip">
+					</span></span>
+				</h2>
+
+				<div>
+					<span id="spnVersion" ></span>
+				</div>
+
+			</header>
+
+			<hr>
+
+			<div id="MASdivMenuAppSwitch" > </div>
+
+
+			<details open>
+
+				<summary>interactive legend
+
+					<span class="couponcode">&#x24d8;<span id=spnInteractive class="coupontooltip">
+						Press the colored buttons to see selected items only. Press again to see all.
+					</span></span>
+
+					</summary>
+				<p class=navLegend style="background-color:cyan;" title=";-(">
+					<button id=butNew class=butLegend onclick=toggleNewCases(groupCasesNewGrounded)
+						style=background-color:cyan;color:black;width:100%;>
+						New cases&nbsp;</button>
+				</p>
+
+				<p class=navLegend style=background-color:red; title=";-(">
+					<button id=butCases class=butLegend onclick=toggleBars(groupCases)
+						style=background-color:red;color:white;width:100%;>
+						Confirmed cases&nbsp;</button>
+				</p>
+
+				<p class=navLegend style=background-color:black; title=";-(">
+					<button id=butDeaths class=butLegend onclick=toggleBars(groupDeaths)
+						style=background-color:black;color:white;width:100%;>
+						Deaths&nbsp;</button>
+				</p>
+
+				<p class=navLegend style=background-color:lavender;
+					title="Will behave like new cases today in future version">
+					<button id=butDeathsNew class=butLegend onclick=toggleNewCases(groupDeathsNewGrounded)
+						style=background-color:lavender;width:100%;>
+						New deaths today&nbsp;</button>
+				</p>
+
+				<p class=navLegend style=background-color:limegreen; title=";-)">
+					<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveries)
+						style=background-color:limegreen;width:100%;>
+						Recoveries&nbsp;
+					</button>
+				</p>
+
+				<hr>
+
+			</details>
+
+			<div id=divDates title="Use your cursor keys to speed through the dates"
+				class=navMenuItem ></div>
+
+			<div id=divCountries title="Use your cursor keys to speed through the countries"
+				style=background-color:white;padding:1ch;></div>
+
+			<div id=divStats style="background-color:white;padding:0 1ch;" ></div>
+
+			<div id=divSettings style=background-color:white;padding:1ch;></div>
+
+		</details>
+
+		<hr>
+
+		<center title="hello!" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; > <img src="../../../assets/spider.ico" alt="spider icon" height=24 > </a></center>
+
+	</nav>
+
+
+	<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center;>
+
+		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
+		&nbsp;
+		<button onclick="THR.controls.autoRotate=!THR.controls.autoRotate" title="stop the rotation"
+			class=ftrButton >&circlearrowright;</button>
+		&nbsp;
+		<button onclick="groupPlacards.visible=!groupPlacards.visible" title="toggle placards"
+			class=ftrButton >&sdotb;</button>
+		&nbsp;
+		<button onclick=sayThis(); title="Can you hear me now?" class=ftrButton>&phone;</button>
+
+	</footer>
+
+
+	<div id="DMTdivParent" >
+		<div id="DMTdivHeader" >
+			<img src="../../../assets/spider.ico" alt="Spider icon" height=24 >
+			<!--
+				<span onclick=DMTdivParent.hidden=true; style=float:right;z-index:20>[ x ]</span>
+			-->
+		</div>
+		<div id="DMTdivContainer" >
+			<div id=DMTdivContent >
+				<div id=divMessageTitle ></div>
+				<div id=divReleaseText >dev</div>
+				View <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" target="_blank">
+					Johns Hopkins University Time Series COVID-19 data</a> for 230+ locations with 60+ day timelines
+				<hr>
+				<div id=divMessageInfo></div>
+
+				<hr>
+				<div id=divMessageOfTheDay ></div>
+				<hr>
+				<small>Come back! See new version every day!</small>
+			</div>
+		</div>
+	</div>
+
+
+	<script src="../js/main.js"></script>
+	<script src="c19-remix.js"></script>
+	<script src="../js/mas-menu-app-switch.js"></script>
+	<script src="../js/glo-globe.js"></script>
+	<script src="../js/spk-speak.js"></script>
+
+
+	<script>
+
+		divMessageTitle.innerHTML = `<b>${ document.title } ~ ${ versionStr }</b>`;
+
+		divMessageInfo.innerHTML = messageInfo;
+
+		if ( build === "stable" ) {
+
+			MASliJTSstable.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<p><mark>"Flagship" chart - most authoritative data and least likely to crash</mark></p>`
+			divMessageOfTheDay.innerHTML = messageOfTheDayStable;
+
+		} else {
+
+			MASliJTSdev.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<mark>"Beta version" - chart with new features and likely to have issues</mark>`;
+			divMessageOfTheDay.innerHTML = messageOfTheDayDev;
+
+		}
+
+		detNavMenu.open = window.innerWidth > 640;
+
+		initMain();
+
+		getPandemicDataUsa();
+
+		getPandemicDataGlobal();
+
+		//initJts();
+
+		// keeps address bar pointed to latest dev. can comment out while developing locally to stop annoying message
+		//window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
+
+	</script>
+</body>
+</html>

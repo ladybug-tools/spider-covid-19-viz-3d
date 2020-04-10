@@ -8,10 +8,10 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "20:10";
+let timeStamp = "22:57";
 
 let versionStable = "v-2020-04-05";
-let versionDev = "v-2020-04-06";
+let versionDev = "v-2020-04-09";
 
 ////////// Menu title
 
@@ -52,15 +52,19 @@ New for 2020-04-05
 	<li>Left menu reorganized, code cleaned</li>
 	<li>Add more info boxes</li>
 	<li>JHU TimeSeries: calculates and shows new percentages</li>
+	<li>Big changes happening in 'Beta' version</li>
 </ul>
 </mark>
 `;
 
 let messageOfTheDayDev = `
 <mark>
-New for 2020-04-06
+New for 2020-04-09
 <ul>
-	<li>Nothing new yet</li>
+	<li>Work-in-progress</li>
+	<li>Process for gathering data being totally refactored</li>
+	<li>Bars once again hav flares and are scaled</li>
+	<li>And much more on the way</li>
 	<li>What would *you* like to see here?</li>
 </ul>
 </mark>`;

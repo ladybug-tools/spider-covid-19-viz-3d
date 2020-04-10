@@ -4,14 +4,14 @@
 
 ## "Pre-flight" check
 
-* fetch or pull: check what you have. make sure no merges needed.
+* Synchronize changes: check what you have on server and locally. make sure no merges needed.
 * dev/v-2020-xx-xx/js/main.js > Check vars for suitability
-* dev/v-2020-xx-xx/covid-19-viz3d-jts/jys-time-series.html
+* dev/v-2020-xx-xx/covid-19-viz3d-jts/jys-time-series.html or default file
 	* Line 170 un-commented:
 	// keeps address bar pointed to latest dev.
 	window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
 
-If OK on Git
+If OK locally on Git
 
 * dev/v-2020-xx-xx/ > copy folder to dev/v-2020-xx-xx+1/
 * main.js > update dates and time

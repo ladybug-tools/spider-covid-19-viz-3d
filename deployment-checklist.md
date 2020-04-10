@@ -26,7 +26,7 @@ If OK locally on Git
 	* makes it easy to push just dev
 * Commit message: 2020-xx-xx+ 1 dev first commit
 * Test by using:
-	*  https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-XX-XX/covid-19-viz3d-jts/jts-time-series.html
+	* https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-XX-XX/covid-19-viz3d-jts/jts-time-series.html
 	* https://www.ladybug.tools/spider-covid-19-viz-3d/dev/v-2020-04-06/covid-19-viz3d-jts/jts-time-series.html
 
 ## New dev second push

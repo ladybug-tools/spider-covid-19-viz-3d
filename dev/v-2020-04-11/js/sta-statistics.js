@@ -59,31 +59,31 @@ txt.addTextContinents = function () {
 		`Africa\n` +
 		`Cases: ${ sta.Africa.cases.toLocaleString() }\n` +
 		`Deaths: ${ sta.Africa.deaths.toLocaleString() }\n`+
-		`Recoveries: ${ sta.Africa.deaths.toLocaleString() }\n`;
+		`Recoveries: ${ sta.Africa.recoveries.toLocaleString() }\n`;
 
 	const europe =
 		`Europe\n` +
 		`Cases: ${ sta.Europe.cases.toLocaleString() }\n` +
 		`Deaths: ${ sta.Europe.deaths.toLocaleString() }\n`+
-		`Recoveries: ${ sta.Europe.deaths.toLocaleString() }\n`;
+		`Recoveries: ${ sta.Europe.recoveries.toLocaleString() }\n`;
 
 	const asia =
 		`Asia\n` +
 		`Cases: ${ sta.Asia.cases.toLocaleString() }\n` +
 		`Deaths: ${ sta.Asia.deaths.toLocaleString() }\n`+
-		`Recoveries: ${ sta.Asia.deaths.toLocaleString() }\n`;
+		`Recoveries: ${ sta.Asia.recoveries.toLocaleString() }\n`;
 
 	const americas =
 		`Americas\n` +
 		`Cases: ${ sta.Americas.cases.toLocaleString() }\n` +
 		`Deaths: ${ sta.Americas.deaths.toLocaleString() }\n`+
-		`Recoveries: ${ sta.Americas.deaths.toLocaleString() }\n`;
+		`Recoveries: ${ sta.Americas.recoveries.toLocaleString() }\n`;
 
 	const oceania =
 		`Oceania\n` +
 		`Cases: ${ sta.Oceania.cases.toLocaleString() }\n` +
 		`Deaths: ${ sta.Oceania.deaths.toLocaleString() }\n`+
-		`Recoveries: ${ sta.Oceania.deaths.toLocaleString() }\n`;
+		`Recoveries: ${ sta.Oceania.recoveries.toLocaleString() }\n`;
 
 	const globals =
 		`Global totals\nCases: ${ WP.totalsGlobal[ 2 ].slice( 1 ) }\n`+

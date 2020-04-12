@@ -5,6 +5,8 @@
 // jshint esversion: 6
 // jshint loopfunc: true
 
+// https://en.wikipedia.org/wiki/Template:2019%E2%80%9320_coronavirus_pandemic_data
+// https://en.wikipedia.org/wiki/Template:2019%E2%80%9320_coronavirus_pandemic_data/United_States_medical_cases_by_state
 
 const WP = {};
 
@@ -28,7 +30,7 @@ WP.init = function () {
 
 	WP.getPandemicData( c19GeoDataGlobal, WP.articleGlobal );
 
-	console.log( "time start all", performance.now() - timeStartAll  );
+	console.log( "time start all", performance.now() - timeStartAll );
 
 };
 
@@ -78,17 +80,23 @@ WP.onLoadData = function ( xhr, c19GeoData ) {
 	const trs = tables[ 0 ].querySelectorAll( "tr" );
 	//console.log( 'trs', trs );
 
-	const rows = Array.from( trs ).slice( 2, -2 ).map( tr => tr.innerText.trim().replace( /\[(.*?)\]/g, "" ).split( "\n" ) ).sort();
-	//console.log( 'rows', rows);
+	let rows = Array.from( trs ).slice( 0, -2 ).map( tr => tr.innerText.trim().replace( /\[(.*?)\]/g, "" ).split( "\n" ) )
+
+	const totals = rows[ 1 ];
+
+	rows = rows.slice( 2 ).sort();
+
+	//console.log( "rows", rows);
 
 	if ( c19GeoData === c19GeoDataUsa ) {
 
+		WP.totalsUsa = totals;
 		WP.parseUsa( rows );
 
 	} else {
 
+		WP.totalsGlobal = totals;
 		WP.parseGlobal( rows );
-
 	}
 
 };
@@ -121,6 +129,8 @@ WP.parseGlobal = function ( rows ) {
 
 	rows[ 43 ][ 0 ] = "China";
 
+	//console.log( "row1", rows[ 0 ] );
+
 	c19GeoDataGlobal.forEach( country => {
 
 		const find = rows.find( places => places[ 0 ] === country.country && country.region === "" );
@@ -150,6 +160,8 @@ WP.parseGlobal = function ( rows ) {
 	console.log( "time", performance.now() - WP.timeStart );
 
 	WP.updateBars( c19GeoDataGlobal );
+
+	sta.init();
 
 };
 

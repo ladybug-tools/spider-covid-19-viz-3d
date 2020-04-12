@@ -50,6 +50,11 @@
 ### js/mas-menu-app-switch.js
 
 
+### js/sta-statistics.js
+
+* First commit
+
+
 ### js/spk-speak.js
 
 
@@ -58,8 +63,10 @@
 
 ### js/threeGeoJSON.js
 
+
 ### js/txt-text.js
 
+* looking good
 
 ### wp/places.js
 

@@ -31,9 +31,9 @@ function onLoadCases ( xhr ) {
 	// .replace( /"Virgin Islands,/, "Virgin Islands");
 
 	JTS.rowsCases = response.split( "\n" ).map( line => line.split( "," ) ).slice( 0, -1 );
-	//console.log( "JTS.rowsCases", JTS.rowsCases );
+	console.log( "JTS.rowsCases", JTS.rowsCases );
 
-	updateBars( JTS.rowsCases[ 1 ].length );
+	updateBars( JTS.rowsCases[ 0 ].length );
 
 }
 

@@ -11,8 +11,8 @@ txt.init = function () {
 
 	const url = "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/fonts/helvetiker_regular.typeface.json";
 
-	loader.load( url, ( fnt ) => { font = fnt; txt.addTextContinents(); } );
-
+	loader.load( url, ( fnt ) => { font = fnt;  } );
+//txt.addTextContinents();
 };
 
 
@@ -23,7 +23,7 @@ txt.addTextContinents = function () {
 
 	groupText = new THREE.Group();
 
-	txt.addBox();
+	//txt.addBox();
 
 	txt.getSimpleText( { text: "Africa\n123", color: 0x0000, radius: 65, latitude: "0", longitude: "0" } );
 	txt.getSimpleText( { text: "Europe", color: 0x0085C7, radius: 65, latitude: "50", longitude: "50" } );
@@ -39,7 +39,7 @@ txt.addTextContinents = function () {
 txt.getSimpleText = function ( {
 		text = "Hello, World!\nThree.js\nabc 123",
 		color = 0x006699,
-		size = 5,
+		size = 3,
 		radius = 70,
 		latitude = 0,
 		longitude = 0

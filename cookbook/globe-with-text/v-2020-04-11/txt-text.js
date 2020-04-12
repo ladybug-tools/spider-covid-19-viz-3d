@@ -46,7 +46,7 @@ txt.getSimpleText = function ( {
 	radius = 65,
 	latitude = 0,
 	longitude = 0,
-	size = 6,
+	size = 3,
 	color = 0x006699
 	} = {} ) {
 
@@ -61,13 +61,9 @@ txt.getSimpleText = function ( {
 	const p3 = THR.latLonToXYZ( radius + 100, latitude, longitude );
 
 	let geometry = new THREE.ShapeBufferGeometry( shapes );
-
 	geometry.computeBoundingBox();
-
 	let xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
-
 	geometry.translate( xMid, 0, 0 );
-
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationY( -0.5 * Math.PI ) );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( -0.5 * Math.PI ) );
 
@@ -80,28 +76,16 @@ txt.getSimpleText = function ( {
 
 
 
-
 	geometry = new THREE.ShapeBufferGeometry( shapes );
-
-
 	geometry.computeBoundingBox();
-
 	xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
-
 	geometry.translate( xMid, 0, 0 );
-
-	//geometry.applyMatrix4( new THREE.Matrix4().makeRotationY( -0.5 * Math.PI ) );
-
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
-	//geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( 0.5 * Math.PI ) );
-
 
 	material = new THREE.MeshBasicMaterial( { color: color, opacity: 1, side: 0, transparent: true } );
 
 	const mesh2 = new THREE.Mesh( geometry, material );
 	mesh2.position.copy( p1 );
-	//mesh2.rotation.z =
-	//mesh2.lookAt( p3 );
 
 	groupText.add( mesh2 );
 

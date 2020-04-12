@@ -32,9 +32,9 @@ sta.init = function () {
 		}
 	} );
 
-	console.log( "sta", sta );
+	//console.log( "sta", sta );
 
-	console.log( "WP", WP.totalsGlobal );
+	//console.log( "WP", WP.totalsGlobal );
 
 	// sta.totalsGlobal = {
 	// 	cases: WP.totalsGlobal[ 2 ].replace( /,/g, "" ),

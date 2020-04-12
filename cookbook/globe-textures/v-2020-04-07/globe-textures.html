@@ -182,6 +182,7 @@
 
 		let bitmaps = [
 
+			"natural-earth-8192-4096-col.jpg",
 			"earth_atmos_2048.jpg",
 			"earth_atmos_4096.jpg",
 			"elevation.jpg",
@@ -226,9 +227,9 @@
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
-			renderer.outputEncoding = THREE.sRGBEncoding;
-			renderer.shadowMap.enabled = true;
-			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+			// renderer.outputEncoding = THREE.sRGBEncoding;
+			// renderer.shadowMap.enabled = true;
+			// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 			controls = new THREE.OrbitControls( camera, renderer.domElement );
 			controls.maxDistance = 20000;
@@ -247,14 +248,16 @@
 			axesHelper = new THREE.AxesHelper( 8000 );
 			scene.add( axesHelper );
 
-			loadGlobeWithMapTilesTextures();
+			loadGlobeWithBitmapTextures()
+
+			//loadGlobeWithMapTilesTextures();
 
 
 		}
 
 
 
-		function loadGlobeWithBitmapTextures( index ) {
+		function loadGlobeWithBitmapTextures( index = 0 ) {
 
 			scene.remove( globe );
 

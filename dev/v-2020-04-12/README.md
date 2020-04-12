@@ -2,9 +2,9 @@
 # [2020-04-10 Read Me]( #README.md )
 
 
-2020-04-11
+2020-04-12
 
-12:51 ~  Start
+* 
 
 
 
@@ -46,6 +46,9 @@
 
 ### js/glo-globe.js
 
+* Back tp a bitmap for the Globe
+* Custom-built 8192 x 4086 - from Natural Earth with colors enhanced
+* geoJson back in.
 
 ### js/mas-menu-app-switch.js
 
@@ -53,7 +56,7 @@
 ### js/sta-statistics.js
 
 * First commit
-* seems 
+* seems
 
 ### js/spk-speak.js
 

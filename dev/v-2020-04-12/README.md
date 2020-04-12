@@ -1,10 +1,11 @@
 
-# [2020-04-10 Read Me]( #README.md )
+# [2020-04-12 Read Me]( #README.md )
 
 
 2020-04-12
 
-* 
+* Better bitmap
+* geoJson
 
 
 
@@ -48,7 +49,7 @@
 
 * Back tp a bitmap for the Globe
 * Custom-built 8192 x 4086 - from Natural Earth with colors enhanced
-* geoJson back in.
+* geoJson back in
 
 ### js/mas-menu-app-switch.js
 
@@ -56,7 +57,6 @@
 ### js/sta-statistics.js
 
 * First commit
-* seems
 
 ### js/spk-speak.js
 

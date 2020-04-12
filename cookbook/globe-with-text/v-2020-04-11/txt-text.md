@@ -4,7 +4,7 @@
 
 * https://stackoverflow.com/questions/27735855/javascript-function-with-optional-parameters-as-object
 	* function loadMap({latitude = "x.xxxx", longitude = "-x.xxxx"} = {})
-	
+
 ## Olympic colors
 
 * https://www.olympic.org/olympic-rings
@@ -40,3 +40,8 @@ Yellow: Asia
 Black: Africa
 Green: Oceania
 Red: The Americas
+
+Name: Cadmium Red
+Hex: #DF0024
+RGB: (223, 0, 36)
+CMYK: 0, 1, 0.838, 0.125

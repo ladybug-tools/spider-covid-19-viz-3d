@@ -92,6 +92,8 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 
 * 2020-04-06 ~ Theo ~ Current settings save in local storage
 	* Globe rotates to the lat/lon onload as set and saved in localStorage
+	* Multiple locations & zoom levels
+	* Scaled or linear heights
 * 2020-04-06 ~ Theo ~ In-world text as Three.js "SimpleText"
 * 2020-04-06 ~ Theo ~ Bars as "little crowns" - flared
 * 2020-04-06 ~ Theo ~ Select scale linear or scale logarithmically

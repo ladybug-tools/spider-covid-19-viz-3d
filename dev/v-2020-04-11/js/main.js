@@ -11,7 +11,7 @@ let build = "dev";
 let timeStamp = "00:05";
 
 let versionStable = "v-2020-04-05";
-let versionDev = "v-2020-04-10";
+let versionDev = "v-2020-04-11";
 
 ////////// Menu title
 
@@ -59,13 +59,13 @@ New for 2020-04-05
 
 let messageOfTheDayDev = `
 <mark>
-New for 2020-04-09
+New for 2020-04-011
 <ul>
 	<li>Work-in-progress</li>
 	<li>Process for gathering data being totally refactored</li>
 	<li>Now loading Johns Hopkins and Wikipedia data in same page</li>
 	<li>Bars once again have flares and are scaled</li>
-	<li>Double sided 3D text starting to appear</li>
+	<li>Double sided 3D text with statistics</li>
 	<li>And more on the way</li>
 	<li>What would *you* like to see here?</li>
 </ul>

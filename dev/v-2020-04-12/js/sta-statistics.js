@@ -1,6 +1,4 @@
 
-console.log( "23" );
-
 const sta = {};
 
 sta.Africa = { cases: 0, deaths: 0, recoveries: 0 };

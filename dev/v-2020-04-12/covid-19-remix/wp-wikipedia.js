@@ -30,7 +30,7 @@ WP.init = function () {
 
 	WP.getPandemicData( c19GeoDataGlobal, WP.articleGlobal );
 
-	console.log( "time start all", performance.now() - timeStartAll );
+	//console.log( "time start all", performance.now() - timeStartAll );
 
 };
 
@@ -116,7 +116,7 @@ WP.parseUsa = function ( rows ) {
 	} );
 
 
-	console.log( "time", performance.now() - WP.timeStart );
+	//console.log( "time", performance.now() - WP.timeStart );
 
 	WP.updateBars( c19GeoDataUsa );
 
@@ -157,7 +157,7 @@ WP.parseGlobal = function ( rows ) {
 
 	} );
 
-	console.log( "time", performance.now() - WP.timeStart );
+	//console.log( "time", performance.now() - WP.timeStart );
 
 	WP.updateBars( c19GeoDataGlobal );
 

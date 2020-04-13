@@ -131,7 +131,7 @@ function initMain () {
 
 	getNotes();
 
-	//DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
+	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
 
 }
 

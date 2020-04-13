@@ -1,6 +1,5 @@
-/* globals THREE, DMTdivContent, DMTdivParent, renderer, camera, group, txt */
-// jshint esversion: 6
-// jshint loopfunc: true
+/* global THREE, groupCasesWP, displayMessage, DMTdivHeader, DMTdivContent, DMTdivContainer, DMTdivParent, renderer, camera, group, txt */
+
 
 const DMT = {};
 
@@ -26,6 +25,7 @@ DMT.init = function () {
 
 
 DMT.onEvent = function ( e ) {
+
 	//console.log( 'event', e );
 
 	renderer.domElement.addEventListener( "touchmove", DMT.onMove );
@@ -39,10 +39,15 @@ DMT.onEvent = function ( e ) {
 
 
 
-DMT.onMove = function( e ) {
+DMT.onMove = function ( e ) {
+
 	//console.log( 'e move', e );
 
-	if ( e ) { DMT.checkIntersect ( e ); }
+	if ( e ) {
+
+		DMT.checkIntersect( e );
+
+	}
 
 };
 
@@ -60,6 +65,7 @@ DMT.onMouseOverOut = function () {
 
 
 DMT.checkIntersect = function ( event ) {
+
 	//console.log( 'event chkInt ', event );
 
 	if ( event.type === "touchmove" || event.type === "touchstart" ) {
@@ -115,6 +121,7 @@ DMT.checkIntersect = function ( event ) {
 
 
 DMT.onMouseDown = function ( e ) {
+
 	//console.log( 'm down', e );
 
 	DMTdivHeader.addEventListener( "touchmove", DMT.onMouseDownMove );
@@ -129,7 +136,7 @@ DMT.onMouseDown = function ( e ) {
 
 
 
-DMT.onMouseDownMove = function( e ) {
+DMT.onMouseDownMove = function ( e ) {
 
 	let dx, dy;
 
@@ -161,7 +168,7 @@ DMT.onMouseDownMove = function( e ) {
 
 
 
-DMT.onMouseDownOut = function() {
+DMT.onMouseDownOut = function () {
 
 	DMTdivHeader.removeEventListener( "touchmove", DMT.onMouseDownMove );
 	DMTdivHeader.removeEventListener( "touchend", DMT.onMouseDownOut );

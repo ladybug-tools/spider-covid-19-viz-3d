@@ -115,7 +115,7 @@ THR.animate();
 
 //initMain(); // see html
 
-function initMain() {
+function initMain () {
 
 	scene = THR.scene;
 	camera = THR.camera;
@@ -138,7 +138,7 @@ function initMain() {
 
 
 
-function requestFile( url, callback ) {
+function requestFile ( url, callback ) {
 
 	const xhr = new XMLHttpRequest();
 	xhr.open( "GET", url, true );
@@ -153,7 +153,7 @@ function requestFile( url, callback ) {
 
 function resetGroups () {
 
-	scene.remove( group, groupCasesWP,groupRecoveriesWP,groupDeathsWP, groupCasesJTS
+	scene.remove( group, groupCasesWP, groupRecoveriesWP, groupDeathsWP, groupCasesJTS
 		//  groupCasesNewGrounded,
 		// groupDeathsNew, groupDeathsNewGrounded, groupPlacards, groupLines
 
@@ -191,9 +191,11 @@ function resetGroups () {
 ////////// Interactive Legend
 
 function toggleBars ( group = groupCases ) {
+
 	//console.log( 'group', group  );
 
 	if ( group === groupPrevious ) {
+
 		groupCasesWP.visible = true;
 		groupDeathsWP.visible = true;
 		groupRecoveriesWP.visible = true;
@@ -261,7 +263,7 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 	// [text], scale, color, x, y, z )
 	// groupPlacards.add( THR.drawPlacard( "Null Island", "0.01", 1, 80, 0, 0 ) );
 
-	vGlo = THR.latLonToXYZ( 65, 50, -20 );
+	vGlo = THR.latLonToXYZ( 65, 50, - 20 );
 	groupPlacards.add( THR.drawPlacard( totalsGlobal, "0.02", 200, vGlo.x, vGlo.y, vGlo.z ) );
 
 	vChi = THR.latLonToXYZ( 70, 45, 110 );
@@ -270,7 +272,7 @@ function displayStats ( totalsGlobal, totalsChina, totalsEurope, totalsUsa, tota
 	const vEur = THR.latLonToXYZ( 60, 55, 20 );
 	groupPlacards.add( THR.drawPlacard( totalsEurope, "0.02", 120, vEur.x, vEur.y, vEur.z ) );
 
-	const vUsa = THR.latLonToXYZ( 60, 40, -120 );
+	const vUsa = THR.latLonToXYZ( 60, 40, - 120 );
 	groupPlacards.add( THR.drawPlacard( totalsUsa, "0.02", 60, vUsa.x, vUsa.y, vUsa.z ) );
 
 	const vRow = THR.latLonToXYZ( 55, 30, 180 );

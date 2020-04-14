@@ -1,11 +1,8 @@
 
-# [2020-04-12 Read Me]( #README.md )
+# [2020-04-13 Read Me]( #README.md )
 
 
-2020-04-12
-
-* Better bitmap
-* geoJson
+2020-04-13
 
 
 

@@ -1,0 +1,173 @@
+/* Copyright 2020 Spider contributors. MIT License */
+/* order tags, classes, IDs  - each in alphabetical order after <body> */
+
+:root {
+	font: 100% monospace;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	overflow: hidden;
+}
+
+a {
+	color: crimson;
+	text-decoration: none;
+}
+a:hover,
+a:focus,
+a:active {
+	background-color: yellow;
+	color: #aaa;
+	text-decoration: underline;
+}
+
+button {
+	background-color: #ddd;
+	border: none;
+	border-radius: 2px;
+	color: #322;
+	cursor: pointer;
+	padding: 3px 5px;
+}
+button:hover {
+	background: #ccc;
+	color: #fff;
+}
+
+input[type="range"] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-color: #ddd;
+	border-radius: 2px;
+	height: 1.7ch;
+	width: 100%;
+}
+input[type="range"]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 2;
+	width: 10px;
+}
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 18px;
+	width: 10px;
+}
+select {
+	width: 100%;
+}
+ul {
+	margin: 0 0 1ch 0;
+	padding: 0 2ch;
+}
+
+.buLegend {
+	width: 100%;
+}
+.help {
+	float: right;
+}
+.couponcode {
+	float: right;
+}
+.couponcode:hover > .coupontooltip {
+	display: block;
+}
+.ftrButton {
+	background-color: #eee;
+	border-radius: 5px;
+	font-size: 200%;
+	margin: auto;
+}
+.coupontooltip {
+	border: 0.8ch double #888;
+	background: white;
+	display: none;
+	font: 100% monospace;
+	font-size: 1rem;
+	font-weight: normal;
+	/* unset summary settings */
+	margin-left: -20ch;
+	padding: 10px;
+	position: absolute;
+	z-index: 1000;
+}
+.navMenuItem {
+	background-color: white;
+	padding: 0 1ch;
+}
+.navLegend {
+	border-radius: 5px;
+	margin: 1ch;
+	padding: 0.5ch;
+}
+
+#navMenu {
+	background-color: rgba(255, 255, 255, 0.85);
+	margin: 0 20px;
+	max-height: 100vh;
+	max-width: 25rem;
+	overflow: auto;
+	position: absolute;
+}
+
+#navMenu h2 {
+	margin-bottom: 0;
+}
+
+#navMenu summary {
+	font-weight: bold;
+}
+
+#DMTdivPopUp {
+	position: absolute;
+	left: calc(50vw - 25ch);
+	top: 55%;
+}
+
+#DMTdivParent {
+	border: 1px solid#444;
+	border-radius: 1rem 1rem 0 1rem;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
+	height: 50ch;
+	margin: -2ch;
+	overflow: hidden;
+	resize: both;
+	/* transform: translate(-50% , -50%); */
+	width: 50ch;
+}
+
+#DMTdivHeader {
+	background-color: #ccc;
+	cursor: move;
+	padding: 1ch;
+	user-select: none;
+}
+
+#DMTdivContainer {
+	background-color: white;
+	/* border: 1px solid red; */
+	height: calc(100% - 5ch);
+	overflow: auto;
+	padding: 1ch;
+}
+
+#DMTdivIntersected {
+	background-color: #eee;
+	border-radius: 1ch;
+	max-width: 50ch;
+	opacity: 0.85;
+	padding: 0.5ch;
+}
+
+@media all and (max-width: 640px) {
+	#DMTdivParent {
+		left: calc(50% - 19ch);
+		width: 42ch;
+	}
+}

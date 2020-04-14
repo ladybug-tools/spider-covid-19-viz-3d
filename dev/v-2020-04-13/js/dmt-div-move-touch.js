@@ -55,14 +55,13 @@ DMT.onStart = function () {
 
 	window.removeEventListener( 'keydown', DMT.onStart );
 
-	renderer.domElement.removeEventListener( 'mousedown', DMT.onStart );
+	//renderer.domElement.removeEventListener( 'mousedown', DMT.onStart );
 	//renderer.domElement.removeEventListener( 'mousemove', DMT.onStart );
 	renderer.domElement.removeEventListener( 'wheel', DMT.onStart );
 
 	renderer.domElement.removeEventListener( 'touchstart', DMT.onStart );
 	renderer.domElement.removeEventListener( 'touchmove', DMT.onStart );
 	renderer.domElement.removeEventListener( 'touchend', DMT.onStart );
-
 
 	renderer.domElement.addEventListener( "mouseover", DMT.onEvent );
 	renderer.domElement.addEventListener( "touchstart", DMT.onEvent );
@@ -76,9 +75,6 @@ DMT.onStart = function () {
 
 	DMT.onEvent(); // for mouse
 
-
-
-
 };
 
 
@@ -87,6 +83,7 @@ DMT.onEvent = function ( e ) {
 
 	//console.log( 'event', e );
 
+	renderer.domElement.addEventListener( "touchstart", DMT.onMove );
 	renderer.domElement.addEventListener( "touchmove", DMT.onMove );
 	renderer.domElement.addEventListener( "touchend", DMT.onOut );
 	renderer.domElement.addEventListener( "mousemove", DMT.onMove );
@@ -168,6 +165,12 @@ DMT.checkIntersect = function ( event ) {
 		//DMTdivPopUp.hidden = true;
 		//DMTdivContent.innerHTML = "";
 
+		if ( event.type === "touchmove" || event.type === "touchstart" ) {
+
+			DMTdivPopUp.hidden = true;
+
+		}
+
 	}
 
 };
@@ -200,6 +203,8 @@ DMT.getMorePopUp = function () {
 	`;
 
 }
+
+
 
 DMT.onMouseDown = function ( e ) {
 

@@ -280,9 +280,9 @@ DMT.displayMessage = function ( intersected ) {
 
 DMT.getMorePopUp = function () {
 
-	console.log( "", DMT.line );
+	//console.log( "", DMT.line );
 	let cases = "NA";
-	date = "NA";
+	let date = "NA";
 
 	const placeJTS = JTS.rowsCases.find( row => DMT.line.country === row[ 1 ] && DMT.line.region === row[ 0 ] );
 
@@ -294,12 +294,18 @@ DMT.getMorePopUp = function () {
 
 	}
 
+
+
 	DMTdivIntersected.innerHTML += `
-	<div id="DMTdivMore" style=height:20ch;overflow:auto;resizable:both;width:100%; >
+	<div id="DMTdivMore"  >
+		<a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory" target="_blank">Global pandemic Wikipedia data</a><br>
+
 		JHU Date: ${ date }<br>
 		JHU Cases: ${ cases }<br>
 		<br>
-	<div id=WPdivGraph>
+	<div id=WPdivGraph style="overflow:auto;resizable:both;">
+		<img src="${ pathAssets }images/progress-indicator.gif" width=100 >
+	<div>
 	`;
 
 	const place = DMT.line.region ? DMT.line.region : DMT.line.country;
@@ -309,7 +315,6 @@ DMT.getMorePopUp = function () {
 		.replace( / /g, "_" )
 		.replace( /New_York/, "New_York_(state)" )
 		.replace( /Georgia/, "Georgia_(U.S._state)" );
-
 
 	const url = "2020_coronavirus_pandemic_in_" + placeWP;
 
@@ -381,6 +386,7 @@ function fetchUrlWikipediaApiPlace ( url, tab = 0, rowStart = 0, column = 0 ) {
 			if ( WPdivGraph ) {
 
 				WPdivGraph.innerHTML = str;
+				WPdivGraph.style.maxHeight = ( window.innerHeight - DMTdivPopUp.offsetTop - WPdivGraph.offsetTop - 15 )+ "px";
 
 			}
 

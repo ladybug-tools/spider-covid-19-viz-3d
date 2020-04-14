@@ -6,7 +6,10 @@ value='You are now in a GitHub web page view - Click this button to view this re
 
 # [COVID-19 Viz3D Read Me]( #README.md )
 
-<iframe src=https://ladybug-tools.github.io/spider-covid-19-viz-3d/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
+<img src=assets/images/v-2020-04-13-dev.png width=100% style=display:none;>
+
+<iframe src=https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
+
 _covid 19 viz 3d - touch me!_
 
 ## Full Screen stable: [covid 19 viz3d]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/ )
@@ -203,12 +206,20 @@ Trackers
 
 Other 3D visualizations of the COVID-19 data
 
+* https://covidvisualizer.com/
+* https://covid3d.live/
 * https://icao.maps.arcgis.com/apps/webappviewer3d/index.html?id=d9d3f8fa9a23425c8f0889baab626186
 * https://earth3dmap.com/coronavirus-interactive-global-map/
 * https://coronation.xyz/
 * https://covid19.martinpham.com/
+* https://covidglobestats.com/
+* https://coronaviz.netlify.com/
 
 
+2D of interest
+
+* https://rongchenguo.github.io/Coronavirus_Visual_Analytics/
+* https://mtrajk.github.io/virus-spreading/
 
 Geolocation
 
@@ -261,13 +272,14 @@ _Change logs are now in the de/dates/ folders._
 
 Wish list items dealt with
 
+* 2020-04-13 ~ Theo ~ JavaScript file for each country and region
 * 2020-04-06 ~ Theo ~ In-world text as Three.js "SimpleText"
 * 2020-04-06 ~ Theo ~ Bars as "little crowns" - flared
 * 2020-03-24 ~ Theo ~ use Three.js fonts??
 * Better display of text in placards??
 * 2020-04-02 ~ Theo ~ Merge data from JHU and Wiki
 	* Data from CSVs to arrays of objects as opposed to arrays of strings as is current
-	
+
 ### 2020-04-04
 
 Wish list items dealt with

@@ -127,9 +127,9 @@ WP.parseUsa = function ( rows ) {
 
 WP.parseGlobal = function ( rows ) {
 
-	//console.log( "rows", rows );
+	console.log( "rows", rows );
 
-	rows[ 43 ][ 0 ] = "China";
+	rows[ 44 ][ 0 ] = "China";
 
 	//console.log( "row1", rows[ 0 ] );
 

@@ -253,7 +253,7 @@ function loadGlobeWithBitmap( size = 50) {
 
 	const url = pathAssets + "images/natural-earth-8192-4096-col.jpg";
 	const texture = new THREE.TextureLoader().load( url );
-	const material = new THREE.MeshBasicMaterial( { map: texture } );
+	const material = new THREE.MeshBasicMaterial( { map: texture, opacity: 0.5, transparent: true } );
 
 	scene.remove( globe );
 	globe = new THREE.Mesh( geometry, material );

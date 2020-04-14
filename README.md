@@ -94,16 +94,9 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 	* Globe rotates to the lat/lon onload as set and saved in localStorage
 	* Multiple locations & zoom levels
 	* Scaled or linear heights
-* 2020-04-06 ~ Theo ~ In-world text as Three.js "SimpleText"
-* 2020-04-06 ~ Theo ~ Bars as "little crowns" - flared
 * 2020-04-06 ~ Theo ~ Select scale linear or scale logarithmically
-* 2020-04-02 ~ Theo ~ Merge data from JHU and Wiki
-	* Data from CSVs to arrays of objects as opposed to arrays of strings as is current
 * 2020-03-30 ~ Theo ~ Multiple charts per pop-up
-* 2020-03-24 ~ Theo ~ use Three.js fonts??
-* Better display of text in placards??
 * Location hash goes to place and set language and other aspects
-
 * Days since last new case indicated as color or opacity
 * Dark mode?
 
@@ -264,7 +257,17 @@ geoJson useful
 
 _Change logs are now in the de/dates/ folders._
 
+### 2020-04-13
 
+Wish list items dealt with
+
+* 2020-04-06 ~ Theo ~ In-world text as Three.js "SimpleText"
+* 2020-04-06 ~ Theo ~ Bars as "little crowns" - flared
+* 2020-03-24 ~ Theo ~ use Three.js fonts??
+* Better display of text in placards??
+* 2020-04-02 ~ Theo ~ Merge data from JHU and Wiki
+	* Data from CSVs to arrays of objects as opposed to arrays of strings as is current
+	
 ### 2020-04-04
 
 Wish list items dealt with

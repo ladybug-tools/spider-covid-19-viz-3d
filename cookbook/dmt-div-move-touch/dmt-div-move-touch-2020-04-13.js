@@ -1,5 +1,5 @@
 /* global THREE, groupCasesWP, displayMessage, DMTdivHeader, DMTdivContent, DMTdivContainer, DMTdivParent, renderer, camera, group, txt */
-// 2020-04-13
+
 
 const DMT = {};
 
@@ -55,13 +55,14 @@ DMT.onStart = function () {
 
 	window.removeEventListener( 'keydown', DMT.onStart );
 
-	//renderer.domElement.removeEventListener( 'mousedown', DMT.onStart );
+	renderer.domElement.removeEventListener( 'mousedown', DMT.onStart );
 	//renderer.domElement.removeEventListener( 'mousemove', DMT.onStart );
 	renderer.domElement.removeEventListener( 'wheel', DMT.onStart );
 
 	renderer.domElement.removeEventListener( 'touchstart', DMT.onStart );
 	renderer.domElement.removeEventListener( 'touchmove', DMT.onStart );
 	renderer.domElement.removeEventListener( 'touchend', DMT.onStart );
+
 
 	renderer.domElement.addEventListener( "mouseover", DMT.onEvent );
 	renderer.domElement.addEventListener( "touchstart", DMT.onEvent );
@@ -75,6 +76,9 @@ DMT.onStart = function () {
 
 	DMT.onEvent(); // for mouse
 
+
+
+
 };
 
 
@@ -83,7 +87,6 @@ DMT.onEvent = function ( e ) {
 
 	//console.log( 'event', e );
 
-	renderer.domElement.addEventListener( "touchstart", DMT.onMove );
 	renderer.domElement.addEventListener( "touchmove", DMT.onMove );
 	renderer.domElement.addEventListener( "touchend", DMT.onOut );
 	renderer.domElement.addEventListener( "mousemove", DMT.onMove );
@@ -141,11 +144,12 @@ DMT.checkIntersect = function ( event ) {
 
 	const intersects = raycaster.intersectObjects( DMT.objects );
 
+
 	if ( intersects.length > 0 ) {
 
 		if ( DMT.intersected !== intersects[ 0 ].object ) {
 
-			//console.log( "int", intersects[ 0 ] )
+			console.log( "int", intersects[ 0 ] )
 
 			DMT.intersected = intersects[ 0 ].object;
 			//console.log( "int", DMT.intersected );
@@ -165,12 +169,6 @@ DMT.checkIntersect = function ( event ) {
 		//DMTdivPopUp.hidden = true;
 		//DMTdivContent.innerHTML = "";
 
-		if ( event.type === "touchmove" || event.type === "touchstart" ) {
-
-			DMTdivPopUp.hidden = true;
-
-		}
-
 	}
 
 };
@@ -181,13 +179,13 @@ DMT.displayMessage = function () {
 	//console.log( "", 23 );
 
 	DMTdivPopUp.innerHTML = `
-		<div id="DMTdivIntersected" >
-		<div>x: ${ event.clientX }
-		<div>y: ${ event.clientY }
-		<div>${ DMT.intersected.name }
-		<div><button onclick=DMT.getMorePopUp() >more</button>
-		</div>
-		`;
+	<div id="DMTdivIntersected" >
+	<div>x: ${ event.clientX }
+	<div>y: ${ event.clientY }
+	<div>${ DMT.intersected.name }
+	<div><button onclick=DMT.getMorePopUp() >more</button>
+	</div>
+	`;
 
 	//console.log( "DMTdivPopUp", DMTdivPopUp );
 
@@ -203,8 +201,6 @@ DMT.getMorePopUp = function () {
 	`;
 
 }
-
-
 
 DMT.onMouseDown = function ( e ) {
 

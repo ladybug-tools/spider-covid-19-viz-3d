@@ -62,6 +62,8 @@ let messageOfTheDayDev = `
 New for 2020-04-14
 <ul>
 	<li>Dark mode support started. Work-in-progress</li>
+	<li>Pop-up menu supports multiple charts - See US States</li>
+	<li>Toggle display of Sky Box in Settings</li>
 	<li>What would *you* like to see here?</li>
 </ul>
 </mark>`;

@@ -51,6 +51,7 @@ Mentions
 * https://www.reddit.com/r/COVID19/comments/fkjby9/view_the_latest_covid19_numbers_from_around_the/
 * https://discourse.threejs.org/t/covid-19-viz-3d-interactive-3d-globe/13613/8
 
+
 ## Influences on the features
 
 ### [Issue #5 Expressions of hope]( https://github.com/ladybug-tools/spider-covid-19-viz-3d/issues/5 )
@@ -93,15 +94,21 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 
 ### Generally / Short term
 
+* 2020-04-15 ~ Ability to add more buttons and links to pop-up
+* 2020-04-15 ~ Case data chart: on open > scroll to bottom
+* 2020-04-15 ~ Place data chart: on open > scroll to top
+* 2020-04-15 ~ Background as a gradient
+* 2020-04-15 ~ Sky box as Three.js text
+* 2020-04-14 ~ Notes and settings in their own modules
 * 2020-04-06 ~ Theo ~ Current settings save in local storage
 	* Globe rotates to the lat/lon onload as set and saved in localStorage
 	* Multiple locations & zoom levels
 	* Scaled or linear heights
 * 2020-04-06 ~ Theo ~ Select scale linear or scale logarithmically
-* 2020-03-30 ~ Theo ~ Multiple charts per pop-up
+
 * Location hash goes to place and set language and other aspects
 * Days since last new case indicated as color or opacity
-* Dark mode?
+
 
 
 ### Medium Term
@@ -145,6 +152,7 @@ Vision of the future
 
 <details open >
 <summary> Things you can do using this script</summary>
+
 
 * Click the three bars( 'hamburger menu icon' ) to slide the menu in and out
 * Click the GitHub Octocat icon to view or edit the source code on GitHub
@@ -267,6 +275,13 @@ geoJson useful
 <summary>Change log </summary>
 
 _Change logs are now in the de/dates/ folders._
+
+### 2020-04-14
+
+Wish list items dealt with
+
+* 2020-03-30 ~ Theo ~ Multiple charts per pop-up
+* Dark mode
 
 ### 2020-04-13
 

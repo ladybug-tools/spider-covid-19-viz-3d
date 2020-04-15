@@ -273,7 +273,7 @@ DMT.getPopUpMore = function () {
 
 	//console.log( "", DMT.line );
 
-	WPdivGraph.innerHTML = `<img src="${ pathAssets }images/progress-indicator.gif" width=100 >`;
+	WPdivGraph.innerHTML = `<img src="../../../assets/images/progress-indicator.gif" width=100 >`;
 
 	let cases = "NA";
 	let date = "NA";
@@ -398,8 +398,8 @@ WP.getPlace = function () {
 
 	} else {
 
-		WPdivGraph.innerHTML = `<img src="${ pathAssets }images/progress-indicator.gif" width=100 >`;
-		
+		WPdivGraph.innerHTML = `<img src="../../../assets/images/progress-indicator.gif" width=100 >`;
+
 		requestFile( WP.cors + WP.api + WP.query + article, WP.onLoadDataTable );
 
 	}

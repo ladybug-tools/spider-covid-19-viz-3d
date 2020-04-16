@@ -109,14 +109,23 @@ WP.onLoadData = function ( xhr, c19GeoData ) {
 
 WP.parseUsa = function ( rows ) {
 
+	console.log( "rows", rows );
+
 	c19GeoDataUsa.forEach( state => {
 
-		//console.log( "rows", rows );
-		const find = rows.find( places => places[ 0 ] === state.region );
+		const find = rows.slice( 1 ).find( places => places[ 0 ] === state.region );
 
-		state.cases = find[ 2 ].replace( /,/g, "" );
-		state.deaths = find[ 4 ].replace( /,/g, "" );
-		state.recoveries = find[ 6 ].replace( /,/g, "" );
+		if ( find ) {
+
+			state.cases = find[ 2 ].trim().replace( /,/g, "" );
+			state.deaths = find[ 4 ].trim().replace( /,/g, "" );
+			state.recoveries = find[ 6 ].trim().replace( /,/g, "" );
+
+		} else {
+
+			console.log( "state", state );
+
+		}
 
 	} );
 

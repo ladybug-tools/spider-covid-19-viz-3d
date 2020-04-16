@@ -5,9 +5,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
 <meta name=description
-	content="Real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library">
+	content="Pop-up for eal-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-03-03">
+<meta name=version content="2020-04-16">
 
 
 <title></title>
@@ -100,14 +100,15 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/controls/OrbitControls.js"></script>
 
-<script src="dmt-div-move-touch.js"></script>
+<script src="dmt-div-move-touch-2020-04-16.js"></script>
+
 <nav id="navMenu">
 
 	<header id="hdrTitle">
 
 		<h2>
 			<a id=aSource target=_top title="Source code on GitHub" >
-				<img id=imgIcon height=18 style=opacity:0.5; >
+				<img id=imgIcon height=18 style=opacity:0.5; src="">
 			</a>
 
 			<a href="" title="Click to reload this page" >
@@ -138,38 +139,8 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 	<div id="divLog"></div>
 
-
-
 </nav>
 
-<!--
-
-	<div id="DMTdivParent" >
-
-	<div id="DMTdivHeader" >
-		<img src="../../assets/spider.ico" alt="Spider icon" height=24 draggable=false >
-
-		<span onclick=DMTdivParent.hidden=true; style=float:right;z-index:20>[ x ]</span>
-
-	</div>
-	<div id="DMTdivContainer" >
-		<div id=DMTdivContent >
-			<div id=divMessageTitle ></div>
-			<div id=divReleaseText >dev</div>
-				Access to data from Wikipedia <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
-				target="_blank">
-				2019–20 coronavirus pandemic by country and territory</a> and 230++ related articles
-			<hr>
-			<div id=divMessageInfo></div>
-
-			<hr>
-			<div id=divMessageOfTheDay ></div>
-			<hr>
-			<small>Come back! See new version every day!</small>
-		</div>
-	</div>
-</div>
--->
 
 <script>
 
@@ -297,6 +268,7 @@ function addMeshes( count = 100 ) {
 
 
 }
+
 
 
 function onWindowResize() {

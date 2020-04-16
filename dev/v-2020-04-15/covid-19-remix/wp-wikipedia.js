@@ -109,7 +109,7 @@ WP.onLoadData = function ( xhr, c19GeoData ) {
 
 WP.parseUsa = function ( rows ) {
 
-	console.log( "rows", rows );
+	//console.log( "rows", rows );
 
 	c19GeoDataUsa.forEach( state => {
 
@@ -123,7 +123,7 @@ WP.parseUsa = function ( rows ) {
 
 		} else {
 
-			console.log( "state", state );
+			//console.log( "state", state );
 
 		}
 

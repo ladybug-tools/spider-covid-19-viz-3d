@@ -8,10 +8,10 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "18:30";
+let timeStamp = "13:02";
 
 let versionStable = "v-2020-04-05";
-let versionDev = "v-2020-04-14";
+let versionDev = "v-2020-04-15";
 
 ////////// Menu title
 
@@ -59,7 +59,7 @@ New for 2020-04-05
 
 let messageOfTheDayDev = `
 <mark>
-New for 2020-04-14
+New for 2020-04-15
 <ul>
 	<li>Dark mode support started. Work-in-progress</li>
 	<li>Pop-up menu supports multiple charts - See US States</li>

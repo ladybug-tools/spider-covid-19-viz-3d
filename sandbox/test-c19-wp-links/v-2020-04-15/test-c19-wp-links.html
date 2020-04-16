@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang = "en" >
+<head>
+<meta charset = "utf-8" >
+<meta name = "viewport" content= "width=device-width, initial-scale=1" >
+<meta name = "description" content = "Basic TooToo HTML template" >
+<meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
+<!-- <meta name=version content="2020-03-06">-->
+
+<title>test links</title>
+
+<style>
+
+* { box-sizing: border-box; }
+
+:root { font: 100% monospace; --mnu-width: 26rem; --screen-width: calc( 100vw ); --headerHeight: 6rem; }
+
+html { height: 100%; }
+
+body { margin: 0 auto; max-width: 80ch; padding: 0 0.5rem; }
+
+a { color: crimson; text-decoration: none; }
+a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline }
+
+aside { border: 1px solid lightgray; margin-top: 15px; padding: 2px; }
+
+blockquote { background-color: #ddd; padding: 1ch; }
+
+button, input[type=button] { background-color: #ddd; border: none; color: #322; cursor: pointer; padding: 3px 5px; }
+button:hover { background: #ccc; color: #fff }
+
+code { background-color: #eee; }
+pre { background-color: #eee; padding: 5px; }
+
+input[type="range"] { -webkit-appearance: none; -moz-appearance: none; background-color: #ddd; height: 2ch;
+	width: 100%; }
+
+input[type="range"]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 0;
+	height: 3ch;
+	width: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 3ch;
+	width: 10px;
+}
+
+summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; }
+
+
+main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
+	padding: 0 1rem; position: absolute; width: calc( 100% - var( --mnu-width ) );  }
+
+#navMenu { background-color: #eee; height: 100vh; left: 0; margin: 0; overflow: auto; padding: 0 1rem;
+	position: absolute; top: 0; width: var( --mnu-width ); }
+
+
+
+.couponcode { float: right }
+
+.couponcode:hover>.coupontooltip { display: block; }
+
+.coupontooltip { border: 0.8ch double #888; background: white; display: none;
+	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
+
+.sumMenuTitle {
+	background-color: #ccc;
+	color: #777;
+	margin: 10px 0;
+	text-align: center;
+}
+
+.sumMenuSecondary {
+	background-color: #ddd;
+	color: #888;
+	/*font-size: 0.9rem;*/
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+.sumMenuTertiary {
+	background-color: #e8e8e8;
+	color: #999;
+	font-size: 0.9rem;
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+
+
+iframe { height: 100%; width: 100%;}
+
+</style>
+</head>
+<body>
+
+<script src="../../../assets/geo-data/geo-data-global.js"></script>
+
+<nav id="navMenu" >
+
+	<header id="hdrTitle" >
+
+		<h2>
+			<a id=aSource target=_top title="Source code on GitHub" >
+				<img id=imgIcon height=18 style=opacity:0.5; >
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="couponcode" >??<span id=divDescription class="coupontooltip" ></span></span>
+
+		</h2>
+
+	</header>
+
+	<p>
+		<button id=but onclick=geoToc19(); >geo to c19 gobal</button> <label>
+	</p>
+
+	<p>
+		<button id=but onclick=testMenuItems(); >test menu items</button>
+	</p>
+
+	<p>
+		<button id=but onclick=getTemplates(); >get templates</button>
+	</p>
+
+	<div id=divItems ></div>
+
+</nav>
+
+<main id=main >
+
+
+</main>
+
+
+<script>
+
+aSource.href = "https://github.com/zzzzz/xxxxx.html";
+imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
+sTitle.innerHTML= document.title; // ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+const version = document.head.querySelector( "[ name=version ]" );
+sVersion.innerHTML = version ? version.content : "";
+divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+let WP = {};
+
+let c19LinksUsa;
+
+
+function init() {
+
+	geoToc19();
+
+	window.addEventListener( "hashchange", onHashChangeArticle, false ) ;
+
+	//window.addEventListener( "hashchange", onHashChangeChart, false ) ;
+
+	//window.addEventListener( "hashchange", onHashChangeChartApi, false ) ;
+
+}
+
+
+function getTemplates() {
+
+	window.removeEventListener( "hashchange", onHashChangeArticle, false ) ;
+
+	window.addEventListener( "hashchange", onHashChangeChart, false ) ;
+
+}
+function onHashChangeArticle() {
+
+	place = location.hash.slice( 1 );
+
+	link = "https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_" + place;
+
+	//console.log( "link", link );
+
+	main.innerHTML = `<iframe id=ifr ></iframe>`;
+	ifr.src= link;
+
+}
+
+
+function onHashChangeChart() {
+
+	// no way of knowing if fail
+
+	place = location.hash.slice( 1 );
+
+	//link = `https://en.wikipedia.org/wiki/Template:2019–20_coronavirus_pandemic_data/United_States/${ place }_medical_cases_chart`;
+
+	link = `https://en.wikipedia.org/wiki/Template:2019–20_coronavirus_pandemic_data/${ place }_medical_cases_chart`;
+
+	//console.log( "link", link );
+
+	country = c19.find( country => country.country === place || country.region === place );
+
+	console.log( "country", country );
+
+	if ( country.chart === "1" ) {
+
+		main.innerHTML = `<iframe id=ifr ></iframe>`;
+		ifr.src= link;
+
+	} else {
+
+		main.innerHTML = `<h2>${ country.country } no chart</h2>`;
+
+	}
+
+}
+
+
+
+function onHashChangeChartApi() {
+
+	place = location.hash.slice( 1 );
+
+	WP.cors = "https://cors-anywhere.herokuapp.com/";
+
+	WP.api = "https://en.wikipedia.org/w/api.php?";
+
+	WP.query = "action=parse&format=json&page=";
+
+	WP.article = `Template:2019–20_coronavirus_pandemic_data/${ place }_medical_cases_chart`;
+
+	WP.requestFileUserData( WP.cors + WP.api + WP.query + WP.article, WP.onLoadData, "" );
+}
+
+
+
+WP.requestFileUserData = function ( url, callback, userData ) {
+
+	const xhr = new XMLHttpRequest();
+	xhr.open( "GET", url, true );
+	xhr.onerror = ( xhr ) => console.log( "error:", xhr );
+	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+	xhr.onload = ( xhr ) => callback( xhr, userData );
+	xhr.send( null );
+
+};
+
+
+
+WP.onLoadData = function ( xhr, c19GeoData ) {
+
+	//console.log( "xhr", xhr, c19GeoData );
+
+	place = location.hash.slice( 1 );
+
+	country = c19.find( country => country.country === place || country.region === place );
+
+	const response = xhr.target.response;
+
+	const json = JSON.parse( response );
+
+	country.chart = json.error ?  "0" : "1";
+
+	console.log( 'json', i, place, country.chart, json );
+
+
+};
+
+
+
+function geoToc19() {
+
+	console.log( "",  );
+
+	const addThe =[ "British Virgin Islands", "Cayman Islands", "Dominican Republic", "Falkland Islands", "FaroeIslands", "Maldives",
+			"Netherlands", "Philippines", "Turks & Caicos Islands", "United Arab Emirates" ];
+
+	const oz = [ "Australian_Capital_Territory", "New South Wales", "Northern Territory",
+	"Queensland", "South Australia", "Tasmania", "Victoria", "Western Australia" ];
+
+	const china = [
+		"Anhui",
+		"Beijing",
+		"Chongqing",
+		"Fujian",
+		"Gansu",
+		"Guangdong",
+		"Guangxi",
+		"Guizhou",
+		"Hainan",
+		"Hebei",
+		"Heilongjiang",
+		//"Henan",
+		//"Hong Kong",
+		//"Hubei",
+		"Hunan",
+		"Inner Mongolia",
+		"Jiangsu",
+		"Jiangxi",
+		"Jilin",
+		"Liaoning",
+		//"Macau",
+		"Ningxia",
+		"Qinghai",
+		"Shaanxi", "Shandong",
+		//"Shanghai",
+		"Shanxi",
+		//"Sichuan",
+		"Tianjin", "Tibet", "Xinjiang", "Yunnan", "Zhejiang"
+	];
+
+	charts = [
+
+"0", //0 Afghanistan
+"0", //1 Albania
+"0", //2 Algeria
+"0", //3 Andorra
+"0", //4 Angola
+"0", //5 Antigua & Barbuda
+"1", //6 Argentina
+"1", //7 Armenia
+"0", //8 Australia Australian Capital Territory
+"0", //9 Australia New South Wales
+"0", //10 Australia Northern Territory
+"0", //11 Australia Queensland
+"0", //12 Australia South Australia
+"0", //13 Australia Tasmania
+"0", //14 Australia Victoria
+"0", //15 Australia Western Australia
+"1", //16 Australia
+"1", //17 Austria
+"1", //18 Azerbaijan
+"0", //19 Bahamas
+"0", //20 Bahrain
+"1", //21 Bangladesh
+"0", //22 Barbados
+"1", //23 Belarus
+"1", //24 Belgium
+"0", //25 Belize
+"0", //26 Benin
+"0", //27 Bhutan
+"1", //28 Bolivia
+"1", //29 Bosnia & Herzegovina
+"0", //30 Botswana
+"1", //31 Brazil
+"1", //32 Brunei
+"1", //33 Bulgaria
+"1", //34 Burkina Faso
+"1", //35 Burundi
+"0", //36 Cambodia
+"1", //37 Cameroon
+"1", //38 Canada Alberta
+"0", //39 Canada British Columbia
+"0", //40 Canada Grand Princess
+"0", //41 Canada Manitoba
+"1", //42 Canada New Brunswick
+"0", //43 Canada Newfoundland and Labrador
+"0", //44 Canada Nova Scotia
+"0", //45 Canada Ontario
+"0", //46 Canada Prince Edward Island
+"1", //47 Canada Quebec
+"0", //48 Canada Saskatchewan
+"0", //49 Canada Northwest Territories
+"1", //50 Canada Yukon
+"1", //51 Canada
+"0", //52 Cape Verde
+"0", //53 Central African Republic
+"0", //54 Chad
+"1", //55 Chile
+"0", //56 China Anhui
+"0", //57 China Beijing
+"0", //58 China Chongqing
+"0", //59 China Fujian
+"0", //60 China Gansu
+"0", //61 China Guangdong
+"0", //62 China Guangxi
+"0", //63 China Guizhou
+"0", //64 China Hainan
+"0", //65 China Hebei
+"0", //66 China Heilongjiang
+"0", //67 China Henan
+"1", //68 China Hong Kong
+"0", //69 China Hubei
+"0", //70 China Hunan
+"0", //71 China Inner Mongolia
+"0", //72 China Jiangsu
+"0", //73 China Jiangxi
+"0", //74 China Jilin
+"0", //75 China Liaoning
+"1", //76 China Macau
+"0", //77 China Ningxia
+"0", //78 China Qinghai
+"0", //79 China Shaanxi
+"0", //80 China Shandong
+"0", //81 China Shanghai
+"0", //82 China Shanxi
+"0", //83 China Sichuan
+"0", //84 China Tianjin
+"0", //85 China Tibet
+"0", //86 China Xinjiang
+"0", //87 China Yunnan
+"0", //88 China Zhejiang
+"0", //89 China
+"1", //90 Colombia
+"1", //91 Republic of the Congo
+"0", //92 DR Congo
+"1", //93 Costa Rica
+"1", //94 Croatia
+"0", //95 Cuba
+"1", //96 Cyprus
+"1", //97 Czech Republic
+"0", //98 Denmark Faroe Islands
+"1", //99 Denmark Greenland
+"1", //100 Denmark
+"0", //101 Djibouti
+"0", //102 Dominica
+"0", //103 Dominican Republic
+"0", //104 East Timor
+"1", //105 Ecuador
+"1", //106 Egypt
+"1", //107 El Salvador
+"1", //108 Equatorial Guinea
+"1", //109 Eritrea
+"1", //110 Estonia
+"1", //111 Eswatini
+"1", //112 Ethiopia
+"1", //113 Fiji
+"1", //114 Finland
+"1", //115 France French Guiana
+"1", //116 France French Polynesia
+"1", //117 France Guadeloupe
+"1", //118 France Mayotte
+"1", //119 France New Caledonia
+"1", //120 France Réunion
+"1", //121 France Saint Barthélemy
+"1", //122 France Saint Martin
+"1", //123 France Martinique
+"1", //124 France Saint Pierre & Miquelon
+"1", //125 France
+"1", //126 Gabon
+"1", //127 Gambia
+"1", //128 Georgia
+"1", //129 Germany
+"1", //130 Ghana
+"1", //131 Greece
+"1", //132 Grenada
+"1", //133 Guatemala
+"1", //134 Guinea
+"1", //135 Guinea-Bissau
+"1", //136 Guyana
+"1", //137 Haiti
+"1", //138 Honduras
+"1", //139 Hungary
+"1", //140 Iceland
+"1", //141 India
+"1", //142 Indonesia
+"1", //143 Iran
+"1", //144 Iraq
+"1", //145 Ireland
+"1", //146 Israel
+"1", //147 Italy
+"1", //148 Ivory Coast
+"1", //149 Jamaica
+"1", //150 Japan
+"1", //151 Jordan
+"1", //152 Kazakhstan
+"1", //153 Kenya
+"1", //154 Kosovo
+"1", //155 Kuwait
+"1", //156 Kyrgyzstan
+"1", //157 Laos
+"1", //158 Latvia
+"1", //159 Lebanon
+"1", //160 Liberia
+"1", //161 Libya
+"1", //162 Liechtenstein
+"1", //163 Lithuania
+"1", //164 Luxembourg
+"1", //165 Madagascar
+"1", //166 Malawi
+"1", //167 Malaysia
+"1", //168 Maldives
+"1", //169 Mali
+"1", //170 Malta
+"1", //171 Mauritania
+"1", //172 Mauritius
+"1", //173 Mexico
+"1", //174 Moldova
+"1", //175 Monaco
+"1", //176 Mongolia
+"1", //177 Montenegro
+"1", //178 Morocco
+"1", //179 Mozambique
+"1", //180 Myanmar
+"1", //181 Namibia
+"1", //182 Nepal
+"1", //183 Netherlands Aruba
+"1", //184 Netherlands Curaçao
+"1", //185 Netherlands Sint Maarten
+"1", //186 Netherlands
+"1", //187 Netherlands Sint Eustatius
+"1", //188 New Zealand
+"1", //189 Nicaragua
+"1", //190 Niger
+"1", //191 Nigeria
+"1", //192 Niue
+"1", //193 North Macedonia
+"1", //194 Norway
+"1", //195 Oman
+"1", //196 Pakistan
+"1", //197 Palestine
+"1", //198 Panama
+"1", //199 Papua New Guinea
+"1", //200 Paraguay
+"1", //201 Peru
+"1", //202 Philippines
+"1", //203 Poland
+"1", //204 Portugal
+"1", //205 Qatar
+"1", //206 Romania
+"1", //207 Russia
+"1", //208 Rwanda
+"1", //209 Saint Kitts & Nevis
+"1", //210 Saint Lucia
+"1", //211 Saint Vincent and the Grenadines
+"1", //212 San Marino
+"1", //213 São Tomé & Príncipe
+"1", //214 Saudi Arabia
+"1", //215 Senegal
+"1", //216 Serbia
+"1", //217 Seychelles
+"1", //218 Sierra Leone
+"1", //219 Singapore
+"1", //220 Slovakia
+"1", //221 Slovenia
+"1", //222 Somalia
+"1", //223 South Africa
+"1", //224 South Korea
+"1", //225 South Sudan
+"1", //226 Spain
+"1", //227 Sri Lanka
+"1", //228 Sudan
+"1", //229 Suriname
+"1", //230 Sweden
+"1", //231 Switzerland
+"1", //232 Syria
+"1", //233 Taiwan
+"1", //234 Tanzania
+"1", //235 Thailand
+"1", //236 Togo
+"1", //237 Trinidad & Tobago
+"1", //238 Tunisia
+"1", //239 Turkey
+"1", //240 Uganda
+"1", //241 Ukraine
+"1", //242 United Arab Emirates
+"1", //243 United Kingdom Bermuda
+"1", //244 United Kingdom Cayman Islands
+"1", //245 United Kingdom Channel Islands
+"1", //246 United Kingdom Gibraltar
+"1", //247 United Kingdom Isle of Man
+"1", //248 United Kingdom Montserrat
+"1", //249 United Kingdom
+"1", //250 United Kingdom Anguilla
+"1", //251 United Kingdom British Virgin Islands
+"1", //252 United Kingdom Turks & Caicos Islands
+"1", //253 United Kingdom Falkland Islands
+"1", //254 United States
+"1", //255 Uruguay
+"1", //256 Uzbekistan
+"1", //257 Vatican City
+"1", //258 Venezuela
+"1", //259 Vietnam
+"1", //260 Western Sahara
+"1", //261 Yemen
+"1", //262 Zambia
+"1", //263 Zimbabwe
+
+];
+
+
+	c19 = c19GeoDataGlobal.map( ( place, index ) => {
+
+		article = place.region ? place.region : place.country;
+
+		if ( addThe.includes( article ) ) article = "the_" + article;
+
+		if ( oz.includes( article ) ) article = "Australia";
+
+		if ( china.includes( article ) ) article = "China";
+
+
+		article = article
+			.replace( /\&/, "and" )
+			.replace( /China/g, "mainland_China" )
+			.replace( /Georgia/g, "Georgia_(country)" )
+			.replace( /DR Congo/g, "the_Democratic_Republic_of_the_Congo" )
+			.replace( /Isle of Man/g, "the_Isle_of_Man" )
+			.replace( /Saint Martin/g, "French_Saint_Martin" )
+			.replace( / /g, "_" )
+		// .replace( //g, "" )
+
+		return { country: place.country, region: place.region, article: article, chart: "0", table: "", index: "0"
+	}
+	} )
+
+	console.log( "c19", c19 );
+
+	txt  = JSON.stringify( c19, null, "" ).replace( /},/g, "},\n");
+
+	main.innerText = "c19LinksGlobal = \n" + txt + "\n\n";
+
+	//console.log( "c19LinksGlobal", c19LinksGlobal );
+	htm  = c19.map( ( place, i ) => `
+	${ i } <a href="#${ place.article}" >${ place.country } ${ place.region }</a>` ).join( "<br>");
+
+	divItems.innerHTML = htm;
+
+};
+
+
+
+function testMenuItems(){
+
+	window.removeEventListener( "hashchange", onHashChangeArticle ) ;
+
+	window.addEventListener( "hashchange", onHashChangeChartApi, false ) ;
+
+	main.innerHTML = "";
+
+	items = divItems.querySelectorAll( "a" )
+	items = Array.from( items );
+
+	i = 0
+	stop = items.length - 1;
+
+	clickItem();
+
+}
+
+
+
+function clickItem() {
+
+	if ( i < stop ) {
+
+		console.log( "", i,  items[ i ].hash  );
+
+		location.hash = items[ i ].hash.trim()
+		i ++;
+
+		setTimeout( clickItem, 4000 )
+
+	} else {
+
+		window.removeEventListener( "hashchange", onHashChangeChartApi ) ;
+
+		window.addEventListener( "hashchange", onHashChangeChart, false ) ;
+
+		txt  = JSON.stringify( c19, null, "" ).replace( /},/g, "},\n");
+
+		main.innerText = "c19LinksGlobal = \n" + txt + "\n\n";
+
+	}
+
+}
+
+
+
+
+c19LinksUsa = [
+
+	{ state: "Alabama", article: "Alabama", table: "0" },
+	{ state: "Alaska", article: "Alaska", table: "0" },
+	{ state: "American Samoa", article: "American_Samoa", chart: "??", table: "0" },
+	{ state: "Arizona", article: "Arizona", table: "0" },
+	{ state: "Arkansas", article: "Arkansas", table: "0" },
+	{ state: "California", article: "California", table: "0" },
+	{ state: "Colorado", article: "Colorado", table: "0" },
+	{ state: "Connecticut", article: "Connecticut", table: "0" },
+	{ state: "Delaware", article: "Delaware", table: "0" },
+	{ state: "Florida", article: "Florida", table: "0" },
+	{ state: "Georgia", article: "Georgia_(U.S._state)", chart: "Georgia" },
+	{ state: "Guam", article: "Guam", table: "0" },
+	{ state: "Hawaii", article: "Hawaii", table: "0" },
+	{ state: "Idaho", article: "Idaho", table: "0" },
+	{ state: "Illinois", article: "Illinois", table: "0" },
+	{ state: "Indiana", article: "Indiana", table: "0" },
+	{ state: "Iowa", article: "Iowa", table: "0" },
+	{ state: "Kansas", article: "Kansas", table: "0" },
+	{ state: "Kentucky", article: "Kentucky", table: "0" },
+	{ state: "Louisiana", article: "Louisiana", table: "0" },
+	{ state: "Maine", article: "Maine", table: "0" },
+	{ state: "Maryland", article: "Maryland", table: "1" },
+	{ state: "Massachusetts", article: "Massachusetts", table: "1" },
+	{ state: "Michigan", article: "Michigan", table: "0" },
+	{ state: "Minnesota", article: "Minnesota", table: "0" },
+	{ state: "Mississippi", article: "Mississippi", table: "0" },
+	{ state: "Missouri", article: "Missouri", table: "0" },
+	{ state: "Montana", article: "Montana", table: "0" },
+	{ state: "Nebraska", article: "Nebraska", table: "0" },
+	{ state: "Nevada", article: "Nevada", table: "0" },
+	{ state: "New Hampshire", article: "New_Hampshire", table: "0" },
+	{ state: "New Jersey", article: "New_Jersey", table: "0" },
+	{ state: "New Mexico", article: "New_Mexico", table: "0" },
+	{ state: "New York", article: "New_York_(state)", chart: "New_York_State", table: "1" },
+	{ state: "North Carolina", article: "North_Carolina", table: "0" },
+	{ state: "North Dakota", article: "North_Dakota", table: "0" },
+	{ state: "Northern Mariana Islands", article: "Northern_Mariana_Islands", chart: "??", table: "0" },
+	{ state: "Ohio", article: "Ohio", table: "0" },
+	{ state: "Oklahoma", article: "Oklahoma", table: "0" },
+	{ state: "Oregon", article: "Oregon", table: "1" },
+	{ state: "Pennsylvania", article: "Pennsylvania", table: "0" },
+	{ state: "Puerto Rico", article: "Puerto_Rico", table: "0" },
+	{ state: "Rhode Island", article: "Rhode_Island", table: "0" },
+	{ state: "South Carolina", article: "South_Carolina", table: "0" },
+	{ state: "South Dakota", article: "South_Dakota", table: "0" },
+	{ state: "Tennessee", article: "Tennessee", table: "0" },
+	{ state: "Texas", article: "Texas", table: "0" },
+	{ state: "U.S. Virgin Islands", article: "the_United_States_Virgin_Islands", chart: "", table: "0" },
+	{ state: "Utah", article: "Utah", table: "0" },
+	{ state: "Vermont", article: "Vermont", table: "0" },
+	{ state: "Virginia", article: "Virginia", table: "0" },
+	{ state: "Washington", article: "Washington", chart: "Washington_State", table: "0" },
+	{ state: "Washington D.C.", article: "Washington,_D.C.", table: "0" },
+	{ state: "West Virginia", article: "West_Virginia", table: "0" },
+	{ state: "Wisconsin", article: "Wisconsin", table: "0" },
+	{ state: "Wyoming", article: "Wyoming", table: "0" }
+
+];
+
+
+
+init();
+</script>
+</body>
+</html>

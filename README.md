@@ -94,9 +94,8 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 
 ### Generally / Short term
 
+* 2020-04-15 ~ Way of testing that pop-up links are working
 * 2020-04-15 ~ Ability to add more buttons and links to pop-up
-* 2020-04-15 ~ Case data chart: on open > scroll to bottom
-* 2020-04-15 ~ Place data chart: on open > scroll to top
 * 2020-04-15 ~ Background as a gradient
 * 2020-04-15 ~ Sky box as Three.js text
 * 2020-04-14 ~ Notes and settings in their own modules
@@ -274,7 +273,14 @@ geoJson useful
 <details open >
 <summary>Change log </summary>
 
-_Change logs are now in the de/dates/ folders._
+_Change logs are now in the v-dates/ folders._
+
+### 2020-04-15
+
+Wish list items dealt with
+
+* 2020-04-15 ~ Case data chart: on open > scroll to bottom
+* 2020-04-15 ~ Place data chart: on open > scroll to top
 
 ### 2020-04-14
 

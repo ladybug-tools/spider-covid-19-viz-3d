@@ -11,7 +11,7 @@ let build = "stable";
 let timeStamp = "23:56";
 
 let versionStable = "v-2020-04-05";
-let versionDev = "v-2020-04-14";
+let versionDev = "v-2020-04-15";
 
 ////////// Menu title
 

@@ -8,7 +8,7 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "10:30";
+let timeStamp = "18:30";
 
 let versionStable = "v-2020-04-05";
 let versionDev = "v-2020-04-15";

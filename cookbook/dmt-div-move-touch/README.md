@@ -13,7 +13,7 @@ _basic-html.html_
 ### Full Screen: [ZZZZZ]( https://www.ladybug.tools/spider-covid-19-viz-3d//xxxxxx/xxxxxx.html )
 -->
 
-### [DMT Div Mouse Touch ]spider-covid-19-viz-3d/cookbook/dmt-div-move-touch/dmt-globe-basic-2020-04-11.html
+### [DMT Div Mouse Touch ]( https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/dmt-div-move-touch/dmt-globe-basic-2020-04-11.html )
 
 <details open >
 <summary>Concept</summary>
@@ -21,6 +21,7 @@ _basic-html.html_
 
 ### Questions
 
+* What is a nice way to format templates strings?
 * which is nicer ```f(e)``` or ```f(error)```?
 
 
@@ -36,6 +37,7 @@ _basic-html.html_
 <details open >
 <summary>Issues </summary>
 
+* Capturing the intersection only on "this" side of the world is a work-in-progress
 
 </details>
 
@@ -48,9 +50,9 @@ _basic-html.html_
 <details open >
 <summary>Change log </summary>
 
-### 123
+### 2020-04-16
 
-* First commit
+* First commit this read me
 
 </details>
 

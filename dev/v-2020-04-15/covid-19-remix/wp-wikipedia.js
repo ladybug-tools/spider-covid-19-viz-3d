@@ -348,7 +348,7 @@ DMT.displayMessage = function () {
 				<button onclick=DMT.getPopUpMore(); >view ${ WP.place.state } case data chart</button></br>
 				<div id="DMTdivJhu"  ></div>
 				<div id=WPdivPlaceJs ></div>
-				<div id=WPdivGraph style="overflow:auto;resizable:both;"><div>
+				<div id=WPdivGraph><div>
 			</div>
 		`;
 
@@ -371,7 +371,7 @@ DMT.displayMessage = function () {
 				<button onclick=DMT.getPopUpMore(); >view ${ place } case data chart</button></br>
 				<div id="DMTdivJhu"  ></div>
 				<div id=WPdivPlaceJs ></div>
-				<div id=WPdivGraph style="overflow:auto;resizable:both;"><div>
+				<div id=WPdivGraph ><div>
 			</div>
 		`;
 
@@ -485,8 +485,9 @@ WP.onLoadBarBox = function ( xhr ) {
 	//.replace( /\[(.*?)\]/g, "" );
 
 	WPdivGraph.innerHTML = str;
-	WPdivGraph.style.maxHeight = ( window.innerHeight - DMTdivPopUp.offsetTop - WPdivGraph.offsetTop - 15 ) + "px";
+	WPdivGraph.style.maxHeight = ( window.innerHeight - DMTdivPopUp.offsetTop - WPdivGraph.offsetTop - 35 ) + "px";
 	WPdivGraph.scrollTop = WPdivGraph.scrollHeight;
+	DMTdivIntersected.style.overflow = "scroll";
 
 };
 
@@ -501,7 +502,6 @@ WP.getPlace = function () {
 	WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
 
 	requestFile( WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.place.article, WP.onLoadDataTable );
-
 
 };
 

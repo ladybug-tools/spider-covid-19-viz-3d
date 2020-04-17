@@ -58,16 +58,15 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 	border-radius: 1rem 1rem 0 1rem;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
 	height: 50ch;
-	margin: -2ch;
 	overflow: hidden;
 	resize: both;
-	/* transform: translate(-50% , -50%); */
 	width: 50ch;
 }
 
 #DMTdivHeader {
 	background-color: #ccc;
 	cursor: move;
+	font-size: 2ch;
 	padding: 1ch;
 	user-select: none;
 }
@@ -80,19 +79,22 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 	padding: 1ch;
 }
 
-
 #DMTdivIntersected {
-
 	background-color: #eee;
 	border-radius: 1ch;
-	max-width: 50ch;
 	opacity: 0.85;
-	padding: 1ch;
-	overflow: auto;
-	resize: both;
-
+	padding: 1ch
 }
 
+@media all and (max-width: 640px) {
+	#DMTdivPopUp {
+		left: calc(50% - 19ch);
+	}
+
+	#DMTdivParent {
+		width: 40ch;
+	}
+}
 
 </style>
 
@@ -222,7 +224,7 @@ function init() {
 function loadGlobeWithBitmap( size = 50) {
 
 	const geometry = new THREE.SphereGeometry( size, 50, 25 );
-	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.85 * Math.PI ) );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( Math.PI ) );
 
 	const url = pathAssets + "images/natural-earth-8192-4096-col.jpg";

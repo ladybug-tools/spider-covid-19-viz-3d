@@ -440,7 +440,7 @@ DMT.getPopUpMore = function () {
 
 		requestFile( WP.cors + WP.api + WP.query + article, WP.onLoadBarBox );
 		//DMT.fetchUrlWikipediaApiPlace( url, 0 );
-		WPdivGraph.innerHTML = `<img src="../../../assets/images/progress-indicator.gif" width=100 >`;
+		WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
 
 	}
 
@@ -498,7 +498,7 @@ WP.getPlace = function () {
 
 	path = WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.place.article;
 
-	WPdivGraph.innerHTML = `<img src="../../../assets/images/progress-indicator.gif" width=100 >`;
+	WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
 
 	requestFile( WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.place.article, WP.onLoadDataTable );
 

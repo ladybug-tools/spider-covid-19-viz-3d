@@ -88,6 +88,8 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 	max-width: 50ch;
 	opacity: 0.85;
 	padding: 1ch;
+	overflow: auto;
+	resize: both;
 
 }
 
@@ -208,6 +210,7 @@ function init() {
 	loadGlobeWithBitmap();
 
 	addMeshes();
+
 
 	DMT.init()
 

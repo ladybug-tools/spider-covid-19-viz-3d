@@ -16,10 +16,9 @@ DMT.init = function () {
 	div.id = "DMTdivPopUp";
 	div.innerHTML = `
 	<div id="DMTdivParent" >
-		<div id="DMTdivHeader" >
+		<div id="DMTdivHeader" style=font-size:2ch; >
 
-			<img src="../../assets/spider.ico" alt="Spider icon" height=18 draggable=false >
-
+			🕷
 			<span onclick=DMTdivPopUp.hidden=true; style=float:right;z-index:20>[ x ]</span>
 
 		</div>
@@ -27,13 +26,10 @@ DMT.init = function () {
 			<div id=DMTdivContent >
 
 				<p>lorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?</p>
+
 			</div>
 		</div>
 	</div>`;
-
-
-	//DMT.popup = `<div id=DMTdivIntersected ></div>`;
-
 
 	window.addEventListener( 'keydown', DMT.onStart );
 
@@ -77,8 +73,6 @@ DMT.onStart = function () {
 
 DMT.onEvent = function ( e ) {
 
-	//console.log( 'event', e );
-
 	renderer.domElement.addEventListener( "touchstart", DMT.onMove );
 	renderer.domElement.addEventListener( "touchmove", DMT.onMove );
 	renderer.domElement.addEventListener( "touchend", DMT.onOut );
@@ -116,8 +110,6 @@ DMT.onMouseOverOut = function () {
 
 DMT.checkIntersect = function ( event ) {
 
-	//console.log( 'event chkInt ', event );
-
 	if ( event.type === "touchmove" || event.type === "touchstart" ) {
 
 		event.clientX = event.touches[ 0 ].clientX;
@@ -134,6 +126,8 @@ DMT.checkIntersect = function ( event ) {
 
 	const intersects = raycaster.intersectObjects( DMT.objects );
 
+	DMT.intersects = intersects;
+
 	if ( intersects.length > 0 ) {
 
 		if ( DMT.intersected !== intersects[ 0 ].object ) {
@@ -141,26 +135,23 @@ DMT.checkIntersect = function ( event ) {
 			//console.log( "int", intersects[ 0 ] )
 
 			DMT.intersected = intersects[ 0 ].object;
-			//console.log( "int", DMT.intersected );
 
 			DMTdivPopUp.hidden = false;
 			DMTdivPopUp.style.left = event.clientX + "px";
 			DMTdivPopUp.style.top = event.clientY + "px";
 			//DMTdivContainer.scrollTop = 0;
 
-			DMT.displayMessage( DMT.intersected );
+			DMT.displayMessage();
 
 		}
 
 	} else {
 
 		DMT.intersected = null;
-		//DMTdivPopUp.hidden = true;
-		//DMTdivContent.innerHTML = "";
 
 		if ( event.type === "touchmove" || event.type === "touchstart" ) {
 
-			DMTdivPopUp.hidden = true;
+			DMTdivPopUp.hidden;
 
 		}
 
@@ -169,39 +160,56 @@ DMT.checkIntersect = function ( event ) {
 };
 
 
+
 DMT.displayMessage = function () {
 
-	//console.log( "", 23 );
+	console.log( "event", event );
+	console.log( "DMT.intersects", DMT.intersects );
 
 	DMTdivPopUp.innerHTML = `
-		<div id="DMTdivIntersected" >
-		<div>x: ${ event.clientX }
-		<div>y: ${ event.clientY }
-		<div>${ DMT.intersected.name }
-		<div><button onclick=DMT.getMorePopUp() >more</button>
-		</div>
-		`;
+	<div id="DMTdivIntersected" >
+		<div>DOM x: ${ event.clientX }
+		<div>DOM y: ${ event.clientY }
+		<div>DOM time: ${ event.timeStamp.toLocaleString() } ms
+		<div>Ray found ${ DMT.intersects.length }
+		<div id=divTest><button onclick=DMT.getMorePopUp() >details ${ DMT.intersects.length } found</button>
+		<div id=DMTdivMore ></button>
+	</div>`;
 
-	//console.log( "DMTdivPopUp", DMTdivPopUp );
 
 };
 
 
+
 DMT.getMorePopUp = function () {
 
-	DMTdivIntersected.innerHTML += `
-	<div id="DMTdivMore" style=height:20ch;overflow:auto;resizable:both;width:100%; >
-		<p>lorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?</p>
-	</div>
-	`;
+	htm = DMT.intersects.map( ( obj, i ) => `
+	<p>
+		Object ${ i }: ${ obj.object.name }<br>
+		distance: ${ obj.distance.toLocaleString() }<br>
+		point: x${ obj.point.x.toLocaleString() }, y${ obj.point.y.toLocaleString() }, z${ obj.point.z.toLocaleString() }<br>
+	</p>`
+	).join( "" );
 
+	DMTdivMore.innerHTML = `
+	<div id="DMTdivMore">
+		${ htm }
+		<p>lorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?</p>
+	</div>`;
+
+	maxHeight = ( window.innerHeight - DMTdivPopUp.offsetTop - DMTdivIntersected.clientHeight - 15 );
+	console.log( "max", maxHeight );
+
+	if ( DMTdivIntersected.clientHeight > maxHeight ) {
+
+		DMTdivIntersected.style.height = maxHeight + "px";
+		//DMTdivMore.offsetTop
+	}
 };
 
 
 
 DMT.onMouseDown = function ( e ) {
-
-	console.log( 'm down', e );
 
 	DMTdivHeader.addEventListener( "touchmove", DMT.onMouseDownMove );
 	DMTdivHeader.addEventListener( "touchend", DMT.onMouseDownOut );
@@ -210,37 +218,11 @@ DMT.onMouseDown = function ( e ) {
 
 	DMT.onMouseDownMove( e ); // for touch
 
-
 };
 
 
 
 DMT.onMouseDownMove = function ( e ) {
-
-	//console.log( "ev", e );
-
-	let dx, dy;
-
-	if ( e.type === "touchmove" ) {
-
-		dx = e.touches[ 0 ].clientX - DMT.x;
-		dy = e.touches[ 0 ].clientY - DMT.y;
-
-		DMT.x = e.touches[ 0 ].clientX;
-		DMT.y = e.touches[ 0 ].clientY;
-
-	} else {
-
-		dx = e.clientX - DMT.x;
-		dy = e.clientY - DMT.y;
-
-		DMT.x = e.clientX;
-		DMT.y = e.clientY;
-
-	}
-
-	//DMTdivPopUp.style.left = DMTdivHeader.offsetLeft + dx + "px";
-	//DMTdivPopUp.style.top = DMTdivHeader.offsetTop + dy + "px";
 
 	DMTdivPopUp.style.left = ( event.clientX - 15 ) + "px";
 	DMTdivPopUp.style.top = ( event.clientY - 15 ) + "px";

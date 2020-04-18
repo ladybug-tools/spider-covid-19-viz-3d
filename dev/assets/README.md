@@ -1,4 +1,15 @@
+# Read me
+
+Deprecated
+
+see assets folder in root
+
+This folder just for archived scripts
+
+
 # Maps
+
+
 
 
 ## Credits

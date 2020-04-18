@@ -3,7 +3,7 @@
 <head>
 <meta charset = "utf-8" >
 <meta name = "viewport" content= "width=device-width, initial-scale=1" >
-<meta name = "description" content = "Files for you to play with" >
+<meta name = "description" content = "Use th GitHub API to list all the files remote or locally" >
 <meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
 
 <title></title>
@@ -91,8 +91,8 @@ main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
 	/* text-align: center; */
 }
 
+#ifr { height: 100%; width: 100%; }
 
-#ifr { height: 100%; width: 100%;}
 
 </style>
 </head>
@@ -138,14 +138,14 @@ main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
 
 <main>
 
-<iframe id=ifr ></iframe>
+	<iframe id=ifr ></iframe>
 
 </main>
 
 <script>
 
-aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/";
-imgIcon.src = "../assets/images/github-mark-32.png";
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/assets/";
+imgIcon.src = "images/github-mark-32.png";
 sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
 sVersion.innerHTML = version ? version.content : "";
@@ -160,11 +160,11 @@ function init() {
 
 	requestFile( urlApi );
 
-	const url = location.hash ? location.hash.slice( 1 ) : "globe-sharing/v-2020-04-08-1423/globe-sharing.html";
+	const url = location.hash ? location.hash.slice( 1 ) : "readme.html";
 
 	ifr.src= url;
 
-	window.addEventListener( "hashchange", () => { console.log( '', 23 );ifr.src = location.hash.slice( 1 ) });
+	window.addEventListener( "hashchange", () => { ifr.src = location.hash.slice( 1 ); });
 
 }
 
@@ -185,11 +185,14 @@ function requestFile( url ) {
 function onLoad( xhr ) {
 
 	const json = JSON.parse( xhr.target.response );
+	//console.log( "json", json );
 
-	let files = json.tree.map( file => file.path )
-		.filter( file => file.includes( "sandbox" ) && file.endsWith( ".html" ) )
-		.filter( file => ! file.includes( "index" ) && ! file.includes( "readme" ) )
-		.map( file => file.slice( 8 ) );
+	let files = json.tree
+		.filter( file => file.type === "blob" )
+		.map( file => file.path )
+		.filter( file => file.includes( "assets" ) && ! file.includes( "dev" )  )
+		//.filter( file => ! file.includes( "index" ) && ! file.includes( "readme" ) )
+		.map( file => file.slice( file.indexOf( "/" ) + 1 ) );
 
 	//console.log( 'files', files );
 
@@ -212,7 +215,7 @@ function onLoad( xhr ) {
 		return `
 		${ str }
 		<div>${ index }
-			
+
 			<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/blob/master/cookbook/${ path }" >
 				<img src="../assets/images/github-mark-32.png" height=12 style=opacity:0.5; ></a>
 			<a href="#${ path }" >${ strings.pop() }</a>

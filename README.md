@@ -12,9 +12,11 @@ value='You are now in a GitHub web page view - Click this button to view this re
 
 _covid 19 viz 3d - touch me!_
 
+
 ## Full Screen stable: [covid 19 viz3d]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/ )
 
 ### Full Screen latest: [covid 19 viz3d/dev ]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev/ )
+
 
 ### [Cookbook]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/cookbook )
 
@@ -81,7 +83,7 @@ The idea is to re-imagine the "chart", to turn the representation of quantities 
 
 Some of the great things about the globe is that yoo know what to do with it. You can spin it, You know the top and bottom bits are kind of boring and not much happens there. You know where you live.
 
-On the other hand, the Pacific Ocean takes half the space and there's nothing there eithr. And whenever ther places of interest there tend to be a ton of then and it's very difficult to attach a sign to one place without covering up the next place.
+On the other hand, the Pacific Ocean takes half the space and there's nothing there either. And whenever ther places of interest there tend to be a ton of then and it's very difficult to attach a sign to one place without covering up the next place.
 
 
 
@@ -94,11 +96,12 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 
 ### Generally / Short term
 
-* 2020-04-15 ~ Way of testing that pop-up links are working
-* 2020-04-15 ~ Ability to add more buttons and links to pop-up
-* 2020-04-15 ~ Background as a gradient
-* 2020-04-15 ~ Sky box as Three.js text
-* 2020-04-14 ~ Notes and settings in their own modules
+* 2020-04-18 ~ Theo ~  Pop-ups remember size and position between calls
+* 2020-04-18 ~ Theo ~  Sky Box: add messages on the fly
+* 2020-04-15 ~ Theo ~  Ability to add more buttons and links to pop-up
+* 2020-04-15 ~ Theo ~  Background as a gradient
+* 2020-04-15 ~ Theo ~  Sky box as Three.js text
+* 2020-04-14 ~ Theo ~  Notes and settings in their own modules
 * 2020-04-06 ~ Theo ~ Current settings save in local storage
 	* Globe rotates to the lat/lon onload as set and saved in localStorage
 	* Multiple locations & zoom levels
@@ -274,6 +277,13 @@ geoJson useful
 <summary>Change log </summary>
 
 _Change logs are now in the v-dates/ folders._
+
+### 2020-04-18
+
+
+Wish list items dealt with
+
+* 2020-04-15 ~ Way of testing that pop-up links are working << see sandbox/test-c19-wp-links
 
 ### 2020-04-15
 

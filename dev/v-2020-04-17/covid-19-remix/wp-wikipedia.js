@@ -353,9 +353,9 @@ DMT.displayYourMessage = function ( intersected) {
 		WP.place = line.region ? line.region : line.country;
 		//console.log( "place", place );
 
-		const find = c19LinksGlobal.find( place => place.country === line.country && place.region === line.region );
+		WP.dataLinks = c19LinksGlobal.find( place => place.country === line.country && place.region === line.region );
 
-		WP.article = find.article;
+		WP.article = WP.dataLinks.article;
 
 	}
 
@@ -379,6 +379,7 @@ WP.getPopUpMore = function () {
 	let template;
 	let htmJhu = "";
 	WP.htmPlace = "";
+	let chartIdx = 1
 
 	if ( WP.places === c19GeoDataUsa ) {
 
@@ -387,8 +388,6 @@ WP.getPopUpMore = function () {
 				<button onclick=WP.getPlace();>view ${ WP.place } county data chart</button>
 			</p>
 		`;
-
-		WP.place.chart = "1";
 
 		article = WP.article + "_medical cases chart";
 
@@ -430,19 +429,36 @@ WP.getPopUpMore = function () {
 
 		template = WP.templateGlobal + "/";
 
+		chartIdx = WP.dataLinks.chartIdx;
+
+
 	}
 
-	const url = WP.cors + WP.api + WP.query + template + article;
-	//console.log( "", url );
 
-	requestFile( url, WP.onLoadBarBox );
+
 
 	DMTdivPopUp.innerHTML = DMT.htmlPopUp;
 
 	DMTdivContent.innerHTML = `
 	<div id="DMTdivJhu"  >${ htmJhu }</div>
-	<div id=WPdivGraph><img src="progress-indicator.gif" width=100 ><div>
+	<div id=WPdivGraph><div>
 	`;
+
+
+	console.log( "idx", WP.dataLinks.chartIdx );
+
+	if ( chartIdx > 0 ) {
+
+		const url = WP.cors + WP.api + WP.query + template + article;
+
+		requestFile( url, WP.onLoadBarBox );
+
+		WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
+
+	} else {
+
+		WPdivGraph.innerHTML = "No chart available"
+	}
 
 	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
 	DMTdivHeader.addEventListener( "touchstart", DMT.onMouseDown );
@@ -472,18 +488,23 @@ WP.onLoadBarBox = function ( xhr ) {
 	const html = parser.parseFromString( text, "text/html" );
 
 	const bboxes = html.querySelectorAll( ".barbox" );
-	//console.log( bboxes );
+	console.log( bboxes );
 
 	boxIndex = 0;
 	const bbox = bboxes[ boxIndex ];
 
 	const plinks = bbox.querySelectorAll( ".plainlinks, .reflist" );
-	//console.log( "", links );
-	plinks.forEach( link => link.style.display = "none" );
+	console.log( "plinks", plinks );
+
+	if ( plinks ) { plinks.forEach( link => link.style.display = "none" ); }
 
 	extras = bbox.querySelectorAll( 'td[colspan="5"]' );
-	extras[ 0 ].style.display = "none";
-	console.log( "extras", extras );
+
+	if ( extras.length ) {
+
+		extras[ 0 ].style.display = "none";
+		console.log( "extras", extras );
+	}
 
 	const s = new XMLSerializer();
 	str = s.serializeToString( bbox );
@@ -551,7 +572,7 @@ WP.onLoadDataTable = function ( xhr ) {
 
 
 
-c19LinksGlobal = [
+c19LinksGlobalbbb = [
 	{ "country": "Afghanistan", "region": "", "article": "Afghanistan", "chart": "1", "table": "", "index": "0" },
 	{ "country": "Albania", "region": "", "article": "Albania", "chart": "1", "table": "", "index": "0" },
 	{ "country": "Algeria", "region": "", "article": "Algeria", "chart": "1", "table": "", "index": "0" },

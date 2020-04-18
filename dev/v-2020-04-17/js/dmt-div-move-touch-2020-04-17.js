@@ -17,9 +17,16 @@ DMT.htmlPopUp = `
 		</div>
 		<div id="DMTdivContainer" >
 
+			<p>${ ( new Date() ) }</p>
+
+			<p>hardwareConcurrency ${ navigator.hardwareConcurrency }</p>
+
 			<p>lorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?</p>
 
-			<p>image below for testing scrolling<img src=../../assets/cube-textures/f4.jpg ></p>
+			<p>
+				image below for testing scrolling
+				<img src=../../assets/cube-textures/f4.jpg >
+			</p>
 
 		</div>
 	</div>`;
@@ -28,8 +35,6 @@ DMT.htmlPopUp = `
 
 DMT.init = function () {
 
-	renderer = THR.renderer; sene = THR.scene; camera = THR.camera;
-
 	// Update to what objects you need monitored
 	DMT.objects = group.children;
 
@@ -37,7 +42,6 @@ DMT.init = function () {
 	div.id = "DMTdivPopUp";
 
 	DMTdivPopUp.innerHTML = DMT.htmlPopUp;
-
 
 	window.addEventListener( 'keydown', DMT.onStart );
 
@@ -205,7 +209,7 @@ DMT.onMouseDownOut = function () {
 
 //////////
 
-DMT.vvvvdisplayYourMessage = function () {
+DMT.displayYourMessage = function ( intersected ) {
 
 	console.log( "event", event );
 	console.log( "DMT.intersects", DMT.intersects );
@@ -213,7 +217,6 @@ DMT.vvvvdisplayYourMessage = function () {
 	DMTdivPopUp.hidden = false;
 	DMTdivPopUp.style.left = event.clientX + "px";
 	DMTdivPopUp.style.top = event.clientY + "px";
-	//DMTdivContainer.scrollTop = 0;
 
 	DMTdivPopUp.innerHTML = `
 	<div id="DMTdivIntersected" >
@@ -243,7 +246,10 @@ DMT.getMorePopUp = function () {
 	DMTdivContainer.innerHTML = `
 	<p>${ htm }</p>
 
-	<p>image below for testing scrolling<img src=../../assets/cube-textures/f4.jpg ></p>
+	<p>
+		image below for testing scrolling
+		<img onload=DMTdivContainer.scrollTop=800; src=../../assets/cube-textures/f4.jpg width=256 >
+	</p>
 	`;
 
 	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );

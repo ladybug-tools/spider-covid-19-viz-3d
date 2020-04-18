@@ -16,7 +16,7 @@ WP.api = "https://en.wikipedia.org/w/api.php?";
 
 WP.query = "action=parse&format=json&page=";
 
-WP.articleUsa = "https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_";
+WP.articlePrefix = "https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_";
 
 WP.templateUsa = "Template:2019–20_coronavirus_pandemic_data/United_States_medical_cases_by_state";
 
@@ -322,11 +322,19 @@ WP.addBar = function ( lat, lon, places, index, color = "red", radius = 0.4, hei
 
 
 
-DMT.displayMessage = function () {
+DMT.displayYourMessage = function ( intersected) {
 
-	const places = DMT.intersected.userData.places;
+	//console.log( "event", event );
+	//console.log( "DMT.intersects", DMT.intersects );
 
-	const index = DMT.intersected.userData.index;
+	DMTdivPopUp.hidden = false;
+	DMTdivPopUp.style.left = event.clientX + "px";
+	DMTdivPopUp.style.top = event.clientY + "px";
+	//DMTdivContainer.scrollTop = 0;
+
+	const places = intersected.userData.places;
+
+	const index = intersected.userData.index;
 
 	const line = places[ index ];
 	DMT.line = line;
@@ -341,11 +349,11 @@ DMT.displayMessage = function () {
 
 		DMTdivPopUp.innerHTML = `
 			<div id=DMTdivIntersected>
-				Wikipedia: <a href="${ WP.articleUsa }${ WP.place.state }" target="_blank">${ WP.place.state }</a><br>
+				Wikipedia: <a href="${ WP.articlePrefix }${ WP.place.state }" target="_blank">${ WP.place.state }</a><br>
 				WP cases: ${ Number( line.cases ).toLocaleString() }<br>
 				WP deaths: ${ Number( line.deaths ).toLocaleString() }<br>
 				WP recoveries: ${ isNaN( Number( line.recoveries ) ) ? "NA" : Number( line.recoveries ).toLocaleString() }<br>
-				<button onclick=DMT.getPopUpMore(); >view ${ WP.place.state } case data chart</button></br>
+				<button onclick=WP.getPopUpMore(); >view ${ WP.place.state } case data chart</button></br>
 				<div id="DMTdivJhu"  ></div>
 				<div id=WPdivPlaceJs ></div>
 				<div id=WPdivGraph><div>
@@ -364,11 +372,11 @@ DMT.displayMessage = function () {
 
 		DMTdivPopUp.innerHTML = `
 			<div id=DMTdivIntersected>
-				Wikipedia: <a href="${ WP.articleUsa }${ WP.place.article }" target="_blank">${ place }</a><br>
+				Wikipedia: <a href="${ WP.articlePrefix }${ WP.place.article }" target="_blank">${ place }</a><br>
 				WP cases: ${ Number( line.cases ).toLocaleString() }<br>
 				WP deaths: ${ Number( line.deaths ).toLocaleString() }<br>
 				WP recoveries: ${ isNaN( Number( line.recoveries ) ) ? "NA" : Number( line.recoveries ).toLocaleString() }<br>
-				<button onclick=DMT.getPopUpMore(); >view ${ place } case data chart</button></br>
+				<button onclick=WP.getPopUpMore(); >view ${ place } case data chart</button></br>
 				<div id="DMTdivJhu"  ></div>
 				<div id=WPdivPlaceJs ></div>
 				<div id=WPdivGraph ><div>
@@ -381,9 +389,25 @@ DMT.displayMessage = function () {
 
 
 
-DMT.getPopUpMore = function () {
-
+WP.getPopUpMore = function () {
 	//console.log( "", DMT.line, WP.place );
+
+	DMTdivPopUp.style.width = null;
+	DMTdivPopUp.innerHTML = DMT.htmlPopUp;
+	DMTdivContainer.innerHTML = `
+	<div id="DMTdivJhu"  ></div>
+	<div id=WPdivPlaceJs ></div>
+	<div id=WPdivGraph ><div>
+
+	<p>image below for testing scrolling<img src=../../assets/cube-textures/f4.jpg ></p>
+
+	`;
+
+	WPdivGraph.style.width = "100%";
+	DMTdivContainer.style.width = "100%";
+	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
+	DMTdivHeader.addEventListener( "touchstart", DMT.onMouseDown );
+
 
 
 	let article = "";
@@ -432,7 +456,7 @@ DMT.getPopUpMore = function () {
 
 	}
 
-	console.log( "chart", WP.place.chart );
+	//console.log( "chart", WP.place.chart );
 
 	if ( WP.place.chart === "1" ) {
 
@@ -487,7 +511,6 @@ WP.onLoadBarBox = function ( xhr ) {
 	WPdivGraph.innerHTML = str;
 	WPdivGraph.style.maxHeight = ( window.innerHeight - DMTdivPopUp.offsetTop - WPdivGraph.offsetTop - 35 ) + "px";
 	WPdivGraph.scrollTop = WPdivGraph.scrollHeight;
-	DMTdivIntersected.style.overflow = "scroll";
 
 };
 
@@ -874,18 +897,4 @@ const c19LinksUsa = [
 	{ state: "Wyoming", article: "Wyoming", table: "0" }
 
 ];
-
-
-function test () {
-
-	for ( let i = 0; i < 3; i ++ ) {
-
-		const state = c19LinksUsa[ i ];
-
-		window.open( "https://en.wikipedia.org/wiki/" + state.article, "_blank" );
-
-	}
-
-}
-
 

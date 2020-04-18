@@ -1,7 +1,7 @@
 // Copyright 2020 Spider contributors. MIT License
 // 2020-04-16
 
-/* global THREE, groupCasesWP, displayMessage, DMTdivHeader, DMTdivContent, DMTdivContainer, DMTdivParent, scene, renderer, camera, group, txt */
+/* global THREE, groupCasesWP, displayMessage, DMTdivHeader, DMTdivContent, DMTdivContent, DMTdivContainer, scene, renderer, camera, group, txt */
 
 const DMT = {};
 
@@ -11,15 +11,22 @@ DMT.y = 0;
 DMT.intersected = undefined;
 
 DMT.htmlPopUp = `
-	<div id="DMTdivParent" >
+	<div id="DMTdivContainer" >
 		<div id="DMTdivHeader">
 			🕷 <span ontouchstart=DMTdivPopUp.hidden=true; onclick=DMTdivPopUp.hidden=true; style=cursor:pointer;float:right;z-index:20; >[ x ]</span>
 		</div>
-		<div id="DMTdivContainer" >
+		<div id="DMTdivContent" >
+
+			<p>${ ( new Date() ) }</p>
+
+			<p>hardwareConcurrency ${ navigator.hardwareConcurrency }</p>
 
 			<p>lorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?</p>
 
-			<p>image below for testing scrolling<img src=../../assets/cube-textures/f4.jpg ></p>
+			<p>
+				image below for testing scrolling
+				<img src=../../assets/cube-textures/f4.jpg >
+			</p>
 
 		</div>
 	</div>`;
@@ -28,8 +35,6 @@ DMT.htmlPopUp = `
 
 DMT.init = function () {
 
-	renderer = THR.renderer; sene = THR.scene; camera = THR.camera;
-
 	// Update to what objects you need monitored
 	DMT.objects = group.children;
 
@@ -37,7 +42,6 @@ DMT.init = function () {
 	div.id = "DMTdivPopUp";
 
 	DMTdivPopUp.innerHTML = DMT.htmlPopUp;
-
 
 	window.addEventListener( 'keydown', DMT.onStart );
 
@@ -52,6 +56,7 @@ DMT.init = function () {
 	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
 	DMTdivHeader.addEventListener( "touchstart", DMT.onMouseDown );
 
+	DMTdivContent.scrollTop = 800;
 };
 
 
@@ -203,9 +208,26 @@ DMT.onMouseDownOut = function () {
 
 
 
+DMT.onloadMore = function () {
+
+	const maxHeadroom = window.innerHeight - DMTdivPopUp.offsetTop - 15;
+
+	DMTdivContainer.style.height = DMTdivPopUp.clientHeight < maxHeadroom ? "100%" : maxHeadroom + "px";
+
+
+	const maxLegroom = window.innerWidth - DMTdivPopUp.offsetLeft - 15;
+
+	DMTdivContainer.style.width = DMTdivPopUp.clientWidth < maxLegroom ? "100%" : maxLegroom + "px";
+
+
+	DMTdivContent.scrollTop = 88888;
+
+};
+
+
 //////////
 
-DMT.vvvvdisplayYourMessage = function () {
+DMT.displayYourMessage = function ( intersected ) {
 
 	console.log( "event", event );
 	console.log( "DMT.intersects", DMT.intersects );
@@ -213,7 +235,7 @@ DMT.vvvvdisplayYourMessage = function () {
 	DMTdivPopUp.hidden = false;
 	DMTdivPopUp.style.left = event.clientX + "px";
 	DMTdivPopUp.style.top = event.clientY + "px";
-	//DMTdivContainer.scrollTop = 0;
+	//DMTdivContent.scrollTop = 0;
 
 	DMTdivPopUp.innerHTML = `
 	<div id="DMTdivIntersected" >
@@ -240,13 +262,24 @@ DMT.getMorePopUp = function () {
 	).join( "" );
 
 	DMTdivPopUp.innerHTML = DMT.htmlPopUp;
-	DMTdivContainer.innerHTML = `
-	<p>${ htm }</p>
-
-	<p>image below for testing scrolling<img src=../../assets/cube-textures/f4.jpg ></p>
+	DMTdivContent.innerHTML = `
+	<div>${ htm }</div>
+	<div>
+		<p>
+			image below for testing scrolling
+			<img onload=DMT.onloadMore(); src=../../assets/cube-textures/f4.jpg >
+		</p>
+	</div>
 	`;
+
+	// DMTdivContainer.style.height = "100%";
+	// DMTdivContainer.style.width = "100%";
+
+	DMT.onloadMore();
 
 	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
 	DMTdivHeader.addEventListener( "touchstart", DMT.onMouseDown );
 
 };
+
+

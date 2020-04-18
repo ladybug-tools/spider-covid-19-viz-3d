@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang = "en" >
+<head>
+<meta charset = "utf-8" >
+<meta name = "viewport" content= "width=device-width, initial-scale=1" >
+<meta name = "description" content = "Basic TooToo HTML template" >
+<meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
+<!-- <meta name=version content="2020-03-06">-->
+
+<title>test links</title>
+
+<style>
+
+* { box-sizing: border-box; }
+
+:root { font: 100% monospace; --mnu-width: 26rem; --screen-width: calc( 100vw ); --headerHeight: 6rem; }
+
+html { height: 100%; }
+
+body { margin: 0 auto; max-width: 80ch; padding: 0 0.5rem; }
+
+a { color: crimson; text-decoration: none; }
+a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline }
+
+aside { border: 1px solid lightgray; margin-top: 15px; padding: 2px; }
+
+blockquote { background-color: #ddd; padding: 1ch; }
+
+button, input[type=button] { background-color: #ddd; border: none; color: #322; cursor: pointer; padding: 3px 5px; }
+button:hover { background: #ccc; color: #fff }
+
+code { background-color: #eee; }
+pre { background-color: #eee; padding: 5px; }
+
+input[type="range"] { -webkit-appearance: none; -moz-appearance: none; background-color: #ddd; height: 2ch;
+	width: 100%; }
+
+input[type="range"]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 0;
+	height: 3ch;
+	width: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 3ch;
+	width: 10px;
+}
+
+summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; }
+
+
+main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
+	padding: 0 1rem; position: absolute; width: calc( 100% - var( --mnu-width ) );  }
+
+#navMenu { background-color: #eee; height: 100vh; left: 0; margin: 0; overflow: auto; padding: 0 1rem;
+	position: absolute; top: 0; width: var( --mnu-width ); }
+
+
+
+.couponcode { float: right }
+
+.couponcode:hover>.coupontooltip { display: block; }
+
+.coupontooltip { border: 0.8ch double #888; background: white; display: none;
+	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
+
+.sumMenuTitle {
+	background-color: #ccc;
+	color: #777;
+	margin: 10px 0;
+	text-align: center;
+}
+
+.sumMenuSecondary {
+	background-color: #ddd;
+	color: #888;
+	/*font-size: 0.9rem;*/
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+.sumMenuTertiary {
+	background-color: #e8e8e8;
+	color: #999;
+	font-size: 0.9rem;
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+
+
+iframe { height: 100%; width: 100%;}
+
+</style>
+</head>
+<body>
+
+<script src="../../../assets/geo-data/geo-data-global.js"></script>
+
+<nav id="navMenu" >
+
+	<header id="hdrTitle" >
+
+		<h2>
+			<a id=aSource target=_top title="Source code on GitHub" >
+				<img id=imgIcon height=18 style=opacity:0.5; >
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="couponcode" >??<span id=divDescription class="coupontooltip" ></span></span>
+
+		</h2>
+
+	</header>
+
+	<p>
+		<button id=but onclick=geoToc19(); >base data: geo to c19 gobal</button> <label>
+	</p>
+
+	<hr>
+
+	<p>
+		<button id=but onclick=setMenuViewArticles(); >set menu to view article in Iframe</button>
+	</p>
+	<p>
+		<button id=but onclick=setMenuViewChartTemplates(); >set menu to view chart template in Iframe</button>
+	</p>
+	<p>
+		<button id=but onclick=setMenuCheckChartTemplates(); >set menu to check chart template</button>
+	</p>
+
+	<p>
+		<button id=but onclick=setMenuCheckArticleTables(); >set menu to check article tables</button>
+	</p>
+	<hr>
+
+	<p>
+		<button id=but onclick=startClickAllMenuItems(); >click All Menu Items</button>
+	</p>
+
+	<hr>
+
+	<div id=divItems ></div>
+
+</nav>
+
+<main id=main >
+
+
+</main>
+
+
+<script>
+
+aSource.href = "https://github.com/zzzzz/xxxxx.html";
+imgIcon.src = "https://pushme-pullyou.github.io/github-mark-32.png";
+sTitle.innerHTML= document.title; // ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+const version = document.head.querySelector( "[ name=version ]" );
+sVersion.innerHTML = version ? version.content : "";
+divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+let WP = {};
+let index = 0;
+
+let c19LinksUsa;
+
+
+function init() {
+
+	geoToc19();
+
+	window.addEventListener( "hashchange", onHashChangeArticle, false ) ;
+
+	//window.addEventListener( "hashchange", onHashChangeViewChart, false ) ;
+
+	//window.addEventListener( "hashchange", onHashChangeChartApi, false ) ;
+
+}
+
+
+function setMenuViewArticles() {
+
+	window.removeEventListener( "hashchange", onHashChangeViewChart, false );
+	window.removeEventListener( "hashchange", onHashChangeChartApi, false ) ;
+
+	window.addEventListener( "hashchange", onHashChangeArticle, false ) ;
+
+
+}
+
+
+
+function setMenuViewChartTemplates() {
+
+	window.removeEventListener( "hashchange", onHashChangeArticle, false ) ;
+	window.removeEventListener( "hashchange", onHashChangeChartApi, false ) ;
+
+	window.addEventListener( "hashchange", onHashChangeViewChart, false ) ;
+
+}
+
+
+
+function setMenuCheckChartTemplates() {
+
+	window.removeEventListener( "hashchange", onHashChangeArticle, false ) ;
+	window.removeEventListener( "hashchange", onHashChangeViewChart, false );
+
+
+	window.addEventListener( "hashchange", onHashChangeChartApi, false ) ;
+
+}
+
+
+
+function setMenuCheckArticleTables() {
+
+	window.removeEventListener( "hashchange", onHashChangeArticle, false ) ;
+	window.removeEventListener( "hashchange", onHashChangeViewChart, false );
+	window.removeEventListener( "hashchange", onHashChangeChartApi, false ) ;
+
+	window.addEventListener( "hashchange", onHashCheckArticleTables, false ) ;
+
+
+}
+
+
+
+function onHashChangeArticle() {
+
+	place = location.hash.slice( 1 );
+
+	link = "https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_" + place;
+
+	//console.log( "link", link );
+
+	main.innerHTML = `<iframe id=ifr ></iframe>`;
+	ifr.src= link;
+
+}
+
+
+
+function onHashChangeViewChart() {
+
+	// no way of knowing if fail
+
+	place = location.hash.slice( 1 );
+
+	//link = `https://en.wikipedia.org/wiki/Template:2019–20_coronavirus_pandemic_data/United_States/${ place }_medical_cases_chart`;
+
+	link = `https://en.wikipedia.org/wiki/Template:2019–20_coronavirus_pandemic_data/${ place }_medical_cases_chart`;
+
+	//console.log( "link", link );
+
+	country = c19.find( country => country.country === place || country.region === place );
+
+	console.log( "country", country );
+
+	if ( country.chart === "1" ) {
+
+		main.innerHTML = `<iframe id=ifr ></iframe>`;
+		ifr.src= link;
+
+	} else {
+
+		main.innerHTML = `<h2>${ country.country } no chart</h2>`;
+
+	}
+
+}
+
+
+
+function onHashChangeChartApi() {
+
+	place = location.hash.slice( 1 );
+
+	WP.cors = "https://cors-anywhere.herokuapp.com/";
+
+	WP.api = "https://en.wikipedia.org/w/api.php?";
+
+	WP.query = "action=parse&format=json&page=";
+
+	WP.article = `Template:2019–20_coronavirus_pandemic_data/${ place }_medical_cases_chart`;
+
+	WP.requestFileUserData( WP.cors + WP.api + WP.query + WP.article, WP.onLoadData, "" );
+}
+
+
+
+function onHashCheckArticleTables() {
+
+	place = location.hash.slice( 1 );
+
+	WP.cors = "https://cors-anywhere.herokuapp.com/";
+
+	WP.api = "https://en.wikipedia.org/w/api.php?";
+
+	WP.query = "action=parse&format=json&page=";
+
+	WP.article = `2020_coronavirus_pandemic_in_${ place }`;
+
+	WP.requestFileUserData( WP.cors + WP.api + WP.query + WP.article, WP.onLoadArticle, "" );
+
+}
+
+
+
+WP.requestFileUserData = function ( url, callback, userData ) {
+
+	const xhr = new XMLHttpRequest();
+	xhr.open( "GET", url, true );
+	xhr.onerror = ( xhr ) => console.log( "error:", xhr );
+	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+	xhr.onload = ( xhr ) => callback( xhr, userData );
+	xhr.send( null );
+
+};
+
+
+
+WP.onLoadData = function ( xhr, c19GeoData ) {
+
+	//console.log( "xhr", xhr, c19GeoData );
+
+	place = location.hash.slice( 1 );
+
+	country = c19.find( country => country.country === place || country.region === place );
+
+	const response = xhr.target.response;
+
+	const json = JSON.parse( response );
+
+	country.chart = json.error ?  "0" : "1";
+
+	console.log( 'json', index, place, country.chart, json );
+
+	main.innerHTML += `json  ${index } , ${ place }, ${ country.chart } `;
+
+};
+
+
+
+
+WP.onLoadArticle = function( xhr ) {
+
+	place = location.hash.slice( 1 );
+
+	const response = xhr.target.response;
+
+	const json = JSON.parse( response );
+
+	let text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	text = text
+		.replace( /\<img (.*?)>/gi, "" )
+		.replace( /\<a href(.*?)>/gi, "" )
+		.replace( /\<ul>(.*?)\<\/ul>/i, "" );
+
+	const parser = new DOMParser();
+	const html = parser.parseFromString( text, "text/html" );
+
+	const tables = html.querySelectorAll( ".wikitable" );
+	console.log( tables );
+
+	main.innerHTML += `${ place } tables ${ tables.length }<br>`
+
+};
+
+
+
+function geoToc19() {
+
+	console.log( "",  );
+
+	const addThe =[ "British Virgin Islands", "Cayman Islands", "Dominican Republic", "Falkland Islands",
+		"FaroeIslands", "Isle of Man", "Maldives",
+		"Netherlands", "Philippines", "Turks & Caicos Islands", "United Arab Emirates" ];
+
+	const oz = [ "Australian_Capital_Territory", "New South Wales", "Northern Territory",
+	"Queensland", "South Australia", "Tasmania", "Victoria", "Western Australia" ];
+
+	const china = [
+		"Anhui",
+		"Beijing",
+		"Chongqing",
+		"Fujian",
+		"Gansu",
+		"Guangdong",
+		"Guangxi",
+		"Guizhou",
+		"Hainan",
+		"Hebei",
+		"Heilongjiang",
+		//"Henan",
+		//"Hong Kong",
+		//"Hubei",
+		"Hunan",
+		"Inner Mongolia",
+		"Jiangsu",
+		"Jiangxi",
+		"Jilin",
+		"Liaoning",
+		//"Macau",
+		"Ningxia",
+		"Qinghai",
+		"Shaanxi", "Shandong",
+		//"Shanghai",
+		"Shanxi",
+		//"Sichuan",
+		"Tianjin", "Tibet", "Xinjiang", "Yunnan", "Zhejiang"
+	];
+
+	c19 = c19GeoDataGlobal.map( ( place, index ) => {
+
+		article = place.region ? place.region : place.country;
+
+		if ( addThe.includes( article ) ) article = "the_" + article;
+
+		if ( oz.includes( article ) ) article = "Australia";
+
+		if ( china.includes( article ) ) article = "China";
+
+
+		article = article
+			.replace( /\&/, "and" )
+			.replace( /China/g, "mainland_China" )
+			.replace( /Georgia/g, "Georgia_(country)" )
+			.replace( /DR Congo/g, "the_Democratic_Republic_of_the_Congo" )
+			.replace( /Saint Martin/g, "French_Saint_Martin" )
+			.replace( / /g, "_" )
+		// .replace( //g, "" )
+
+		return { country: place.country, region: place.region, article: article, chart: "0", table: "", index: "0"
+	}
+	} )
+
+	console.log( "c19", c19 );
+
+	const txt  = JSON.stringify( c19, null, "" ).replace( /},/g, "},\n");
+
+	main.innerText = "c19LinksGlobal = \n" + txt + "\n\n";
+
+
+	htm  = c19.map( ( place, i ) => `
+		${ i } <a href="#${ place.article}" >${ place.country } ${ place.region }</a>` ).join( "<br>");
+
+	divItems.innerHTML = htm;
+
+};
+
+
+
+function startClickAllMenuItems(){
+
+	//window.removeEventListener( "hashchange", onHashChangeArticle ) ;
+
+	//window.addEventListener( "hashchange", onHashChangeChartApi, false ) ;
+
+	main.innerHTML = "";
+
+	items = divItems.querySelectorAll( "a" )
+	items = Array.from( items );
+
+	index = 0;
+	stop = 5; //items.length - 1;
+
+	clickAllMenuItems();
+
+}
+
+
+
+function clickAllMenuItems() {
+
+	if ( index < stop ) {
+
+		console.log( "", index,  items[ index ].hash  );
+
+		location.hash = items[ index ].hash.trim()
+		index ++;
+
+		setTimeout( clickAllMenuItems, 3000 )
+
+	} else {
+
+		//window.removeEventListener( "hashchange", onHashChangeChartApi ) ;
+
+		//window.addEventListener( "hashchange", onHashChangeViewChart, false ) ;
+
+		// txt  = JSON.stringify( c19, null, "" ).replace( /},/g, "},\n");
+
+		// main.innerText = "c19LinksGlobal = \n" + txt + "\n\n";
+
+	}
+
+}
+
+
+
+
+c19LinksUsa = [
+
+	{ state: "Alabama", article: "Alabama", table: "0" },
+	{ state: "Alaska", article: "Alaska", table: "0" },
+	{ state: "American Samoa", article: "American_Samoa", chart: "??", table: "0" },
+	{ state: "Arizona", article: "Arizona", table: "0" },
+	{ state: "Arkansas", article: "Arkansas", table: "0" },
+	{ state: "California", article: "California", table: "0" },
+	{ state: "Colorado", article: "Colorado", table: "0" },
+	{ state: "Connecticut", article: "Connecticut", table: "0" },
+	{ state: "Delaware", article: "Delaware", table: "0" },
+	{ state: "Florida", article: "Florida", table: "0" },
+	{ state: "Georgia", article: "Georgia_(U.S._state)", chart: "Georgia" },
+	{ state: "Guam", article: "Guam", table: "0" },
+	{ state: "Hawaii", article: "Hawaii", table: "0" },
+	{ state: "Idaho", article: "Idaho", table: "0" },
+	{ state: "Illinois", article: "Illinois", table: "0" },
+	{ state: "Indiana", article: "Indiana", table: "0" },
+	{ state: "Iowa", article: "Iowa", table: "0" },
+	{ state: "Kansas", article: "Kansas", table: "0" },
+	{ state: "Kentucky", article: "Kentucky", table: "0" },
+	{ state: "Louisiana", article: "Louisiana", table: "0" },
+	{ state: "Maine", article: "Maine", table: "0" },
+	{ state: "Maryland", article: "Maryland", table: "1" },
+	{ state: "Massachusetts", article: "Massachusetts", table: "1" },
+	{ state: "Michigan", article: "Michigan", table: "0" },
+	{ state: "Minnesota", article: "Minnesota", table: "0" },
+	{ state: "Mississippi", article: "Mississippi", table: "0" },
+	{ state: "Missouri", article: "Missouri", table: "0" },
+	{ state: "Montana", article: "Montana", table: "0" },
+	{ state: "Nebraska", article: "Nebraska", table: "0" },
+	{ state: "Nevada", article: "Nevada", table: "0" },
+	{ state: "New Hampshire", article: "New_Hampshire", table: "0" },
+	{ state: "New Jersey", article: "New_Jersey", table: "0" },
+	{ state: "New Mexico", article: "New_Mexico", table: "0" },
+	{ state: "New York", article: "New_York_(state)", chart: "New_York_State", table: "1" },
+	{ state: "North Carolina", article: "North_Carolina", table: "0" },
+	{ state: "North Dakota", article: "North_Dakota", table: "0" },
+	{ state: "Northern Mariana Islands", article: "Northern_Mariana_Islands", chart: "??", table: "0" },
+	{ state: "Ohio", article: "Ohio", table: "0" },
+	{ state: "Oklahoma", article: "Oklahoma", table: "0" },
+	{ state: "Oregon", article: "Oregon", table: "1" },
+	{ state: "Pennsylvania", article: "Pennsylvania", table: "0" },
+	{ state: "Puerto Rico", article: "Puerto_Rico", table: "0" },
+	{ state: "Rhode Island", article: "Rhode_Island", table: "0" },
+	{ state: "South Carolina", article: "South_Carolina", table: "0" },
+	{ state: "South Dakota", article: "South_Dakota", table: "0" },
+	{ state: "Tennessee", article: "Tennessee", table: "0" },
+	{ state: "Texas", article: "Texas", table: "0" },
+	{ state: "U.S. Virgin Islands", article: "the_United_States_Virgin_Islands", chart: "", table: "0" },
+	{ state: "Utah", article: "Utah", table: "0" },
+	{ state: "Vermont", article: "Vermont", table: "0" },
+	{ state: "Virginia", article: "Virginia", table: "0" },
+	{ state: "Washington", article: "Washington", chart: "Washington_State", table: "0" },
+	{ state: "Washington D.C.", article: "Washington,_D.C.", table: "0" },
+	{ state: "West Virginia", article: "West_Virginia", table: "0" },
+	{ state: "Wisconsin", article: "Wisconsin", table: "0" },
+	{ state: "Wyoming", article: "Wyoming", table: "0" }
+
+];
+
+
+init();
+
+
+</script>
+</body>
+</html>

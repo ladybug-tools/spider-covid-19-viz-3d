@@ -16,11 +16,11 @@ WP.api = "https://en.wikipedia.org/w/api.php?";
 
 WP.query = "action=parse&format=json&page=";
 
-WP.articleUsa = "https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_";
+WP.articlePrefix = "https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_";
 
 WP.templateUsa = "Template:2019–20_coronavirus_pandemic_data/United_States_medical_cases_by_state";
 
-WP.articleGlobal = "Template:2019–20_coronavirus_pandemic_data";
+WP.templateGlobal = "Template:2019–20_coronavirus_pandemic_data";
 
 WP.init = function () {
 
@@ -30,7 +30,7 @@ WP.init = function () {
 
 	WP.getPandemicData( c19GeoDataUsa, WP.templateUsa );
 
-	WP.getPandemicData( c19GeoDataGlobal, WP.articleGlobal );
+	WP.getPandemicData( c19GeoDataGlobal, WP.templateGlobal );
 
 	//console.log( "time start all", performance.now() - timeStartAll );
 
@@ -322,98 +322,91 @@ WP.addBar = function ( lat, lon, places, index, color = "red", radius = 0.4, hei
 
 
 
-DMT.displayMessage = function () {
+//////////
 
-	const places = DMT.intersected.userData.places;
+DMT.displayYourMessage = function ( intersected) {
 
-	const index = DMT.intersected.userData.index;
+	//console.log( "event", event );
+	//console.log( "DMT.intersects", DMT.intersects );
 
-	const line = places[ index ];
-	DMT.line = line;
-	//console.log( "line", line );
+	DMTdivPopUp.hidden = false;
+	DMTdivPopUp.style.left = event.clientX + "px";
+	DMTdivPopUp.style.top = event.clientY + "px";
+	//DMTdivContainer.scrollTop = 0;
 
-	if ( places === c19GeoDataUsa ) {
+	WP.places = intersected.userData.places;
+	const index = intersected.userData.index;
+	const line = WP.places[ index ];
+	WP.line = line;
 
-		const state = c19LinksUsa.find( state => state.state === DMT.line.region );
+	if ( WP.places === c19GeoDataUsa ) {
 
-		WP.place = state;
+		const state = c19LinksUsa.find( state => state.state === line.region );
+
+		WP.place = state.state;
+
+		WP.article = state.state;
 		//console.log( "", WP.place );
-
-		DMTdivPopUp.innerHTML = `
-			<div id=DMTdivIntersected>
-				Wikipedia: <a href="${ WP.articleUsa }${ WP.place.state }" target="_blank">${ WP.place.state }</a><br>
-				WP cases: ${ Number( line.cases ).toLocaleString() }<br>
-				WP deaths: ${ Number( line.deaths ).toLocaleString() }<br>
-				WP recoveries: ${ isNaN( Number( line.recoveries ) ) ? "NA" : Number( line.recoveries ).toLocaleString() }<br>
-				<button onclick=DMT.getPopUpMore(); >view ${ WP.place.state } case data chart</button></br>
-				<div id="DMTdivJhu"  ></div>
-				<div id=WPdivPlaceJs ></div>
-				<div id=WPdivGraph><div>
-			</div>
-		`;
 
 	} else {
 
-		place = DMT.line.region ? DMT.line.region : DMT.line.country;
+		WP.place = line.region ? line.region : line.country;
 		//console.log( "place", place );
 
-		WP.place = c19LinksGlobal.find( place => place.country === DMT.line.country && place.region === DMT.line.region );
-		// const placeWP = place
-		//console.log( "p2", WP.place );
-		//WP.article = WP.place.replace( / /g, "_" );
+		const find = c19LinksGlobal.find( place => place.country === line.country && place.region === line.region );
 
-		DMTdivPopUp.innerHTML = `
-			<div id=DMTdivIntersected>
-				Wikipedia: <a href="${ WP.articleUsa }${ WP.place.article }" target="_blank">${ place }</a><br>
-				WP cases: ${ Number( line.cases ).toLocaleString() }<br>
-				WP deaths: ${ Number( line.deaths ).toLocaleString() }<br>
-				WP recoveries: ${ isNaN( Number( line.recoveries ) ) ? "NA" : Number( line.recoveries ).toLocaleString() }<br>
-				<button onclick=DMT.getPopUpMore(); >view ${ place } case data chart</button></br>
-				<div id="DMTdivJhu"  ></div>
-				<div id=WPdivPlaceJs ></div>
-				<div id=WPdivGraph ><div>
-			</div>
-		`;
+		WP.article = find.article;
 
 	}
+
+	DMTdivPopUp.innerHTML = `
+	<div id=DMTdivIntersected>
+		Wikipedia: <a href="${ WP.articlePrefix }${ WP.article }" target="_blank">${ WP.place }</a><br>
+		WP cases: ${ Number( line.cases ).toLocaleString() }<br>
+		WP deaths: ${ Number( line.deaths ).toLocaleString() }<br>
+		WP recoveries: ${ isNaN( Number( line.recoveries ) ) ? "NA" : Number( line.recoveries ).toLocaleString() }<br>
+		<button onclick=WP.getPopUpMore(); >view ${ WP.place } case data chart</button></br>
+	</div>`;
 
 };
 
 
 
-DMT.getPopUpMore = function () {
+WP.getPopUpMore = function () {
+	//console.log( "", WP.line, WP.place );
 
-	//console.log( "", DMT.line, WP.place );
+	let article;
+	let template;
+	let htmJhu = "";
+	WP.htmPlace = "";
 
+	if ( WP.places === c19GeoDataUsa ) {
 
-	let article = "";
-
-	if ( WP.place.state ) {
-
-		DMTdivJhu.innerHTML = "";
-
-		WPdivPlaceJs.innerHTML = `
+		WP.htmPlace = `
 			<p>
-				<button onclick=WP.getPlace();>view ${ WP.place.state } county data chart</button>
+				<button onclick=WP.getPlace();>view ${ WP.place } county data chart</button>
 			</p>
 		`;
 
-		article = WP.place.article;
 		WP.place.chart = "1";
+
+		article = WP.article + "_medical cases chart";
+
+		template = "Template:2019–20_coronavirus_pandemic_data/United_States/";
 
 	} else {
 
 		let cases = "NA";
 		let date = "NA";
 
-		const placeJTS = JTS.rowsCases.find( row => DMT.line.country === row[ 1 ] && DMT.line.region === row[ 0 ] );
+		const placeJTS = JTS.rowsCases.find( row => WP.line.country === row[ 1 ] && WP.line.region === row[ 0 ] );
 
 		if ( placeJTS ) {
 
 			cases = Number( placeJTS[ placeJTS.length - 1 ] );
 			const row = JTS.rowsCases[ 0 ];
 			date = row[ row.length - 1 ];
-			DMTdivJhu.innerHTML = `
+			htmJhu = `
 				<p>
 					JHU Date: ${ date }<br>
 					JHU Cases: ${ cases.toLocaleString() }<br>
@@ -422,27 +415,37 @@ DMT.getPopUpMore = function () {
 
 		} else {
 
-			DMTdivJhu.innerHTML = `
+			htmJhu = `
 			<p>No data from JHU for this location</p>
 			<p>This may happen at midnight Central European time and at midnight US East Coast time.</p>`;
 
 		}
 
-		article = WP.place.article;
+		WP.article = WP.article
+ 			.replace( /Ireland/, "Republic_of_Ireland" );
+
+		const suffix = WP.article === "United States" ? "_medical cases by state" : "_medical cases chart";
+
+		article = WP.article + suffix;
+
+		template = WP.templateGlobal + "/";
 
 	}
 
-	console.log( "chart", WP.place.chart );
+	const url = WP.cors + WP.api + WP.query + template + article;
+	//console.log( "", url );
 
-	if ( WP.place.chart === "1" ) {
+	requestFile( url, WP.onLoadBarBox );
 
-		article = "2020_coronavirus_pandemic_in_" + article;
+	DMTdivPopUp.innerHTML = DMT.htmlPopUp;
 
-		requestFile( WP.cors + WP.api + WP.query + article, WP.onLoadBarBox );
-		//DMT.fetchUrlWikipediaApiPlace( url, 0 );
-		WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
+	DMTdivContent.innerHTML = `
+	<div id="DMTdivJhu"  >${ htmJhu }</div>
+	<div id=WPdivGraph><img src="progress-indicator.gif" width=100 ><div>
+	`;
 
-	}
+	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
+	DMTdivHeader.addEventListener( "touchstart", DMT.onMouseDown );
 
 };
 
@@ -471,23 +474,27 @@ WP.onLoadBarBox = function ( xhr ) {
 	const bboxes = html.querySelectorAll( ".barbox" );
 	//console.log( bboxes );
 
-	boxIndex = 0; //[ "Ireland" ].includes( WP.place ) ? 1 : 0;
+	boxIndex = 0;
 	const bbox = bboxes[ boxIndex ];
 
-	const plinks = bbox.querySelectorAll( ".plainlinks" );
+	const plinks = bbox.querySelectorAll( ".plainlinks, .reflist" );
 	//console.log( "", links );
-	plinks[ 0 ].style.display = "none";
+	plinks.forEach( link => link.style.display = "none" );
+
+	extras = bbox.querySelectorAll( 'td[colspan="5"]' );
+	extras[ 0 ].style.display = "none";
+	console.log( "extras", extras );
 
 	const s = new XMLSerializer();
 	str = s.serializeToString( bbox );
 
-	//str = str.replace( /\<td colspan=\"5\"(.*?)\<\/td>/g, "" );
-	//.replace( /\[(.*?)\]/g, "" );
+	str = str //.replace( /\<td colspan=\"5\"(.*?)\<\/td>/, "" );
+		.replace( /\[(.*?)\]/g, "" );
 
-	WPdivGraph.innerHTML = str;
-	WPdivGraph.style.maxHeight = ( window.innerHeight - DMTdivPopUp.offsetTop - WPdivGraph.offsetTop - 35 ) + "px";
-	WPdivGraph.scrollTop = WPdivGraph.scrollHeight;
-	DMTdivIntersected.style.overflow = "scroll";
+	WPdivGraph.innerHTML = str + WP.htmPlace;
+
+	DMT.onLoadMore();
+	setTimeout( DMT.onLoadMore, 100 );
 
 };
 
@@ -497,11 +504,12 @@ WP.getPlace = function () {
 
 	console.log( "get place ", WP.place );
 
-	path = WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.place.article;
+	const url = WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.article;
+	//console.log( "", url );
 
 	WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
 
-	requestFile( WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.place.article, WP.onLoadDataTable );
+	requestFile( url, WP.onLoadDataTable );
 
 };
 
@@ -528,16 +536,14 @@ WP.onLoadDataTable = function ( xhr ) {
 	const html = parser.parseFromString( text, "text/html" );
 
 	const tables = html.querySelectorAll( ".wikitable" );
-	//console.log( tables );
+	console.log( tables );
 
-
-	const ttab = tables[ WP.place.table ];
+	const ttab = tables[ 0 ];
 
 	const s = new XMLSerializer();
-	const str = s.serializeToString( ttab )
-		.replace( /\<td colspan="5"(.*?)<\/td>/g, "" );
+	const str = s.serializeToString( ttab );
 
-	WPdivGraph.innerHTML = str;
+	WPdivGraph.innerHTML = WP.htmPlace + str;
 
 	WPdivGraph.scrollTop = 0;
 
@@ -874,3 +880,4 @@ const c19LinksUsa = [
 	{ state: "Wyoming", article: "Wyoming", table: "0" }
 
 ];
+

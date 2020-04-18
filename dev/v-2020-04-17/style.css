@@ -131,21 +131,20 @@ ul {
 }
 
 
-
 #DMTdivPopUp {
 	position: absolute;
 	left: calc(50vw - 25ch);
 	top: 55%;
 }
 
-#DMTdivParent {
+#DMTdivContainer{
 	border: 1px solid#444;
 	border-radius: 1rem 1rem 0 1rem;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
 	height: 50ch;
 	overflow: hidden;
 	resize: both;
-	/* width: 50ch; */
+	width: 50ch;
 }
 
 #DMTdivHeader {
@@ -156,13 +155,12 @@ ul {
 	user-select: none;
 }
 
-#DMTdivContainer {
+#DMTdivContent {
 	background-color: white;
 	/* border: 1px solid red; */
 	height: calc( 100% - 5ch );
 	overflow: auto;
 	padding: 1ch;
-	width: 50ch;
 }
 
 #DMTdivIntersected {
@@ -177,7 +175,7 @@ ul {
 		left: calc(50% - 19ch);
 	}
 
-	#DMTdivParent {
+	#DMTdivContainer {
 		width: 40ch;
 	}
 }

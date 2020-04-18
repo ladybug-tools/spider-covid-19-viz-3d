@@ -8,10 +8,10 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "15.42";
+let timeStamp = "18:19";
 
 let versionStable = "v-2020-04-05";
-let versionDev = "v-2020-04-16";
+let versionDev = "v-2020-04-17";
 
 ////////// Menu title
 
@@ -59,11 +59,9 @@ New for 2020-04-05
 
 let messageOfTheDayDev = `
 <mark>
-New for 2020-04-15
+New for 2020-04-17
 <ul>
-	<li>Dark mode support started. Work-in-progress</li>
-	<li>Pop-up menu supports multiple charts - See US States</li>
-	<li>Toggle display of Sky Box in Settings</li>
+	<li>Pop-ups working better</li>
 	<li>What would *you* like to see here?</li>
 </ul>
 </mark>`;

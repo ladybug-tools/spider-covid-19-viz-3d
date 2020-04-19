@@ -123,7 +123,7 @@ main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
 	</p>
 
 	<p>
-		View <a href="https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/readme.html" >readme</a>
+		View <a href="https://www.ladybug.tools/spider-covid-19-viz-3d/sandbox/readme.html" >readme</a>
 	</p>
 
 	<div id=divFiles ></div>
@@ -144,7 +144,7 @@ main { border: 	px; height: 100vh; margin: 0 0 0 var( --mnu-width );
 
 <script>
 
-aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/";
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/sandbox/";
 imgIcon.src = "../assets/images/github-mark-32.png";
 sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
@@ -212,11 +212,11 @@ function onLoad( xhr ) {
 		return `
 		${ str }
 		<div>${ index }
-			
-			<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/blob/master/cookbook/${ path }" >
+
+			<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/blob/master/sandbox/${ path }" >
 				<img src="../assets/images/github-mark-32.png" height=12 style=opacity:0.5; ></a>
 			<a href="#${ path }" >${ strings.pop() }</a>
-			<a href="https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/${ path }" target="_blank">
+			<a href="https://www.ladybug.tools/spider-covid-19-viz-3d/sandbox/${ path }" target="_blank">
 				<img src=../assets/images/Icon_External_Link.png></a>
 
 		</div>`

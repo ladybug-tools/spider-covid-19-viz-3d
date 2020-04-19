@@ -270,6 +270,35 @@ geoJson useful
 * https://github.com/waylau/svg-china-map
 
 
+
+wikipedia api
+
+* https://en.wikipedia.org/w/api.php
+* https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/Africa/daily/2017042700/201805170
+	* https://medium.com/@mustaphamekhatria/get-wikipedia-pages-views-data-with-nodejs-54a265e0a78c
+
+wiki geography
+
+* https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)
+* https://en.wikipedia.org/wiki/List_of_sovereign_states
+* https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population
+* https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory
+* https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_the_United_States
+
+### WP Chart Templates
+
+* https://en.wikipedia.org/wiki/Template:2019%E2%80%9320_coronavirus_pandemic_data/United_States_medical_cases_chart
+* https://en.wikipedia.org/wiki/Template:2019%E2%80%9320_coronavirus_pandemic_data/Spain_medical_cases_chart
+
+### JHU
+
+* https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+	* Has lat & lon
+
+### tests
+
+* https://en.wikipedia.org/w/api.php?action=parse&format=json&origin=*&section=1&page=2019–20_coronavirus_pandemic_by_country_and_territory
+
 </details>
 
 

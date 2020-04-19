@@ -196,7 +196,7 @@ WP.parseGlobal2 = function ( rows ) {
 
 	//console.log( "filter1", filter1 );
 
-	filter = filter1.filter( row => {
+	const filter = filter1.filter( row => {
 
 		const find1 = c19GeoDataGlobal.find( country => row[ 0 ] === country.country );
 
@@ -204,7 +204,7 @@ WP.parseGlobal2 = function ( rows ) {
 
 		if ( ! find1 && ! find2 ) {
 
-			//console.log( "not find", row );
+			console.log( "not find", row );
 
 		}
 

@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang = "en" >
+<head>
+<meta charset = "utf-8" >
+<meta name = "viewport" content= "width=device-width, initial-scale=1" >
+<meta name = "description" content = "Basic TooToo HTML template" >
+<meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
+<!-- <meta name=version content="2020-03-06">-->
+
+<title></title>
+
+<style>
+
+* { box-sizing: border-box; }
+
+:root { font: 100% monospace; --mnu-width: 22rem; --screen-width: calc( 100vw ); --headerHeight: 6rem; }
+
+html { height: 100%; }
+
+body { margin: 0 auto; max-width: 80ch; padding: 0 0.5rem; }
+
+a { color: crimson; text-decoration: none; }
+a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline }
+
+aside { border: 1px solid lightgray; margin-top: 15px; padding: 2px; }
+
+blockquote { background-color: #ddd; padding: 1ch; }
+
+button, input[type=button] { background-color: #ddd; border: none; color: #322; cursor: pointer; padding: 3px 5px; }
+button:hover { background: #ccc; color: #fff }
+
+code { background-color: #eee; }
+pre { background-color: #eee; padding: 5px; }
+
+input[type="range"] { -webkit-appearance: none; -moz-appearance: none; background-color: #ddd; height: 2ch;
+	width: 100%; }
+
+input[type="range"]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 0;
+	height: 3ch;
+	width: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 3ch;
+	width: 10px;
+}
+
+summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; }
+
+
+main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
+	padding: 0 1rem; position: absolute; width: calc( 100% - var( --mnu-width ) );  }
+
+#navMenu { background-color: #eee; left: 0; margin: 0; padding: 0 1rem;
+	position: absolute; top: 0; width: var( --mnu-width ); }
+
+
+.couponcode { float: right }
+
+.couponcode:hover>.coupontooltip { display: block; }
+
+.coupontooltip { border: 0.8ch double #888; background: white; display: none;
+	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
+
+.sumMenuTitle {
+	background-color: #ccc;
+	color: #777;
+	margin: 10px 0;
+	text-align: center;
+}
+
+.sumMenuSecondary {
+	background-color: #ddd;
+	color: #888;
+	/*font-size: 0.9rem;*/
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+.sumMenuTertiary {
+	background-color: #e8e8e8;
+	color: #999;
+	font-size: 0.9rem;
+	margin: 8px 0;
+	/* text-align: center; */
+}
+
+
+</style>
+</head>
+<body>
+
+	<script src="geo-data-global-2020-04-18-1418.js"></script>
+
+<nav id="navMenu" >
+
+	<header id="hdrTitle" >
+
+		<h2>
+			<a id=aSource target=_top title="Source code on GitHub" >
+				<img id=imgIcon height=18 style=opacity:0.5; >
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="couponcode" >??<span id=divDescription class="coupontooltip" ></span></span>
+
+		</h2>
+
+	</header>
+
+	<p>
+		<button id=but onclick=sortObjectsInArray(); >sortObjectsInArray</button>
+	</p>
+
+
+
+	<p>
+		<button onclick=addContinents(); >addContinents</button>
+	</p>
+
+	<p>
+		<button onclick=checkForContinents(); >checkForContinents</button>
+	</p>
+
+	<p>
+		<button onclick=checkForPopulation() >checkForPopulation</button>
+	</p>
+	<p>
+		<button onclick=saveFile(); >Save File</button>
+	</p>
+
+
+	<div id=divLog ></div>
+
+
+
+</nav>
+
+<main>
+
+	<div id="divContent" contentEditable=true ></div>
+
+</main>
+
+
+<script>
+
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/assets/geodata/";
+imgIcon.src = "../images/github-mark-32.png";
+sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+const version = document.head.querySelector( "[ name=version ]" );
+sVersion.innerHTML = version ? version.content : "";
+divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+
+init();
+
+function init() {
+
+	txt = JSON.stringify( geoDataGlobal ).replace( /},/g, "},\n")
+
+	divContent.innerText = txt;
+
+}
+
+
+
+function sortObjectsInArray() {
+
+	newObj = geoDataGlobal.sort( function(a, b) {
+
+		const nameA = a.country.toUpperCase(); // ignore upper and lowercase
+		const nameB = b.country.toUpperCase(); // ignore upper and lowercase
+
+		if (nameA < nameB) {
+			return -1;
+		}
+
+		if (nameA > nameB) {
+			return 1;
+		}
+
+		return 0;
+	} );
+
+	const txt = JSON.stringify( newObj ).replace( /},/g, "},\n")
+
+	divContent.innerText = txt;
+
+	divLog.innerHTML += `<p>${ ( performance.now() ) } - Howdy! </p>`;
+
+}
+
+
+
+function checkForContinents() {
+
+	console.clear()
+
+	geoDataGlobal.forEach( country => {
+
+		if ( ! country.continent  ) {
+
+			console.log( country.country, country.region );
+		}
+
+	} );
+
+}
+
+
+function addContinents() {
+
+	newObj = geoDataGlobal.map( country => {
+
+		let continent
+
+
+		if ( ( country.country === "Australia"  )
+			&& ! country.continent  ) {
+
+			country.continent = "Oceania"
+
+		}
+
+		if ( ( country.country === "China"  )
+			&& ! country.continent  ) {
+
+			country.continent = "Asia"
+
+		}
+
+		if ( ( country.country === "United States" || country.country === "Canada"  )
+			&& ! country.continent  ) {
+
+			oceania = ["American Samoa", "Guam", "Northern Mariana Islands" ];
+			continent = oceania.includes( country.region ) ? "Oceania" : "Americas";
+
+			country.continent = continent;
+
+			console.log( country.region, continent );
+		}
+
+		regions = [  "Curaçao", "Saint Barthélemy", "Saint Martin", "Sint Eustatius" ];
+
+		if ( regions.includes( country.region ) && ! country.continent  ) {
+
+			country.continent = "Asia";
+
+		}
+
+		return country
+
+	} );
+
+}
+
+
+
+function checkForPopulation() {
+
+	console.clear()
+
+	geoDataGlobal.forEach( country => {
+
+		if ( ! country.population  ) {
+
+			console.log( country.country, country.region );
+
+		}
+
+	} );
+
+}
+
+
+function saveFile() {
+
+		const str = "geoDataGlobal = \n" + JSON.stringify( newObj ).replace( /},/g, "},\n") + ";\n";
+
+
+		let blob = new Blob( [ str ] );
+		let a = document.body.appendChild( document.createElement( 'a' ) );
+		a.href = window.URL.createObjectURL( blob );
+		a.download = 'geo-data-global-2020-04-18-1418.js';
+		a.click();
+		a = null;
+
+	}
+
+</script>
+</body>
+</html>

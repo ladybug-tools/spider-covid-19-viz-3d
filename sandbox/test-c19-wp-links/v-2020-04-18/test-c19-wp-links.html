@@ -96,6 +96,9 @@ main { border: 0px; height: 100%; left: var( --mnu-width ); margin: 0;
 
 iframe { height: 100%; width: 100%;}
 
+#divPop { background-color: white; border: 1px solid red; height: 50%; left: 30%; margin: auto;
+	overflow: auto; position: absolute; resize: both; width: 50%; top: 20% }
+
 </style>
 </head>
 <body>
@@ -142,7 +145,7 @@ iframe { height: 100%; width: 100%;}
 
 
 	<p>
-		<button id=but onclick=setMenuCheckChartTemplates(); >set menu to check chart template</button>
+		<button id=but onclick=setMenuCheckChartTemplates(); >set menu to check if chart template exists</button>
 	</p>
 	<p>
 		<button id=but onclick=setMenuCheckArticleTables(); >set menu to check article tables</button>
@@ -171,8 +174,11 @@ iframe { height: 100%; width: 100%;}
 
 <main id=main >
 
+	<div id=divContent ></div>
 
 </main>
+
+<div id=divPop hidden >mmmmmmmmmmmmmm</div>
 
 
 <script>
@@ -194,17 +200,19 @@ function init() {
 
 	//geoToc19();
 
-	const txt  = JSON.stringify( c19LinksGlobal );
+	// const txt  = JSON.stringify( c19LinksGlobal );
 
-	main.innerHTML = `<textarea id=txtC19 style="height: 100%; width: 100%;" >${ txt.replace( /},/g, "},\n") }</textarea>`;
+	// main.innerHTML = `<textarea id=txtC19 style="height: 100%; width: 100%;" >${ txt.replace( /},/g, "},\n") }</textarea>`;
 
-	htm  = c19LinksGlobal.map( ( place, i ) => `
-		${ i } <a href="#${ place.article}" >${ place.country } ${ place.region }</a> ${ place.chartIdx }` ).join( "<br>");
+	// htm  = c19LinksGlobal.map( ( place, i ) => `
+	// 	${ i } <a href="#${ place.article}" >${ place.country } ${ place.region }</a> ${ place.chartIdx }` ).join( "<br>");
 
-	divItems.innerHTML = htm;
+	// divItems.innerHTML = htm;
 
 
-	window.addEventListener( "hashchange", onHashViewArticle, false ) ;
+	// window.addEventListener( "hashchange", onHashViewArticle, false ) ;
+
+	setMenuCheckArticleTables()
 
 }
 
@@ -218,6 +226,7 @@ function c19toMain() {
 }
 
 
+//////////
 
 function setMenuViewArticles() {
 
@@ -227,43 +236,12 @@ function setMenuViewArticles() {
 
 	window.addEventListener( "hashchange", onHashViewArticle, false ) ;
 
-}
+	main.innerHTML = `<textarea id=txtC19 style="height: 100%; width: 100%;" >${ txt.replace( /},/g, "},\n") }</textarea>`;
 
+	htm  = c19LinksGlobal.map( ( place, i ) => `
+		${ i } <a href="#${ place.article}" > ${ place.article}</a> ${ place.chartIdx }` ).join( "<br>");
 
-
-function setMenuViewChartTemplates() {
-
-	window.removeEventListener( "hashchange", onHashViewArticle, false ) ;
-	window.removeEventListener( "hashchange", onHashChangeChartApi, false ) ;
-	window.removeEventListener( "hashchange", onHashCheckArticleTables, false ) ;
-
-	window.addEventListener( "hashchange", onHashChangeViewChart, false ) ;
-
-}
-
-
-////
-
-function setMenuCheckChartTemplates() {
-
-	window.removeEventListener( "hashchange", onHashViewArticle, false ) ;
-	window.removeEventListener( "hashchange", onHashChangeViewChart, false );
-	window.removeEventListener( "hashchange", onHashCheckArticleTables, false ) ;
-
-	window.addEventListener( "hashchange", onHashChangeChartApi, false ) ;
-
-}
-
-
-
-function setMenuCheckArticleTables() {
-
-	window.removeEventListener( "hashchange", onHashViewArticle, false ) ;
-	window.removeEventListener( "hashchange", onHashChangeViewChart, false );
-	window.removeEventListener( "hashchange", onHashChangeChartApi, false ) ;
-
-	window.addEventListener( "hashchange", onHashCheckArticleTables, false ) ;
-
+	divItems.innerHTML = htm;
 
 }
 
@@ -278,7 +256,26 @@ function onHashViewArticle() {
 	//console.log( "link", link );
 
 	main.innerHTML = `<iframe id=ifr ></iframe>`;
-	ifr.src= link;
+	ifr.src = link;
+
+}
+
+
+
+//////////
+
+function setMenuViewChartTemplates() {
+
+	window.removeEventListener( "hashchange", onHashViewArticle, false ) ;
+	window.removeEventListener( "hashchange", onHashChangeChartApi, false ) ;
+	window.removeEventListener( "hashchange", onHashCheckArticleTables, false ) ;
+
+	window.addEventListener( "hashchange", onHashChangeViewChart, false ) ;
+
+	htm  = c19LinksGlobal.map( ( place, i ) => `
+		${ i } <a href="#${ place.chart}" > ${ place.chart}</a> ${ place.chartIdx }` ).join( "<br>");
+
+	divItems.innerHTML = htm;
 
 }
 
@@ -296,20 +293,41 @@ function onHashChangeViewChart() {
 
 	//console.log( "link", link );
 
-	country = c19LinksGlobal.find( country => country.country === place || country.region === place );
+	country = c19LinksGlobal.find( country => country.chart === place );
 
 	console.log( "country", country );
 
+	divPop.hidden = false;
+
 	if ( country.chartIdx === "1" ) {
 
-		main.innerHTML = `<iframe id=ifr ></iframe>`;
+		divPop.innerHTML = `<iframe id=ifr ></iframe>`;
 		ifr.src= link;
 
 	} else {
 
-		main.innerHTML = `<h2>${ country.country } no chart</h2>`;
+		divPop.innerHTML = `<h2>${ country.country } no chart</h2>`;
 
 	}
+
+}
+
+
+
+////
+
+function setMenuCheckChartTemplates() {
+
+	htm  = c19LinksGlobal.map( ( place, i ) => `
+		${ i } <a href="#${ place.chart}" > ${ place.chart}</a> ${ place.chartIdx }` ).join( "<br>");
+
+	divItems.innerHTML = htm;
+
+	window.removeEventListener( "hashchange", onHashViewArticle, false ) ;
+	window.removeEventListener( "hashchange", onHashChangeViewChart, false );
+	window.removeEventListener( "hashchange", onHashCheckArticleTables, false ) ;
+
+	window.addEventListener( "hashchange", onHashChangeChartApi, false ) ;
 
 }
 
@@ -319,7 +337,7 @@ function onHashChangeChartApi() {
 
 	place = location.hash.slice( 1 );
 
-	WP.cors = ""; //"https://cors-anywhere.herokuapp.com/";
+	WP.cors = location.protocol === "https:" ? "" : "https://cors-anywhere.herokuapp.com/";
 
 	WP.api = "https://en.wikipedia.org/w/api.php?";
 
@@ -328,15 +346,65 @@ function onHashChangeChartApi() {
 	WP.article = `Template:2019–20_coronavirus_pandemic_data/${ place }_medical_cases_chart`;
 
 	WP.requestFileUserData( WP.cors + WP.api + WP.query + WP.article, WP.onLoadData, "" );
+
 }
 
+
+WP.onLoadData = function ( xhr, c19GeoData ) {
+
+	//console.log( "xhr", xhr, c19GeoData );
+
+	const response = xhr.target.response;
+
+	const json = JSON.parse( response );
+
+	const place = location.hash.slice( 1 );
+
+	country = c19LinksGlobal.find( country => country.article === place );
+
+	if ( country ) {
+
+		country.chartIdx = json.error ?  "0" : "1";
+
+		console.log( 'json', index, place, country.chart, json );
+
+		main.innerHTML += `json  ${index } , ${ place }, ${ country.chart } `;
+
+	} else {
+
+		console.log( "place not found", place );
+
+	}
+
+
+};
+
+
+
+/////////
+
+function setMenuCheckArticleTables() {
+
+	htm  = c19LinksGlobal.map( ( place, i ) => `
+		${ i } <a href="#${ place.article}" > ${ place.article}</a> ${ place.chartIdx }` ).join( "<br>");
+
+	divItems.innerHTML = htm;
+
+	window.removeEventListener( "hashchange", onHashViewArticle, false ) ;
+	window.removeEventListener( "hashchange", onHashChangeViewChart, false );
+	window.removeEventListener( "hashchange", onHashChangeChartApi, false ) ;
+
+	window.addEventListener( "hashchange", onHashCheckArticleTables, false ) ;
+
+
+}
 
 
 function onHashCheckArticleTables() {
 
 	place = location.hash.slice( 1 );
 
-	WP.cors = "https://cors-anywhere.herokuapp.com/";
+	WP.cors = location.protocol === "https:" ? "" : "https://cors-anywhere.herokuapp.com/";
 
 	WP.api = "https://en.wikipedia.org/w/api.php?";
 
@@ -347,42 +415,6 @@ function onHashCheckArticleTables() {
 	WP.requestFileUserData( WP.cors + WP.api + WP.query + WP.article, WP.onLoadArticle, "" );
 
 }
-
-
-
-WP.requestFileUserData = function ( url, callback, userData ) {
-
-	const xhr = new XMLHttpRequest();
-	xhr.open( "GET", url, true );
-	xhr.onerror = ( xhr ) => console.log( "error:", xhr );
-	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
-	xhr.onload = ( xhr ) => callback( xhr, userData );
-	xhr.send( null );
-
-};
-
-
-
-WP.onLoadData = function ( xhr, c19GeoData ) {
-
-	//console.log( "xhr", xhr, c19GeoData );
-
-	place = location.hash.slice( 1 );
-
-	country = c19LinksGlobal.find( country => country.country === place || country.region === place );
-
-	const response = xhr.target.response;
-
-	const json = JSON.parse( response );
-
-	country.chartIdx = json.error ?  "0" : "1";
-
-	console.log( 'json', index, place, country.chart, json );
-
-	main.innerHTML += `json  ${index } , ${ place }, ${ country.chart } `;
-
-};
-
 
 
 WP.onLoadArticle = function( xhr ) {
@@ -397,25 +429,51 @@ WP.onLoadArticle = function( xhr ) {
 	//console.log( 'text', text );
 
 	text = text
-		.replace( /\<img (.*?)>/gi, "" )
 		.replace( /\<a href(.*?)>/gi, "" )
 		.replace( /\<ul>(.*?)\<\/ul>/i, "" );
 
 	const parser = new DOMParser();
 	const html = parser.parseFromString( text, "text/html" );
 
-	const tables = html.querySelectorAll( ".wikitable" );
-	console.log( tables );
+	//console.log( "html", html );
 
-	main.innerHTML += `${ place } tables ${ tables.length }<br>`
+	const graphs = html.querySelectorAll( ".mw-graph" );
+	//console.log( graphs );
+
+
+	const infoboxes = html.querySelectorAll( ".infobox" );
+	console.log( infoboxes );
+
+	const tables = html.querySelectorAll( ".wikitable" );
+	//console.log( tables );
+
+	main.innerHTML = `<div>${ place } tables </div>`
+
+
+	infoboxes.forEach(  infobox => {
+		console.log( "infobox", infobox  );
+		images = infobox.querySelectorAll( "img" )
+		images.forEach( image => image.src = "https://" + image.src.slice(  5 ) )
+		main.innerHTML +=  infobox.outerHTML; } )
+
+
+	graphs.forEach(  graph => {
+		//console.log( "graph", graph.firstElementChild.src  );
+
+		graph.firstElementChild.src  = "https://en.wikipedia.org" + graph.firstElementChild.src.slice( 10 )
+		main.innerHTML +=  graph.outerHTML;
+
+	} )
+
+	
+	tables.forEach(  table => {
+		main.innerHTML +=  table.outerHTML; } )
 
 };
 
 
 
 function geoToc19() {
-
-	console.log( "",  );
 
 	const addThe =[ "British Virgin Islands", "Cayman Islands", "Dominican Republic", "Falkland Islands",
 		"Faroe Islands", "Isle of Man", "Maldives",
@@ -426,8 +484,7 @@ function geoToc19() {
 	"Queensland", "South Australia", "Tasmania", "Victoria", "Western Australia" ];
 
 
-	const canada = [ "Newfoundland and Labrador", "Northwest Territories", "Yukon"]
-
+	const canada = [ "Newfoundland and Labrador", "Northwest Territories", "Yukon"];
 
 	const china = [
 		"Anhui",
@@ -453,7 +510,8 @@ function geoToc19() {
 		//"Macau",
 		"Ningxia",
 		"Qinghai",
-		"Shaanxi", "Shandong",
+		"Shaanxi",
+		"Shandong",
 		//"Shanghai",
 		"Shanxi",
 		//"Sichuan",
@@ -474,6 +532,7 @@ function geoToc19() {
 		if ( china.includes( article ) ) article = "China";
 
 		region = place.region ? place.region : "";
+		// .replace( //g, "" )
 
 		article = article
 			.replace( /\&/, "and" )
@@ -482,17 +541,13 @@ function geoToc19() {
 			.replace( /Grand Princess/g, "Canada" )
 			.replace( /DR Congo/g, "the_Democratic_Republic_of_the_Congo" )
 			.replace( /Saint Martin/g, "French_Saint_Martin" )
-			.replace( / /g, "_" )
-		// .replace( //g, "" )
+			.replace( / /g, "_" );
 
+		// Bailiwick_of_Jersey
 		chart = article
 			.replace( /\&/, "and" )
-			.replace( /China/g, "mainland_China" )
-			.replace( /Georgia/g, "Georgia_(country)" )
-			.replace( /DR Congo/g, "the_Democratic_Republic_of_the_Congo" )
-			.replace( /Saint Martin/g, "French_Saint_Martin" )
+			.replace( /Ireland/g, "Republic_of_Ireland" )
 			.replace( / /g, "_" )
-		// .replace( //g, "" )
 
 		return { country: place.country, region: place.region, article: article, chart: chart, chartIdx: "0", table: "", tableIdx: "0"
 	}
@@ -502,10 +557,7 @@ function geoToc19() {
 
 	const txt  = JSON.stringify( c19LinksGlobal, null, "" ).replace( /},/g, "},\n");
 
-	//main.innerText = "c19LinksGlobal = \n" + txt + "\n\n";
-
 	main.innerHTML = `<textarea id=txtC19 style="height: 100%; width: 100%;" >${ txt }</textarea>`;
-
 
 
 	htm  = c19LinksGlobal.map( ( place, i ) => `
@@ -550,10 +602,6 @@ function clickAllMenuItems() {
 
 	} else {
 
-		//window.removeEventListener( "hashchange", onHashChangeChartApi ) ;
-
-		//window.addEventListener( "hashchange", onHashChangeViewChart, false ) ;
-
 		const txt  = JSON.stringify( c19LinksGlobal );
 
 		main.innerHTML = `<textarea id=txtC19 style="height: 100%; width: 100%;" >${ txt }</textarea>`;
@@ -562,6 +610,18 @@ function clickAllMenuItems() {
 
 }
 
+
+
+WP.requestFileUserData = function ( url, callback, userData ) {
+
+	const xhr = new XMLHttpRequest();
+	xhr.open( "GET", url, true );
+	xhr.onerror = ( xhr ) => console.log( "error:", xhr );
+	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+	xhr.onload = ( xhr ) => callback( xhr, userData );
+	xhr.send( null );
+
+};
 
 
 

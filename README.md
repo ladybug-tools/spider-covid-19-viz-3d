@@ -288,12 +288,31 @@ wiki geography
 ### WP Chart Templates
 
 * https://en.wikipedia.org/wiki/Template:2019%E2%80%9320_coronavirus_pandemic_data/United_States_medical_cases_chart
-* https://en.wikipedia.org/wiki/Template:2019%E2%80%9320_coronavirus_pandemic_data/Spain_medical_cases_chart
+* https://en.wikipedia.org/wiki/Template:2019%E2%80%9320_coronavirus_pandemic_data/
+
+
+### Google DSPL
+
+* https://github.com/google/dspl/blob/master/samples/google/canonical/countries.csv
+	* 245 places identifier, lat & lon
+* https://github.com/google/dspl/blob/master/samples/google/canonical/states.csv
+	* identifier, lat & lon
+* https://github.com/google/dspl/tree/master/samples/bls/unemployment
+* https://github.com/google/dspl/blob/master/samples/bls/unemployment/counties.csv
+	* counties lat & lon
+* https://github.com/google/dspl/blob/master/samples/bls/unemployment/states.csv
+	* states lat & lon, identifier, alternate name
+
+### simplemaps
+
+* https://simplemaps.com/data/us-cities
 
 ### JHU
 
 * https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
 	* Has lat & lon
+
+
 
 ### tests
 

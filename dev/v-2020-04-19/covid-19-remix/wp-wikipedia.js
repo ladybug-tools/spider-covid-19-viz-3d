@@ -594,7 +594,7 @@ WP.onLoadDataInfobox = function ( xhr ) {
 	infoboxes.forEach( infobox => {
 		//console.log( "infobox", infobox );
 		images = infobox.querySelectorAll( "img" );
-		images.forEach( image => image.src = "https://" + image.src.slice( 5 ) );
+		//images.forEach( image => image.src = "https://" + image.src.slice( 5 ) );
 		refs = infobox.querySelectorAll( ".reference" );
 		refs.forEach( ref => ref.style.display = "none" );
 		WPdivGraph.innerHTML += infobox.outerHTML + "<br><hr>";

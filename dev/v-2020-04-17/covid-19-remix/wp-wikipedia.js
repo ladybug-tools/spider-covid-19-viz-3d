@@ -391,6 +391,8 @@ WP.getPopUpMore = function () {
 
 		article = WP.article + "_medical cases chart";
 
+		chartIdx = WP.dataLinks.chartIdx;
+
 		template = "Template:2019–20_coronavirus_pandemic_data/United_States/";
 
 	} else {

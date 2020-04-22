@@ -55,11 +55,11 @@ THR.init = function () {
 
 	THR.camera = camera; THR.scene = scene; THR.renderer = renderer; THR.controls = controls;
 
-	let event = new Event( "onloadthree", { "bubbles": true, "cancelable": false, detail: true } );
+	//let event = new Event( "onloadthree", { "bubbles": true, "cancelable": false, detail: true } );
 
 	//window.addEventListener( "onloadthree", THR.onLoad, false );
 
-	window.dispatchEvent( event );
+	//window.dispatchEvent( event );
 
 };
 
@@ -84,8 +84,6 @@ THR.onStart = function () {
 	renderer.domElement.removeEventListener( 'touchstart', THR.onStart );
 	renderer.domElement.removeEventListener( 'touchmove', THR.onStart );
 	renderer.domElement.removeEventListener( 'touchend', THR.onStart );
-
-	//DMT.init();
 
 };
 

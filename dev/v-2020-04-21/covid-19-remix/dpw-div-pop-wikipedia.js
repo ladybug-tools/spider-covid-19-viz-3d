@@ -22,11 +22,10 @@ DMT.displayYourMessage = function ( intersected ) {
 	const line = WP.places[ index ];
 	WP.line = line;
 
-
 	WP.place = line.region ? line.region : line.country;
-	//console.log( "place", place );
+	//console.log( "wp.place", WP.place );
 
-	WP.dataLinks = c19LinksGlobal.find( place => place.country === line.country && place.region === line.region );
+	WP.dataLinks = c19LinksGlobal.find( link => link.country === line.country && link.region === line.region );
 
 	DMTdivPopUp.innerHTML = `
 	<div id=DMTdivIntersected>
@@ -52,59 +51,40 @@ WP.getPopUpMore = function () {
 
 	if ( WP.places === c19GeoDataUsa ) {
 
-		chart = WP.dataLinks.chart + "_medical cases chart";
+		// chart = WP.dataLinks.chart + "_medical cases chart";
 
-		template = "Template:2019–20_coronavirus_pandemic_data/United_States/";
+		// template = "Template:2019–20_coronavirus_pandemic_data/United_States/";
 
 		WP.htmPlace = `
 		<div>
 			Data courtesy of Wikipedia: <a href="${ WP.chartPrefix }${ WP.dataLinks.article }" target="_blank">${ WP.place }</a>
 		<div>
 		<p>
-			<button onclick=WP.getInfobox();>infobox</button>
+			<button onclick=WP.getInfoboxes();>infobox</button>
 
 			<button onclick=WP.getCases();>state data</button>
 
-			<button onclick=WP.getPlace();>regional data</button>
+			<button onclick=WP.getTables();>regional data</button>
+
+			<button onclick=WP.getGraphs(); >graphs</button>
+
 		</p>`;
 
 	} else {
 
-		// let cases = "NA";
-		// let date = "NA";
-
-		// const placeJTS = JTS.rowsCases.find( row => WP.line.country === row[ 1 ] && WP.line.region === row[ 0 ] );
-
-		// if ( placeJTS ) {
-
-		// 	cases = Number( placeJTS[ placeJTS.length - 1 ] );
-		// 	const row = JTS.rowsCases[ 0 ];
-		// 	date = row[ row.length - 1 ];
-		// 	htmJhu = `
-		// 		<p>
-		// 			JHU Date: ${ date }<br>
-		// 			JHU Cases: ${ cases.toLocaleString() }<br>
-		// 		</p>
-		// 	`;
-
-		// } else {
-
-		// 	htmJhu = `
-		// 	<p>No data from JHU for this location</p>
-		// 	<p>This may happen at midnight Central European time and at midnight US East Coast time.</p>`;
-
-		// }
-
 		WP.htmPlace = `
 		<div>
 			Data courtesy of Wikipedia: <a href="${ WP.chartPrefix }${ WP.dataLinks.article }" target="_blank">${ WP.place }</a>
 		<div>
 		<p>
-			<button onclick=WP.getInfobox();>infobox</button>
+			<button onclick=WP.getInfoboxes();>infobox</button>
 
 			<button onclick=WP.getCases();>national data</button>
 
-			<button onclick=WP.getPlace();>regional data</button>
+			<button onclick=WP.getTables();>regional data</button>
+
+			<button onclick=WP.getGraphs(); >graphs</button>
+
 		</p>`;
 
 	}
@@ -120,7 +100,7 @@ WP.getPopUpMore = function () {
 	`;
 
 
-	WP.getInfobox();
+	WP.getInfoboxes();
 
 	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
 	DMTdivHeader.addEventListener( "touchstart", DMT.onMouseDown );
@@ -129,8 +109,78 @@ WP.getPopUpMore = function () {
 
 
 
+//////////
+
+WP.getInfoboxes = function () {
+
+	const url = WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.dataLinks.article;
+	//console.log( "", url );
+
+	WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
+
+	requestFile( url, WP.onLoadDataInfoboxes );
+
+};
+
+
+
+WP.onLoadDataInfoboxes = function ( xhr ) {
+
+	const response = xhr.target.response;
+
+	const json = JSON.parse( response );
+	//console.log( 'json',json );
+
+	let text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	text = text
+		.replace( /\<a href(.*?)>/gi, "" )
+		.replace( /\<ul>(.*?)\<\/ul>/i, "" )
+		.replace( /\[(.*?)\]/g, "" );
+
+	const parser = new DOMParser();
+	WP.html = parser.parseFromString( text, "text/html" );
+
+	const infoboxes = WP.html.querySelectorAll( ".infobox" );
+	//console.log( "ib", infoboxes );
+
+	WPdivGraph.innerHTML = !infoboxes.length ?
+		`<p>Wikipedia article for ${ WP.place } has no infoboxes.</p>`
+		:
+		"";
+
+	infoboxes.forEach( infobox => {
+		//console.log( "infobox", infobox );
+
+		if ( location.protocol.includes( "file" ) ) {
+
+			images = infobox.querySelectorAll( "img" );
+			images.forEach( image => image.src = "https://" + image.src.slice( 5 ) );
+
+		}
+
+		refs = infobox.querySelectorAll( ".reference" );
+		refs.forEach( ref => ref.outerHTML = "" );
+		WPdivGraph.innerHTML += infobox.outerHTML + "<br><hr>";
+
+	} );
+
+	WPdivGraph.scrollTop = 0;
+
+	DMT.onLoadMore(); // seems to need to run twice
+
+	setTimeout( DMT.onLoadMore, 100 );
+
+};
+
+
+
+//////////
+
 WP.getCases = function () {
 
+	let chart, template;
 
 	if ( WP.places === c19GeoDataUsa ) {
 
@@ -140,10 +190,7 @@ WP.getCases = function () {
 
 	} else {
 
-		//console.log( "idx", WP.dataLinks.chartIdx );
-
 		WP.chart = WP.dataLinks.chart;
-		//.replace( /Ireland/, "Republic_of_Ireland" );
 
 		const suffix = WP.chart === "United States" ? "_medical cases by state" : "_medical cases chart";
 
@@ -153,7 +200,7 @@ WP.getCases = function () {
 
 	}
 
-	chartIdx = WP.dataLinks.chartIdx;
+	const chartIdx = WP.dataLinks.chartIdx;
 
 	if ( chartIdx > 0 ) {
 
@@ -169,12 +216,11 @@ WP.getCases = function () {
 
 	}
 
-}
+};
+
 
 
 WP.onLoadBarBox = function ( xhr ) {
-
-	//console.log( "xhr", xhr );
 
 	const response = xhr.target.response;
 
@@ -190,27 +236,13 @@ WP.onLoadBarBox = function ( xhr ) {
 	const bbox = html.querySelector( ".barbox" );
 	//console.log( bboxes );
 
-	//const bbox = bboxes[ 0 ];
-
-	const plinks = bbox.querySelectorAll( ".plainlinks, .reflist" );
+	const plinks = bbox.querySelectorAll( `.plainlinks, .reflist, td[colspan="5"]` );
 	//console.log( "plinks", plinks );
 
-	if ( plinks ) {
-
-		plinks.forEach( link => link.style.display = "none" );
-
-	}
-
-	const extras = bbox.querySelectorAll( 'td[colspan="5"]' );
-
-	if ( extras.length ) {
-
-		extras[ 0 ].style.display = "none";
-		//console.log( "extras", extras );
-
-	}
+	plinks.forEach( link => link.style.display = "none" );
 
 	const s = new XMLSerializer();
+
 	str = s.serializeToString( bbox );
 
 	str = str.replace( /\[(.*?)\]/g, "" );
@@ -227,107 +259,70 @@ WP.onLoadBarBox = function ( xhr ) {
 
 
 
-WP.getPlace = function () {
-
-	//console.log( "get place ", WP.place );
-
-	const url = WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.dataLinks.article;
-	//console.log( "", url );
-
-	WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
-
-	requestFile( url, WP.onLoadDataTable );
-
-};
-
-
-
-WP.onLoadDataTable = function ( xhr ) {
-
-	//console.log( "xhr", xhr );
-
-	const response = xhr.target.response;
-
-	const json = JSON.parse( response );
-	//console.log( 'json',json );
-
-	let text = json.parse.text[ "*" ];
-	//console.log( 'text', text );
-
-	text = text
-		.replace( /\<img (.*?)>/gi, "" )
-		.replace( /\<a href(.*?)>/gi, "" )
-		.replace( /\<ul>(.*?)\<\/ul>/i, "" );
-
-	const parser = new DOMParser();
-	const html = parser.parseFromString( text, "text/html" );
-
-	const ttab = html.querySelector( ".wikitable" );
-
-	const s = new XMLSerializer();
-	const str = s.serializeToString( ttab );
-
-	WPdivGraph.innerHTML = str;
-
-	WPdivGraph.scrollTop = 0;
-
-};
-
-
-
 //////////
 
-WP.getInfobox = function () {
+WP.getTables = function () {
 
-	//console.log( "get place ", WP.place );
+	const tables = WP.html.querySelectorAll( ".wikitable" );
 
-	const url = WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.dataLinks.article;
-	//console.log( "", url );
+	WPdivGraph.innerHTML = ! tables.length ?
+		`<p>Wikipedia article for ${ WP.place } has no tables.</p>`
+		:
+		"";
 
-	WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
+	const s = new XMLSerializer();
 
-	requestFile( url, WP.onLoadDataInfobox );
+	tables.forEach( table => {
 
-};
+		const plinks = table.querySelectorAll( `img, .plainlinks, .reference, .reflist, td[colspan="5"]` );
+		plinks.forEach( link => link.outerHTML = "" );
 
-WP.onLoadDataInfobox = function ( xhr ) {
+		const str = s.serializeToString( table );
 
-	//console.log( "xhr", xhr );
+		WPdivGraph.innerHTML += str + "<br><hr>";
 
-	const response = xhr.target.response;
-
-	const json = JSON.parse( response );
-	//console.log( 'json',json );
-
-	let text = json.parse.text[ "*" ];
-	//console.log( 'text', text );
-
-	text = text
-		.replace( /\<a href(.*?)>/gi, "" )
-		.replace( /\<ul>(.*?)\<\/ul>/i, "" )
-		.replace( /\[(.*?)\]/g, "" );
-
-
-	const parser = new DOMParser();
-	const html = parser.parseFromString( text, "text/html" );
-
-	const infoboxes = html.querySelectorAll( ".infobox" );
-
-	WPdivGraph.innerHTML = "";
-
-	infoboxes.forEach( infobox => {
-		//console.log( "infobox", infobox );
-		images = infobox.querySelectorAll( "img" );
-		images.forEach( image => image.src = "https://" + image.src.slice( 5 ) );
-		refs = infobox.querySelectorAll( ".reference" );
-		refs.forEach( ref => ref.style.display = "none" );
-		WPdivGraph.innerHTML += infobox.outerHTML + "<br><hr>";
 	} );
-
-	WPdivGraph.scrollTop = 0;
 
 	DMT.onLoadMore(); // seems to need to run twice
 
 	setTimeout( DMT.onLoadMore, 100 );
 
+	WPdivGraph.scrollTop = 0;
+
 };
+
+
+WP.getGraphs = function () {
+
+	const graphs = WP.html.querySelectorAll( ".mw-graph" );
+
+	WPdivGraph.innerHTML = ! graphs.length ?
+		`<p>Wikipedia article for ${ WP.place } has no graphs.</p>`
+		:
+		"";
+
+	const s = new XMLSerializer();
+
+	graphs.forEach( graph => {
+
+		const plinks = graph.querySelectorAll( `.plainlinks, .reference, .reflist, td[colspan="5"]` );
+		plinks.forEach( link => link.outerHTML = "" );
+
+		const images = graph.querySelectorAll( "img" );
+		images.forEach( image => image.src = image.src = "https://en.wikipedia.org" + image.src.slice( 10 ) )
+		images.forEach( image => image.style.maxWidth = "50rem" );
+
+		const str = s.serializeToString( graph );
+
+		WPdivGraph.innerHTML += str + "<br><hr>";
+
+	} );
+
+	DMT.onLoadMore(); // seems to need to run twice
+
+	setTimeout( DMT.onLoadMore, 100 );
+
+	WPdivGraph.scrollTop = 0;
+
+
+}

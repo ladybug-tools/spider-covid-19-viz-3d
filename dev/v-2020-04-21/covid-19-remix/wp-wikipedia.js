@@ -116,7 +116,7 @@ WP.parseUsa = function ( rows ) {
 
 	c19GeoDataUsa.forEach( state => {
 
-		const find = rows.slice( 1 ).find( places => places[ 0 ] === state.region );
+		const find = rows.slice( 1 ).find( row => row[ 0 ] === state.region );
 
 		if ( find ) {
 

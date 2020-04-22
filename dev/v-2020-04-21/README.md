@@ -1,8 +1,17 @@
 
-# [2020-04-15 Read Me]( #README.md )
+# [2020-04-22 Read Me]( #README.md )
 
 
-2020-04-15
+To Do
+
+* dev to stable
+* menu updates
+* Start updating JHU modules
+* State | regional data in its own div
+* heights as radio buttons
+* Notes as a thing
+* Use main or HTML for init
+
 
 
 ## Issues
@@ -35,8 +44,6 @@
 
 ### ### wp-wikipedia.js
 
-* Case data chart> scroll to bottom on open
-* County data chart> scroll to top on open
 
 ### js/main.js
 

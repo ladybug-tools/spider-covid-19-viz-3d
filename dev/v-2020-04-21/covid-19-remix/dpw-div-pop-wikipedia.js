@@ -48,7 +48,7 @@ DMT.displayYourMessage = function ( intersected ) {
 		WP cases: ${ Number( line.cases ).toLocaleString() }<br>
 		WP deaths: ${ Number( line.deaths ).toLocaleString() }<br>
 		WP recoveries: ${ isNaN( Number( line.recoveries ) ) ? "NA" : Number( line.recoveries ).toLocaleString() }<br>
-		<button onclick=WP.getPopUpMore(); >view ${ WP.place } case data chart</button></br>
+		<button onclick=WP.getPopUpMore(); title="Click this button to view the charts" >📊 ${ WP.place } case data charts</button></br>
 	</div>`;
 
 };

@@ -311,12 +311,12 @@ WP.getGraphs = function () {
 		const images = graph.querySelectorAll( "img" );
 		console.log( "images", images );
 		
-		if ( location.protocol.includes( "file" ) ) {
+		//if ( location.protocol.includes( "file" ) ) {
 			
-			images.forEach( image => image.src = image.src = "https://en.wikipedia.org" + image.src.slice( 10 ) )
+			images.forEach( image => image.src = "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) - 4 )
 			images.forEach( image => image.style.maxWidth = "50rem" );
 
-		}
+		//}
 
 		const str = s.serializeToString( graph );
 

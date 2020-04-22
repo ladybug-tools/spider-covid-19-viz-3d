@@ -314,6 +314,7 @@ WP.getGraphs = function () {
 		//if ( location.protocol.includes( "file" ) ) {
 			
 			images.forEach( image => {
+				console.log( "image", image );
 				console.log( "src", "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) - 4 ) );
 				image.src = "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) - 4 );
 			} );

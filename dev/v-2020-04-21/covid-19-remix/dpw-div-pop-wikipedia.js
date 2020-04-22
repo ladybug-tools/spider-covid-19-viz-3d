@@ -309,7 +309,7 @@ WP.getGraphs = function () {
 		plinks.forEach( link => link.outerHTML = "" );
 
 		const images = graph.querySelectorAll( "img" );
-		
+		console.log( "", images );
 		if ( location.protocol.includes( "file" ) ) {
 			
 			images.forEach( image => image.src = image.src = "https://en.wikipedia.org" + image.src.slice( 10 ) )

@@ -315,7 +315,8 @@ WP.getGraphs = function () {
 			
 			images.forEach( image => {
 				console.log( "src", "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) - 4 ) );
-				image.src = "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) - 4 )
+				image.src = "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) - 4 );
+			} );
 			images.forEach( image => image.style.maxWidth = "50rem" );
 
 		//}

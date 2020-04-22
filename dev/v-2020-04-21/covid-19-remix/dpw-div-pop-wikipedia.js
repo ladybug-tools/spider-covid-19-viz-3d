@@ -3,10 +3,26 @@
 /* global THR, resetGroups , THREE, camera, renderer,intersected, linecases, DMTdragParent, divMessage */
 
 
+
 const DPW = {};
 
 
 //////////
+
+DMT.onLoadMore = function () {
+
+	const maxHeadroom = window.innerHeight - DMTdivPopUp.offsetTop - 15;
+
+	DMTdivContainer.style.height = DMTdivPopUp.clientHeight < maxHeadroom ? "100%" : maxHeadroom + "px";
+
+	const maxLegroom = window.innerWidth - DMTdivPopUp.offsetLeft - 15;
+
+	DMTdivContainer.style.width = DMTdivPopUp.clientWidth < maxLegroom ? "100%" : maxLegroom + "px";
+
+
+};
+
+
 
 DMT.displayYourMessage = function ( intersected ) {
 
@@ -166,11 +182,12 @@ WP.onLoadDataInfoboxes = function ( xhr ) {
 
 	} );
 
-	WPdivGraph.scrollTop = 0;
 
 	DMT.onLoadMore(); // seems to need to run twice
 
 	setTimeout( DMT.onLoadMore, 100 );
+
+	WPdivGraph.scrollTop = 0;
 
 };
 

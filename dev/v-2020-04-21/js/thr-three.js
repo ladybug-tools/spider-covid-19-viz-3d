@@ -11,49 +11,47 @@ THR.group = new THREE.Group();
 
 THR.init = function () {
 
-	const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 1000 );
-	camera.position.set( 120, 0, 65 );
-	camera.up.set( 0, 0, 1 );
+	THR.camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 1000 );
+	THR.camera.position.set( 120, 0, 65 );
+	THR.camera.up.set( 0, 0, 1 );
 
-	const scene = new THREE.Scene();
+	THR.scene = new THREE.Scene();
 	//scene.background = new THREE.Color( 0xcce0ff );
 	//scene.fog = new THREE.Fog( 0xcce0ff, 9999, 999999 );
-	scene.add( camera );
+	THR.scene.add( THR.camera );
 
 	//const distance = 25;
 	//scene.fog.near = distance * 1.8;
 	//scene.fog.far = distance * 2.5;
 
-	const renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	THR.renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
+	THR.renderer.setPixelRatio( window.devicePixelRatio );
+	THR.renderer.setSize( window.innerWidth, window.innerHeight );
 	// renderer.outputEncoding = THREE.sRGBEncoding;
 	// renderer.shadowMap.enabled = true;
 	// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-	document.body.appendChild( renderer.domElement );
+	document.body.appendChild( THR.renderer.domElement );
 
-	const controls = new THREE.OrbitControls( camera, renderer.domElement );
+	THR.controls = new THREE.OrbitControls( THR.camera, THR.renderer.domElement );
 	//controls.maxPolarAngle = Math.PI * 0.5;
-	controls.enablePan = false;
-	controls.minDistance = 30;
-	controls.maxDistance = 300;
-	controls.autoRotate = true;
+	THR.controls.enablePan = false;
+	THR.controls.minDistance = 30;
+	THR.controls.maxDistance = 300;
+	THR.controls.autoRotate = true;
 
 	window.addEventListener( 'resize', THR.onWindowResize, false );
 	window.addEventListener( 'orientationchange', THR.onWindowResize, false );
 
 	window.addEventListener( 'keydown', THR.onStart );
 
-	renderer.domElement.addEventListener( 'mousedown', THR.onStart );
+	THR.renderer.domElement.addEventListener( 'mousedown', THR.onStart );
 	//renderer.domElement.addEventListener( 'mousemove', THR.onStart );
-	renderer.domElement.addEventListener( 'wheel', THR.onStart );
+	THR.renderer.domElement.addEventListener( 'wheel', THR.onStart );
 
-	renderer.domElement.addEventListener( 'touchstart', THR.onStart );
-	renderer.domElement.addEventListener( 'touchmove', THR.onStart );
-	renderer.domElement.addEventListener( 'touchend', THR.onStart );
-
-	THR.camera = camera; THR.scene = scene; THR.renderer = renderer; THR.controls = controls;
+	THR.renderer.domElement.addEventListener( 'touchstart', THR.onStart );
+	THR.renderer.domElement.addEventListener( 'touchmove', THR.onStart );
+	THR.renderer.domElement.addEventListener( 'touchend', THR.onStart );
 
 	//let event = new Event( "onloadthree", { "bubbles": true, "cancelable": false, detail: true } );
 
@@ -77,13 +75,13 @@ THR.onStart = function () {
 	THR.controls.autoRotate = false;
 
 	window.removeEventListener( 'keydown', THR.onStart );
-	renderer.domElement.removeEventListener( 'mousedown', THR.onStart );
-	renderer.domElement.removeEventListener( 'mousemove', THR.onStart );
-	renderer.domElement.removeEventListener( 'wheel', THR.onStart );
+	THR.renderer.domElement.removeEventListener( 'mousedown', THR.onStart );
+	THR.renderer.domElement.removeEventListener( 'mousemove', THR.onStart );
+	THR.renderer.domElement.removeEventListener( 'wheel', THR.onStart );
 
-	renderer.domElement.removeEventListener( 'touchstart', THR.onStart );
-	renderer.domElement.removeEventListener( 'touchmove', THR.onStart );
-	renderer.domElement.removeEventListener( 'touchend', THR.onStart );
+	THR.renderer.domElement.removeEventListener( 'touchstart', THR.onStart );
+	THR.renderer.domElement.removeEventListener( 'touchmove', THR.onStart );
+	THR.renderer.domElement.removeEventListener( 'touchend', THR.onStart );
 
 };
 

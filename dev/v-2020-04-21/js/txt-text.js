@@ -4,6 +4,7 @@ const TXT = {};
 
 TXT.group = new THREE.Group();
 
+let font;
 
 
 TXT.init = function () {

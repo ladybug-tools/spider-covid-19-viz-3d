@@ -8,10 +8,10 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "18:39";
+let timeStamp = "00:31";
 
 let versionStable = "v-2020-04-05";
-let versionDev = "v-2020-04-17";
+let versionDev = "v-2020-04-21";
 
 ////////// Menu title
 
@@ -59,9 +59,11 @@ New for 2020-04-05
 
 let messageOfTheDayDev = `
 <mark>
-New for 2020-04-17
+New for 2020-04-21
 <ul>
 	<li>Pop-ups working better</li>
+	<li>Pop-ups provide access to Wikipedia graphs and more</li>
+	<li>Buttons to select linear or scaled bars</li>
 	<li>What would *you* like to see here?</li>
 </ul>
 </mark>`;

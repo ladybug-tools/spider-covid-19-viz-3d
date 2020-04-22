@@ -22,15 +22,15 @@ GLO.onLoadGeoJson = function( xhr ) {
 
 GLO.addLights = function() {
 
-	scene.add( new THREE.AmbientLight( 0xaaaaaa ) );
+	THR.scene.add( new THREE.AmbientLight( 0xaaaaaa ) );
 
 	const pointLight = new THREE.PointLight( 0xffffff, 1 );
-	pointLight.position.copy( camera.position );
-	camera.add( pointLight );
+	pointLight.position.copy( THR.camera.position );
+	THR.camera.add( pointLight );
 
 	const lightDirectional = new THREE.DirectionalLight( 0xfffffff, 1 );
 	lightDirectional.position.set( -50, -200, 100 );
-	scene.add( lightDirectional );
+	THR.scene.add( lightDirectional );
 
 };
 
@@ -77,9 +77,9 @@ GLO.loadGlobeBasic = function ( size = 50 ) {
 	var texture = new THREE.TextureLoader().load( url );
 
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
-	mesh = new THREE.Mesh( geometry, material );
+	const mesh = new THREE.Mesh( geometry, material );
 	mesh.name = "globe";
-	scene.add( mesh );
+	THR.scene.add( mesh );
 
 	mesh.matrixAutoUpdate = false;
 
@@ -152,7 +152,7 @@ GLO.loadGlobeWithMapTextures = function() {
 
 GLO.toggleSkyBox = function ( boole = true ) {
 
-	scene.background = boole ?
+	THR.scene.background = boole ?
 		new THREE.CubeTextureLoader()
 			.setPath( pathAssets + "cube-textures/" )
 			.load( [ "f1.jpg", "f2.jpg", "f3.jpg", "f4.jpg", "f5.jpg", "f6.jpg" ] )

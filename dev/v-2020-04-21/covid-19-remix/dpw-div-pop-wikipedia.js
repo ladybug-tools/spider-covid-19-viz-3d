@@ -309,18 +309,14 @@ WP.getGraphs = function () {
 		plinks.forEach( link => link.outerHTML = "" );
 
 		const images = graph.querySelectorAll( "img" );
-		console.log( "images", images );
-		
-		//if ( location.protocol.includes( "file" ) ) {
-			
-			images.forEach( image => {
-				console.log( "image", image );
-				console.log( "src", "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) ) );
-				image.src = "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) );
-			} );
-			images.forEach( image => image.style.maxWidth = "50rem" );
+		//console.log( "images", images );
 
-		//}
+		images.forEach( image => {
+			//console.log( "image", image );
+			//console.log( "src", "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) ) );
+			image.src = "https://en.wikipedia.org" + image.src.slice( image.src.indexOf( "/api" ) );
+		} );
+		images.forEach( image => image.style.maxWidth = "50rem" );
 
 		const str = s.serializeToString( graph );
 

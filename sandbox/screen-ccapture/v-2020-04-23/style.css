@@ -1,0 +1,21 @@
+
+html, body {
+	height: 100%;
+}
+
+body {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.buttons {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+
+#stop {
+	display: none;
+}

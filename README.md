@@ -6,12 +6,14 @@ value='You are now in a GitHub web page view - Click this button to view this re
 
 # [COVID-19 Viz3D Read Me]( #README.md )
 
-<img src=assets/images/v-2020-04-13-dev.png width=100% style=display:none;>
+<img src=assets/images/c19-viz3d-2020-04-24.gif width=100% >
+
+<!--
 
 <iframe src=https://ladybug-tools.github.io/spider-covid-19-viz-3d/dev width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
 
 _covid 19 viz 3d - touch me!_
-
+-->
 
 ## Full Screen stable: [covid 19 viz3d]( https://ladybug-tools.github.io/spider-covid-19-viz-3d/ )
 

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+	<meta name=description
+		content="View and track COVID-19 data from multiple authoritative sources in interactive 3D in your browser">
+	<meta name=keywords content="COVID-19,Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+
+	<title>v3D Remix</title>
+
+	<link rel="stylesheet" type="text/css" href="../style.css">
+
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/controls/OrbitControls.js"></script>
+
+
+	<script src="geo-data-usa.js"></script>
+	<script src="geo-data-global.js"></script>
+	<script src="c19-data-links.js"></script>
+
+	<script src="../js/thr-three.js"></script>
+
+
+	<nav id="navMenu">
+
+		<br>
+
+		<details id="detNavMenu">
+
+			<summary>show or hide menu</summary>
+
+			<header id="hdrTitle">
+
+				<h2>
+					<a id=aSource target="_top" title="Ladybug Tools / Spider readme & source code on GitHub">
+						<img id=imgIcon height=18 style=opacity:0.5; alt="octocat icon"></a>
+					<a href="" title="Click to reload this page">
+						<span id=spnTitle></span>&nbsp;
+					</a><span class="couponcode">&#x24d8;<span id=spnDescription class="coupontooltip">
+						</span></span>
+				</h2>
+
+				<div>
+					<span id="spnVersion"></span>
+				</div>
+
+			</header>
+
+			<hr>
+
+			<div id="MASdivMenuAppSwitch"> </div>
+
+
+			<details open>
+
+				<summary>interactive legend
+
+					<span class="couponcode">&#x24d8;<span id=spnInteractive class="coupontooltip">
+							Press the colored buttons to see selected items only. Press again to see all.
+						</span></span>
+
+				</summary>
+				<p class=navLegend style="background-color:blue;" title=";-(">
+					<button id=butNew class=butLegend onclick=toggleBars(groupCasesJTS)
+						style=background-color:Blue;color:white;width:100%;>
+						JHU cases&nbsp;</button>
+				</p>
+
+				<p class=navLegend style=background-color:red; title=";-(">
+					<button id=butCases class=butLegend onclick=toggleBars(groupCasesWP)
+						style=background-color:red;color:white;width:100%;>
+						Wikipedia cases&nbsp;</button>
+				</p>
+
+				<p class=navLegend style=background-color:black; title=";-(">
+					<button id=butDeaths class=butLegend onclick=toggleBars(groupDeathsWP)
+						style=background-color:black;color:white;width:100%;>
+						Wikipedia Deaths&nbsp;</button>
+				</p>
+
+				<p class=navLegend style=background-color:limegreen; title=";-)">
+					<button id=butRecoveries class=butLegend onclick=toggleBars(groupRecoveriesWP)
+						style=background-color:limegreen;width:100%;>
+						Wikipedia Recoveries&nbsp;
+					</button>
+				</p>
+
+				<hr>
+
+			</details>
+<!--
+
+	<div id=divDates title="Use your cursor keys to speed through the dates"
+	class=navMenuItem></div>
+
+	<div id=divCountries title="Use your cursor keys to speed through the countries" ></div>
+
+	<div id=divStats ></div>
+-->
+
+			<div id=divSettings></div>
+
+			<hr>
+
+			<center title="hello!"><a href=javascript:window.scrollTo(0,0); style=text-decoration:none;> <img
+						src="../../../assets/spider.ico" alt="spider icon" height=24> </a></center>
+
+		</details>
+
+	</nav>
+
+
+	<footer style=bottom:1ch;position:fixed;;width:100vw;text-align:center;>
+
+		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
+		&nbsp;
+		<button onclick="THR.controls.autoRotate=!THR.controls.autoRotate" title="stop the rotation"
+			class=ftrButton>&circlearrowright;</button>
+		&nbsp;
+		<button onclick="groupText.visible=!groupText.visible" title="toggle placards"
+			class=ftrButton>&sdotb;</button>
+		&nbsp;
+		<button onclick=sayThis(); title="Can you hear me now?" class=ftrButton>&phone;</button>
+
+	</footer>
+
+
+	<script src="../js/main.js"></script>
+	<script src="../js/dmt-div-move-touch-2020-04-17-1422.js"></script>
+	<script src="wp-wikipedia.js"></script>
+	<script src="jts-jhu-time-series.js"></script>
+
+	<script src="../js/mas-menu-app-switch.js"></script>
+	<script src="../js/threeGeoJSON.js"></script>
+	<script src="../js/glo-globe.js"></script>
+	<script src="../js/txt-text.js"></script>
+	<script src="../js/sta-statistics.js"></script>
+	<script src="../js/spk-speak.js"></script>
+
+
+	<script>
+
+		initMain();
+
+		DMT.init();
+
+		DMTdivContent.innerHTML = `
+			<div id=divMessageTitle ></div>
+			<div id=divReleaseText >dev</div>
+			<div>
+				Access to data from Wikipedia <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
+				target="_blank">
+				2019–20 coronavirus pandemic by country and territory</a> and 230++ related articles
+			</div>
+			<hr>
+			<div id=divMessageInfo></div>
+			<hr>
+			<div id=divMessageOfTheDay ></div>
+			<hr>
+			<div><small>Come back! See new version every day!</small></div>
+		`;
+
+		divMessageTitle.innerHTML = `<b>${ document.title } ~ ${ versionStr }</b>`;
+
+		divMessageInfo.innerHTML = messageInfo;
+
+		if ( build === "stable" ) {
+
+			MASliJTSstable.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<p><mark>"Flagship" chart - most authoritative data and least likely to crash</mark></p>`
+			divMessageOfTheDay.innerHTML = messageOfTheDayStable;
+
+		} else {
+
+			MASliWPdev.style.backgroundColor = "pink";
+			divReleaseText.innerHTML = `<mark>"Beta version" - chart with new features and likely to have issues</mark>`;
+			divMessageOfTheDay.innerHTML = messageOfTheDayDev;
+
+		}
+
+		detNavMenu.open = window.innerWidth > 640;
+
+		WP.init();
+
+		JTS.init();
+
+		TXT.init();
+
+		GLO.addLights();
+
+		GLO.addGlobe();
+
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches === false) {
+
+			GLO.toggleSkyBox();
+			SETinpSpyBox.checked = true
+		}
+
+		DMT.objects = groupCasesWP.children;
+
+		// keeps address bar pointed to latest dev. can comment out while developing locally to stop annoying message
+		window.history.pushState( "", "", "/spider-covid-19-viz-3d/dev/" );
+
+	</script>
+</body>
+
+</html>

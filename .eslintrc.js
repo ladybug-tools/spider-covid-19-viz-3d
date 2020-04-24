@@ -17,6 +17,7 @@ module.exports = {
 	},
 	"rules": {
 
+		"eslint-env": "es6",
 		"array-bracket-spacing": ["error", "always", { "singleValue": true, "arraysInArrays": false }],
 		"block-spacing": ["error", "always"],
 		"brace-style": [ "error", "1tbs", { "allowSingleLine": true } ],
@@ -90,7 +91,7 @@ module.exports = {
 		// "no-console": 0,             // allow the use of console
 		// "curly": 0,                  // Don't require all if statements to have curly braces
 		// "no-redeclare": 0,           // Don't care if var declared more than once in same scope. eg for (var x, ...) for (var x, ...);
-		// "quotes": 0,                 // Don't care if quotes are double or single
+		"quotes": ["error", "double", { "allowTemplateLiterals": true }],                 // Don't care if quotes are double or single
 		// "no-use-before-define": 0,   // don't care if something is used before it's defined.
 		// "no-underscore-dangle": 0,   // don't care if var starts with underscore
 	}

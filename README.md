@@ -83,7 +83,7 @@ The idea is to re-imagine the "chart", to turn the representation of quantities 
 
 Some of the great things about the globe is that yoo know what to do with it. You can spin it, You know the top and bottom bits are kind of boring and not much happens there. You know where you live.
 
-On the other hand, the Pacific Ocean takes half the space and there's nothing there either. And whenever ther places of interest there tend to be a ton of then and it's very difficult to attach a sign to one place without covering up the next place.
+On the other hand, the Pacific Ocean takes half the space and there's nothing there either. And whenever other places of interest there tend to be a ton of then and it's very difficult to attach a sign to one place without covering up the next place.
 
 
 
@@ -96,43 +96,77 @@ On the other hand, the Pacific Ocean takes half the space and there's nothing th
 
 ### Generally / Short term
 
+
+
+
+
+#### Places
+
+* Other large jurisdictions: Brazil, India, Indonesia, Russia
+
+#### Indicator Bars
+
+* Replay all stats individually - see last five days of just new cases
+* Code in its own module
+* Show some item of interest at the top of each indicator bar
+	* As in all classical columns have a capital
+	* Country or state flag?
+	* Placards over each bar showing country - 2 letter identifier -  & # cases?
+	* Ends on Red bars
+	* Days since last new case indicated as color or opacity
+
+
+#### Pop-ups
+
 * 2020-04-18 ~ Theo ~  Pop-ups remember size and position between calls
-* 2020-04-18 ~ Theo ~  Sky Box: add messages on the fly
 * 2020-04-15 ~ Theo ~  Ability to add more buttons and links to pop-up
+
+
+
+#### Background
+
 * 2020-04-15 ~ Theo ~  Background as a gradient
 * 2020-04-15 ~ Theo ~  Sky box as Three.js text
-* 2020-04-14 ~ Theo ~  Notes and settings in their own modules
+* 2020-04-18 ~ Theo ~  Sky Box: add messages on the fly
+* 2020-04-14 ~ Theo ~  Settings in their own modules
+
+
+#### Sessions
+
 * 2020-04-06 ~ Theo ~ Current settings save in local storage
 	* Globe rotates to the lat/lon onload as set and saved in localStorage
 	* Multiple locations & zoom levels
 	* Scaled or linear heights
-* 2020-04-06 ~ Theo ~ Select scale linear or scale logarithmically
-
 * Location hash goes to place and set language and other aspects
-* Days since last new case indicated as color or opacity
 
 
+#### "Expressions of Hope"
+
+* Translations with workflow for producing translations
+* Twitter API
+* Add to telephone messages
+	* Random messages
+	* In browser language
+* Notes to pop-up
+* Add "expressions of hope" such as positive tweets - in language?
 
 ### Medium Term
 
-* Translations with workflow for producing translations
-* Better geoJson parser JavaScript function
 
 Vision of the future
 
 * New organization?
+* Better geoJson parser JavaScript function
 * Separate timeline pages
 * web pages for counties/provinces
 * Add sound/music? During mouseover and at mouse click or data update
 * Refresh data every few minutes
-* Add "expressions of hope" such as positive tweets - in language?
+
 * Sun path? Mountains? Flamingos and dolphins?
+* Rebuild oSome globe
 * Themes? Mid-century modern, Burner, pixelated
 * Rotation + zoom - 3D Lissajous path
-* Show some item of interest at the top of each indicator
-	* As in all classical columns have a capital
-	* Country or state flag?
-	* Placards over each bar showing country & cases?
+
 * Community transmission vs traveller transmission
 	* Data in WHO PDF file hard to parse
 * a growing percentage affected per day of each country's population rather than cases detected if we're separating it out by country.
@@ -325,6 +359,16 @@ wiki geography
 <summary>Change log </summary>
 
 _Change logs are now in the v-dates/ folders._
+
+### 2020-04-22
+
+Wish list items dealt with
+
+* Improve Wikipedia workflow
+* States to global map
+* Rescale bars
+* 2020-04-06 ~ Theo ~ Select scale linear or scale logarithmically
+
 
 ### 2020-04-18
 

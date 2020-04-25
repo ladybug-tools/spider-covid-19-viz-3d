@@ -5,8 +5,8 @@
 
 ////////// Deployment
 
-//let build = "stable";
-let build = "dev";
+let build = "stable";
+//let build = "dev";
 
 let timeStamp = "18:15";
 

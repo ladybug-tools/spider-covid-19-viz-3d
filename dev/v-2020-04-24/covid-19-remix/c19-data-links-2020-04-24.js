@@ -143,7 +143,7 @@ c19LinksGlobal = [ { "country": "Afghanistan", "region": "", "article": "Afghani
 	{ "country": "Indonesia", "region": "", "article": "Indonesia", "chart": "Indonesia", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "Iran", "region": "", "article": "Iran", "chart": "Iran", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "Iraq", "region": "", "article": "Iraq", "chart": "Iraq", "chartIdx": "1", "table": "", "tableIdx": "0" },
-	{ "country": "Ireland", "region": "", "article": "Ireland", "chart": "Republic_of_Ireland", "chartIdx": "1", "table": "", "tableIdx": "0" },
+	{ "country": "Ireland", "region": "", "article": "the_Republic_of_Ireland", "chart": "Republic_of_Ireland", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "Israel", "region": "", "article": "Israel", "chart": "Israel", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "Italy", "region": "", "article": "Italy", "chart": "Italy", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "Ivory Coast", "region": "", "article": "Ivory_Coast", "chart": "Ivory_Coast", "chartIdx": "1", "table": "", "tableIdx": "0" },
@@ -248,7 +248,7 @@ c19LinksGlobal = [ { "country": "Afghanistan", "region": "", "article": "Afghani
 	{ "country": "United Kingdom", "region": "Gibraltar", "article": "Gibraltar", "chart": "Gibraltar", "chartIdx": "0", "table": "", "tableIdx": "0" },
 	{ "country": "United Kingdom", "region": "Isle of Man", "article": "the_Isle_of_Man", "chart": "Isle_of_Man", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "United Kingdom", "region": "Montserrat", "article": "Montserrat", "chart": "Montserrat", "chartIdx": "0", "table": "", "tableIdx": "0" },
-	{ "country": "United Kingdom", "region": "", "article": "United_Kingdom", "chart": "United_Kingdom", "chartIdx": "1", "table": "", "tableIdx": "0" },
+	{ "country": "United Kingdom", "region": "", "article": "the_United_Kingdom", "chart": "United_Kingdom", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "United Kingdom", "region": "Anguilla", "article": "Anguilla", "chart": "Anguilla", "chartIdx": "0", "table": "", "tableIdx": "0" },
 	{ "country": "United Kingdom", "region": "British Virgin Islands", "article": "the_British_Virgin_Islands", "chart": "the_British_Virgin_Islands", "chartIdx": "0", "table": "", "tableIdx": "0" },
 	{ "country": "United Kingdom", "region": "Turks & Caicos Islands", "article": "the_Turks_and_Caicos_Islands", "chart": "the_Turks_and_Caicos_Islands", "chartIdx": "0", "table": "", "tableIdx": "0" },
@@ -293,7 +293,7 @@ c19LinksGlobal = [ { "country": "Afghanistan", "region": "", "article": "Afghani
 	{ "country": "United States", "region": "New York", "article": "New_York_(state)", "chart": "New_York_State", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "United States", "region": "North Carolina", "article": "North_Carolina", "chart": "North_Carolina", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "United States", "region": "North Dakota", "article": "North_Dakota", "chart": "North_Dakota", "chartIdx": "1", "table": "", "tableIdx": "0" },
-	{ "country": "United States", "region": "Northern Mariana Islands", "article": "Northern_Mariana_Islands", "chart": "Northern_Mariana_Islands", "chartIdx": "0", "table": "", "tableIdx": "0" },
+	{ "country": "United States", "region": "Northern Mariana Islands", "article": "the_Northern_Mariana_Islands", "chart": "the_Northern_Mariana_Islands", "chartIdx": "0", "table": "", "tableIdx": "0" },
 	{ "country": "United States", "region": "Ohio", "article": "Ohio", "chart": "Ohio", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "United States", "region": "Oklahoma", "article": "Oklahoma", "chart": "Oklahoma", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "United States", "region": "Oregon", "article": "Oregon", "chart": "Oregon", "chartIdx": "1", "table": "", "tableIdx": "0" },
@@ -320,4 +320,6 @@ c19LinksGlobal = [ { "country": "Afghanistan", "region": "", "article": "Afghani
 	{ "country": "Western Sahara", "region": "", "article": "Western_Sahara", "chart": "Western_Sahara", "chartIdx": "0", "table": "", "tableIdx": "0" },
 	{ "country": "Yemen", "region": "", "article": "Yemen", "chart": "Yemen", "chartIdx": "1", "table": "", "tableIdx": "0" },
 	{ "country": "Zambia", "region": "", "article": "Zambia", "chart": "Zambia", "chartIdx": "0", "table": "", "tableIdx": "0" },
-	{ "country": "Zimbabwe", "region": "", "article": "Zimbabwe", "chart": "Zimbabwe", "chartIdx": "0", "table": "", "tableIdx": "0" } ];
+	{ "country": "Zimbabwe", "region": "", "article": "Zimbabwe", "chart": "Zimbabwe", "chartIdx": "0", "table": "", "tableIdx": "0" }
+
+];

@@ -116,7 +116,7 @@ WP.getInfoboxes = function () {
 	const url = WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.dataLinks.article;
 	//console.log( "", url );
 
-	WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
+	WPdivGraph.innerHTML = `<img src="./progress-indicator.gif" width=100 >`;
 
 	requestFile( url, WP.onLoadDataInfoboxes );
 
@@ -210,7 +210,7 @@ WP.getCases = function () {
 
 		requestFile( url, WP.onLoadBarBox );
 
-		WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
+		WPdivGraph.innerHTML = `<img src="./progress-indicator.gif" width=100 >`;
 
 	} else {
 

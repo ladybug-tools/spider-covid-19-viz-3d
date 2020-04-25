@@ -6,7 +6,7 @@ value='You are now in a GitHub web page view - Click this button to view this re
 
 # [COVID-19 Viz3D Read Me]( #README.md )
 
-<img src="https://ladybug.tools/spider-covid-19-viz-3d/assets/images/c19-viz3d-2020-04-24.gif" width=100% >
+<img src="https://ladybug.tools/spider-covid-19-viz-3d/assets/images/c19-viz3d-2020-04-24.gif" width="100%" >
 
 <!--
 

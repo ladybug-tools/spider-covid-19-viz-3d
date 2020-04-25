@@ -7,23 +7,6 @@
 const DPW = {};
 
 
-DMT.onLoadMore = function () {
-
-	const maxHeadroom = window.innerHeight - DMTdivPopUp.offsetTop - 15;
-
-	DMTdivContainer.style.height = DMTdivPopUp.clientHeight < maxHeadroom ? "100%" : maxHeadroom + "px";
-
-	const maxLegroom = window.innerWidth - DMTdivPopUp.offsetLeft - 15;
-
-	DMTdivContainer.style.width = DMTdivPopUp.clientWidth < maxLegroom ? "100%" : maxLegroom + "px";
-
-	//DMTdivMoreGraph.style.height = DMTdivContainer.clientHeight - DMTdivMoreGraph.offsetTop - 15 + "px";
-	//DMTdivContent.scrollTop = 88888;
-
-};
-
-
-
 
 DMT.displayYourMessage = function ( intersected ) {
 
@@ -173,6 +156,7 @@ WP.onLoadDataInfoboxes = function ( xhr ) {
 		if ( location.protocol.includes( "file" ) ) {
 
 			images = infobox.querySelectorAll( "img" );
+			images.onload = DMT.onLoadMore;
 			images.forEach( image => image.src = "https://" + image.src.slice( 5 ) );
 
 		}
@@ -188,7 +172,7 @@ WP.onLoadDataInfoboxes = function ( xhr ) {
 
 	setTimeout( DMT.onLoadMore, 100 );
 
-	WPdivGraph.scrollTop = 0;
+	WPdivGraph.scrollTop = 660;
 
 };
 
@@ -265,13 +249,17 @@ WP.onLoadBarBox = function ( xhr ) {
 
 	str = str.replace( /\[(.*?)\]/g, "" );
 
-	WPdivGraph.innerHTML = str + "<p><button onclick=DMTdivContent.scrollTop=0 >back to top</button></p>";
+	WPdivGraph.innerHTML = `
+<p><button onclick=DMTdivContent.scrollTop=8888>&dArr; scroll to latest</button ></p>
+${ str }
+<p><button onclick=DMTdivContent.scrollTop=0>&uArr; scroll to top</button ></p >
+`;
 
 	DMT.onLoadMore(); // seems to need to run twice
 
 	setTimeout( DMT.onLoadMore, 100 );
 
-	DMTdivContent.scrollTop = 88888;
+	WPdivGraph.scrollTop = 0;
 
 };
 

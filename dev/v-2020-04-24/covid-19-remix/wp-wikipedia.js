@@ -10,6 +10,7 @@
 
 const WP = {};
 
+
 //WP.cors = location.protocol === "https:" ? "" : "https://cors-anywhere.herokuapp.com/";
 WP.cors = "https://cors-anywhere.herokuapp.com/";
 
@@ -87,7 +88,7 @@ WP.onLoadData = function ( xhr, c19GeoData ) {
 		.replace( /\[(.*?)\]/g, "" )
 		.split( "\n" ) );
 
-	rows = rows.slice( 2 )// .sort();
+	//rows = rows.slice( 2 )// .sort();
 	//console.log( "rows", rows);
 
 	if ( c19GeoData === c19GeoDataUsa ) {
@@ -131,7 +132,6 @@ WP.parseUsa = function ( rows ) {
 		}
 
 	} );
-
 	//console.log( "time", performance.now() - WP.timeStart );
 
 	WP.updateBars( c19GeoDataUsa );

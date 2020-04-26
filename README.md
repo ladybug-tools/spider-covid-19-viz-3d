@@ -353,12 +353,17 @@ wiki geography
 ### simplemaps
 
 * https://simplemaps.com/data/us-cities
+* https://simplemaps.com/data/world-cities << 15,000 cities
 
 ### JHU
 
 * https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
 	* Has lat & lon
 
+### Cool Three.js Glob handling
+
+* https://threejsfundamentals.org/threejs/lessons/threejs-optimize-lots-of-objects-animated.html
+* https://threejsfundamentals.org/threejs/lessons/threejs-optimize-lots-of-objects.html
 
 
 ### tests

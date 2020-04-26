@@ -350,6 +350,11 @@ wiki geography
 * https://github.com/google/dspl/blob/master/samples/bls/unemployment/states.csv
 	* states lat & lon, identifier, alternate name
 
+### SEDAC
+
+* https://sedac.ciesin.columbia.edu/data/collection/gpw-v4
+* https://sedac.ciesin.columbia.edu/data/collection/gpw-v4/maps/services
+
 ### simplemaps
 
 * https://simplemaps.com/data/us-cities

@@ -57,13 +57,13 @@ BAR.latLonToXYZ = function ( radius, lat, lon ) {
 
 	const pi2 = Math.PI / 2;
 
-	const theta = Number( lat ) * Math.PI / 180;
-	const phi = Number( lon ) * Math.PI / 180;
+	const phi = Number( 90 - lat ) * Math.PI / 180;
+	const theta = Number( 180 - lon ) * Math.PI / 180;
 	//console.log( "lat/lon", theta, phi, index);
 
-	const x = radius * Math.sin( theta + pi2 ) * Math.cos( phi );
-	const y = radius * Math.sin( theta + pi2 ) * Math.sin( phi );
-	const z = radius * Math.cos( theta - pi2 );
+	const x = - radius * Math.sin( phi ) * Math.cos( theta );
+	const y = radius * Math.sin( phi ) * Math.sin( theta );
+	const z = radius * Math.cos( phi );
 
 	return new THREE.Vector3( x, y, z );
 

@@ -44,57 +44,6 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 #navMenu { margin: 0 20px; max-width: 15rem; position: absolute; }
 
-
-#DMTdivPopUp {
-	position: absolute;
-	left: calc(50vw - 25ch);
-	top: 55%;
-}
-
-#DMTdivContainer{
-	border: 1px solid#444;
-	border-radius: 1rem 1rem 0 1rem;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
-	height: 50ch;
-	overflow: hidden;
-	resize: both;
-	width: 50ch;
-}
-
-#DMTdivHeader {
-	background-color: #ccc;
-	cursor: move;
-	font-size: 2ch;
-	padding: 1ch;
-	user-select: none;
-}
-
-#DMTdivContent {
-	background-color: white;
-	/* border: 1px solid red; */
-	height: calc( 100% - 5ch );
-	overflow: auto;
-	padding: 1ch;
-}
-
-#DMTdivIntersected {
-	background-color: #eee;
-	border-radius: 1ch;
-	opacity: 0.85;
-	padding: 1ch
-}
-
-@media all and (max-width: 640px) {
-	#DMTdivPopUp {
-		left: calc(50% - 19ch);
-	}
-
-	#DMTdivContainer {
-		width: 40ch;
-	}
-}
-
-
 </style>
 
 </head>
@@ -102,9 +51,6 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 <body>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/controls/OrbitControls.js"></script>
-
-<script src="bar-bars.js"></script>
-<script src="dmt-div-move-touch-2020-04-25.js"></script>
 
 <nav id="navMenu">
 
@@ -147,12 +93,11 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 <script>
 
-let pathAssets = "../../../assets/";
-
-const urlEarthImg = pathAssets + "images/natural-earth-4096-2048-col.jpg";
+let pathAssets = "../";
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = pathAssets + "images/github-mark-32.png";
+
 
 sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
@@ -162,8 +107,7 @@ divDescription.innerHTML = document.head.querySelector( "[ name=description ]" )
 const THR = {};
 let globe;
 
-
-let mesh, axesHelper, lightDirectional, cameraHelper;
+let mesh, group, axesHelper, lightDirectional, cameraHelper;
 let sceneRotation = 1;
 let renderer, camera, controls, scene;
 
@@ -175,7 +119,7 @@ animate();
 function init() {
 
 	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 1000 );
-	camera.position.set( 200, 0, 50 );
+	camera.position.set( 0, - 200, 50 );
 	camera.up.set( 0, 0, 1 );
 
 	scene = new THREE.Scene();
@@ -212,37 +156,22 @@ function init() {
 
 	loadGlobeWithBitmap();
 
-	//mesh = BAR.addBar();
-
-	//scene.add( mesh );
-
-	url = "../../../assets/geo-data/worldcities.csv";
-
-	BAR.requestFileUserData( url, BAR.onLoadWorldCities );
-
-
-
 }
 
 
-function loadSimplemapsCsv() {
-
-
-
-
-}
 
 
 function loadGlobeWithBitmap() {
 
 	scene.remove( globe );
 
-	const size = 50;
+	const size = 50
 	const geometry = new THREE.SphereBufferGeometry( size, 50, 25 );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
-	//geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( -0.5 * Math.PI ) );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( Math.PI ) );
 
-	const texture = new THREE.TextureLoader().load( urlEarthImg );
+	const url = pathAssets + "images/natural-earth-4096-2048-col.jpg";
+	const texture = new THREE.TextureLoader().load( url );
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
 
 	globe = new THREE.Mesh( geometry, material );

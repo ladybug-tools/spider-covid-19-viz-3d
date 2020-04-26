@@ -19,9 +19,9 @@ DMT.htmlPopUp = `
 
 			<p>${ ( new Date() ) }</p>
 
-			<p>cities from: https://simplemaps.com/data/world-cities</p>
+			<p>15,594 cities from: https://simplemaps.com/data/world-cities</p>
 
-			<p> </p>
+			<p>Cursor over a city to see its statistics. Click its name to view the Wikipedia article.</p>
 
 		</div>
 	</div>`;

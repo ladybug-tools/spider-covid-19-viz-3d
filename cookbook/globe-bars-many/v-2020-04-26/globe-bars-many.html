@@ -7,7 +7,7 @@
 <meta name=description
 	content="Real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-04-24">
+<meta name=version content="2020-04-26">
 
 
 <title></title>
@@ -44,6 +44,58 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 #navMenu { margin: 0 20px; max-width: 15rem; position: absolute; }
 
+
+#DMTdivPopUp {
+	position: absolute;
+	left: calc(50vw - 25ch);
+	top: 55%;
+}
+
+#DMTdivContainer{
+	border: 1px solid#444;
+	border-radius: 1rem 1rem 0 1rem;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
+	height: 50ch;
+	overflow: hidden;
+	resize: both;
+	width: 50ch;
+}
+
+#DMTdivHeader {
+	background-color: #ccc;
+	cursor: move;
+	font-size: 2ch;
+	padding: 1ch;
+	user-select: none;
+}
+
+#DMTdivContent {
+	background-color: white;
+	/* border: 1px solid red; */
+	height: calc( 100% - 5ch );
+	overflow: auto;
+	padding: 1ch;
+}
+
+#DMTdivIntersected {
+	background-color: #eee;
+	border-radius: 1ch;
+	opacity: 0.85;
+	padding: 1ch
+}
+
+@media all and (max-width: 640px) {
+	#DMTdivPopUp {
+		left: calc(50% - 19ch);
+	}
+
+	#DMTdivContainer {
+		width: 40ch;
+	}
+}
+
+#divLog, #divTime { background-color: white; padding: 1ch;  }
+
 </style>
 
 </head>
@@ -51,7 +103,9 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 <body>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/controls/OrbitControls.js"></script>
-<script src="BufferGeometryUtils.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/utils/BufferGeometryUtils.js"></script>
+
+<script src="bar-bars.js"></script>
 
 <nav id="navMenu">
 
@@ -71,8 +125,6 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 		</h2>
 
-
-
 	</header>
 
 	<p>
@@ -80,10 +132,15 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 	</p>
 
 	<p>
-		<button onclick="addMeshes()">add meshes</button>
+		<button onclick="BAR.requestFileUserData(url,BAR.onLoadWorldCitiesInstanced);">add meshes by instance</button>
 	</p>
 
-
+	<p>
+		<button onclick="BAR.requestFileUserData(url,BAR.onLoadWorldCitiesGroup);">add meshes by group</button>
+	</p>
+	<p>
+		<button onclick="addMouseMove()" >addMouseMove</button>
+	</p>
 	<p>
 		<button onclick=controls.reset()>reset view</button>
 		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
@@ -94,17 +151,20 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 		<input type="range" id="inpSpeed" onclick="controls.autoRotateSpeed=0.05 * this.value;outSpeed.innerHTML=this.value;" />
 	</p>
 
+	<div id="divTime"></div>
+
 	<div id="divLog"></div>
 
 </nav>
 
 <script>
 
-let pathAssets = "../";
+let pathAssets = "../../../assets/";
+
+const urlEarthImg = pathAssets + "images/natural-earth-4096-2048-col.jpg";
 
 aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = pathAssets + "images/github-mark-32.png";
-
 
 sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
@@ -114,7 +174,11 @@ divDescription.innerHTML = document.head.querySelector( "[ name=description ]" )
 const THR = {};
 let globe;
 
-let mesh, group, axesHelper, lightDirectional, cameraHelper;
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
+
+let mesh, axesHelper, lightDirectional, cameraHelper;
 let sceneRotation = 1;
 let renderer, camera, controls, scene;
 
@@ -142,9 +206,9 @@ function init() {
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
 	controls.minDistance = 40;
 	controls.maxDistance = 500;
-	//controls.autoRotate = true;
+	controls.autoRotate = true;
 	controls.enablePan = false;
-	controls.autoRotateSpeed = 5;
+	controls.autoRotateSpeed = 2;
 
 	axesHelper = new THREE.AxesHelper( 100 );
 	scene.add( axesHelper );
@@ -163,131 +227,13 @@ function init() {
 
 	loadGlobeWithBitmap();
 
-	//test2();
+	//mesh = BAR.addBar();
 
-	makeMerged();
+	//scene.add( mesh );
 
+	url = "../../../assets/geo-data/worldcities.csv";
 
-}
-
-// https://threejs.org/examples/#webgl_math_orientation_transform
-
-
-function test1 () {
-
-	vector = latLonToXYZ( 60, 10, 10);
-
-	position = new THREE.Vector3();
-	rotation = new THREE.Euler();
-	var quaternion = new THREE.Quaternion();
-	var scale = new THREE.Vector3( 1, 1, 1 );
-	var matrix = new THREE.Matrix4();
-
-	position.copy( vector );
-	rotation.copy( vector );
-
-	quaternion.setFromEuler( rotation );
-
-	matrix.compose( position, quaternion, scale );
-
-	const geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
-	geometry.applyMatrix4( matrix );
-	const material = new THREE.MeshNormalMaterial();
-	mesh = new THREE.Mesh( geometry, material );
-
-
-	scene.add( mesh );
-
-
-}
-
-
-function makeMerged( geometry ) {
-
-	var instanceGeometry;
-	var geometries = [];
-	var matrix = new THREE.Matrix4();
-
-	for ( var i = 0; i < 15000; i ++ ) {
-
-		geometry = randomizeMatrix( 50 + 50 * Math.random(), 180 *  Math.random() - 90, 360 * Math.random() );
-
-		// var instanceGeometry = geometry.clone();
-		// instanceGeometry.applyMatrix4( matrix );
-
-		geometries.push( geometry );
-
-	}
-
-	var mergedGeometry = THREE.BufferGeometryUtils.mergeBufferGeometries( geometries );
-
-	const material = new THREE.MeshNormalMaterial();
-	scene.add( new THREE.Mesh( mergedGeometry, material ) );
-
-}
-
-
-
-
-function makeInstanced( geometry ) {
-
-	var matrix = new THREE.Matrix4();
-	var mesh = new THREE.InstancedMesh( geometry, material, api.count );
-
-	for ( var i = 0; i < api.count; i ++ ) {
-
-		randomizeMatrix( matrix );
-		mesh.setMatrixAt( i, matrix );
-
-	}
-
-	scene.add( mesh );
-
-	//
-
-	var geometryByteLength = getGeometryByteLength( geometry );
-
-}
-
-
-
-function randomizeMatrix ( r = 50, lat = 80, lon = 50 ) {
-
-	position = latLonToXYZ( r, lat, lon );
-	var quaternion = new THREE.Quaternion(); // .setFromUnitVectors ( new THREE.Vector3( 0, 0, 0 ).normalize(), position.clone().normalize() )
-	var scale = new THREE.Vector3();
-	var matrix = new THREE.Matrix4();
-	matrix.compose( position, quaternion, scale );
-	matrix.lookAt(  new THREE.Vector3( 0, 0, 0 ), position, new THREE.Vector3( 0, 0, 1 ));
-
-	const geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
-	geometry.applyMatrix4( matrix );
-
-	return geometry;
-
-	// const material = new THREE.MeshNormalMaterial();
-	// mesh = new THREE.Mesh( geometry, material );
-
-	// scene.add( mesh );
-
-}
-
-
-function test3 ( radius = 50, lat = 80, lon = 10 ) {
-
-	const phi = Number( 90 - lat ) * Math.PI / 180;
-	const theta = Number( 180 - lon ) * Math.PI / 180;
-
-	var vector = new THREE.Vector3().setFromSphericalCoords( radius, theta, phi );
-
-	const geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
-	geometry.lookAt( vector );
-	geometry.translate( vector.x, vector.z, vector.y );
-
-	const material = new THREE.MeshNormalMaterial();
-	mesh = new THREE.Mesh( geometry, material );
-
-	scene.add( mesh );
+	BAR.requestFileUserData( url, BAR.onLoadWorldCitiesInstanced );
 
 }
 
@@ -297,13 +243,12 @@ function loadGlobeWithBitmap() {
 
 	scene.remove( globe );
 
-	const size = 50
+	const size = 50;
 	const geometry = new THREE.SphereBufferGeometry( size, 50, 25 );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
-	//geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( Math.PI ) );
+	//geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( -0.5 * Math.PI ) );
 
-	const url = pathAssets + "images/natural-earth-4096-2048-col.jpg";
-	const texture = new THREE.TextureLoader().load( url );
+	const texture = new THREE.TextureLoader().load( urlEarthImg );
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
 
 	globe = new THREE.Mesh( geometry, material );
@@ -313,21 +258,6 @@ function loadGlobeWithBitmap() {
 	scene.add( globe );
 
 }
-
-
-function latLonToXYZ( radius = 50, lat = 0 , lon = 0 ) {
-
-	const phi = Number( 90 - lat ) * Math.PI / 180;
-	const theta = Number( 180 - lon ) * Math.PI / 180;
-	//console.log( "lat/lon", theta, phi, index);
-
-	const x = radius * Math.sin( phi ) * Math.cos( theta );
-	const y = radius * Math.sin( phi ) * Math.sin( theta );
-	const z = radius * Math.cos( phi );
-
-	return new THREE.Vector3( - x, y, z );
-
-};
 
 
 

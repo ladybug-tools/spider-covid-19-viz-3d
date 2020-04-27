@@ -288,6 +288,7 @@ Globes
 
 * https://github.com/vasturiano/three-globe
 * https://github.com/vasturiano/globe.gl
+* https://globe.chromeexperiments.com/
 
 
 Source of bitmaps used on globe
@@ -365,11 +366,11 @@ wiki geography
 * https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
 	* Has lat & lon
 
-### Cool Three.js Glob handling
+### Cool Three.js Globe handling
 
 * https://threejsfundamentals.org/threejs/lessons/threejs-optimize-lots-of-objects-animated.html
 * https://threejsfundamentals.org/threejs/lessons/threejs-optimize-lots-of-objects.html
-
+* https://codeburst.io/improve-your-threejs-performances-with-buffergeometryutils-8f97c072c14b
 
 ### tests
 

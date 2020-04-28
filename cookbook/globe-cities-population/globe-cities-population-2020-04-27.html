@@ -7,7 +7,7 @@
 <meta name=description
 	content="Real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-04-26">
+<meta name=version content="2020-04-27">
 
 
 <title></title>
@@ -34,67 +34,19 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 .help { float: right; }
 
-.couponcode { float: right }
+.info { float: right }
 
-.couponcode:hover>.coupontooltip { display: block; }
+.info:hover>.infotooltip { display: block; }
 
-.coupontooltip { border: 0.8ch double #888; background: white; display: none;
+.infotooltip { border: 0.8ch double #888; background: white; display: none;
 	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
-	margin-left: -20ch; padding: 10px; position: absolute; z-index: 1000; }
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
 
 #navMenu { margin: 0 20px; max-width: 15rem; position: absolute; }
 
 
-#DMTdivPopUp {
-	position: absolute;
-	left: calc(50vw - 25ch);
-	top: 55%;
-}
-
-#DMTdivContainer{
-	border: 1px solid#444;
-	border-radius: 1rem 1rem 0 1rem;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
-	height: 50ch;
-	overflow: hidden;
-	resize: both;
-	width: 50ch;
-}
-
-#DMTdivHeader {
-	background-color: #ccc;
-	cursor: move;
-	font-size: 2ch;
-	padding: 1ch;
-	user-select: none;
-}
-
-#DMTdivContent {
-	background-color: white;
-	/* border: 1px solid red; */
-	height: calc( 100% - 5ch );
-	overflow: auto;
-	padding: 1ch;
-}
-
-#DMTdivIntersected {
-	background-color: #eee;
-	border-radius: 1ch;
-	opacity: 0.85;
-	padding: 1ch
-}
-
-@media all and (max-width: 640px) {
-	#DMTdivPopUp {
-		left: calc(50% - 19ch);
-	}
-
-	#DMTdivContainer {
-		width: 40ch;
-	}
-}
-
-#divLog, #divTime { background-color: white; padding: 1ch;  }
+.navText { background-color: white; margin: 1ch 0; padding: 1ch; }
 
 </style>
 
@@ -105,7 +57,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/controls/OrbitControls.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/utils/BufferGeometryUtils.js"></script>
 
-<script src="bar-bars.js"></script>
+
 
 <nav id="navMenu">
 
@@ -121,26 +73,19 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 				<span id=sVersion ></span>
 			</a>
 
-			<span class="couponcode" >??<span id=divDescription class="coupontooltip" ></span></span>
+			<span class="info" >&#x24d8;<span id=divDescription class="infotooltip" ></span></span>
 
 		</h2>
 
 	</header>
 
-	<p>
+	<p title="View the frames per second and memory used by this page" >
 		<a href="javascript:( () => { const script=document.head.appendChild( document.createElement('script') ); script.onload=() => {const stats=new Stats();document.body.appendChild(stats.dom); requestAnimationFrame( function loop(){ stats.update(); requestAnimationFrame(loop) } ); } ; script.src='https://raw.githack.com/mrdoob/stats.js/master/build/stats.min.js'; })()" >load stats.js</a>
 	</p>
-
-	<p>
-		<button onclick="BAR.requestFileUserData(url,BAR.onLoadWorldCitiesInstanced);">add meshes by instance</button>
+	<p title="View the number of objects that need rendering and the total number of triangles used to create the objects">
+		<button onclick="getRendererInfo()" >getRendererInfo</button>
 	</p>
-
-	<p>
-		<button onclick="BAR.requestFileUserData(url,BAR.onLoadWorldCitiesGroup);">add meshes by group</button>
-	</p>
-	<p>
-		<button onclick="addMouseMove()" >addMouseMove</button>
-	</p>
+	<hr>
 	<p>
 		<button onclick=controls.reset()>reset view</button>
 		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
@@ -151,15 +96,17 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 		<input type="range" id="inpSpeed" onclick="controls.autoRotateSpeed=0.05 * this.value;outSpeed.innerHTML=this.value;" />
 	</p>
 
-	<div id="divTime"></div>
+	<div id="divTime" class = navText ></div>
 
-	<div id="divLog"></div>
+	<div id="divLog" class = navText></div>
+
+	<div id="divInfo" class = navText ></div>
 
 </nav>
 
 <script>
 
-let pathAssets = "../../../assets/";
+let pathAssets = "../../assets/";
 
 const urlEarthImg = pathAssets + "images/natural-earth-4096-2048-col.jpg";
 
@@ -171,21 +118,39 @@ const version = document.head.querySelector( "[ name=version ]" );
 sVersion.innerHTML = version ? version.content : "";
 divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
 
-const THR = {};
+
 let globe;
+
+const BAR = {
+
+	lat: 0,
+	lon: 0,
+	places: "Null Island",
+	index: 0,
+	color: "red",
+	radius: 0.4,
+	height: 40,
+	offset: 0,
+	radialSegments: 5,
+	heightSegments: 1,
+	openEnded: true
+
+};
+
+let cities;
+let group;
+let timeStart;
 
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
 
-let mesh, axesHelper, lightDirectional, cameraHelper;
-let sceneRotation = 1;
+let mesh, axesHelper;
 let renderer, camera, controls, scene;
+
 
 init();
 animate();
-
-
 
 function init() {
 
@@ -222,18 +187,12 @@ function init() {
 	renderer.domElement.addEventListener( 'touchmove', () => controls.autoRotate = false );
 	renderer.domElement.addEventListener( 'touchend', () => controls.autoRotate = false );
 
-	THR.camera = camera; THR.scene = scene; THR.renderer = renderer; THR.controls = controls;
-
-
 	loadGlobeWithBitmap();
 
-	//mesh = BAR.addBar();
 
-	//scene.add( mesh );
+	url = pathAssets + "geo-data/worldcities.csv";
 
-	url = "../../../assets/geo-data/worldcities.csv";
-
-	BAR.requestFileUserData( url, BAR.onLoadWorldCitiesInstanced );
+	requestFile( url, onLoadWorldCitiesInstanced );
 
 }
 
@@ -260,6 +219,147 @@ function loadGlobeWithBitmap() {
 }
 
 
+function requestFile ( url, callback ) {
+
+	timeStart = performance.now();
+
+	const xhr = new XMLHttpRequest();
+	xhr.open( "GET", url, true );
+	xhr.onerror = ( xhr ) => console.log( "error:", xhr );
+	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+	xhr.onload = callback;
+	xhr.send( null );
+
+};
+
+
+
+function onLoadWorldCitiesInstanced ( xhr ) {
+
+	const response = xhr.target.response;
+	//console.log( "response", response );
+
+	cities = response.split( /\n/ ).map( line => line.replace( /\"/g, "" ).split( "," ) );
+	//console.log( "cities", cities );
+
+	scene.remove( group );
+	group = new THREE.Group();
+
+	//const geometry = new THREE.BoxBufferGeometry( 0.3, 0.3, 1 );
+	let geometry = new THREE.CylinderBufferGeometry( 0.1, BAR.radius, 1, BAR.radialSegments, BAR.heightSegments, BAR.openEnded );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
+	geometry.applyMatrix( new THREE.Matrix4().makeScale( -1, -1, -1 ) );
+
+	const material = new THREE.MeshNormalMaterial({ side: 2 } );
+	const mesh = new THREE.InstancedMesh( geometry, material, cities.length );
+
+	for ( let i = 0; i < cities.length; i ++ ) {
+
+		city = cities[ i ];
+		let height = isNaN( Number( city[ 9 ] ) ) ? 1000 : Number( city[ 9 ] );
+		height = height < 1000 ? 1000 : height;
+		height = 0.008 * Math.sqrt( height );
+		//console.log( "height", height );
+
+		const matrix = getMatrixComposed( 50, + city[ 2 ], + city[ 3 ], height );
+		mesh.setMatrixAt( i, matrix );
+
+	}
+
+	group.add( mesh );
+	scene.add( group );
+
+	divTime.innerHTML = `Load data by instance<br> ${ ( performance.now() - timeStart ).toLocaleString() } ms`;
+
+	renderer.domElement.addEventListener( 'mousemove', onMouseMove, false );
+
+};
+
+
+
+function getMatrixComposed ( r = 50, lat = 0, lon = 0, height = 5 ) {
+
+	const position = latLonToXYZ( r + 0.5 * height, lat, lon );
+	const quaternion = new THREE.Quaternion().setFromUnitVectors (
+		new THREE.Vector3( 0, 0, 1 ), position.clone().normalize() )
+	const scale = new THREE.Vector3( 1, 1, height );
+	const matrix = new THREE.Matrix4();
+	matrix.compose( position, quaternion, scale );
+
+	return matrix;
+
+}
+
+
+
+function latLonToXYZ ( radius, lat, lon ) {
+
+	const phi = ( 90 - lat ) * Math.PI / 180;
+	const theta = ( 180 - lon ) * Math.PI / 180;
+	//console.log( "lat/lon", theta, phi, index);
+
+	const x = radius * Math.sin( phi ) * Math.cos( theta );
+	const y = radius * Math.sin( phi ) * Math.sin( theta );
+	const z = radius * Math.cos( phi );
+
+	return new THREE.Vector3( - x, y, z );
+
+};
+
+
+
+function onMouseMove ( event ) {
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+	raycaster.setFromCamera( mouse, camera );
+
+	let intersects = raycaster.intersectObjects( [ globe, group.children[ 0 ] ] );
+
+	if ( intersects.length ) {
+
+		const intersected = intersects[ 0 ];
+
+		if ( intersected.object.id !== globe.id ) {
+
+			const index = intersected.instanceId; // ? intersected.instanceId : intersected.object.userData.index;
+
+			const row0 = cities[ 0 ];
+			const city = cities[ index ];
+			const str = city.map( ( item, i ) => {
+
+				item = i === 0 ? `<a href="https://en.wikipedia.org/w/index.php?search=${ item }" target="_blank">${ item }</a>` : item;
+				item = i === 9 ? ( + item ).toLocaleString() : item;
+				return `${ row0[ i ] }: ${ item } `;
+
+			} ).join( "<br>" );
+
+			divLog.innerHTML = `${ str }<br>index: ${ index }<br>`;
+
+		}
+
+	}
+
+}
+
+
+//////////
+
+
+
+function getRendererInfo() {
+
+const render = renderer.info.render;
+
+divInfo.innerHTML = `
+	Renderer<br>
+	Calls: ${ render.calls }<br>
+	Triangles: ${ render.triangles.toLocaleString() }<br>
+`;
+
+}
+
 
 function onWindowResize() {
 
@@ -281,6 +381,7 @@ function animate() {
 	controls.update();
 
 }
+
 
 </script>
 </body>

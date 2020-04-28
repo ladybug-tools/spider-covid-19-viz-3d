@@ -7,7 +7,7 @@
 <meta name=description
 	content="Real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library">
 <meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
-<meta name=version content="2020-04-26">
+<meta name=version content="2020-04-27">
 
 
 <title></title>
@@ -34,13 +34,14 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 .help { float: right; }
 
-.couponcode { float: right }
+.info { float: right }
 
-.couponcode:hover>.coupontooltip { display: block; }
+.info:hover>.infotooltip { display: block; }
 
-.coupontooltip { border: 0.8ch double #888; background: white; display: none;
+.infotooltip { border: 0.8ch double #888; background: white; display: none;
 	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
-	margin-left: -20ch; padding: 10px; position: absolute; z-index: 1000; }
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
 
 #navMenu { margin: 0 20px; max-width: 15rem; position: absolute; }
 
@@ -94,7 +95,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 	}
 }
 
-#divLog, #divTime { background-color: white; padding: 1ch;  }
+.navText { background-color: white; margin: 1ch 0; padding: 1ch; }
 
 </style>
 
@@ -105,7 +106,7 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/controls/OrbitControls.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/utils/BufferGeometryUtils.js"></script>
 
-<script src="bar-bars.js"></script>
+<script src="bar-bars-2020-04-27.js"></script>
 
 <nav id="navMenu">
 
@@ -121,16 +122,19 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 				<span id=sVersion ></span>
 			</a>
 
-			<span class="couponcode" >??<span id=divDescription class="coupontooltip" ></span></span>
+			<span class="info" >&#x24d8;<span id=divDescription class="infotooltip" ></span></span>
 
 		</h2>
 
 	</header>
 
-	<p>
+	<p title="View the frames per second and memory used by this page" >
 		<a href="javascript:( () => { const script=document.head.appendChild( document.createElement('script') ); script.onload=() => {const stats=new Stats();document.body.appendChild(stats.dom); requestAnimationFrame( function loop(){ stats.update(); requestAnimationFrame(loop) } ); } ; script.src='https://raw.githack.com/mrdoob/stats.js/master/build/stats.min.js'; })()" >load stats.js</a>
 	</p>
-
+	<p title="View the number of objects that need rendering and the total number of triangles used to create the objects">
+		<button onclick="getRendererInfo()" >getRendererInfo</button>
+	</p>
+	<hr>
 	<p>
 		<button onclick="BAR.requestFileUserData(url,BAR.onLoadWorldCitiesInstanced);">add meshes by instance</button>
 	</p>
@@ -151,9 +155,11 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 		<input type="range" id="inpSpeed" onclick="controls.autoRotateSpeed=0.05 * this.value;outSpeed.innerHTML=this.value;" />
 	</p>
 
-	<div id="divTime"></div>
+	<div id="divTime" class = navText ></div>
 
-	<div id="divLog"></div>
+	<div id="divLog" class = navText></div>
+
+	<div id="divInfo" class = navText ></div>
 
 </nav>
 
@@ -227,13 +233,24 @@ function init() {
 
 	loadGlobeWithBitmap();
 
-	//mesh = BAR.addBar();
-
-	//scene.add( mesh );
 
 	url = "../../../assets/geo-data/worldcities.csv";
 
 	BAR.requestFileUserData( url, BAR.onLoadWorldCitiesInstanced );
+
+}
+
+
+
+function getRendererInfo() {
+
+	const render = renderer.info.render;
+
+	divInfo.innerHTML = `
+	Renderer<br>
+	Calls: ${ render.calls }<br>
+	Triangles: ${ render.triangles.toLocaleString() }<br>
+	`;
 
 }
 

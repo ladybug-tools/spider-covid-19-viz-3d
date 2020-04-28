@@ -45,57 +45,6 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 #navMenu { margin: 0 20px; max-width: 15rem; position: absolute; }
 
 
-#DMTdivPopUp {
-	position: absolute;
-	left: calc(50vw - 25ch);
-	top: 55%;
-}
-
-#DMTdivContainer{
-	border: 1px solid#444;
-	border-radius: 1rem 1rem 0 1rem;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.9), 0 6px 20px 0 rgba(0, 0, 0, 0.6);
-	height: 50ch;
-	overflow: hidden;
-	resize: both;
-	width: 50ch;
-}
-
-#DMTdivHeader {
-	background-color: #ccc;
-	cursor: move;
-	font-size: 2ch;
-	padding: 1ch;
-	user-select: none;
-}
-
-#DMTdivContent {
-	background-color: white;
-	/* border: 1px solid red; */
-	height: calc( 100% - 5ch );
-	overflow: auto;
-	padding: 1ch;
-}
-
-#DMTdivIntersected {
-	background-color: #eee;
-	border-radius: 1ch;
-	opacity: 0.85;
-	padding: 1ch
-}
-
-@media all and (max-width: 640px) {
-	#DMTdivPopUp {
-		left: calc(50% - 19ch);
-	}
-
-	#DMTdivContainer {
-		width: 40ch;
-	}
-}
-
-#divLog, #divTime { background-color: white; padding: 1ch;  }
-
 </style>
 
 </head>
@@ -104,8 +53,6 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/controls/OrbitControls.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/utils/BufferGeometryUtils.js"></script>
-
-<script src="bar-bars.js"></script>
 
 <nav id="navMenu">
 
@@ -125,6 +72,8 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 
 		</h2>
 
+
+
 	</header>
 
 	<p>
@@ -132,15 +81,24 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 	</p>
 
 	<p>
-		<button onclick="BAR.requestFileUserData(url,BAR.onLoadWorldCitiesInstanced);">add meshes by instance</button>
+		<button onclick="addMesh()">add mesh</button>
 	</p>
 
 	<p>
-		<button onclick="BAR.requestFileUserData(url,BAR.onLoadWorldCitiesGroup);">add meshes by group</button>
+		<button onclick="addMeshGeometryMerged()" >addMeshGeometryMerged</button>
+	</p>
+
+	<p>
+		<button onclick="addMeshInstanced()" >addMeshInstanced</button>
+	</p>
+
+	<p>
+		<button onclick="addPlaneMeshInstanced()" >addPlaneMeshInstanced</button>
 	</p>
 	<p>
 		<button onclick="addMouseMove()" >addMouseMove</button>
 	</p>
+
 	<p>
 		<button onclick=controls.reset()>reset view</button>
 		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
@@ -151,20 +109,17 @@ input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background
 		<input type="range" id="inpSpeed" onclick="controls.autoRotateSpeed=0.05 * this.value;outSpeed.innerHTML=this.value;" />
 	</p>
 
-	<div id="divTime"></div>
-
-	<div id="divLog"></div>
+	<div id="divLog" ></div>
 
 </nav>
 
 <script>
 
-let pathAssets = "../../../assets/";
+let pathAssets = "../";
 
-const urlEarthImg = pathAssets + "images/natural-earth-4096-2048-col.jpg";
-
-aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/cookbook/";
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/";
 imgIcon.src = pathAssets + "images/github-mark-32.png";
+
 
 sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
 const version = document.head.querySelector( "[ name=version ]" );
@@ -174,11 +129,13 @@ divDescription.innerHTML = document.head.querySelector( "[ name=description ]" )
 const THR = {};
 let globe;
 
+count = 10000;
+
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
 
-let mesh, axesHelper, lightDirectional, cameraHelper;
+let mesh, group, axesHelper, lightDirectional, cameraHelper;
 let sceneRotation = 1;
 let renderer, camera, controls, scene;
 
@@ -206,9 +163,9 @@ function init() {
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
 	controls.minDistance = 40;
 	controls.maxDistance = 500;
-	controls.autoRotate = true;
+	//controls.autoRotate = true;
 	controls.enablePan = false;
-	controls.autoRotateSpeed = 2;
+	controls.autoRotateSpeed = 5;
 
 	axesHelper = new THREE.AxesHelper( 100 );
 	scene.add( axesHelper );
@@ -227,28 +184,241 @@ function init() {
 
 	loadGlobeWithBitmap();
 
-	//mesh = BAR.addBar();
+	//addMeshGeometryMerged();
 
-	//scene.add( mesh );
-
-	url = "../../../assets/geo-data/worldcities.csv";
-
-	BAR.requestFileUserData( url, BAR.onLoadWorldCitiesInstanced );
+	//makeInstanced();
 
 }
 
 
 
+function addMesh() {
+
+	scene.remove( group );
+	group = new THREE.Group();
+
+	const geometry = new THREE.BoxBufferGeometry( 5, 5, 5 );
+	const matrix = getMatrixComposed();
+	geometry.applyMatrix4( matrix );
+	const material = new THREE.MeshNormalMaterial();
+	const mesh = new THREE.Mesh( geometry, material )
+	group.add( mesh );
+
+	scene.add( group);
+
+}
+
+
+
+function addMeshGeometryMerged() {
+
+	scene.remove( group );
+	group = new THREE.Group();
+
+	const geometries = [];
+
+	for ( let i = 0; i < count; i ++ ) {
+
+		const geometry = getGeometryComposed( 50 + 50 * Math.random(), 180 *  Math.random() - 90, 360 * Math.random() );
+
+		geometries.push( geometry );
+
+	}
+
+	const mergedGeometry = THREE.BufferGeometryUtils.mergeBufferGeometries( geometries );
+
+	const material = new THREE.MeshNormalMaterial();
+	mesh = new THREE.Mesh( mergedGeometry, material )
+	group.add( mesh );
+
+	scene.add( group );
+
+}
+
+
+
+function addMeshInstanced() {
+
+	scene.remove( group );
+	group = new THREE.Group();
+
+	const geometry = new THREE.BoxBufferGeometry( 1, 1, 10 );
+	const material = new THREE.MeshNormalMaterial();
+	const mesh = new THREE.InstancedMesh( geometry, material, count );
+
+	for ( let i = 0; i < count; i ++ ) {
+
+		const matrix = getMatrixComposed( 60 + 50 * Math.random(), 180 * Math.random() - 90, 360 * Math.random() - 180 );
+		mesh.setMatrixAt( i, matrix );
+		mesh.userData.index = "Box " + i;
+
+	}
+
+	group.add( mesh );
+	scene.add( group );
+
+	console.log( "mesh", mesh );
+
+}
+
+
+
+function addPlaneMeshInstanced() {
+
+	scene.remove( group );
+	group = new THREE.Group();
+
+	const count = 10;
+
+	const geometry = new THREE.PlaneBufferGeometry( 100, 100, 256, 256 );
+	const material = new THREE.MeshNormalMaterial( { wireframe: true });
+	const mesh = new THREE.InstancedMesh( geometry, material, count );
+
+	for ( let i = 0; i < count; i ++ ) {
+
+		const matrix = getMatrixComposed( 60 + 50 * Math.random(), 180 * Math.random() - 90, 360 * Math.random() - 180 );
+		mesh.setMatrixAt( i, matrix );
+		mesh.userData.index = "Box " + i;
+
+	}
+
+	group.add( mesh );
+	scene.add( group );
+
+	console.log( "mesh", mesh );
+
+}
+
+
+
+function getMatrixComposed ( r = 50, lat = 0, lon = 0, size = 5 ) {
+
+	const position = latLonToXYZ( r, lat, lon );
+	//const quaternion = new THREE.Quaternion().setFromUnitVectors ( new THREE.Vector3( 1, 0, 0 ), position.normalize() );
+	const quaternion = new THREE.Quaternion();
+	const scale = new THREE.Vector3();
+	const matrix = new THREE.Matrix4();
+	matrix.compose( position, quaternion, scale );
+	matrix.lookAt(  new THREE.Vector3( 0, 0, 0 ), position, new THREE.Vector3( 0, 0, 1 ));
+
+	return matrix;
+
+}
+
+
+
+function latLonToXYZ( radius = 50, lat = 0 , lon = 0 ) {
+
+	const phi = Number( 90 - lat ) * Math.PI / 180;
+	const theta = Number( 180 - lon ) * Math.PI / 180;
+	//console.log( "lat/lon", theta, phi, index);
+
+	const x = radius * Math.sin( phi ) * Math.cos( theta );
+	const y = radius * Math.sin( phi ) * Math.sin( theta );
+	const z = radius * Math.cos( phi );
+
+	return new THREE.Vector3( - x, y, z );
+
+}
+
+
+
+function addMouseMove() {
+
+	window.addEventListener( 'mousemove', onMouseMove, false );
+
+}
+
+
+
+function onMouseMove( event ) {
+
+	// calculate mouse position in normalized device coordinates
+	// (-1 to +1) for both components
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+	render();
+}
+
+
+function render() {
+
+	// update the picking ray with the camera and mouse position
+	raycaster.setFromCamera( mouse, camera );
+
+	// calculate objects intersecting the picking ray
+	let intersects = raycaster.intersectObjects( group.children );
+
+	if ( intersects.length && intersects[ 0 ].instanceId ) {
+
+		divLog.innerHTML =  `instanceId: ${ intersects[ 0 ].instanceId } `;
+
+	}
+
+
+	//requestAnimationFrame(render);
+
+}
+
+
+/////////
+
+
+function getGeometryComposed ( r = 50, lat = 0, lon = 0, size = 5 ) {
+
+	const geometry = new THREE.BoxBufferGeometry( size, size, size );
+	const position = latLonToXYZ( r, lat, lon );
+	//const quaternion = new THREE.Quaternion().setFromUnitVectors ( new THREE.Vector3( 0, 0, 1 ), position.clone().normalize() )
+	const quaternion = new THREE.Quaternion();
+	const scale = new THREE.Vector3();
+	const matrix = new THREE.Matrix4();
+	matrix.compose( position, quaternion, scale );
+	matrix.lookAt(  new THREE.Vector3( 0, 0, 0 ), position, new THREE.Vector3( 0, 0, 1 ));
+
+	geometry.applyMatrix4( matrix );
+
+	return geometry;
+
+}
+
+
+
+function test3 ( radius = 50, lat = 80, lon = 10 ) {
+
+	const phi = Number( 90 - lat ) * Math.PI / 180;
+	const theta = Number( 180 - lon ) * Math.PI / 180;
+	const vector = new THREE.Vector3().setFromSphericalCoords( radius, theta, phi );
+
+	const geometry = new THREE.BoxBufferGeometry( 10, 10, 10 );
+	geometry.lookAt( vector );
+	geometry.translate( vector.x, vector.z, vector.y );
+
+	const material = new THREE.MeshNormalMaterial();
+	mesh = new THREE.Mesh( geometry, material );
+
+	scene.add( mesh );
+
+}
+
+// https://threejs.org/examples/#webgl_math_orientation_transform
+
+
+
+//////////
+
 function loadGlobeWithBitmap() {
 
 	scene.remove( globe );
 
-	const size = 50;
+	const size = 50
 	const geometry = new THREE.SphereBufferGeometry( size, 50, 25 );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
-	//geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( -0.5 * Math.PI ) );
+	//geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( Math.PI ) );
 
-	const texture = new THREE.TextureLoader().load( urlEarthImg );
+	const url = pathAssets + "images/natural-earth-4096-2048-col.jpg";
+	const texture = new THREE.TextureLoader().load( url );
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
 
 	globe = new THREE.Mesh( geometry, material );
@@ -258,6 +428,7 @@ function loadGlobeWithBitmap() {
 	scene.add( globe );
 
 }
+
 
 
 

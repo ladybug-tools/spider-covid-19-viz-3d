@@ -48,9 +48,10 @@ let messageInfo = `
 
 let messageOfTheDayStable = `
 <mark>
-New for 2020-04-24
+New for 2020-04-27
 	<li>Refactoring everything!</li>
 	<li>All change!</li>
+	<li>See <a href="https://dev.to/theoarmour" target="_blank">posts on Dev.to</a></li>
 </ul>
 </mark>
 `;

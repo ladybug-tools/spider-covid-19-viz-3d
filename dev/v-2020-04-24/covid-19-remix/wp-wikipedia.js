@@ -11,8 +11,8 @@
 const WP = {};
 
 
-//WP.cors = location.protocol === "https:" ? "" : "https://cors-anywhere.herokuapp.com/";
-WP.cors = "https://cors-anywhere.herokuapp.com/";
+WP.cors = location.protocol === "https:" ? "" : "https://cors-anywhere.herokuapp.com/";
+//WP.cors = "https://cors-anywhere.herokuapp.com/";
 
 WP.api = "https://en.wikipedia.org/w/api.php?";
 

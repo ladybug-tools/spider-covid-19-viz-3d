@@ -18,7 +18,7 @@ DMT.displayYourMessage = function ( intersected ) {
 	DMTdivPopUp.style.top = event.clientY + "px";
 
 	WP.places = intersected.userData.places;
-	const index = intersected.userData.index;
+	const index = DMT.intersects[ 0 ].instanceId;
 	const line = WP.places[ index ];
 	WP.line = line;
 

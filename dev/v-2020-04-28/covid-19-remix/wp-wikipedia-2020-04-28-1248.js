@@ -237,6 +237,7 @@ WP.updateBars = function ( places ) {
 	//console.log( 'heightsCases', heightsCases );
 
 	meshCases = WP.addBars( places, heightsCases, "red" );
+	meshCases.userData.places = places;
 	groupCasesWP.add( meshCases );
 
 

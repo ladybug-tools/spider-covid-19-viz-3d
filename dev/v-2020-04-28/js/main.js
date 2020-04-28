@@ -8,10 +8,10 @@
 //let build = "stable";
 let build = "dev";
 
-let timeStamp = "18:15";
+let timeStamp = "1801";
 
 let versionStable = 'v-2020-04-24';
-let versionDev = "v-2020-04-24";
+let versionDev = "v-2020-04-28";
 
 ////////// Menu title
 

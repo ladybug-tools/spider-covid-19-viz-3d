@@ -197,6 +197,7 @@ function getNotes () {
 		<p>
 			<button onclick=getNotesContent()>show notes</button>
 		</p>
+
 		<p title="View the frames per second and memory used by this page" >
 			<a href="javascript:( () => { const script=document.head.appendChild( document.createElement('script') ); script.onload=() => {const stats=new Stats();document.body.appendChild(stats.dom); requestAnimationFrame( function loop(){ stats.update(); requestAnimationFrame(loop) } ); } ; script.src='https://raw.githack.com/mrdoob/stats.js/master/build/stats.min.js'; })()" >load stats.js</a>
 		</p>
@@ -219,7 +220,6 @@ function getNotes () {
 </details>`;
 
 }
-
 
 
 function getRendererInfo() {

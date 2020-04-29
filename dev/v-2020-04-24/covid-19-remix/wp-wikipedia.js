@@ -16,7 +16,7 @@ WP.cors = "https://cors-anywhere.herokuapp.com/";
 
 WP.api = "https://en.wikipedia.org/w/api.php?";
 
-WP.query = "action=parse&format=json&page=";
+WP.query = "action=parse&format=json&origin=*&page=";
 
 WP.chartPrefix = "https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_";
 

@@ -324,6 +324,9 @@ wikipedia api
 * https://en.wikipedia.org/w/api.php
 * https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/Africa/daily/2017042700/201805170
 	* https://medium.com/@mustaphamekhatria/get-wikipedia-pages-views-data-with-nodejs-54a265e0a78c
+* https://www.freecodecamp.org/forum/t/the-wikipedia-api-does-not-support-cors-requests/16595
+	* add ```*origin=*``` for CORS
+* https://stackoverflow.com/questions/23952045/wikipedia-api-cross-origin-requests
 
 wiki geography
 

@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+<meta name=description
+	content="Test the speed of creating a 3D globe and generating numerous objects given their elevation, latitude & longitude using three methods with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library">
+<meta name=keywords content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM">
+<meta name=version content="2020-04-29">
+
+
+<title></title>
+
+<style>
+
+/* Copyright 2020 Theo Armour. MIT License */
+
+:root { font: 100% monospace; }
+
+* { box-sizing: border-box; }
+
+body { margin: 0; overflow: hidden; }
+
+a { color: crimson; text-decoration: none; }
+a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline; }
+
+button { background-color: #ddd; border: none; border-radius: 2px; color: #322;cursor: pointer; padding: 3px 5px; }
+button:hover { background: #ccc; color: #fff }
+
+input[ type=range ] { -webkit-appearance: none; -moz-appearance: none; width: 98%; background-color: #ddd; border-radius: 2px; height: 1.7ch;  }
+input[ type=range ]::-moz-range-thumb { background-color: #888; border-radius: 2; width: 10px; }
+input[ type=range ]::-webkit-slider-thumb { -webkit-appearance: none; background-color: #888; height: 18px; width: 10px; }
+
+.help { float: right; }
+
+.info { float: right }
+
+.info:hover>.infotooltip { display: block; }
+
+.infotooltip { border: 0.8ch double #888; background: white; display: none;
+	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
+#navMenu { margin: 0 20px; max-height: 100vh; width: 15rem; overflow: auto; position: absolute; resize: both; }
+
+.navText { background-color: white; margin: 1ch 0; padding: 1ch; }
+
+</style>
+
+</head>
+
+<body>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/js/utils/BufferGeometryUtils.js"></script>
+
+
+<nav id="navMenu">
+
+	<header id="hdrTitle">
+
+		<h2>
+			<a id=aSource target=_top title="Source code on GitHub" >
+				<img id=imgIcon height=18 style=opacity:0.5; >
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="info" >&#x24d8;<span id=divDescription class="infotooltip" ></span></span>
+
+		</h2>
+
+
+
+	</header>
+
+	<hr>
+
+	<p>
+		<button onclick="addMesh()">add one mesh</button>
+	</p>
+
+	<p>
+		<select id=selCount >
+			<option >2</option>
+			<option>5</option>
+			<option>10</option>
+			<option >100</option>
+			<option selected>1000</option>
+			<option >10000</option>
+			<option>100000</option>
+		</select>
+	</p>
+
+	<p>
+		<button onclick="addMeshGeometryInstanced()" >addMeshGeometryInstanced</button>
+	</p>
+
+	<div id="divTime" class = navText ></div>
+
+	<div id="divLog" class = navText ></div>
+
+	<hr>
+
+	<p title="View the frames per second and memory used by this page" >
+		<a href="javascript:( () => { const script=document.head.appendChild( document.createElement('script') ); script.onload=() => {const stats=new Stats();document.body.appendChild(stats.dom); requestAnimationFrame( function loop(){ stats.update(); requestAnimationFrame(loop) } ); } ; script.src='https://raw.githack.com/mrdoob/stats.js/master/build/stats.min.js'; })()" >load stats.js</a>
+	</p>
+
+	<p title="View the number of objects that need rendering and the total number of triangles used to create the objects">
+		<button onclick="getRendererInfo()" >getRendererInfo</button>
+	</p>
+
+	<div id="divInfo" class = navText ></div>
+
+
+	<p title="capture 120 frames and save to WebM file" >
+		<button onclick=SCC.init() >screen capture</button>
+		<br>
+		Experimental feature. Work-in-progress. In JavaScript developer console, select a small screen before using.
+	</p>
+
+	<p>
+		<button onclick=controls.reset()>reset view</button>
+		<button onclick="controls.autoRotate=!controls.autoRotate">rotation</button>
+	</p>
+
+	<p>
+		<output id=outSpeed>50</output>
+		<input type="range" id="inpSpeed" onclick="controls.autoRotateSpeed=0.05 * this.value;outSpeed.innerHTML=this.value;" />
+	</p>
+
+	<hr>
+
+
+</nav>
+
+<script>
+
+let pathAssets = "../../assets/";
+
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/cookbook/globe-template/";
+imgIcon.src = pathAssets + "images/github-mark-32.png";
+
+
+sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+const version = document.head.querySelector( "[ name=version ]" );
+sVersion.innerHTML = version ? version.content : "";
+divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+const THR = {};
+let globe;
+
+count = 10000;
+
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
+
+let mesh, group, axesHelper, lightDirectional, cameraHelper;
+let sceneRotation = 1;
+let renderer, camera, controls, scene;
+
+init();
+animate();
+
+
+
+function init() {
+
+	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 1000 );
+	camera.position.set( 200, 0, 50 );
+	camera.up.set( 0, 0, 1 );
+
+	scene = new THREE.Scene();
+	scene.background = new THREE.Color( 0xcce0ff );
+	scene.add( camera )
+
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	renderer.setPixelRatio( window.devicePixelRatio );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( renderer.domElement );
+	//renderer.outputEncoding = THREE.sRGBEncoding;
+
+	controls = new THREE.OrbitControls( camera, renderer.domElement );
+	controls.minDistance = 40;
+	controls.maxDistance = 500;
+	//controls.autoRotate = true;
+	controls.enablePan = false;
+	controls.autoRotateSpeed = 5;
+
+	//axesHelper = new THREE.AxesHelper( 100 );
+	//scene.add( axesHelper );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+	window.addEventListener( 'orientationchange', onWindowResize, false );
+	window.addEventListener( 'keyup', () => controls.autoRotate = false, false );
+	renderer.domElement.addEventListener( 'click', () => controls.autoRotate = false, false );
+
+	renderer.domElement.addEventListener( 'touchstart', () => controls.autoRotate = false );
+	renderer.domElement.addEventListener( 'touchmove', () => controls.autoRotate = false );
+	renderer.domElement.addEventListener( 'touchend', () => controls.autoRotate = false );
+
+	THR.camera = camera; THR.scene = scene; THR.renderer = renderer; THR.controls = controls;
+
+
+	loadGlobeWithBitmap();
+
+	//addMesh();
+
+	//addMeshGeometryInstanced();
+
+	//addMeshGeometryMerged();
+
+	//addMeshGroup();
+
+}
+
+
+function getRendererInfo() {
+
+	const render = renderer.info.render;
+
+	divInfo.innerHTML = `
+Renderer<br>
+Calls: ${ render.calls }<br>
+Triangles: ${ render.triangles.toLocaleString() }<br>
+`;
+
+}
+
+
+
+function addMesh() {
+
+	timeStart = performance.now();
+
+	scene.remove( group );
+	group = new THREE.Group();
+
+	const geometry = new THREE.BoxBufferGeometry( 5, 5, 5 );
+	const matrix = getMatrixComposed();
+	geometry.applyMatrix4( matrix );
+	const material = new THREE.MeshNormalMaterial();
+	const mesh = new THREE.Mesh( geometry, material )
+	group.add( mesh );
+
+	scene.add( group);
+
+	divTime.innerHTML  = `single mesh<br> ${ ( performance.now() -  timeStart ).toLocaleString() } ms`;
+
+	addMouseMove();
+
+}
+
+
+function addMeshGeometryInstanced() {
+
+	timeStart = performance.now();
+
+	scene.remove( group );
+	group = new THREE.Group();
+
+	const count = + selCount.value;
+
+	const geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+	const material = new THREE.MeshNormalMaterial();
+	const mesh = new THREE.InstancedMesh( geometry, material, count );
+
+	for ( let i = 0; i < count; i ++ ) {
+
+		const matrix = getMatrixComposed(
+			51, 180 * Math.random() - 90,
+			360 * Math.random() - 180,
+			20 * Math.random()
+		);
+		mesh.setMatrixAt( i, matrix );
+
+		mesh.userData.index = "Box " + i;
+
+	}
+
+	group.add( mesh );
+	scene.add( group );
+
+	divTime.innerHTML  = `geometry instanced<br> ${ ( performance.now() -  timeStart ).toLocaleString() } ms`;
+
+	addMouseMove();
+
+}
+
+
+
+function addMeshGeometryMerged() {
+
+	timeStart = performance.now();
+
+	scene.remove( group );
+	group = new THREE.Group();
+
+	const geometries = [];
+	const count = + selCount.value;
+
+	for ( let i = 0; i < count; i ++ ) {
+
+		const geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+		const matrix = getMatrixComposed(
+			51,
+			180 *  Math.random() - 90,
+			360 * Math.random() - 180,
+			20 * Math.random() );
+
+		geometry.applyMatrix4( matrix );
+		geometries.push( geometry );
+
+	}
+
+	const mergedGeometry = THREE.BufferGeometryUtils.mergeBufferGeometries( geometries );
+
+	const material = new THREE.MeshNormalMaterial();
+	mesh = new THREE.Mesh( mergedGeometry, material )
+	group.add( mesh );
+
+	scene.add( group );
+
+	divTime.innerHTML  = `geometry merge<br> ${ ( performance.now() -  timeStart ).toLocaleString() } ms`;
+
+	addMouseMove();
+
+}
+
+
+
+function addMeshGroup() {
+
+	timeStart = performance.now();
+
+	scene.remove( group );
+	group = new THREE.Group();
+
+	const count = + selCount.value;
+	const material = new THREE.MeshNormalMaterial();
+
+	for ( let i = 0; i < count; i ++ ) {
+
+		const geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+		const matrix = getMatrixComposed(
+			51,
+			180 *  Math.random() - 90,
+			360 * Math.random() - 180,
+			20 * Math.random() );
+
+		geometry.applyMatrix4( matrix );
+
+		mesh = new THREE.Mesh( geometry, material )
+		group.add( mesh );
+
+	}
+
+	scene.add( group );
+
+	divTime.innerHTML  = `mesh group<br> ${ ( performance.now() -  timeStart ).toLocaleString() } ms`;
+
+	addMouseMove();
+
+}
+
+
+
+function getMatrixComposed ( r = 50, lat = 0, lon = 0, height = 5 ) {
+
+	const position = latLonToXYZ( r + 0.5 * height, lat, lon );
+	const quaternion = new THREE.Quaternion().setFromUnitVectors (
+		new THREE.Vector3( 0, 0, 1 ), position.clone().normalize() )
+	const scale = new THREE.Vector3( 2, 1, height );
+	const matrix = new THREE.Matrix4();
+	matrix.compose( position, quaternion, scale );
+	return matrix;
+
+}
+
+
+
+function latLonToXYZ( radius = 50, lat = 0 , lon = 0 ) {
+
+	const phi = ( 90 - lat ) * Math.PI / 180;
+	const theta = ( 180 - lon ) * Math.PI / 180;
+	//console.log( "lat/lon", theta, phi, index);
+
+	const x = radius * Math.sin( phi ) * Math.cos( theta );
+	const y = radius * Math.sin( phi ) * Math.sin( theta );
+	const z = radius * Math.cos( phi );
+
+	return new THREE.Vector3( - x, y, z );
+
+}
+
+
+
+function addMouseMove() {
+
+	window.addEventListener( 'mousemove', onMouseMove, false );
+
+	divInfo.innerHTML = "";
+
+}
+
+
+
+function onMouseMove( event ) {
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+	raycaster.setFromCamera( mouse, camera );
+
+	let intersects = raycaster.intersectObjects( group.children );
+
+	if ( intersects.length ) {
+
+		const intersected = intersects[ 0 ];
+
+		if ( intersected.instanceId  ) {
+
+			//console.log( "int 0:", intersected );
+			divLog.innerHTML =  `instance index: ${ intersected.instanceId }`;
+
+		} else if ( intersected.faceIndex ) {
+
+			divLog.innerHTML =  `face index: ${ Math.floor( intersected.faceIndex / 12 ) }`;
+
+		} else {
+
+			//console.log( "int 0:", intersected.object.id );
+			divLog.innerHTML =  `object.id: ${ intersected.object.id }`;
+		}
+
+	}
+
+}
+
+
+
+//////////
+
+const SCC = {};
+
+SCC.frames = 120;
+SCC.delta = 2 * Math.PI / SCC.frames;
+SCC.phi = Math.PI;
+
+
+SCC.init = function () {
+
+	// https://github.com/spite/ccapture.js/
+	SCC.CCapture = document.body.appendChild( document.createElement( 'script' ) );
+	SCC.CCapture.onload = SCC.onLoadScript;
+	SCC.CCapture.src = "https://raw.githack.com/spite/ccapture.js/master/build/CCapture.all.min.js";
+
+};
+
+
+SCC.onLoadScript = function () {
+
+	THR.animate = function () { }
+
+	THR.controls.reset();
+	THR.controls.autoRotate = false;
+	THR.scene.background = new THREE.Color( 0xcce0ff );
+
+	SCC.recorder = new CCapture( {
+		verbose: false,
+		display: true,
+		framerate: 20,
+		quality: 99,
+		format: 'webm',
+		timeLimit: 100,
+		frameLimit: SCC.frames,
+		autoSaveTime: 0,
+		name: "globe"
+	} );
+
+	SCC.animate();
+
+	SCC.recorder.start();
+
+};
+
+
+
+SCC.animate = function() {
+
+	SCC.phi -= SCC.delta
+	THR.camera.position.x = - 120 * Math.cos( SCC.phi );
+	THR.camera.position.y = - 120 * Math.sin( SCC.phi );
+
+	requestAnimationFrame( SCC.animate );
+	THR.renderer.render( THR.scene, THR.camera );
+	SCC.recorder.capture( THR.renderer.domElement );
+	THR.controls.update();
+
+};
+
+
+
+//////////
+
+function loadGlobeWithBitmap() {
+
+	scene.remove( globe );
+
+	const size = 50
+	const geometry = new THREE.SphereBufferGeometry( size, 50, 25 );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
+	//geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( Math.PI ) );
+
+	const url = pathAssets + "images/nat-earth-800.jpg";
+
+	//const url = pathAssets + "images/earth_atmos_2048.jpg";
+
+	const texture = new THREE.TextureLoader().load( url );
+	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );
+
+	globe = new THREE.Mesh( geometry, material );
+	globe.matrixAutoUpdate = false;
+
+	globe.name = "globe";
+	scene.add( globe );
+
+}
+
+
+
+function onWindowResize() {
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+	//console.log( 'onWindowResize  window.innerWidth', window.innerWidth );
+
+}
+
+
+
+function animate() {
+
+	requestAnimationFrame( animate );
+	renderer.render( scene, camera );
+	controls.update();
+
+}
+
+</script>
+</body>
+</html>

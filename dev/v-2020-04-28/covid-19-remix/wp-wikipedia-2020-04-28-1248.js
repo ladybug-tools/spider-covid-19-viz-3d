@@ -100,7 +100,8 @@ WP.onLoadData = function ( xhr, c19GeoData ) {
 
 	const parser = new DOMParser();
 	const html = parser.parseFromString( text, "text/html" );
-	console.log( "html", html );
+	//console.log( "html", html );
+
 	const table = html.querySelector( ".wikitable" );
 	//console.log(table );
 

@@ -25,7 +25,11 @@ const BAR = {
 
 };
 
+
 const WP = {};
+
+
+
 
 
 //WP.cors = location.protocol === "https:" ? "" : "https://cors-anywhere.herokuapp.com/";
@@ -37,9 +41,9 @@ WP.query = "action=parse&format=json&origin=*&page=";
 
 WP.chartPrefix = "https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_";
 
-WP.templateUsa = "Template:2019–20_coronavirus_pandemic_data/United_States_medical_cases_by_state";
+WP.templateUsa = "Template:COVID-19_pandemic_data/United_States_medical_cases_by_state";
 
-WP.templateGlobal = "Template:2019–20_coronavirus_pandemic_data";
+WP.templateGlobal = "Template:COVID-19_pandemic_data";
 
 WP.init = function () {
 
@@ -61,7 +65,9 @@ WP.getPandemicData = function ( c19GeoData, chart ) {
 
 	WP.timeStart = performance.now();
 
-	WP.requestFileUserData( WP.cors + WP.api + WP.query + chart, WP.onLoadData, c19GeoData );
+	url =  WP.cors + WP.api + WP.query + chart;
+
+	WP.requestFileUserData( url, WP.onLoadData, c19GeoData );
 
 };
 
@@ -87,14 +93,14 @@ WP.onLoadData = function ( xhr, c19GeoData ) {
 	const response = xhr.target.response;
 
 	const json = JSON.parse( response );
-	//console.log( 'json',json );
+	//console.log( "json", json );
 
 	const text = json.parse.text[ "*" ];
 	//console.log( 'text', text );
 
 	const parser = new DOMParser();
 	const html = parser.parseFromString( text, "text/html" );
-
+	console.log( "html", html );
 	const table = html.querySelector( ".wikitable" );
 	//console.log(table );
 
@@ -268,13 +274,13 @@ WP.addBars = function ( places, heights, color = "red" ) {
 	//const geometry = new THREE.BoxBufferGeometry( 0.3, 0.3, 1 );
 	let geometry = new THREE.CylinderBufferGeometry( 0.2, radius, 1, radialSegments, heightSegments, openEnded );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
-	geometry.applyMatrix4( new THREE.Matrix4().makeScale( -1, -1, -1 ) );
+	geometry.applyMatrix4( new THREE.Matrix4().makeScale( - 1, - 1, - 1 ) );
 
 	//const material = new THREE.MeshNormalMaterial( { side: 2 } );
 	const material = new THREE.MeshPhongMaterial( { color: color, side: 2 } );
 	const cases = new THREE.InstancedMesh( geometry, material, places.length );
 
-	for ( let i = 0; i < places.length; i++ ) {
+	for ( let i = 0; i < places.length; i ++ ) {
 
 		place = places[ i ];
 		let height = isNaN( heights[ i ] ) ? 10 : Number( heights[ i ] );
@@ -308,7 +314,7 @@ BAR.getMatrixComposed = function ( r = 50, lat = 0, lon = 0, height = 5 ) {
 
 
 
-BAR.latLonToXYZ = function( radius, lat, lon ) {
+BAR.latLonToXYZ = function ( radius, lat, lon ) {
 
 	const phi = ( 90 - lat ) * Math.PI / 180;
 	const theta = ( 180 - lon ) * Math.PI / 180;

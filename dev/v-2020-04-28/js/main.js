@@ -10,7 +10,7 @@ let build = "dev";
 
 let timeStamp = "1644";
 
-let versionStable = 'v-2020-04-24';
+let versionStable = "v-2020-04-24";
 let versionDev = "v-2020-04-28";
 
 ////////// Menu title
@@ -222,7 +222,7 @@ function getNotes () {
 }
 
 
-function getRendererInfo() {
+function getRendererInfo () {
 
 	const render = THR.renderer.info.render;
 
@@ -251,7 +251,7 @@ function getNotesContent () {
 `;
 
 
-DMTdivMoreButtons.innerHTML = `
+	DMTdivMoreButtons.innerHTML = `
 <button onclick=DMTdivMoreContent.innerHTML=notes >notes</button>
 <button onclick=DMTimg.src="../../assets/cube-textures/f1.jpg" >button2 </button>
 <button onclick=DMTimg.src="../../assets/cube-textures/f2.jpg" >button 3</button>

@@ -56,6 +56,19 @@ Counties & Cities
 <details open >
 <summary>Change log </summary>
 
+### 2020-05-03
+
+Keeping two files
+
+* global
+* regional
+
+is a good idea
+
+* can load one without the other
+
+CSV is more fun: 10K instead of 25K
+
 ### 2020-04-19
 
 Nice steps in building up a good country, region, city workflow

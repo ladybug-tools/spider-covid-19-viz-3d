@@ -187,8 +187,10 @@ function loadGlobeWithBitmapTextures( index = 1 ) {
 	const material = new THREE.MeshBasicMaterial( { map: texture } );
 	globe = new THREE.Mesh( geometry, material );
 
-	globe.name = "globe";
+	globe.name = "globe"
 	scene.add( globe );
+
+
 
 }
 

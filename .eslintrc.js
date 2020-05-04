@@ -17,7 +17,7 @@ module.exports = {
 	},
 	"rules": {
 
-		"eslint-env": "es6",
+
 		"array-bracket-spacing": ["error", "always", { "singleValue": true, "arraysInArrays": false }],
 		"block-spacing": ["error", "always"],
 		"brace-style": [ "error", "1tbs", { "allowSingleLine": true } ],

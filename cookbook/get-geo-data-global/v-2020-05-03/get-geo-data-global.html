@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang = "en" >
+<head>
+<meta charset = "utf-8" >
+<meta name = "viewport" content= "width=device-width, initial-scale=1" >
+<meta name = "description" content = "Basic TooToo HTML template" >
+<meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
+<meta name = "version" content = "2020-04-19" >
+
+<title></title>
+
+<style>
+
+* { box-sizing: border-box; }
+
+:root { font: 100% monospace; --mnu-width: 25rem; --screen-width: calc( 100vw ); --headerHeight: 6rem; }
+
+html { height: 100%; }
+
+body { margin: 0; }
+
+a { color: crimson; text-decoration: none; }
+a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline }
+
+aside { border: 1px solid lightgray; margin-top: 15px; padding: 2px; }
+
+blockquote { background-color: #ddd; padding: 1ch; }
+
+button, input[type=button] { background-color: #ddd; border: none; color: #322; cursor: pointer; padding: 3px 5px; }
+button:hover { background: #ccc; color: #fff }
+
+code { background-color: #eee; }
+pre { background-color: #eee; padding: 5px; }
+
+input[type="range"] { -webkit-appearance: none; -moz-appearance: none; background-color: #ddd; height: 2ch;
+	width: 100%; }
+
+input[type="range"]::-moz-range-thumb { background-color: #888; border-radius: 0; height: 3ch; width: 10px; }
+
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background-color: #888; height: 3ch; width: 10px; }
+
+summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; }
+
+.info { float: right }
+
+.info:hover>.infotooltip { display: block; }
+
+.infotooltip { border: 0.8ch double #888; background: white; display: none;
+	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
+
+.sumMenuTitle { background-color: #ccc; color: #777; margin: 10px 0; text-align: center; }
+
+
+main { border: 2px red solid; height: 100%; left: var( --mnu-width ); margin: 0;
+	overflow: auto; padding: 0 1rem; position: absolute; width: calc( 100% - var( --mnu-width ) );  }
+
+#navMenu { background-color: #eee; height: 100vh; left: 0; margin: 0; overflow: auto; padding: 0 1rem;
+	position: absolute; top: 0; width: var( --mnu-width ); }
+
+iframe { height: 100vh; width: 100%; }
+
+</style>
+</head>
+<body>
+
+	<script src="geo-data-global-csv-2020-04-19.js"></script>
+
+<nav id="navMenu" >
+
+	<header id="hdrTitle" >
+
+		<h2 style=vertical-align:middle; >
+			<a id=aSource target=_top title="Source code on GitHub" >
+				<span id=spnIcon ></span>
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="info" >&#x24d8;<span id=divDescription class="infotooltip" ></span></span>
+
+		</h2>
+
+	</header>
+
+	<p>
+		<button onclick=setContentCsv() >setContentCsv</button>   <button id=but onclick=setMenuCsv(); >setMenuCsv</button>
+	</p>
+	<p>
+
+	<p>
+		start <input type=number id=inpStart value=0 style=width:4rem; >
+		end <input id=inpEnd type=number value=2 style=width:4rem;>
+	</p>
+	<p>
+		<button id=but onclick=startClickSelectedMenuItems(); >click selected menu items</button>
+	</p>
+
+	<hr:
+
+	<p>
+		 <button onclick=compareWithDspl() >compareWithDspl()</button>
+	</p>
+
+	<details open >
+
+		<summary class=sumMenuTitle >
+			Summary
+			<span class="info" >&#x24d8;<span id=divDetails class="infotooltip" >How can I help you?</span></span>
+		</summary>
+
+		<div id=divNavContent ></div>
+
+	</details>
+
+	<footer style=position:relative >
+
+		<hr>
+
+		<center title="go to top of menu" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; >
+			<img src="../../../assets/spider.ico" alt="spider icon" height=18> </a></center>
+		</center>
+
+	</footer>
+
+</nav>
+
+<main>
+
+	<div id="divContent"></div>
+
+</main>
+
+
+
+<script>
+
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/cookbook/";
+
+spnIcon.innerHTML = `<svg height="18" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="18" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>`;
+sTitle.innerHTML= document.title ? document.title : location.pathname.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+const version = document.head.querySelector( "[ name=version ]" );
+sVersion.innerHTML = version ? version.content : "";
+divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+
+init();
+
+function init() {
+
+	setMenuCsv();
+
+	window.addEventListener( "hashchange", onHashChangeWiki );
+
+}
+
+
+function setContentCsv() {
+
+	divContent.innerText =  geoDataGlobalCsv.join( "\n" );
+
+}
+
+function setMenuCsv() {
+
+	htm = geoDataGlobalCsv.map( country => `<a href="#${country[ 0 ] }" >${country[ 0 ] }</a>` );
+
+	divNavContent.innerHTML = htm.join( "<br>" );
+
+	inpEnd.value = geoDataGlobalCsv.length
+
+}
+
+
+function onHashChangeWiki() {
+
+	article = location.hash.slice( 1 );
+
+	divContent.innerHTML = `<iframe id=ifr src="https://en.wikipedia.org/wiki/${ article }" ></iframe>`;
+
+	ifr.onerror = (e) => { console.log( "error", e ); }
+
+}
+
+
+//////////
+
+function compareWithDspl() {
+
+	url = "https://raw.githack.com/google/dspl/master/samples/google/canonical/countries.csv"
+
+	requestFileUserData( url, onLoadDspl );
+
+}
+
+
+function onLoadDspl( xhr ) {
+
+	response = xhr.target.response;
+	// console.log( "", response  );
+
+	countries = response.split( '\n' ).map( ( line ) => line.split( "," ) );
+	// console.log( "lines", lines );
+
+	countries.forEach( country => {
+
+		find = geoDataGlobalCsv.find( place => place[ 0 ] === country[ 3 ].replace( /\"/g, "") );
+
+		if ( !find ) {
+
+			divContent.innerHTML += `${ country }<br>`;
+
+		}
+	})
+
+}
+
+
+function startClickSelectedMenuItems(){
+
+	divContent.innerHTML = "";
+
+	items = divNavContent.querySelectorAll( "a" );
+	items = Array.from( items );
+
+	index = + inpStart.value
+	stop = + inpEnd.value
+
+	clickAllMenuItems();
+
+}
+
+
+
+function clickAllMenuItems() {
+
+	if ( index < stop && index < items.length ) {
+
+		console.log( "", index,  items[ index ].hash  );
+
+		location.hash = items[ index ].hash.trim();
+		index ++;
+
+		setTimeout( clickAllMenuItems, 4000 );
+
+	} else {
+
+		//const txt  = JSON.stringify( c19LinksGlobal );
+
+		//divContent.innerHTML = `<textarea id=txtC19 style="height: 100%; width: 100%;" >${ txt }</textarea>`;
+
+	}
+
+}
+
+
+
+requestFileUserData = function ( url, callback, userData = "" ) {
+
+	const xhr = new XMLHttpRequest();
+	xhr.open( "GET", url, true );
+	xhr.onerror = ( xhr ) => console.log( "error:", xhr );
+	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+	xhr.onload = ( xhr ) => callback( xhr, userData );
+	xhr.send( null );
+
+};
+
+
+
+function saveFile() {
+
+	str = `geoDataGlobalCsv = ${txtC19.value.replace( /\}\,/g, "},\n" ) };`;
+
+	let blob = new Blob( [ str  ] );
+	let a = document.body.appendChild( document.createElement( 'a' ) );
+	a.href = window.URL.createObjectURL( blob );
+	a.download = 'c19-data-links.js';
+	a.click();
+	a = null;
+
+}
+
+
+
+
+</script>
+</body>
+</html>

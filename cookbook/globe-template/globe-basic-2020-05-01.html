@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta
+		name="viewport"
+		content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
+	<meta
+		name="description"
+		content="Test the speed of creating a 3D globe and generating numerous objects given their elevation, latitude & longitude using three methods with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library" />
+	<meta
+		name="keywords"
+		content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
+	<meta name="version" content="2020-04-30" />
+
+	<title>globe-template</title>
+
+	<style>
+		/* Copyright 2020 Theo Armour. MIT License */
+
+		:root {
+			font: 100% monospace;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			overflow: hidden;
+		}
+
+		a {
+			color: crimson;
+			text-decoration: none;
+		}
+
+		a:hover,
+		a:focus,
+		a:active {
+			background-color: yellow;
+			color: #aaa;
+			text-decoration: underline;
+		}
+
+		button {
+			background-color: #ddd;
+			border: none;
+			border-radius: 2px;
+			color: #322;
+			cursor: pointer;
+			padding: 3px 5px;
+		}
+
+		button:hover {
+			background: #ccc;
+			color: #fff;
+		}
+
+		input[type="range"] {
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			background-color: #ddd;
+			border-radius: 2px;
+			height: 1.7ch;
+			width: 98%;
+		}
+
+		input[type="range"]::-moz-range-thumb {
+			background-color: #888;
+			border-radius: 2;
+			width: 10px;
+		}
+
+		input[type="range"]::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			background-color: #888;
+			height: 18px;
+			width: 10px;
+		}
+
+		.help {
+			float: right;
+		}
+
+		.info {
+			float: right;
+		}
+
+		.info:hover>.infotooltip {
+			display: block;
+		}
+
+		.infotooltip {
+			border: 0.8ch double #888;
+			background: white;
+			display: none;
+			font: 100% monospace;
+			font-size: 1rem;
+			font-weight: normal;
+			/* unset summary settings */
+			margin-left: -28ch;
+			padding: 10px;
+			position: absolute;
+			z-index: 1000;
+		}
+
+		#navMenu {
+			border: 0px solid red;
+			margin: 0 20px;
+			max-height: 100vh;
+			max-width: 16rem;
+			overflow: auto;
+			position: absolute;
+		}
+
+		.navText {
+			background-color: white;
+			margin: 1ch 0;
+			padding: 1ch;
+		}
+
+	</style>
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/controls/OrbitControls.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/utils/BufferGeometryUtils.js"></script>
+
+	<script src="https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fgeo-data-global-2020-04-18-1418.js"></script>
+
+	<nav id="navMenu">
+		<details open>
+			<summary>show || hide menu</summary>
+
+			<header id="hdrTitle">
+				<h2>
+					<a id="aSource" target="_top" title="Source code on GitHub">
+						<span id="spnIcon"></span>
+					</a>
+
+					<a href="" title="Click to reload this page">
+						<span id="sTitle"></span>
+						<span id="sVersion"></span>
+					</a>
+
+					<span class="info">&#x24d8;<span id="divDescription" class="infotooltip"></span></span>
+
+				</h2>
+
+			</header>
+
+			<hr />
+
+			<!-- <p>
+				Click me to see the Earth!<br />
+				<button onclick="addMesh()">add one mesh</button>
+			</p>
+
+			<p>
+				objects:
+				<select id="selCount">
+					<option>2</option>
+					<option>5</option>
+					<option>10</option>
+					<option selected>100</option>
+					<option>1000</option>
+					<option>10000</option>
+					<option>100000</option>
+				</select>
+			</p>
+
+			<p>
+				<button onclick="addMeshGeometryInstanced()">
+					addMeshGeometryInstanced
+				</button>
+			</p> -->
+
+			<div id="divLog" class="navText"></div>
+
+			<div id="divTime" class="navText"></div>
+
+			<hr />
+
+			<p>
+				<button onclick="controls.reset()">reset view</button>
+				<button onclick="controls.autoRotate=!controls.autoRotate">
+					rotation
+				</button>
+			</p>
+
+			<p>
+				<output id="outSpeed">50</output>
+				<input
+					type="range"
+					id="inpSpeed"
+					onclick="controls.autoRotateSpeed=0.05 * this.value;outSpeed.innerHTML=this.value;" />
+			</p>
+
+			<hr />
+
+			<p>
+				<a
+					href="javascript:( () => { const script=document.head.appendChild( document.createElement('script') ); script.onload=() => {const stats=new Stats();document.body.appendChild(stats.dom); requestAnimationFrame( function loop(){ stats.update(); requestAnimationFrame(loop) } ); } ; script.src='https://raw.githack.com/mrdoob/stats.js/master/build/stats.min.js'; })()">load
+					stats.js</a>
+			</p>
+
+			<p
+				title="View the number of objects that need rendering and the total number of triangles used to create the objects">
+				<button onclick="getRendererInfo()">getRendererInfo</button>
+			</p>
+
+			<div id="divInfo" class="navText"></div>
+
+			<p title="capture 120 frames and save to WebM file">
+				<button onclick="SCC.init()">screen capture</button>
+				<br />
+				Experimental feature. Work-in-progress. In JavaScript developer
+				console, select a small screen before using.
+			</p>
+		</details>
+	</nav>
+
+	<script>
+		let pathAssets = "./assets/";
+
+		aSource.href =
+			"https://github.com/ladybug-tools/spider-covid-19-viz-3d/cookbook/globe-template/";
+		spnIcon.innerHTML = `<svg height="18" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="18" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>`;
+
+		sTitle.innerHTML = document.title;
+		const version = document.head.querySelector( "[ name=version ]" );
+		sVersion.innerHTML = version ? version.content : "";
+		divDescription.innerHTML = document.head.querySelector(
+			"[ name=description ]"
+		).content;
+
+
+		const TXT = {};
+		let globe;
+		let groupGeoJson=new THREE.Group();
+		groupGeoJson.name = "geoJson";
+
+		const materialGeoJson = new THREE.LineBasicMaterial( { color: 0x000ff } );
+
+		var raycaster = new THREE.Raycaster();
+		var mouse = new THREE.Vector2();
+
+		let mesh, group, axesHelper, lightDirectional, cameraHelper;
+		let sceneRotation = 1;
+		let renderer, camera, controls, scene;
+
+		init();
+		animate();
+
+		function init() {
+			camera = new THREE.PerspectiveCamera(
+				40,
+				window.innerWidth / window.innerHeight,
+				1,
+				1000
+			);
+			camera.position.set( 200, 0, 50 );
+			camera.up.set( 0, 0, 1 );
+
+			scene = new THREE.Scene();
+			scene.background = new THREE.Color( 0xcce0ff );
+			scene.add( camera );
+
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+			renderer.setPixelRatio( window.devicePixelRatio );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			//renderer.outputEncoding = THREE.sRGBEncoding;
+
+			controls = new THREE.OrbitControls( camera, renderer.domElement );
+			controls.minDistance = 40;
+			controls.maxDistance = 500;
+			controls.autoRotate = true;
+			controls.enablePan = false;
+			controls.autoRotateSpeed = 5;
+
+			axesHelper = new THREE.AxesHelper( 100 );
+			axesHelper.name = "axesHelper"
+			scene.add( axesHelper );
+
+			window.addEventListener( "resize", onWindowResize, false );
+			window.addEventListener( "orientationchange", onWindowResize, false );
+			window.addEventListener(
+				"keyup",
+				() => ( controls.autoRotate = false ),
+				false
+			);
+			renderer.domElement.addEventListener(
+				"click",
+				() => ( controls.autoRotate = false ),
+				false
+			);
+
+			renderer.domElement.addEventListener(
+				"touchstart",
+				() => ( controls.autoRotate = false )
+			);
+			renderer.domElement.addEventListener(
+				"touchmove",
+				() => ( controls.autoRotate = false )
+			);
+			renderer.domElement.addEventListener(
+				"touchend",
+				() => ( controls.autoRotate = false )
+			);
+
+			loadGlobeWithBitmap();
+
+			TXTinit();
+
+			//addMesh();
+
+			//addMeshGeometryInstanced();
+
+			//addMeshGeometryMerged();
+
+			//addMeshGroup();
+
+			addGeoJson();
+
+		}
+
+
+		function loadGlobeWithBitmap( url ) {
+			scene.remove( globe );
+
+			url =
+				url ||
+				"https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fnatural-earth-4096-2048-col.jpg?v=1588126762356";
+			const size = 50;
+			const geometry = new THREE.SphereBufferGeometry( size, 50, 25 );
+			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
+
+			const texture = new THREE.TextureLoader().load( url );
+			const material = new THREE.MeshBasicMaterial( {
+				color: 0xcce0ff,
+				map: texture
+			} );
+
+			globe = new THREE.Mesh( geometry, material );
+			globe.matrixAutoUpdate = false;
+
+			globe.name = "globe";
+			scene.add( globe );
+		}
+
+		//////////
+
+		function addGeoJson() {
+
+			scene.remove(groupGeoJson);
+			groupGeoJson=new THREE.Group();
+			scene.add(groupGeoJson);
+
+			const pathGeoJson = "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/";
+
+			const urlJsonCountries = pathGeoJson + "ne_50m_admin_0_scale_rank.geojson";
+
+			requestFile( urlJsonCountries, onLoadGeoJson );
+
+			const urlJsonRegions = pathGeoJson + "ne_50m_admin_1_states_provinces_lines.geojson";
+
+			requestFile( urlJsonRegions, onLoadGeoJson );
+
+		}
+
+
+
+		function onLoadGeoJson( string ){
+
+			const json = JSON.parse( string );
+
+			let geometries = json.features.map( feature => feature.geometry );
+			//console.log( "geometries", geometries );
+
+			let points = [];
+
+			geometries.forEach( geometry => {
+
+				if ( [ "MultiPolygon", "Polygon", "MultiLineString"].includes( geometry.type ) ) {
+
+					//console.log( "geo", geometry );
+
+					points.push( ... geometry.coordinates );
+
+				} else if ( geometry.type === "LineString" ) {
+
+					//console.log( "geometry", geometry );
+
+					points.push( geometry.coordinates );
+
+				} else {
+
+					console.log( "geometry", geometry );
+
+				}
+
+			})
+
+			//console.log( "points", points );
+
+			const vertices = points.map( pairs => pairs.map( pair => latLonToXYZ( 50, pair[ 1 ], pair[ 0 ] ) ) );
+			//console.log( "vertices", vertices );
+
+			vertices.forEach( vertices => addLine( vertices ) );
+
+		}
+
+
+		function addLine( vertices ) {
+
+			const geometry = new THREE.Geometry();
+			geometry.vertices = vertices;
+
+			const line = new THREE.Line( geometry, materialGeoJson );
+
+			groupGeoJson.add( line );
+
+		}
+
+		//////////
+
+		function addMesh() {
+			timeStart = performance.now();
+
+			scene.remove( group );
+			group = new THREE.Group();
+
+			const geometry = new THREE.BoxBufferGeometry( 5, 5, 5 );
+			const matrix = getMatrixComposed();
+			geometry.applyMatrix4( matrix );
+			const material = new THREE.MeshNormalMaterial();
+			const mesh = new THREE.Mesh( geometry, material );
+			group.add( mesh );
+
+			scene.add( group );
+
+			divTime.innerHTML = `single mesh<br> ${ (
+				performance.now() - timeStart
+			).toLocaleString() } ms`;
+
+			addMouseMove();
+		}
+
+
+
+		function addMeshGeometryInstanced( data) {
+
+			timeStart = performance.now();
+
+			scene.remove( group );
+			group = new THREE.Group();
+			group.name = "instances";
+
+			const geometry = new THREE.CylinderBufferGeometry( 0.8, 0.2, 1, 5, 1, true );
+			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
+			geometry.applyMatrix4( new THREE.Matrix4().makeScale( -1, -1, -1 ) );
+			const material = new THREE.MeshNormalMaterial( { side: 2 } );
+			const mesh = new THREE.InstancedMesh( geometry, material, data.length );
+			mesh.userData.index = "Box "
+			mesh.name = "instancedMesh";
+
+			grouptxt1 = new THREE.Group();
+
+			geometriesTxt = [];
+
+			for ( let i = 0; i < data.length; i++ ) {
+
+				country = data[ i ];
+				const txt = country.region ? country.region : country.country;
+				const siz = country.region ? 0.7 : 1;
+				const pop = country.population ? country.population : 100000;
+
+				const height = 0.0000001 * pop;
+				const latitude = + country.latitude;
+				const longitude = + country.longitude;
+
+				const matrix = getMatrixComposed(
+					50,
+					latitude,
+					longitude,
+					height
+				);
+				mesh.setMatrixAt( i, matrix );
+
+
+
+				const shapes = TXTfont.generateShapes( txt, siz );
+				const geometryTxt0 = new THREE.ShapeBufferGeometry( shapes );
+				geometryTxt0.computeBoundingBox();
+
+				const xSize = geometryTxt0.boundingBox.getSize( new THREE.Vector3() ).x;
+				//geometryTxt0.translate( xMid, 0, 0 );
+
+				const geometryTxt1 = geometryTxt0.clone();
+				geometryTxt1.applyMatrix4( new THREE.Matrix4().makeRotationY( -0.5 * Math.PI ) );
+
+				const matrixTxt = getMatrixComposed(
+					51 + height + xSize,
+					latitude,
+					longitude,
+					1
+				);
+				geometryTxt1.applyMatrix4( matrixTxt );
+
+
+				const geometryTxt2 = geometryTxt0.clone();
+				geometryTxt2.applyMatrix4( new THREE.Matrix4().makeRotationY( 0.5 * Math.PI ) );
+
+				const matrixTxt2 = getMatrixComposed(
+					51 + height,
+					latitude,
+					longitude,
+					1
+				);
+				geometryTxt2.applyMatrix4( matrixTxt2 );
+
+				geometryTxt2.name = txt;
+
+				geometriesTxt.push( geometryTxt1, geometryTxt2 );
+
+			}
+
+			group.add( mesh );
+
+			const mergedGeometry = THREE.BufferGeometryUtils.mergeBufferGeometries( geometriesTxt );
+			const materialTxt = new THREE.MeshBasicMaterial( { color: "white", side: 0 } );
+			const meshTxt = new THREE.Mesh( mergedGeometry, materialTxt );
+			grouptxt1.add( meshTxt );
+
+			scene.add( group, grouptxt1 );
+
+			divTime.innerHTML = `geometry instanced<br> ${ (
+				performance.now() - timeStart
+			).toLocaleString() } ms`;
+
+			addMouseMove();
+
+		}
+
+		//////////
+
+		TXTgroup = new THREE.Group();
+		TXTfont = undefined;
+
+		function TXTinit() {
+			const loader = new THREE.FontLoader();
+
+			const url =
+				"https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/fonts/helvetiker_regular.typeface.json";
+
+			loader.load( url, fnt => {
+				TXTfont = fnt;
+				TXTaddTextContinents();
+
+				addMeshGeometryInstanced( geoDataGlobal );
+
+			} );
+		}
+
+		TXTaddTextContinents = function () {
+			scene.remove( TXT.group );
+
+			TXTgroup = new THREE.Group();
+			TXTgroup.name = "txtgroup"
+
+			//TXT.addBox();
+
+			TXTgetSimpleText( {
+				text: "Africa",
+				color: 0x0000,
+				radius: 70,
+				latitude: "0",
+				longitude: "0"
+			} );
+			TXTgetSimpleText( {
+				text: "Europe",
+				color: 0x0085c7,
+				radius: 70,
+				latitude: "50",
+				longitude: "50"
+			} );
+			TXTgetSimpleText( {
+				text: "Asia",
+				color: 0xf4c300,
+				radius: 75,
+				latitude: "20",
+				longitude: "130"
+			} );
+			TXTgetSimpleText( {
+				text: "Oceania",
+				color: 0x009f3d,
+				radius: 75,
+				latitude: "-10",
+				longitude: "160"
+			} );
+			TXTgetSimpleText( {
+				text: "Americas",
+				color: 0xdf0024,
+				radius: 70,
+				latitude: "0",
+				longitude: "-100"
+			} );
+
+			scene.add( TXTgroup );
+		};
+
+
+		TXTgetSimpleText = function ( {
+			text = "Hello, World!\nThree.js\nabc 123",
+			color = 0x006699,
+			size = 3,
+			radius = 70,
+			latitude = 0,
+			longitude = 0
+		} = {} ) {
+
+			const shapes = TXTfont.generateShapes( text, size );
+
+			const geometry0 = new THREE.ShapeBufferGeometry( shapes );
+			geometry0.computeBoundingBox();
+			const xMid =
+				-0.5 * geometry0.boundingBox.getSize( new THREE.Vector3() ).x;
+			geometry0.translate( xMid, 0, 0 );
+
+			geometry1 = geometry0
+				.clone()
+				.applyMatrix4( new THREE.Matrix4().makeRotationY( 0.5 * Math.PI ) );
+
+			matrix = getMatrixComposed( radius, latitude, longitude );
+			geometry1.applyMatrix4( matrix );
+
+			const material = new THREE.MeshBasicMaterial( {
+				color: 0xff0000,
+				opacity: 0.9,
+				side: 0,
+				transparent: true
+			} );
+
+			const mesh = new THREE.Mesh( geometry1, material );
+
+			TXTgroup.add( mesh );
+
+			const geometry2 = geometry0.clone();
+			geometry2.applyMatrix4(
+				new THREE.Matrix4().makeRotationY( -0.5 * Math.PI )
+			);
+			//geometry2.applyMatrix4( new THREE.Matrix4().makeRotationX( Math.PI ) );
+
+			matrix = getMatrixComposed( radius, latitude, longitude );
+			geometry2.applyMatrix4( matrix );
+
+			const material2 = new THREE.MeshBasicMaterial( {
+				color: color,
+				opacity: 0.9,
+				side: 0,
+				transparent: true
+			} );
+
+			const mesh2 = new THREE.Mesh( geometry2, material2 );
+
+			TXTgroup.add( mesh2 );
+
+		};
+
+		////////// Screen CCapture ~ Thank you Jaume Sancchez https://github.com/spite/ccapture.js/
+
+		const SCC = {};
+
+		SCC.frames = 120;
+		SCC.delta = ( 2 * Math.PI ) / SCC.frames;
+		SCC.phi = Math.PI;
+
+		SCC.init = function () {
+			loadGlobeWithBitmap(
+				"https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fnat-earth-800.jpg?v=1588217961784"
+			);
+
+			SCC.CCapture = document.body.appendChild(
+				document.createElement( "script" )
+			);
+			SCC.CCapture.onload = SCC.onLoadScript;
+			SCC.CCapture.src =
+				"https://raw.githack.com/spite/ccapture.js/master/build/CCapture.all.min.js";
+		};
+
+		SCC.onLoadScript = function () {
+			animate = function () { };
+
+			controls.reset();
+			controls.autoRotate = false;
+			scene.background = new THREE.Color( 0xcce0ff );
+
+			SCC.recorder = new CCapture( {
+				verbose: false,
+				display: true,
+				framerate: 20,
+				quality: 99,
+				format: "webm",
+				timeLimit: 100,
+				frameLimit: SCC.frames,
+				autoSaveTime: 0,
+				name: "globe"
+			} );
+
+			SCC.animate();
+
+			SCC.recorder.start();
+		};
+
+		SCC.animate = function () {
+			SCC.phi -= SCC.delta;
+			camera.position.x = -120 * Math.cos( SCC.phi );
+			camera.position.y = -120 * Math.sin( SCC.phi );
+
+			requestAnimationFrame( SCC.animate );
+			renderer.render( scene, camera );
+			SCC.recorder.capture( renderer.domElement );
+			controls.update();
+		};
+
+		////////// raycasting
+
+		function onMouseMove( event ) {
+
+			if ( event.type === "touchmove" || event.type === "touchstart" ) {
+
+				event.clientX = event.touches[ 0 ].clientX;
+				event.clientY = event.touches[ 0 ].clientY;
+			}
+
+			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+			mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+
+			raycaster.setFromCamera( mouse, camera );
+
+			let intersects = raycaster.intersectObjects( group.children );
+
+			if ( intersects.length ) {
+				const intersected = intersects[ 0 ];
+
+				if ( intersected.instanceId ) {
+
+					country = geoDataGlobal[ intersected.instanceId ]
+					htm = JSON.stringify( country, null, "<br>" ).slice( 1, -1 ).replace( /[",]/g, "");
+
+					divLog.innerHTML = `index: ${ intersected.instanceId }${ htm }`;
+
+				} else if ( intersected.faceIndex ) {
+					divLog.innerHTML = `face index: ${ Math.floor(
+						intersected.faceIndex / 12
+					) }`;
+				} else {
+					//console.log( "int 0:", intersected.object.id );
+					divLog.innerHTML = `object.id: ${ intersected.object.id }`;
+				}
+			}
+		}
+
+
+
+
+		////////// Matrix updates
+
+		function getMatrixComposed( r = 50, lat = 0, lon = 0, height = 1 ) {
+			const position = latLonToXYZ( r + 0.5 * height, lat, lon );
+			const matrix = new THREE.Matrix4();
+			const quaternion = new THREE.Quaternion().setFromRotationMatrix(
+				matrix.lookAt(
+					new THREE.Vector3( 0, 0, 0 ),
+					position,
+					new THREE.Vector3( 0, 0, 1 )
+				)
+			);
+			const scale = new THREE.Vector3( 1, 1, height );
+
+			matrix.compose(
+				position,
+				quaternion,
+				scale
+			);
+
+			return matrix;
+		}
+
+		function latLonToXYZ( radius = 50, lat = 0, lon = 0 ) {
+			const phi = ( ( 90 - lat ) * Math.PI ) / 180;
+			const theta = ( ( 180 - lon ) * Math.PI ) / 180;
+			//console.log( "lat/lon", theta, phi, index);
+
+			const x = radius * Math.sin( phi ) * Math.cos( theta );
+			const y = radius * Math.sin( phi ) * Math.sin( theta );
+			const z = radius * Math.cos( phi );
+
+			return new THREE.Vector3( -x, y, z );
+		}
+
+		function addMouseMove() {
+			window.addEventListener( "mousemove", onMouseMove, false );
+			renderer.domElement.addEventListener( "touchstart", onMouseMove );
+			renderer.domElement.addEventListener( "touchmove", onMouseMove );
+
+			divInfo.innerHTML = "";
+		}
+
+		////////// three.js
+
+		function getRendererInfo() {
+			const render = renderer.info.render;
+
+			divInfo.innerHTML = `
+Renderer<br>
+Calls: ${render.calls }<br>
+Triangles: ${render.triangles.toLocaleString() }<br>
+`;
+		}
+
+		function onWindowResize() {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+
+			renderer.setSize( window.innerWidth, window.innerHeight );
+
+			//console.log( 'onWindowResize  window.innerWidth', window.innerWidth );
+		}
+
+		function animate() {
+			requestAnimationFrame( animate );
+			renderer.render( scene, camera );
+			controls.update();
+		}
+
+		//////////
+
+		function requestFile( url, callback ) {
+
+			xhr = new XMLHttpRequest();
+			xhr.open( 'GET', url, true );
+			xhr.onerror = ( xhr ) => console.log( 'error:', xhr  );
+			//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+			xhr.onload = ( xhr ) => callback( xhr.target.response );
+			xhr.send( null );
+
+		}
+	</script>
+</body>
+
+</html>

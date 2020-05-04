@@ -5,13 +5,13 @@
 
 ////////// Deployment
 
-//let build = "stable";
-let build = "dev";
+let build = "stable";
+//let build = "dev";
 
-let timeStamp = "1644";
+let timeStamp = "1645";
 
-let versionStable = "v-2020-04-24";
-let versionDev = "v-2020-04-28";
+let versionStable = "v-2020-05-04";
+let versionDev = "v-2020-05-04";
 
 ////////// Menu title
 
@@ -48,8 +48,8 @@ let messageInfo = `
 
 let messageOfTheDayStable = `
 <mark>
-New for 2020-04-24
-	<li>Refactoring everything!</li>
+New for 2020-05-04
+	<li>In process of mocing project to <a href="https://glitch.com" target="_blank">Glitch</a></li>
 	<li>All change!</li>
 </ul>
 </mark>

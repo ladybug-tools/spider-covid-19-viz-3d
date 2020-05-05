@@ -143,7 +143,7 @@ WP.onLoadDataInfoboxes = function ( xhr ) {
 	WP.html = parser.parseFromString( text, "text/html" );
 
 	const infoboxes = WP.html.querySelectorAll( ".infobox" );
-	console.log( "ib", infoboxes );
+	//console.log( "ib", infoboxes );
 
 	WPdivGraph.innerHTML = !infoboxes.length ?
 		`<p>Wikipedia article for ${ WP.place } has no infoboxes.</p>`
@@ -188,7 +188,7 @@ WP.getCases = function () {
 
 		chart = WP.dataLinks.chart + "_medical cases chart";
 
-		template = "Template:2019–20_coronavirus_pandemic_data/United_States/";
+		template = "Template:COVID-19_pandemic_data/United_States/";
 
 	} else {
 

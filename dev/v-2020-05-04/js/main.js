@@ -48,7 +48,7 @@ let messageInfo = `
 
 let messageOfTheDayStable = `
 <mark>
-New for 2020-04-24
+New for 2020-05-04
 	<li>Refactoring everything!</li>
 	<li>All change!</li>
 </ul>
@@ -57,10 +57,14 @@ New for 2020-04-24
 
 let messageOfTheDayDev = `
 <mark>
-New for 2020-04-24
+New for 2020-05-04
 <ul>
 	<li>Nothing new yet</li>
-	<li>What would *you* like to see here?</li>
+	<li>In process of moving this project to <a href="https://glitch.com/@theo-armour" target="_blank">Glitch</a></li>
+	<li>See <a href="https://dev.to/theoarmour" target="_blank">posts on Dev.to</a> for details</li>
+	<li>Statistics are from <a href="https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data" target="_blank">wikipedia:Template:COVID-19_pandemic_data</a></li>
+
+
 </ul>
 </mark>`;
 

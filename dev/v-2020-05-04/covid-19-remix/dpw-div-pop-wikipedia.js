@@ -113,7 +113,7 @@ WP.getPopUpMore = function () {
 
 WP.getInfoboxes = function () {
 
-	const url = WP.cors + WP.api + WP.query + "2020_coronavirus_pandemic_in_" + WP.dataLinks.article;
+	const url = WP.cors + WP.api + WP.query + "COVID-19_pandemic_in_" + WP.dataLinks.article;
 	//console.log( "", url );
 
 	WPdivGraph.innerHTML = `<img src="progress-indicator.gif" width=100 >`;
@@ -143,7 +143,7 @@ WP.onLoadDataInfoboxes = function ( xhr ) {
 	WP.html = parser.parseFromString( text, "text/html" );
 
 	const infoboxes = WP.html.querySelectorAll( ".infobox" );
-	//console.log( "ib", infoboxes );
+	console.log( "ib", infoboxes );
 
 	WPdivGraph.innerHTML = !infoboxes.length ?
 		`<p>Wikipedia article for ${ WP.place } has no infoboxes.</p>`

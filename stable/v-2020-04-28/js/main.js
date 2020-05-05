@@ -49,7 +49,8 @@ let messageInfo = `
 let messageOfTheDayStable = `
 <mark>
 New for 2020-05-04
-	<li>In process of mocing project to <a href="https://glitch.com" target="_blank">Glitch</a></li>
+	<li>In process of moving project to <a href="https://glitch.com" target="_blank">Glitch</a></li>
+	<li>See <a href="https://dev.to/theoarmour" target="_blank">posts on Dev.to</a></li>
 	<li>All change!</li>
 </ul>
 </mark>
@@ -57,7 +58,7 @@ New for 2020-05-04
 
 let messageOfTheDayDev = `
 <mark>
-New for 2020-04-24
+New for 2020-05-04
 <ul>
 	<li>Nothing new yet</li>
 	<li>What would *you* like to see here?</li>

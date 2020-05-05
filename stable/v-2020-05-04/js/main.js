@@ -8,10 +8,10 @@
 let build = "stable";
 //let build = "dev";
 
-let timeStamp = "18:15";
+let timeStamp = "1919";
 
-let versionStable = 'v-2020-04-24';
-let versionDev = "v-2020-04-24";
+let versionStable = "v-2020-05-04";
+let versionDev = "v-2020-05-04";
 
 ////////// Menu title
 
@@ -48,20 +48,23 @@ let messageInfo = `
 
 let messageOfTheDayStable = `
 <mark>
-New for 2020-04-27
-	<li>Refactoring everything!</li>
-	<li>All change!</li>
-	<li>See <a href="https://dev.to/theoarmour" target="_blank">posts on Dev.to</a></li>
+New for 2020-05-04
+<ul>
+		<li>In process of moving this project to <a href="https://glitch.com/@theo-armour" target="_blank">Glitch</a></li>
+	<li>See <a href="https://dev.to/theoarmour" target="_blank">posts on Dev.to</a> for details</li>
+	<li>Statistics are from <a href="https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data" target="_blank">wikipedia:Template:COVID-19_pandemic_data</a></li>
 </ul>
 </mark>
 `;
 
 let messageOfTheDayDev = `
 <mark>
-New for 2020-04-24
+New for 2020-05-04
 <ul>
 	<li>Nothing new yet</li>
-	<li>What would *you* like to see here?</li>
+	<li>In process of moving this project to <a href="https://glitch.com/@theo-armour" target="_blank">Glitch</a></li>
+	<li>See <a href="https://dev.to/theoarmour" target="_blank">posts on Dev.to</a> for details</li>
+	<li>Statistics are from <a href="https://en.wikipedia.org/wiki/Template:COVID-19_pandemic_data" target="_blank">wikipedia:Template:COVID-19_pandemic_data</a></li>
 </ul>
 </mark>`;
 
@@ -199,6 +202,16 @@ function getNotes () {
 			<button onclick=getNotesContent()>show notes</button>
 		</p>
 
+		<p title="View the frames per second and memory used by this page" >
+			<a href="javascript:( () => { const script=document.head.appendChild( document.createElement('script') ); script.onload=() => {const stats=new Stats();document.body.appendChild(stats.dom); requestAnimationFrame( function loop(){ stats.update(); requestAnimationFrame(loop) } ); } ; script.src='https://raw.githack.com/mrdoob/stats.js/master/build/stats.min.js'; })()" >load stats.js</a>
+		</p>
+
+		<p title="View the number of objects that need rendering and the total number of triangles used to create the objects">
+			<button onclick="getRendererInfo()" >getRendererInfo</button>
+		</p>
+
+		<div id=divInfo ></div>
+
 		<p>
 			<label><input id=SETinpSpyBox type=checkbox onchange=GLO.toggleSkyBox(this.checked)> toggle skybox</label>
 		</p>
@@ -213,6 +226,17 @@ function getNotes () {
 }
 
 
+function getRendererInfo () {
+
+	const render = THR.renderer.info.render;
+
+	divInfo.innerHTML = `
+Renderer<br>
+Calls: ${ render.calls }<br>
+Triangles: ${ render.triangles.toLocaleString() }<br>
+`;
+
+}
 
 function getNotesContent () {
 
@@ -231,7 +255,7 @@ function getNotesContent () {
 `;
 
 
-DMTdivMoreButtons.innerHTML = `
+	DMTdivMoreButtons.innerHTML = `
 <button onclick=DMTdivMoreContent.innerHTML=notes >notes</button>
 <button onclick=DMTimg.src="../../assets/cube-textures/f1.jpg" >button2 </button>
 <button onclick=DMTimg.src="../../assets/cube-textures/f2.jpg" >button 3</button>

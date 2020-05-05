@@ -8,6 +8,23 @@
 // https://en.wikipedia.org/wiki/Template:2019%E2%80%9320_coronavirus_pandemic_data
 // https://en.wikipedia.org/wiki/Template:2019%E2%80%9320_coronavirus_pandemic_data/United_States_medical_cases_by_state
 
+
+const BAR = {
+
+	lat: 0,
+	lon: 0,
+	places: "Null Island",
+	index: 0,
+	color: "red",
+	radius: 0.4,
+	height: 40,
+	offset: 0,
+	radialSegments: 5,
+	heightSegments: 1,
+	openEnded: true
+
+};
+
 const WP = {};
 
 
@@ -250,32 +267,55 @@ WP.addBar = function ( lat, lon, places, index, color = "red", radius = 0.4, hei
 
 	//console.log( 'rad', radius );
 
-	if ( ! height || height === 0 ) {
-
-		//console.log( "no height", index );
-
-		return new THREE.Mesh();
-
-	}
+	//if ( ! height || height === 0 ) { return new THREE.Mesh(); }
 
 
 	const heightScaled = WP.scale ? 0.05 * Math.sqrt( height ) : 0.0002 * height;
 
-	const p1 = THR.latLonToXYZ( 50 + ( offset + 0.5 * heightScaled ), lat, lon );
-	const p2 = THR.latLonToXYZ( 100, lat, lon );
+	//let geometry = new THREE.CylinderGeometry( 0.2, radius, heightScaled, radialSegments, heightSegments, openEnded );
+	let geometry = new THREE.CylinderBufferGeometry( 0.1, BAR.radius, 1, BAR.radialSegments, BAR.heightSegments, BAR.openEnded );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 
-	let geometry = new THREE.CylinderGeometry( 0.2, radius, heightScaled, radialSegments, heightSegments, openEnded );
-	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( - 0.5 * Math.PI ) );
+	const matrix = getMatrixComposed( 50, lat, lon, heightScaled );
+	geometry.applyMatrix4( matrix );
+
 	let material = new THREE.MeshPhongMaterial( { color: color, side: 2 } );
 	let mesh = new THREE.Mesh( geometry, material );
-	mesh.position.copy( p1 );
-	mesh.lookAt( p2 );
 	mesh.userData.index = index;
 	mesh.userData.places = places;
 	//mesh.name = rows[ index ][ 0 ];
 
-	//mesh.matrixAutoUpdate = false;
-
 	return mesh;
 
 };
+
+
+
+function getMatrixComposed ( r = 50, lat = 0, lon = 0, height = 5 ) {
+
+	const position = latLonToXYZ( r + 0.5 * height, lat, lon );
+	const quaternion = new THREE.Quaternion().setFromUnitVectors (
+		new THREE.Vector3( 0, 0, 1 ), position.clone().normalize() )
+	const scale = new THREE.Vector3( 1, 1, height );
+	const matrix = new THREE.Matrix4();
+	matrix.compose( position, quaternion, scale );
+
+	return matrix;
+
+}
+
+
+function latLonToXYZ ( radius, lat, lon ) {
+
+	const phi = ( 90 - lat ) * Math.PI / 180;
+	const theta = ( 180 - lon ) * Math.PI / 180;
+	//console.log( "lat/lon", theta, phi, index);
+
+	const x = radius * Math.sin( phi ) * Math.cos( theta );
+	const y = radius * Math.sin( phi ) * Math.sin( theta );
+	const z = radius * Math.cos( phi );
+
+	return new THREE.Vector3( - x, y, z );
+
+};
+

@@ -1,16 +1,10 @@
 
-# [2020-04-22 Read Me]( #README.md )
+# [2020-04-28 Read Me]( #README.md )
 
 
-To Do
 
-* dev to stable
-* menu updates
-* Start updating JHU modules
-* State | regional data in its own div
-* heights as radio buttons
-* Notes as a thing
-* Use main or HTML for init
+* R: wp.js - use matrix.compose
+* F: main.js - add stats and render info
 
 
 

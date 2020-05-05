@@ -13,7 +13,7 @@ TXT.init = function () {
 
 	const url = "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/fonts/helvetiker_regular.typeface.json";
 
-	loader.load( url, ( fnt ) => font = fnt );
+	loader.load( url, ( fnt ) => font = fnt )
 
 };
 

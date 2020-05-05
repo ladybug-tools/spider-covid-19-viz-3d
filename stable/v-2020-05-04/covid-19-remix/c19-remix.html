@@ -135,10 +135,10 @@
 
 
 	<script src="../js/main.js"></script>
-	<script src="wp-wikipedia.js"></script>
+	<script src="wp-wikipedia-2020-04-28-1248.js"></script>
 
 
-	<script src="../js/dmt-div-move-touch-2020-04-24.js"></script>
+	<script src="../js/dmt-div-move-touch-2020-04-28.js"></script>
 
 	<script src="dpw-div-pop-wikipedia.js"></script>
 
@@ -151,6 +151,7 @@
 
 
 	<script>
+
 
 		THR.init();
 
@@ -186,16 +187,15 @@
 				<div id=divMessageTitle ></div>
 				<div id=divReleaseText >dev</div>
 				<div>
-					Access to data from Wikipedia <a href="https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic_by_country_and_territory"
+					Access to data from Wikipedia <a href="https://en.wikipedia.org/wiki/COVID-19_pandemic_by_country_and_territory"
 					target="_blank">
-					2019–20 coronavirus pandemic by country and territory</a> and 230++ related articles
+					COVID-19 pandemic by country and territory</a> and 230++ related articles
 				</div>
 				<hr>
 				<div id=divMessageInfo></div>
 				<hr>
 				<div id=divMessageOfTheDay ></div>
-				<hr>
-				<div><small>Come back! See new version every day!</small></div>
+
 			`;
 
 			divMessageTitle.innerHTML = `<b>${ document.title } ~ ${ versionStr }</b>`;
@@ -230,8 +230,13 @@
 
 			}
 
-			// keeps address bar pointed to latest dev. can comment out while developing locally to stop annoying message
-			window.history.pushState( "", "", "/spider-covid-19-viz-3d/" );
+			// keeps address bar pointed to latest dev. can comment out while developing stop annoying message
+
+			if ( location.protocol === "https:" ) {
+
+				window.history.pushState( "", "", "/spider-covid-19-viz-3d/" );
+
+			}
 
 
 		}

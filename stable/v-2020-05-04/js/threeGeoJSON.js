@@ -102,6 +102,8 @@ function drawThreeGeo ( json, radius, shape, options ) {
 
 }
 
+
+
 function createGeometryArray ( json ) {
 
 	var geometry_array = [];

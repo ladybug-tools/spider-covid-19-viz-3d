@@ -38,20 +38,20 @@ DMT.init = function () {
 	// Update to what objects you need monitored
 	DMT.objects = group.children;
 
-	const div = document.body.appendChild( document.createElement( 'div' ) );
+	const div = document.body.appendChild( document.createElement( "div" ) );
 	div.id = "DMTdivPopUp";
 
 	DMTdivPopUp.innerHTML = DMT.htmlPopUp;
 
-	window.addEventListener( 'keydown', DMT.onStart );
+	window.addEventListener( "keydown", DMT.onStart );
 
-	THR.renderer.domElement.addEventListener( 'mousedown', DMT.onStart );
+	THR.renderer.domElement.addEventListener( "mousedown", DMT.onStart );
 	//THR.renderer.domElement.addEventListener( 'mousemove', DMT.onStart );
-	THR.renderer.domElement.addEventListener( 'wheel', DMT.onStart );
+	THR.renderer.domElement.addEventListener( "wheel", DMT.onStart );
 
-	THR.renderer.domElement.addEventListener( 'touchstart', DMT.onStart );
-	THR.renderer.domElement.addEventListener( 'touchmove', DMT.onStart );
-	THR.renderer.domElement.addEventListener( 'touchend', DMT.onStart );
+	THR.renderer.domElement.addEventListener( "touchstart", DMT.onStart );
+	THR.renderer.domElement.addEventListener( "touchmove", DMT.onStart );
+	THR.renderer.domElement.addEventListener( "touchend", DMT.onStart );
 
 	DMTdivHeader.addEventListener( "mousedown", DMT.onMouseDown );
 	DMTdivHeader.addEventListener( "touchstart", DMT.onMouseDown );
@@ -63,15 +63,15 @@ DMT.init = function () {
 
 DMT.onStart = function () {
 
-	window.removeEventListener( 'keydown', DMT.onStart );
+	window.removeEventListener( "keydown", DMT.onStart );
 
 	//THR.renderer.domElement.removeEventListener( 'mousedown', DMT.onStart );
 	//THR.renderer.domElement.removeEventListener( 'mousemove', DMT.onStart );
-	THR.renderer.domElement.removeEventListener( 'wheel', DMT.onStart );
+	THR.renderer.domElement.removeEventListener( "wheel", DMT.onStart );
 
-	THR.renderer.domElement.removeEventListener( 'touchstart', DMT.onStart );
-	THR.renderer.domElement.removeEventListener( 'touchmove', DMT.onStart );
-	THR.renderer.domElement.removeEventListener( 'touchend', DMT.onStart );
+	THR.renderer.domElement.removeEventListener( "touchstart", DMT.onStart );
+	THR.renderer.domElement.removeEventListener( "touchmove", DMT.onStart );
+	THR.renderer.domElement.removeEventListener( "touchend", DMT.onStart );
 
 	THR.renderer.domElement.addEventListener( "mouseover", DMT.onEvent );
 	THR.renderer.domElement.addEventListener( "touchstart", DMT.onEvent );

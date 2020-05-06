@@ -4,7 +4,7 @@
 value='You are now in a GitHub web page view - Click this button to view this read me file as source code' ></div>
 
 
-# [ZZZZZ Read Me]( https://www.ladybug.tools/spider-covid-19-viz-3d/readme.html#assets/0-templates/README.md/README.md )
+# [geoData Read Me]( https://www.ladybug.tools/spider-covid-19-viz-3d/readme.html#assets/0-templates/README.md/README.md )
 
 <!--
 <iframe src=https://pushme-pullyou.github.io/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
@@ -16,20 +16,16 @@ _basic-html.html_
 <details open >
 <summary>Concept</summary>
 
-{"country":"","region":"","latitude":"","longitude":"","continent":""},
+CSV
 
-"Abkhazia",
-"Artsakh",
-"Bonaire",
-"Donetsk PR",
-"Luhansk PR",
-"Saba",
-"Saint Vincent",
-"Somaliland",
+["country","region",latitude,longitude,"two-letter-code","continent",population],
 
-{"country":"United Kingdom","region":"Guernsey","latitude":"49.4482","longitude":"2.5895","continent":"Europe"},
-{"country":"United Kingdom","region":"Jersey","latitude":"49.2144","longitude":"2.1312","continent":"Europe"},
-{"country":"Cyprus","region":"Northern Cyprus","latitude":"35.2480","longitude":"33.6577","continent":"Europe"},
+Coming next
+
+* States in India - https://en.wikipedia.org/wiki/States_and_union_territories_of_India
+* States in Brazil - https://en.wikipedia.org/wiki/States_of_Brazil
+* States in Russia
+
 
 
 </details>
@@ -55,9 +51,9 @@ _basic-html.html_
 <details open >
 <summary>Change log </summary>
 
-### 123
+### 2020-05-05 ~ Theo
 
-* First commit
+* First update
 
 </details>
 

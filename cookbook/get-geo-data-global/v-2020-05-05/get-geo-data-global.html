@@ -65,7 +65,7 @@ iframe { height: 100vh; width: 100%; }
 </head>
 <body>
 
-	<script src="geo-data-global-csv-2020-04-19.js"></script>
+	<script src="geo-data-global-csv-2020-05-05.js"></script>
 
 <nav id="navMenu" >
 
@@ -88,22 +88,26 @@ iframe { height: 100vh; width: 100%; }
 	</header>
 
 	<p>
-		<button onclick=setContentCsv() >setContentCsv</button>   <button id=but onclick=setMenuCsv(); >setMenuCsv</button>
+		<button id=but onclick=setMenuCsv(); >setMenuCsv</button>
+		<button onclick=setContentCsv() >setContentCsv</button>
+		<button onclick=checkLengthSix() >check length </button>
 	</p>
-	<p>
 
 	<p>
 		start <input type=number id=inpStart value=0 style=width:4rem; >
 		end <input id=inpEnd type=number value=2 style=width:4rem;>
 	</p>
 	<p>
-		<button id=but onclick=startClickSelectedMenuItems(); >click selected menu items</button>
+		<button id=but onclick=startClickSelectedMenuItems(); >check WP articles for selected menu items</button>
 	</p>
 
-	<hr:
 
 	<p>
-		 <button onclick=compareWithDspl() >compareWithDspl()</button>
+		 <button onclick=compareWithGoogleDspl() >compareWithGoogleDspl + add 2 letter</button>
+	</p>
+
+	<p>
+		<button onclick=saveFile(); >Save File</button>
 	</p>
 
 	<details open >
@@ -154,24 +158,38 @@ function init() {
 
 	setMenuCsv();
 
+	setContentCsv()
+
 	window.addEventListener( "hashchange", onHashChangeWiki );
+
+}
+
+
+
+function setMenuCsv() {
+
+	const htm = geoDataGlobalCsv.map( country => `<a href="#${country[ 0 ] }" >${country[ 0 ] }</a>` );
+
+	divNavContent.innerHTML = htm.join( "<br>" );
+
+	inpEnd.value = geoDataGlobalCsv.length;
 
 }
 
 
 function setContentCsv() {
 
-	divContent.innerText =  geoDataGlobalCsv.join( "\n" );
+	const txt = JSON.stringify( geoDataGlobalCsv ).replace( /\],\[/g,  "],\n[" );
+
+	divContent.innerText = txt;
 
 }
 
-function setMenuCsv() {
 
-	htm = geoDataGlobalCsv.map( country => `<a href="#${country[ 0 ] }" >${country[ 0 ] }</a>` );
 
-	divNavContent.innerHTML = htm.join( "<br>" );
+function checkLengthSix() {
 
-	inpEnd.value = geoDataGlobalCsv.length
+	geoDataGlobalCsv.forEach( item => { if ( item.length !== 6 ) { console.log( "item", item );} } )
 
 }
 
@@ -189,7 +207,9 @@ function onHashChangeWiki() {
 
 //////////
 
-function compareWithDspl() {
+function compareWithGoogleDspl() {
+
+	//https://github.com/google/dspl/tree/master/samples/google/canonical
 
 	url = "https://raw.githack.com/google/dspl/master/samples/google/canonical/countries.csv"
 
@@ -201,20 +221,27 @@ function compareWithDspl() {
 function onLoadDspl( xhr ) {
 
 	response = xhr.target.response;
-	// console.log( "", response  );
+	//console.log( "response", response  );
 
 	countries = response.split( '\n' ).map( ( line ) => line.split( "," ) );
-	// console.log( "lines", lines );
+	//console.log( "countries", countries );
 
-	countries.forEach( country => {
+	countries.slice( 1, - 1 ).forEach( country => {
 
 		find = geoDataGlobalCsv.find( place => place[ 0 ] === country[ 3 ].replace( /\"/g, "") );
 
-		if ( !find ) {
 
-			divContent.innerHTML += `${ country }<br>`;
+		if ( find ) {
+
+			find.splice( 3, 0, country[ 0 ] )
+			console.log( "find", find );
+
+		} else {
+
+			divContent.innerHTML += `${ country } <a href="https://en.wikipedia.org/wiki/${ country[ 3 ] }" target="_blank">${ country[ 3 ] }</a><br>`;
 
 		}
+
 	})
 
 }
@@ -274,12 +301,15 @@ requestFileUserData = function ( url, callback, userData = "" ) {
 
 function saveFile() {
 
-	str = `geoDataGlobalCsv = ${txtC19.value.replace( /\}\,/g, "},\n" ) };`;
+	txt = divContent.innerText;
+
+
+	str = `geoDataGlobalCsv = ${ txt }`;
 
 	let blob = new Blob( [ str  ] );
 	let a = document.body.appendChild( document.createElement( 'a' ) );
 	a.href = window.URL.createObjectURL( blob );
-	a.download = 'c19-data-links.js';
+	a.download = 'geo-data-global-csv-2020-05-05.js';
 	a.click();
 	a = null;
 

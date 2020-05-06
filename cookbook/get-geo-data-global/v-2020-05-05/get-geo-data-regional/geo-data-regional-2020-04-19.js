@@ -1,3 +1,5 @@
+
+geoDataRegional = [
 {"country":"Australia","region":"Australian Capital Territory","latitude":"-35.4735","longitude":"149.0124","continent":"Oceania"},
 {"country":"Australia","region":"New South Wales","latitude":"-33.8688","longitude":"151.2093","continent":"Oceania"},
 {"country":"Australia","region":"Northern Territory","latitude":"-12.4634","longitude":"130.8456","continent":"Oceania"},
@@ -5,7 +7,7 @@
 {"country":"Australia","region":"South Australia","latitude":"-34.9285","longitude":"138.6007","continent":"Oceania"},
 {"country":"Australia","region":"Tasmania","latitude":"-41.4545","longitude":"145.9707","continent":"Oceania"},
 {"country":"Australia","region":"Victoria","latitude":"-37.8136","longitude":"144.9631","continent":"Oceania"},
-{"country":"Australia","region":"Western Australia","latitude":"-31.9505", "longitude": "115.8605", "continent": "Oceania"; },
+{"country":"Australia","region":"Western Australia","latitude":"-31.9505", "longitude": "115.8605", "continent": "Oceania" },
 
 {"country":"Canada","region":"Alberta","latitude":"53.9333","longitude":"-116.5765","continent":"Americas"},
 {"country":"Canada","region":"British Columbia","latitude":"49.2827","longitude":"-123.1207","continent":"Americas"},
@@ -90,7 +92,7 @@
 
 {"country":"United States","region":"Alabama","latitude":"32.6010112","longitude":"-86.6807365","population":"4903185","continent":"Americas"},
 {"country":"United States","region":"Alaska","latitude":"61.3025006","longitude":"-158.7750198","population":"731545","continent":"Americas"},
-{"country":"United States","region":"American Samoa","latitude":"14.2710","longitude":'-170.1322","population":"55641","continent":"Oceania"},
+{"country":"United States","region":"American Samoa","latitude":"14.2710","longitude":"-170.1322","population":"55641","continent":"Oceania"},
 {"country":"United States","region":"Arizona","latitude":"34.1682185","longitude":"-111.930907","population":"7278717","continent":"Americas"},
 {"country":"United States","region":"Arkansas","latitude":"34.7519275","longitude":"-92.1313784","population":"3017825","continent":"Americas"},
 {"country":"United States","region":"California","latitude":"37.2718745","longitude":"-119.2704153","population":"39512223","continent":"Americas"},
@@ -144,3 +146,4 @@
 {"country":"United States","region":"West Virginia","latitude":"38.9201705","longitude":"-80.1816905","population":"1792147","continent":"Americas"},
 {"country":"United States","region":"Wisconsin","latitude":"44.7862968","longitude":"-89.8267049","population":"5822434","continent":"Americas"},
 {"country":"United States","region":"Wyoming","latitude":"43.000325","longitude":"-107.5545669","population":"578759","continent":"Americas"},
+]

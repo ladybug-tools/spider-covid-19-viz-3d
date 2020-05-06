@@ -131,7 +131,8 @@
 	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/controls/OrbitControls.js"></script>
 	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/utils/BufferGeometryUtils.js"></script>
 
-	<script src="https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fgeo-data-global-2020-04-18-1418.js"></script>
+	<script src="geo-data-global-csv-2020-05-05.js"></script>
+	<script src="geo-data-regional-csv-2020-05-05-1631.js"></script>
 
 	<nav id="navMenu">
 		<details open>
@@ -221,8 +222,9 @@
 				console, select a small screen before using.
 			</p>
 
-			<div id="divInfo" class="navText"></div>
 		-->
+
+		<div id="divInfo" class="navText"></div>
 
 		</details>
 	</nav>
@@ -239,7 +241,7 @@
 			<button onclick="TXTgroup.visible=! TXTgroup.visible" title="toggle statistics"
 			class=ftrButton>&sdotb;</button>
 			&nbsp;
-			<button onclick=sayThis(); title="Can you hear me now?" class=ftrButton>fps</button>
+			<button onclick=setStats(); title="" class=ftrButton>fps</button>
 		</span>
 
 	</footer>
@@ -371,6 +373,8 @@
 			scene.add( globe );
 		}
 
+
+
 		//////////
 
 		function addGeoJson() {
@@ -433,6 +437,7 @@
 		}
 
 
+
 		function addLine( vertices ) {
 
 			const geometry = new THREE.Geometry();
@@ -443,6 +448,8 @@
 			groupGeoJson.add( line );
 
 		}
+
+
 
 		//////////
 
@@ -474,16 +481,13 @@
 
 			const timeStart = performance.now();
 
-			scene.remove( group );
-			group = new THREE.Group();
-			group.name = "instances";
-
 			const geometry = new THREE.CylinderBufferGeometry( 0.8, 0.2, 1, 5, 1, true );
 			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 			geometry.applyMatrix4( new THREE.Matrix4().makeScale( -1, -1, -1 ) );
 			const material = new THREE.MeshNormalMaterial( { side: 2 } );
 			const mesh = new THREE.InstancedMesh( geometry, material, data.length );
-			mesh.userData.index = "Box "
+			mesh.userData.index = "Box ";
+			mesh.userData.data = data;
 			mesh.name = "instancedMesh";
 
 			geometriesTxt = [];
@@ -491,13 +495,30 @@
 			for ( let i = 0; i < data.length; i++ ) {
 
 				const country = data[ i ];
-				const txt = country.region ? country.region : country.country;
-				const siz = country.region ? 0.7 : 1;
-				const pop = country.population ? country.population : 100000;
+				let txt, siz, pop, height, latitude, longitude;
 
-				const height = 0.0000001 * pop;
-				const latitude = + country.latitude;
-				const longitude = + country.longitude;
+				if ( country.length === 6 ) {
+					//console.log( "country", country );
+
+					txt = country[ 0 ];
+					siz = 1; //country[ 6 ]
+					pop = country[ 5 ];
+
+					height = 0.0000001 * pop;
+					latitude = + country[ 1 ];
+					longitude = + country[ 2 ];
+
+				} else {
+
+					txt = country[ 1 ];
+					siz = 0.7;
+					pop = country[ 6 ];
+
+					height = 0.0000001 * pop;
+					latitude = + country[ 2 ];
+					longitude = + country[ 3 ];
+				}
+
 
 				const matrix = getMatrixComposed(
 					50,
@@ -513,13 +534,13 @@
 				geometryTxt0.computeBoundingBox();
 
 				const xSize = geometryTxt0.boundingBox.getSize( new THREE.Vector3() ).x;
-				geometryTxt0.translate( -xSize, 0, 0 );
+				//geometryTxt0.translate( xSize, 0, 0 );
 
 				const geometryTxt1 = geometryTxt0.clone();
 				geometryTxt1.applyMatrix4( new THREE.Matrix4().makeRotationY( -0.5 * Math.PI ) );
 
 				const matrixTxt = getMatrixComposed(
-					51 + height,
+					51 + height + xSize,
 					latitude,
 					longitude,
 					1
@@ -551,13 +572,11 @@
 			const meshTxt = new THREE.Mesh( mergedGeometry, materialTxt );
 			TXTgroup.add( meshTxt );
 
-			scene.add( group );
-
 			divTime.innerHTML = `geometry instanced<br> ${ (
 				performance.now() - timeStart
 			).toLocaleString() } ms`;
 
-			addMouseMove();
+
 
 		}
 
@@ -576,10 +595,22 @@
 				TXTfont = fnt;
 				TXTaddTextContinents();
 
-				addMeshGeometryInstanced( geoDataGlobal );
+				scene.remove( group );
+				group = new THREE.Group();
+				group.name = "instances";
+
+				addMeshGeometryInstanced( geoDataGlobalCsv );
+
+				addMeshGeometryInstanced( geoDataRegionalCsv );
+
+				scene.add( group);
+
+				addMouseMove();
 
 			} );
 		}
+
+
 
 		TXTaddTextContinents = function () {
 			scene.remove( TXT.group );
@@ -627,6 +658,7 @@
 
 			scene.add( TXTgroup );
 		};
+
 
 
 		TXTgetSimpleText = function ( {
@@ -686,6 +718,8 @@
 
 		};
 
+
+
 		////////// Screen CCapture ~ Thank you Jaume Sancchez https://github.com/spite/ccapture.js/
 
 		const SCC = {};
@@ -706,6 +740,8 @@
 			SCC.CCapture.src =
 				"https://raw.githack.com/spite/ccapture.js/master/build/CCapture.all.min.js";
 		};
+
+
 
 		SCC.onLoadScript = function () {
 			animate = function () { };
@@ -731,6 +767,8 @@
 			SCC.recorder.start();
 		};
 
+
+
 		SCC.animate = function () {
 			SCC.phi -= SCC.delta;
 			camera.position.x = -120 * Math.cos( SCC.phi );
@@ -741,6 +779,8 @@
 			SCC.recorder.capture( renderer.domElement );
 			controls.update();
 		};
+
+
 
 		////////// raycasting
 
@@ -760,12 +800,15 @@
 			let intersects = raycaster.intersectObjects( group.children );
 
 			if ( intersects.length ) {
+
 				const intersected = intersects[ 0 ];
 
 				if ( intersected.instanceId ) {
 
-					country = geoDataGlobal[ intersected.instanceId ]
-					htm = JSON.stringify( country, null, "<br>" ).slice( 1, -1 ).replace( /[",]/g, "");
+					//console.log( "int", intersected );
+
+					const country = intersected.object.userData.data[ intersected.instanceId ]
+					const htm = JSON.stringify( country, null, "<br>" ).slice( 1, -1 ).replace( /[",]/g, "");
 
 					divLog.innerHTML = `index: ${ intersected.instanceId }${ htm }`;
 
@@ -779,7 +822,6 @@
 				}
 			}
 		}
-
 
 
 
@@ -806,6 +848,8 @@
 			return matrix;
 		}
 
+
+
 		function latLonToXYZ( radius = 50, lat = 0, lon = 0 ) {
 			const phi = ( ( 90 - lat ) * Math.PI ) / 180;
 			const theta = ( ( 180 - lon ) * Math.PI ) / 180;
@@ -818,6 +862,8 @@
 			return new THREE.Vector3( -x, y, z );
 		}
 
+
+
 		function addMouseMove() {
 			window.addEventListener( "mousemove", onMouseMove, false );
 			renderer.domElement.addEventListener( "touchstart", onMouseMove );
@@ -827,16 +873,27 @@
 		}
 
 		////////// three.js
+		function setStats() {
 
-		function getRendererInfo() {
+			const script=document.head.appendChild( document.createElement('script') );
+			script.onload=() => {
+				const stats=new Stats();document.body.appendChild(stats.dom);
+				requestAnimationFrame( function loop() { stats.update(); requestAnimationFrame(loop) } );
+			};
+
+			script.src="https://raw.githack.com/mrdoob/stats.js/master/build/stats.min.js";
+
+
 			const render = renderer.info.render;
 
 			divInfo.innerHTML = `
-Renderer<br>
-Calls: ${render.calls }<br>
-Triangles: ${render.triangles.toLocaleString() }<br>
-`;
+			Renderer<br>
+			Calls: ${render.calls }<br>
+			Triangles: ${render.triangles.toLocaleString() }<br>
+			`;
+
 		}
+
 
 		function onWindowResize() {
 			camera.aspect = window.innerWidth / window.innerHeight;
@@ -865,7 +922,7 @@ Triangles: ${render.triangles.toLocaleString() }<br>
 			xhr.send( null );
 
 		}
+
 	</script>
 </body>
-
 </html>

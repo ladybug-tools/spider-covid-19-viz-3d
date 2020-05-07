@@ -109,6 +109,12 @@
 			position: absolute;
 		}
 
+		.navText {
+			background-color: white;
+			margin: 1ch 0;
+			padding: 1ch;
+		}
+
 	</style>
 
 </head>
@@ -163,6 +169,7 @@
 		<p><button onclick=loadGlobeWithBitmapTextures(4); >loadGlobeWithBitmapTextures 5</button></p>
 		<p><button onclick=loadGlobeWithBitmapTextures(5); >loadGlobeWithBitmapTextures 6</button></p>
 		<p><button onclick=loadGlobeWithBitmapTextures(6); >loadGlobeWithBitmapTextures 7</button></p>
+		<p><button onclick=loadGlobeWithBitmapTextures(7); >loadGlobeWithBitmapTextures 8</button></p>
 
 		<h3>Map Tiles</h3>
 		<p><button onclick="loadGlobeWithMapTilesTextures(1)" >zoom level 1 </button></p>
@@ -182,6 +189,7 @@
 
 		let bitmaps = [
 
+			"natural-earth-4096-2048-col.jpg",
 			"natural-earth-8192-4096-col.jpg",
 			"earth_atmos_2048.jpg",
 			"earth_atmos_4096.jpg",
@@ -259,9 +267,11 @@
 
 		function loadGlobeWithBitmapTextures( index = 0 ) {
 
+			timeStart = performance.now()
+
 			scene.remove( globe );
 
-			const size = 6371
+			const size = 6371;
 			const geometry = new THREE.SphereGeometry( size, 50, 25 );
 			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 			geometry.applyMatrix4( new THREE.Matrix4().makeRotationZ( Math.PI ) );
@@ -274,6 +284,13 @@
 
 			globe.name = "globe";
 			scene.add( globe );
+
+			divLog.classList.add("navText");
+			divLog.innerHTML = `load time: ${ (
+				performance.now() - timeStart
+			).toLocaleString() } ms`;
+
+
 
 		}
 

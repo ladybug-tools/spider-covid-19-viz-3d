@@ -13,6 +13,8 @@ _basic-html.html_
 ### Full Screen: [ZZZZZ]( https://www.ladybug.tools/spider-covid-19-viz-3d//xxxxxx/xxxxxx.html )
 -->
 
+<img src=icon-external-link.svg width=18 >
+
 <details open >
 <summary>Concept</summary>
 

@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang = "en" >
+<head>
+<meta charset = "utf-8" >
+<meta name = "viewport" content= "width=device-width, initial-scale=1" >
+<meta name = "description" content = "Basic TooToo HTML template" >
+<meta name = "keywords" content = "JavaScript,GitHub,FOSS" >
+<!-- <meta name=version content="2020-05-05">-->
+
+<title></title>
+
+<style>
+
+/* Copyright 2020 Theo Armour. MIT License */
+
+
+* { box-sizing: border-box; }
+
+:root { font: 100% monospace; --mnu-width: 25rem; --screen-width: calc( 100vw ); --headerHeight: 6rem; }
+
+html { height: 100%; }
+
+body { margin: 0 auto; margin:0 0 0 var( --mnu-width ); max-width: 100ch; padding: 0 0.5rem; }
+
+a { color: crimson; text-decoration: none; }
+a:hover, a:focus, a:active { background-color: yellow; color: #aaa; text-decoration: underline }
+
+aside { border: 1px solid lightgray; margin-top: 15px; padding: 2px; }
+
+blockquote { background-color: #ddd; padding: 1ch; }
+
+button, input[type=button] { background-color: #ddd; border: none; color: #322; cursor: pointer; padding: 3px 5px; }
+button:hover { background: #ccc; color: #fff }
+
+code { background-color: #eee; }
+pre { background-color: #eee; padding: 5px; }
+
+input[type="range"] { -webkit-appearance: none; -moz-appearance: none; background-color: #ddd; height: 2ch;
+	width: 100%; }
+
+input[type="range"]::-moz-range-thumb { background-color: #888; border-radius: 0; height: 3ch; width: 10px; }
+
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background-color: #888; height: 3ch; width: 10px; }
+
+summary { cursor: pointer; font-size: 2.5ch; font-weight: bold; }
+
+.info { float: right }
+
+.info:hover>.infotooltip { display: block; }
+
+.infotooltip { border: 0.8ch double #888; background: white; display: none;
+	font: 100% monospace; font-size: 1rem; font-weight: normal; /* unset summary settings */
+	margin-left: -28ch; padding: 10px; position: absolute; z-index: 1000; }
+
+.sumMenuTitle { background-color: #ccc; color: #777; margin: 10px 0; text-align: center; }
+
+
+#divContent { border: 1px solid red; height: 100vh; left: var( --mnu-width ); margin: 0; overflow: auto;
+	padding: 0 1rem; position: absolute; width: calc( 100% - var( --mnu-width ) );  }
+
+#navMenu { background-color: #eee; max-height: 100vh; left: 0; margin: 0; overflow: auto; padding: 0 1rem;
+	position: absolute; top: 0; width: var( --mnu-width ); }
+
+iframe { height: 100vh; width: 100%; }
+
+</style>
+</head>
+<body>
+
+
+	<!-- <script src="geo-data-regional-2020-04-19.js"></script> -->
+
+	<script id=scr src="geo-data-regional-csv-2020-05-05-1631.js"></script>
+
+<nav id="navMenu" >
+
+	<header id="hdrTitle" >
+
+		<h2 style=vertical-align:middle; >
+
+			<a id=aSource target=_top title="Source code on GitHub" >
+				<span id=spnIcon ></span>
+			</a>
+
+			<a href="" title="Click to reload this page" >
+				<span id=sTitle ></span>
+				<span id=sVersion ></span>
+			</a>
+
+			<span class="info" >&#x24d8;<span id=divDescription class="infotooltip" ></span></span>
+
+		</h2>
+
+	</header>
+
+	<div id=divCsv ></div>
+
+	<p>
+		<button id=but onclick=setMenuCsv(); >setMenuCsv</button>
+		<button onclick=setContentCsv() >setContentCsv</button>
+		<button onclick=checkLength() >check length </button>
+	</p>
+
+	<p>
+		<button onclick=convertObjToCsv() >convert obj to csv</button>
+	</p>
+
+	<p>
+		<button onclick=compareUsaWithGoogleDspl() >compareUsaWithGoogleDspl + add 2 letter</button>
+	</p>
+
+	<p>
+		<button onclick=compareGlobalWithGoogleDspl() >compareGlobalWithGoogleDspl + add 2 letter</button>
+	</p>
+	<p>
+		<button onclick=compareAustraliaWithWikipedia() >compareAustraliaWithWikipedia + add 2 letter</button>
+	</p>
+	<p>
+		<button onclick=compareCanadaWithWikipedia() >compareCanadaWithWikipedia + add 2 letter</button>
+	</p>
+
+	<p>
+		<button onclick=compareChinaWithWikipedia() >compareChinaWithWikipedia + add 2 letter</button>
+	</p>
+
+	<p>
+		<button onclick=saveFile(); >Save File</button>
+	</p>
+
+	<hr>
+
+	<div id=divNavContent ></div>
+
+
+	<footer>
+
+		<hr>
+
+		<center title="go to top of menu" ><a href=javascript:window.scrollTo(0,0); style=text-decoration:none; >
+			❦</a>
+		</center>
+
+	</footer>
+
+</nav>
+
+<main id=main >
+
+	<div id="divContent" ></div>
+
+</main>
+
+
+
+<script>
+
+aSource.href = "https://github.com/ladybug-tools/spider-covid-19-viz-3d/cookbook/";
+
+spnIcon.innerHTML = `<svg height="18" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="18" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>`;
+sTitle.innerHTML= document.title ? document.title : location.href.split( '/' ).pop().slice( 0, - 5 ).replace( /-/g, ' ' );
+const version = document.head.querySelector( "[ name=version ]" );
+sVersion.innerHTML = version ? version.content : "";
+divDescription.innerHTML = document.head.querySelector( "[ name=description ]" ).content;
+
+
+init();
+
+function init() {
+
+
+	divCsv.innerHTML = scr.src.split( "/").pop();
+
+	setMenuCsv()
+
+	setContentCsv();
+
+	window.addEventListener( "hashchange", onHashChangeWiki );
+
+}
+
+
+function setMenuCsv() {
+
+	htm = geoDataRegionalCsv.map( country => `${ country[ 0 ] }: <a href="#${country[ 1 ]}" >${country[ 1 ] }</a>` );
+
+	divNavContent.innerHTML = htm.join( "<br>" );
+
+
+}
+
+
+function setContentCsv() {
+
+	const txt = JSON.stringify( geoDataRegionalCsv ).replace( /\],\[/g,  "],\n[" );
+
+	divContent.innerText = txt;
+
+}
+
+
+
+function checkLength() {
+
+	geoDataRegional.forEach( country => { if ( Object.keys( country )!== 6 ) { console.log( "country", country );} } );
+
+
+}
+
+
+function onHashChangeWiki() {
+
+	const article = location.hash.slice( 1 );
+
+	divContent.innerHTML = `<iframe id=ifr src="https://en.wikipedia.org/wiki/${ article }" ></iframe>`;
+
+	ifr.onerror = (e) => { console.log( "error", e ); }
+
+}
+
+
+function convertObjToCsv() {
+
+	geoDataRegionalCsv = geoDataRegional.map( plc => {
+
+		return `["${ plc.country }","${ plc.region}",${ plc.latitude },${ plc.longitude },"xx","${ plc.continent }","${ plc.population || 'population' }"],`;
+
+	} );
+
+	divContent.innerText = geoDataRegionalCsv.join( "\n");
+
+	console.log( "geoDataRegionalCsv", geoDataRegionalCsv );
+
+}
+
+
+
+function compareUsaWithGoogleDspl() {
+
+	//https://github.com/google/dspl/tree/master/samples/google/canonical
+
+	url = "https://raw.githack.com/google/dspl/master/samples/google/canonical/states.csv"
+
+	requestFile( url, onLoadUsaDspl );
+
+}
+
+
+function onLoadUsaDspl( response ) {
+
+	//console.log( "response", response  );
+
+	dspl = response.split( '\n' ).map( ( line ) => line.split( "," ) );
+	//console.log( "states", states );
+
+	dspl.slice( 1, - 1 ).forEach( pl => {
+
+		//console.log( "pl", pl );
+
+		find = geoDataRegionalCsv.find( state => state[ 1 ] === pl[ 3 ].replace( /\"/g, "") );
+
+
+		if ( find ) {
+
+			find.splice( 4, 1, pl[ 0 ] )
+			//console.log( "find", find );
+
+		} else {
+
+
+			console.log( "no find", pl );
+			//divContent.innerHTML += `<a href="https://en.wikipedia.org/wiki/${ pl[ 3 ] }" target="_blank">${ pl[ 2 ] }</a><br>`;
+
+		}
+
+	} )
+
+	setContentCsv()
+
+}
+
+
+
+function compareGlobalWithGoogleDspl() {
+
+	//https://github.com/google/dspl/tree/master/samples/google/canonical
+
+	url = "https://raw.githack.com/google/dspl/master/samples/google/canonical/countries.csv"
+
+	requestFile( url, onLoadGlobalDspl );
+
+}
+
+
+
+function onLoadGlobalDspl( response ) {
+
+//console.log( "response", response  );
+
+	const dspl = response.split( '\n' ).map( ( line ) => line.split( "," ) );
+	//console.log( "dspl", dspl );
+
+	dspl.slice( 1, - 1 ).forEach( pl => {
+
+		//console.log( "pl", pl );
+
+		const find = geoDataRegionalCsv.find( rgn => rgn[ 1 ] === pl[ 3 ].replace( /\"/g, "") );
+
+		if ( find ) {
+
+			find.splice( 4, 1, pl[ 0 ] )
+			console.log( "find", find );
+
+		} else {
+
+
+			//console.log( "no find", pl );
+			//divContent.innerHTML += `<a href="https://en.wikipedia.org/wiki/${ pl[ 3 ] }" target="_blank">${ pl[ 2 ] }</a><br>`;
+
+		}
+
+	} )
+
+	setContentCsv();
+
+}
+
+
+
+//////////
+
+
+
+function compareAustraliaWithWikipedia() {
+
+// https://en.wikipedia.org/wiki/States_and_territories_of_Australia
+
+	WPapi = "https://en.wikipedia.org/w/api.php?";
+
+	WPquery = "action=parse&format=json&origin=*&page=";
+
+	WParticle= "States_and_territories_of_Australia";
+
+	url =  WPapi + WPquery + WParticle;
+
+	requestFile( url, onLoadDataAustralia );
+
+}
+
+
+function onLoadDataAustralia( response ) {
+
+	const json = JSON.parse( response );
+	//console.log( "json", json );
+
+	const text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	const parser = new DOMParser();
+	const html = parser.parseFromString( text, "text/html" );
+	//console.log( "html", html );
+
+	const tables = html.querySelectorAll( ".wikitable" );
+	console.log(tables );
+
+	const trs = tables[ 1 ].querySelectorAll( "tr" );
+	console.log( 'trs', trs );
+
+	let rows = Array.from( trs ).map( tr => tr.innerText.trim()
+		.replace( /\[(.*?)\]/g, "" )
+		.split( "\n" ) );
+
+	rows = rows.slice( 1 ); // .sort();
+	console.log( "rows", rows);
+
+	rows.forEach( row => {
+
+	//console.log( "pl", pl );
+
+	const find = geoDataRegionalCsv.find( rgn => row[ 0 ].includes( rgn[ 1 ] ) );
+
+	if ( find ) {
+
+		find.splice( 4, 1, row[ 1 ] );
+		console.log( "find", row );
+
+		population = row[ 4 ].replace( /,/g, "" );
+
+		console.log( "pop", population );
+
+		find.splice( 6, 1, population );
+
+	} else {
+
+		console.log( "no find", row );
+		//divContent.innerHTML += `<a href="https://en.wikipedia.org/wiki/${ pl[ 3 ] }" target="_blank">${ pl[ 2 ] }</a><br>`;
+
+	}
+
+	} )
+
+	setContentCsv();
+
+}
+
+
+//////////
+
+
+function compareCanadaWithWikipedia() {
+
+// https://en.wikipedia.org/wiki/Provinces_and_territories_of_Canada
+
+	WPapi = "https://en.wikipedia.org/w/api.php?";
+
+	WPquery = "action=parse&format=json&origin=*&page=";
+
+	WParticle= "Provinces_and_territories_of_Canada";
+
+	url =  WPapi + WPquery + WParticle;
+
+	requestFile( url, onLoadDataCanada );
+
+}
+
+
+function onLoadDataCanada( response ) {
+
+	const json = JSON.parse( response );
+	//console.log( "json", json );
+
+	const text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	const parser = new DOMParser();
+	const html = parser.parseFromString( text, "text/html" );
+	//console.log( "html", html );
+
+	const table = html.querySelector( ".wikitable" );
+	//console.log(table );
+
+	const trs = table.querySelectorAll( "tr" );
+	//console.log( 'trs', trs );
+
+	rows = Array.from( trs ).slice( 1 ).map( tr => tr.innerText.trim()
+		.replace( /\[(.*?)\]/g, "" )
+		.split( "\n" ) );
+
+	rows = rows.slice( 1 ); // .sort();
+	console.log( "rows", rows);
+
+	rows.forEach( row => {
+
+	//console.log( "pl", pl );
+
+	const find = geoDataRegionalCsv.find( rgn => row[ 0 ].includes( rgn[ 1 ] ) );
+
+	if ( find ) {
+
+		find.splice( 4, 1, row[ 2 ] );
+		console.log( "find", row );
+
+		population = row.length === 23 ? row[ 10 ] : row[ 8 ];
+
+		population = population.replace( /,/g, "" );
+
+		console.log( "pop", population );
+
+		find.splice( 6, 1, population );
+
+	} else {
+
+		console.log( "no find", row );
+		//divContent.innerHTML += `<a href="https://en.wikipedia.org/wiki/${ pl[ 3 ] }" target="_blank">${ pl[ 2 ] }</a><br>`;
+
+	}
+
+	} )
+
+	setContentCsv();
+
+}
+
+
+//////////
+
+function compareChinaWithWikipedia() {
+
+// https://en.wikipedia.org/wiki/Provinces_of_China
+
+	WPapi = "https://en.wikipedia.org/w/api.php?";
+
+	WPquery = "action=parse&format=json&origin=*&page=";
+
+	WParticle= "Provinces_of_China";
+
+	url =  WPapi + WPquery + WParticle;
+
+	requestFile( url, onLoadDataChina );
+
+}
+
+
+function onLoadDataChina( response ) {
+
+	const json = JSON.parse( response );
+	//console.log( "json", json );
+
+	const text = json.parse.text[ "*" ];
+	//console.log( 'text', text );
+
+	const parser = new DOMParser();
+	const html = parser.parseFromString( text, "text/html" );
+	//console.log( "html", html );
+
+	const table = html.querySelector( ".wikitable" );
+	//console.log(table );
+
+	const trs = table.querySelectorAll( "tr" );
+	//console.log( 'trs', trs );
+
+	rows = Array.from( trs ).slice( 1 ).map( tr => tr.innerText.trim()
+		.replace( /\[(.*?)\]/g, "" )
+		.split( "\n" ) );
+
+	rows = rows.slice( 1 ); // .sort();
+	console.log( "rows", rows);
+
+	rows.forEach( row => {
+
+	//console.log( "pl", pl );
+
+	const find = geoDataRegionalCsv.find( rgn => row[ 4 ].includes( rgn[ 1 ] ) );
+
+	if ( find ) {
+
+		find.splice( 4, 1, row[ 0 ].slice( 0, 2 ) );
+		//console.log( "find", find );
+
+		population = row[ 10 ].replace( /,/g, "" );
+
+		console.log( "pop", population );
+
+		find.splice( 6, 1, population );
+
+	} else {
+
+		console.log( "no find", row );
+		//divContent.innerHTML += `<a href="https://en.wikipedia.org/wiki/${ pl[ 3 ] }" target="_blank">${ pl[ 2 ] }</a><br>`;
+
+	}
+
+	} )
+
+	setContentCsv();
+
+}
+
+
+
+function requestFile( url, callback ) {
+
+	xhr = new XMLHttpRequest();
+	xhr.open( 'GET', url, true );
+	xhr.onerror = ( xhr ) => console.log( 'error:', xhr  );
+	//xhr.onprogress = ( xhr ) => console.log( 'bytes loaded:', xhr.loaded );
+	xhr.onload = ( xhr ) => callback( xhr.target.response );
+	xhr.send( null );
+
+}
+
+
+function saveFile() {
+
+	const txt = divContent.innerText;
+	const str = `geoDataRegionalCsv = \n${ txt };`;
+
+	const blob = new Blob( [ str  ] );
+	let a = document.body.appendChild( document.createElement( 'a' ) );
+	a.href = window.URL.createObjectURL( blob );
+	a.download = `geo-data-regional-csv-${ new Date().toISOString().slice( 0, 10 ) }.js`;
+	a.click();
+	a = null;
+
+}
+
+</script>
+</body>
+</html>

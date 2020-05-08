@@ -12,16 +12,14 @@
 	<meta
 		name="keywords"
 		content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
-	<meta name="version" content="2020-05-06" />
+	<meta name="version" content="2020-05-07" />
 
 	<title>globe-template</title>
 
 	<style>
 		/* Copyright 2020 Theo Armour. MIT License */
 
-		:root {
-			font: 100% monospace;
-		}
+		:root {font: 100% monospace;}
 
 		* { box-sizing: border-box; }
 
@@ -205,9 +203,6 @@
 		let globe;
 		let groupGeoJson=new THREE.Group();
 
-
-		const materialGeoJson = new THREE.LineBasicMaterial( { color: 0x000ff } );
-
 		let timeStart;
 		let raycaster = new THREE.Raycaster();
 		let mouse = new THREE.Vector2();
@@ -257,29 +252,12 @@
 
 			window.addEventListener( "resize", onWindowResize, false );
 			window.addEventListener( "orientationchange", onWindowResize, false );
-			window.addEventListener(
-				"keyup",
-				() => ( controls.autoRotate = false ),
-				false
-			);
-			renderer.domElement.addEventListener(
-				"click",
-				() => ( controls.autoRotate = false ),
-				false
-			);
 
-			renderer.domElement.addEventListener(
-				"touchstart",
-				() => ( controls.autoRotate = false )
-			);
-			renderer.domElement.addEventListener(
-				"touchmove",
-				() => ( controls.autoRotate = false )
-			);
-			renderer.domElement.addEventListener(
-				"touchend",
-				() => ( controls.autoRotate = false )
-			);
+			window.addEventListener( "keyup", onStart );
+			renderer.domElement.addEventListener( "click", onStart );
+			renderer.domElement.addEventListener( "touchstart", onStart );
+			renderer.domElement.addEventListener( "touchmove", onStart );
+			renderer.domElement.addEventListener( "touchend", onStart );
 
 			loadGlobeWithBitmap();
 
@@ -287,10 +265,23 @@
 
 			addGeoJson();
 
-			console.log( "ms2", performance.now() - timeStart );
+			console.log( "ms0", performance.now() - timeStart );
 
 		}
 
+
+
+		function onStart() {
+
+			controls.autoRotate = false;
+
+			window.removeEventListener( "keyup", onStart );
+			renderer.domElement.removeEventListener( "click", onStart );
+			renderer.domElement.removeEventListener( "touchstart", onStart );
+			renderer.domElement.removeEventListener( "touchmove", onStart );
+			renderer.domElement.removeEventListener( "touchend", onStart );
+
+		}
 
 		//////////
 
@@ -312,6 +303,7 @@
 
 			scene.add( globe );
 
+			console.log( "msGlo", performance.now() - timeStart );
 		}
 
 
@@ -335,6 +327,8 @@
 			requestFile( urlJsonRegions, onLoadGeoJson );
 
 			scene.add(groupGeoJson);
+
+			console.log( "msGeoJ", performance.now() - timeStart );
 
 		}
 
@@ -372,32 +366,76 @@
 			})
 			//console.log( "points", points );
 
-			const vertices = points.map( pairs => pairs.map( pair => latLonToXYZ( 50, pair[ 1 ], pair[ 0 ] ) ) );
+			vertices = points.map( pairs => pairs.map( pair => latLonToXYZ( 50, pair[ 1 ], pair[ 0 ] ) ) );
 			//console.log( "vertices", vertices );
 
-			vertices.forEach( vertices => addLine( vertices ) );
+			addLineSegments( vertices );
 
-			console.log( "ms3", performance.now() - timeStart );
+			//lines = vertices.map( vertices => addLineSegments( vertices ) );
+
+
+			// const geometry = new THREE.BufferGeometry();
+			// const material = new THREE.LineBasicMaterial( { color: 0x0000 } );
+
+			// indices = [];
+			// positions = [];
+			// index = 0;
+
+			// for ( let i = 0; i < 2; i++ ) {
+
+			// 	lin = vertices[ i ];
+			// 	console.log( "len", lin.length );
+			// 	for ( let k = 0; k < lin.length - 1; k++ ) {
+
+			// 		const v1 = lin[ k ];
+			// 		positions.push( v1.x, v1.y, v1.z );
+			// 		const v2 = lin[ k + 1 ];
+			// 		positions.push( v2.x, v2.y, v2.z );
+			// 		indices.push( index + k, index + k + 1 );
+
+			// 	}
+
+			// 	//indices.push( lin.length - 2, lin.length - 1 );
+			// 	console.log( "indices", indices );
+
+			// 	index += indices[ indices.length - 1 ] + 1;
+
+			// }
+
+			// geometry.setIndex( indices );
+			// geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+
+ 			// line = new THREE.LineSegments( geometry, materialGeoJson );
+ 			// groupGeoJson.add( line );
+
 
 		}
 
 
-
-		function addLine( vertices ) {
+		function addLineSegments( lines ) {
+			//console.log( "lines", lines );
 
 			const geometry = new THREE.Geometry();
-			geometry.vertices = vertices;
+			const material = new THREE.LineBasicMaterial( { color: 0x000ff } );
 
-			const line = new THREE.Line( geometry, materialGeoJson );
+			const pairs = lines.flatMap( vertices =>
+
+				vertices.slice( 0, -1 ).flatMap( ( vertex, i )  => [ vertex, vertices[ i + 1 ] ] )
+
+			);
+			console.log( "pairs", pairs );
+
+
+			geometry.vertices = pairs;
+
+			const line = new THREE.LineSegments( geometry, material );
 
 			groupGeoJson.add( line );
 
 		}
 
 
-
 		//////////
-
 
 		function addMeshGeometryInstanced( data) {
 
@@ -474,6 +512,8 @@
 			// 	performance.now() - timeStart
 			// ).toLocaleString() } ms`;
 
+			console.log( "ms4", performance.now() - timeStart );
+
 		}
 
 		//////////
@@ -503,13 +543,13 @@
 
 				scene.add( group);
 
-				group.add( globe );
+				//group.add( globe );
 
-				addHeart();
+				//addHeart();
 
 				addMouseMove();
 
-				console.log( "ms1", performance.now() - timeStart );
+				console.log( "msTxt", performance.now() - timeStart );
 
 			} );
 		}
@@ -628,12 +668,14 @@
 
 		function addMouseMove() {
 
-			window.addEventListener( "mousemove", onMouseMove, false );
+			renderer.domElement.addEventListener( "mousemove", onMouseMove );
 			renderer.domElement.addEventListener( "touchstart", onMouseMove );
 			renderer.domElement.addEventListener( "touchmove", onMouseMove );
 
 			//divInfo.innerHTML = "";
 		}
+
+
 
 		function onMouseMove( event ) {
 
@@ -660,23 +702,39 @@
 					const country = intersected.object.userData.data[ intersected.instanceId ];
 					//console.log( "country", country );
 
+					divLog.hidden = false;
 					divLog.innerHTML = getHtm( country );
 					divLog.style.left = event.clientX + "px";
 					divLog.style.top = event.clientY + "px";
 
+					renderer.domElement.addEventListener( "click", onClick );
+
 				}
+
 
 			} else {
 
 				intersected = null;
 
-				if ( event.type === "touchmove" || event.type === "touchstart" ) {
+				if ( [ "touchstart", "touchmove" ].includes( event.type  ) ) {
 
 					divLog.hidden = true;
 
 				}
+
 			}
 		}
+
+
+
+		function onClick() {
+
+			divLog.hidden = true;
+
+			renderer.domElement.removeEventListener( "click", onClick );
+
+		}
+
 
 
 		function getHtm( country ) {
@@ -854,7 +912,6 @@
 				const stats=new Stats();document.body.appendChild(stats.dom);
 				requestAnimationFrame( function loop() { stats.update(); requestAnimationFrame(loop) } );
 			};
-
 			script.src="https://raw.githack.com/mrdoob/stats.js/master/build/stats.min.js";
 
 
@@ -870,14 +927,17 @@
 		}
 
 
+
 		function onWindowResize() {
 			camera.aspect = window.innerWidth / window.innerHeight;
 			camera.updateProjectionMatrix();
 
 			renderer.setSize( window.innerWidth, window.innerHeight );
-
 			//console.log( 'onWindowResize  window.innerWidth', window.innerWidth );
+
 		}
+
+
 
 		function animate() {
 			requestAnimationFrame( animate );

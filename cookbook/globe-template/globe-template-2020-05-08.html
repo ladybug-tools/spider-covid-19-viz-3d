@@ -12,16 +12,14 @@
 	<meta
 		name="keywords"
 		content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
-	<meta name="version" content="2020-05-06" />
+	<meta name="version" content="2020-05-07" />
 
 	<title>globe-template</title>
 
 	<style>
 		/* Copyright 2020 Theo Armour. MIT License */
 
-		:root {
-			font: 100% monospace;
-		}
+		:root {font: 100% monospace;}
 
 		* { box-sizing: border-box; }
 
@@ -66,6 +64,11 @@
 			width: 98%;
 		}
 
+		footer {border: 0px solid red;
+			bottom: 1ch; position: fixed; display: td; left: 0;
+			 margin: 0 auto; right: 0; text-align: center; max-width: 25rem;
+		}
+
 		input[type="range"]::-moz-range-thumb {
 			background-color: #888;
 			border-radius: 2;
@@ -83,15 +86,21 @@
 			background-color: #eee;
 			border-radius: 5px;
 			font-size: 200%;
-			margin: auto;
+			margin: 0 1rem;
 		}
 
 		.info {
 			float: right;
 		}
 
-		.info:hover>.infotooltip {
+		.info:hover {
+			background-color: yellow;
+		}
+		.info:hover >.infotooltip {
 			display: block;
+		}
+		#navMenu:hover  {
+			overflow: visible;
 		}
 
 		.infotooltip {
@@ -102,9 +111,10 @@
 			font-size: 1rem;
 			font-weight: normal;
 			/* unset summary settings */
-			margin-left: -28ch;
+			margin-left: -12rem;
 			padding: 10px;
 			position: absolute;
+			max-width: 20rem;
 			z-index: 1000;
 		}
 
@@ -137,8 +147,12 @@
 	<script src="geo-data-global-csv-2020-05-06.js"></script>
 	<script src="geo-data-regional-csv-2020-05-05.js"></script>
 
+
+
 	<nav id="navMenu">
+
 		<details open>
+
 			<summary>show || hide menu</summary>
 
 			<header id="hdrTitle">
@@ -152,11 +166,16 @@
 						<span id="sVersion"></span>
 					</a>
 
-					<!-- <span class="info">&#x24d8;<span id="divDescription" class="infotooltip"></span></span> -->
+					<span class="info">&#x24d8;<span id="divDescription" class="infotooltip" ></span></span>
 
 				</h2>
 
 			</header>
+
+			<p>
+				Elevations: <output id=out >0</output>
+				<input type=range value=0 id="rng" oninput=GLO.setElevation(this.value);out.value=this.value; >
+			</p>
 
 			<div id="divTime" ></div>
 
@@ -170,17 +189,15 @@
 
 	<footer  >
 
-		<span style="bottom:1ch;position:fixed;display:inline;left: calc(50vw - 16ch);border: 0px solid red;" >
-			<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
-			&nbsp;
-			<button onclick="controls.autoRotate=!controls.autoRotate" title="toggle the rotation"
-			class=ftrButton>&circlearrowright;</button>
-			&nbsp;
-			<button onclick="TXTgroup.visible=! TXTgroup.visible" title="toggle statistics"
-			class=ftrButton>&sdotb;</button>
-			&nbsp;
-			<button onclick=setStats(); title="" class=ftrButton>fps</button>
-		</span>
+		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
+
+		<button onclick="controls.autoRotate=!controls.autoRotate" title="toggle the rotation"
+		class=ftrButton>&circlearrowright;</button>
+
+		<button onclick="TXTgroup.visible=! TXTgroup.visible" title="toggle statistics"
+		class=ftrButton>&sdotb;</button>
+
+		<button onclick=setStats(); title="View frames per second and number of draw calls" class=ftrButton>fps</button>
 
 	</footer>
 
@@ -198,26 +215,26 @@
 		sTitle.innerHTML = document.title;
 		const version = document.head.querySelector( "[ name=version ]" );
 		sVersion.innerHTML = version ? version.content : "";
-		// divDescription.innerHTML = document.head.querySelector(
-		// 	"[ name=description ]"
-		// ).content;
 
-		let globe;
-		let groupGeoJson=new THREE.Group();
+		divDescription.innerHTML = document.head.querySelector(
+			"[ name=description ]"
+		).content;
 
+		const GLO = { globe: undefined };
 
-		const materialGeoJson = new THREE.LineBasicMaterial( { color: 0x000ff } );
+		const GJS = { groupGeoJson: undefined };
 
 		let timeStart;
 		let raycaster = new THREE.Raycaster();
 		let mouse = new THREE.Vector2();
 
+		const SCC = {}; // screen caputer to a WebM video
+
 		let mesh, group, axesHelper, lightDirectional, cameraHelper;
 		let sceneRotation = 1;
 		let renderer, camera, controls, scene;
 
-		init();
-		animate();
+
 
 		function init() {
 
@@ -255,92 +272,125 @@
 			axesHelper.name = "axesHelper"
 			scene.add( axesHelper );
 
+			addLights();
+
 			window.addEventListener( "resize", onWindowResize, false );
 			window.addEventListener( "orientationchange", onWindowResize, false );
-			window.addEventListener(
-				"keyup",
-				() => ( controls.autoRotate = false ),
-				false
-			);
-			renderer.domElement.addEventListener(
-				"click",
-				() => ( controls.autoRotate = false ),
-				false
-			);
 
-			renderer.domElement.addEventListener(
-				"touchstart",
-				() => ( controls.autoRotate = false )
-			);
-			renderer.domElement.addEventListener(
-				"touchmove",
-				() => ( controls.autoRotate = false )
-			);
-			renderer.domElement.addEventListener(
-				"touchend",
-				() => ( controls.autoRotate = false )
-			);
+			window.addEventListener( "keyup", onStart );
+			renderer.domElement.addEventListener( "click", onStart );
+			renderer.domElement.addEventListener( "touchstart", onStart );
+			renderer.domElement.addEventListener( "touchmove", onStart );
+			renderer.domElement.addEventListener( "touchend", onStart );
 
-			loadGlobeWithBitmap();
+			GLO.loadGlobeWithBitmap();
 
 			TXTinit();
 
-			addGeoJson();
+			GJS.addGeoJson();
 
-			console.log( "ms2", performance.now() - timeStart );
+			console.log( "ms0", performance.now() - timeStart );
 
 		}
 
 
+
+		function onStart() {
+
+			controls.autoRotate = false;
+
+			window.removeEventListener( "keyup", onStart );
+			renderer.domElement.removeEventListener( "click", onStart );
+			renderer.domElement.removeEventListener( "touchstart", onStart );
+			renderer.domElement.removeEventListener( "touchmove", onStart );
+			renderer.domElement.removeEventListener( "touchend", onStart );
+
+		}
+
+		function addLights() {
+
+			//scene.add( new THREE.AmbientLight( 0x404040 ) );
+			scene.add( new THREE.AmbientLight( 0xaaaaaa ) );
+
+			const pointLight = new THREE.PointLight( 0xffffff, 1 );
+			pointLight.position.copy( camera.position );
+			camera.add( pointLight );
+
+			// lightDirectional = new THREE.DirectionalLight( 0xdffffff, 0 );
+			// lightDirectional.position.set( -50, -200, 100 );
+			// scene.add( lightDirectional );
+
+
+}
+
 		//////////
 
-		function loadGlobeWithBitmap( url, size = 50 ) {
+		GLO.loadGlobeWithBitmap = function( url, size = 50 ) {
 
 			url = url || "https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fnatural-earth-4096-2048-col.jpg?v=1588126762356";
 
-			scene.remove( globe );
+			scene.remove( GLO.globe );
 
-			const geometry = new THREE.SphereBufferGeometry( size, 50, 25 );
+			const geometry = new THREE.SphereBufferGeometry( size, 2048, 1024 );
 			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 
-			const texture = new THREE.TextureLoader().load( url );
-			const material = new THREE.MeshBasicMaterial( { map: texture } );
+			const loader = new THREE.TextureLoader()
+			texture = loader.load( url );
+			heightmap = loader.load( "bathymetry_bw_composite_2k.png" );
+			const material = new THREE.MeshPhongMaterial( {
+				map: texture,
+				displacementMap: heightmap,
+				displacementScale: 0
+			} );
 
-			globe = new THREE.Mesh( geometry, material );
-			globe.matrixAutoUpdate = false;
-			globe.name = "globe";
+			GLO.globe = new THREE.Mesh( geometry, material );
+			GLO.globe.matrixAutoUpdate = false;
+			GLO.globe.name = "globe";
 
-			scene.add( globe );
+			scene.add( GLO.globe );
+
+			console.log( "msGlo", performance.now() - timeStart );
 
 		}
+
+
+		GLO.setElevation = function( value ) {
+
+			GLO.globe.material.displacementScale = + value / 10;
+
+			GLO.globe.material.needsUptate = true;
+
+		};
 
 
 
 		//////////
 
-		function addGeoJson() {
+		GJS.addGeoJson = function () {
 
-			scene.remove(groupGeoJson);
-			groupGeoJson=new THREE.Group();
-			groupGeoJson.name = "geoJson";
+			scene.remove( GJS.groupGeoJson);
+			GJS.groupGeoJson=new THREE.Group();
+			GJS.groupGeoJson.name = "geoJson";
 
 			const pathGeoJson = "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/";
 
 			const urlJsonCountries = pathGeoJson + "ne_50m_admin_0_scale_rank.geojson";
 
-			requestFile( urlJsonCountries, onLoadGeoJson );
+			requestFile( urlJsonCountries, GJS.onLoadGeoJson );
 
 			const urlJsonRegions = pathGeoJson + "ne_50m_admin_1_states_provinces_lines.geojson";
 
-			requestFile( urlJsonRegions, onLoadGeoJson );
+			requestFile( urlJsonRegions, GJS.onLoadGeoJson );
 
-			scene.add(groupGeoJson);
+			scene.add( GJS.groupGeoJson);
 
-		}
+			console.log( "msGeoJ", performance.now() - timeStart );
+
+		};
 
 
 
-		function onLoadGeoJson( string ){
+		GJS.onLoadGeoJson = function ( string ){
 
 			const json = JSON.parse( string );
 
@@ -375,29 +425,40 @@
 			const vertices = points.map( pairs => pairs.map( pair => latLonToXYZ( 50, pair[ 1 ], pair[ 0 ] ) ) );
 			//console.log( "vertices", vertices );
 
-			vertices.forEach( vertices => addLine( vertices ) );
+			const line = GJS.addLineSegments( vertices );
 
-			console.log( "ms3", performance.now() - timeStart );
+			GJS.groupGeoJson.add( line );
 
-		}
+		};
 
 
 
-		function addLine( vertices ) {
+		GJS.addLineSegments = function ( segments ) {
+			//console.log( "segments", segments );
 
-			const geometry = new THREE.Geometry();
-			geometry.vertices = vertices;
+			const geometry = new THREE.BufferGeometry();
 
-			const line = new THREE.Line( geometry, materialGeoJson );
+			const positions = segments.flatMap( vertices =>
 
-			groupGeoJson.add( line );
+				vertices.slice( 0, -1 ).flatMap( ( v0, i )  => {
+					const v1 = vertices[ i + 1 ];
+					return [ v0.x, v0.y, v0.z, v1.x, v1.y, v1.z ];
+
+				} )
+
+			);
+
+			geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+
+			const material = new THREE.LineBasicMaterial( { color: 0x000ff } );
+
+			return new THREE.LineSegments( geometry, material );
 
 		}
 
 
 
 		//////////
-
 
 		function addMeshGeometryInstanced( data) {
 
@@ -474,6 +535,8 @@
 			// 	performance.now() - timeStart
 			// ).toLocaleString() } ms`;
 
+			console.log( "ms4", performance.now() - timeStart );
+
 		}
 
 		//////////
@@ -488,6 +551,7 @@
 				"https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/fonts/helvetiker_regular.typeface.json";
 
 			loader.load( url, fnt => {
+
 				TXTfont = fnt;
 				TXTaddTextContinents();
 
@@ -501,15 +565,13 @@
 
 				addMeshGeometryInstanced( geoDataRegionalCsv );
 
-				scene.add( group);
-
-				group.add( globe );
+				scene.add( group );
 
 				addHeart();
 
 				addMouseMove();
 
-				console.log( "ms1", performance.now() - timeStart );
+				console.log( "msTxt", performance.now() - timeStart );
 
 			} );
 		}
@@ -628,12 +690,14 @@
 
 		function addMouseMove() {
 
-			window.addEventListener( "mousemove", onMouseMove, false );
+			renderer.domElement.addEventListener( "mousemove", onMouseMove );
 			renderer.domElement.addEventListener( "touchstart", onMouseMove );
 			renderer.domElement.addEventListener( "touchmove", onMouseMove );
 
 			//divInfo.innerHTML = "";
 		}
+
+
 
 		function onMouseMove( event ) {
 
@@ -660,23 +724,39 @@
 					const country = intersected.object.userData.data[ intersected.instanceId ];
 					//console.log( "country", country );
 
+					divLog.hidden = false;
 					divLog.innerHTML = getHtm( country );
 					divLog.style.left = event.clientX + "px";
 					divLog.style.top = event.clientY + "px";
 
+					renderer.domElement.addEventListener( "click", onClick );
+
 				}
+
 
 			} else {
 
 				intersected = null;
 
-				if ( event.type === "touchmove" || event.type === "touchstart" ) {
+				if ( [ "touchstart", "touchmove" ].includes( event.type  ) ) {
 
 					divLog.hidden = true;
 
 				}
+
 			}
 		}
+
+
+
+		function onClick() {
+
+			divLog.hidden = true;
+
+			renderer.domElement.removeEventListener( "click", onClick );
+
+		}
+
 
 
 		function getHtm( country ) {
@@ -770,7 +850,7 @@
 
 		////////// Screen CCapture ~ Thank you Jaume Sancchez https://github.com/spite/ccapture.js/
 
-		const SCC = {};
+
 
 		SCC.frames = 240;
 		SCC.delta = ( 2 * Math.PI ) / ( SCC.frames - 1 );
@@ -778,7 +858,7 @@
 		SCC.radius = 120;
 
 		SCC.init = function () {
-			loadGlobeWithBitmap(
+			GLO.loadGlobeWithBitmap(
 				"https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fnat-earth-800.jpg?v=1588217961784"
 			);
 
@@ -854,7 +934,6 @@
 				const stats=new Stats();document.body.appendChild(stats.dom);
 				requestAnimationFrame( function loop() { stats.update(); requestAnimationFrame(loop) } );
 			};
-
 			script.src="https://raw.githack.com/mrdoob/stats.js/master/build/stats.min.js";
 
 
@@ -870,14 +949,17 @@
 		}
 
 
+
 		function onWindowResize() {
 			camera.aspect = window.innerWidth / window.innerHeight;
 			camera.updateProjectionMatrix();
 
 			renderer.setSize( window.innerWidth, window.innerHeight );
-
 			//console.log( 'onWindowResize  window.innerWidth', window.innerWidth );
+
 		}
+
+
 
 		function animate() {
 			requestAnimationFrame( animate );
@@ -885,6 +967,9 @@
 			controls.update();
 		}
 
+
+		init();
+		animate();
 
 	</script>
 </body>

@@ -358,7 +358,7 @@
 
 		GLO.setElevation = function( value ) {
 
-			const scale = + value / 10;
+			const scale = + value / 5;
 
 			if ( GLO.globe.name === "globeFlat" ) {
 
@@ -368,8 +368,8 @@
 				geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 
 				const loader = new THREE.TextureLoader()
-				texture = loader.load( GLO.url );
-				heightmap = loader.load( GLO.urlHeightmap, );
+				const texture = loader.load( GLO.url );
+				const heightmap = loader.load( GLO.urlHeightmap, );
 				const material = new THREE.MeshPhongMaterial( {
 					map: texture,
 					displacementMap: heightmap,
@@ -382,20 +382,11 @@
 
 				scene.add( GLO.globe );
 
-				console.log( "msGlo", performance.now() - timeStart );
-
-
-
 			} else {
 
-			GLO.globe.material.displacementScale = scale;
+				GLO.globe.material.displacementScale = scale;
 
-			GLO.globe.material.needsUptate = true;
 			}
-
-
-
-
 
 		};
 
@@ -434,25 +425,15 @@
 			let geometries = json.features.map( feature => feature.geometry );
 			//console.log( "geometries", geometries );
 
-			let points = [];
-
-			geometries.forEach( geometry => {
+			let points = geometries.flatMap( geometry => {
 
 				if ( [ "MultiPolygon", "Polygon", "MultiLineString"].includes( geometry.type ) ) {
 
-					//console.log( "geo", geometry );
-
-					points.push( ... geometry.coordinates );
+					return [ ... geometry.coordinates ];
 
 				} else if ( geometry.type === "LineString" ) {
 
-					//console.log( "geometry", geometry );
-
-					points.push( geometry.coordinates );
-
-				} else {
-
-					console.log( "geometry", geometry );
+					return [ geometry.coordinates ];
 
 				}
 

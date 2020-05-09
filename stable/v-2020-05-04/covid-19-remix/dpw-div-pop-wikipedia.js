@@ -188,7 +188,7 @@ WP.getCases = function () {
 
 		chart = WP.dataLinks.chart + "_medical cases chart";
 
-		template = "Template:2019–20_coronavirus_pandemic_data/United_States/";
+		template = "Template:COVID-19_pandemic_data/United_States/";
 
 	} else {
 

@@ -289,6 +289,8 @@ Globes
 * https://github.com/vasturiano/three-globe
 * https://github.com/vasturiano/globe.gl
 * https://globe.chromeexperiments.com/
+* https://timcchang.com/threejs-globe
+* https://giojs.org/
 
 
 Source of bitmaps used on globe

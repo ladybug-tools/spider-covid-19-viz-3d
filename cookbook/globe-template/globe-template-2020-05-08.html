@@ -12,7 +12,7 @@
 	<meta
 		name="keywords"
 		content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
-	<meta name="version" content="2020-05-07" />
+	<meta name="version" content="2020-05-08" />
 
 	<title>globe-template</title>
 
@@ -128,7 +128,7 @@
 		}
 
 		.navText {
-			background-color: white;
+			background-color: #cce0ff;
 			margin: 1ch 0;
 			padding: 1ch;
 		}
@@ -172,7 +172,7 @@
 
 			</header>
 
-			<p>
+			<p class=navText >
 				Elevations: <output id=out >0</output>
 				<input type=range value=0 id="rng" oninput=GLO.setElevation(this.value);out.value=this.value; >
 			</p>
@@ -194,7 +194,7 @@
 		<button onclick="controls.autoRotate=!controls.autoRotate" title="toggle the rotation"
 		class=ftrButton>&circlearrowright;</button>
 
-		<button onclick="TXTgroup.visible=! TXTgroup.visible" title="toggle statistics"
+		<button onclick="TXT.group.visible=! TXT.group.visible;divLog.hidden = true;" title="toggle statistics"
 		class=ftrButton>&sdotb;</button>
 
 		<button onclick=setStats(); title="View frames per second and number of draw calls" class=ftrButton>fps</button>
@@ -228,15 +228,23 @@
 
 		 };
 
-		const GJS = { groupGeoJson: undefined };
+		const GJS = { groupGeoJson: undefined }; // GeoJson lines
 
-		let timeStart;
-		let raycaster = new THREE.Raycaster();
-		let mouse = new THREE.Vector2();
+		const PTS = {}; // data points. Each point is displayed as a cylindrical 3D object rising perpendicularly from the surface of the globe.
+
+		const TXT = {}; // three.js 3D text
+
+		const RAY = {
+
+			raycaster: new THREE.Raycaster(),
+			mouse: new THREE.Vector2()
+
+		}
 
 		const SCC = {}; // screen caputer to a WebM video
 
-		let mesh, group, axesHelper, lightDirectional, cameraHelper;
+		let timeStart;
+		let mesh, axesHelper, lightDirectional, cameraHelper;
 		let sceneRotation = 1;
 		let renderer, camera, controls, scene;
 
@@ -291,7 +299,7 @@
 
 			GLO.loadGlobeWithBitmap();
 
-			TXTinit();
+			TXT.init();
 
 			GJS.addGeoJson();
 
@@ -313,21 +321,7 @@
 
 		}
 
-		function addLights() {
 
-			//scene.add( new THREE.AmbientLight( 0x404040 ) );
-			scene.add( new THREE.AmbientLight( 0xaaaaaa ) );
-
-			const pointLight = new THREE.PointLight( 0xffffff, 1 );
-			pointLight.position.copy( camera.position );
-			camera.add( pointLight );
-
-			// lightDirectional = new THREE.DirectionalLight( 0xdffffff, 0 );
-			// lightDirectional.position.set( -50, -200, 100 );
-			// scene.add( lightDirectional );
-
-
-}
 
 		//////////
 
@@ -354,6 +348,7 @@
 			console.log( "msGlo", performance.now() - timeStart );
 
 		}
+
 
 
 		GLO.setElevation = function( value ) {
@@ -478,7 +473,7 @@
 
 		//////////
 
-		function addMeshGeometryInstanced( data) {
+		PTS.addPoints = function ( data) {
 
 			const timeStart = performance.now();
 
@@ -516,7 +511,7 @@
 
 
 				// consider separating into a separate function
-				const shapes = TXTfont.generateShapes( txt, siz );
+				const shapes = TXT.font.generateShapes( txt, siz );
 				const geometryTxt0 = new THREE.ShapeBufferGeometry( shapes );
 				geometryTxt0.computeBoundingBox();
 				const xSize = geometryTxt0.boundingBox.getSize( new THREE.Vector3() ).x;
@@ -541,12 +536,12 @@
 
 			}
 
-			group.add( mesh );
+			PTS.group.add( mesh );
 
 			const mergedGeometry = THREE.BufferGeometryUtils.mergeBufferGeometries( geometriesTxt );
 			const materialTxt = new THREE.MeshBasicMaterial( { color: "yellow", side: 0 } );
 			const meshTxt = new THREE.Mesh( mergedGeometry, materialTxt );
-			TXTgroup.add( meshTxt );
+			TXT.group.add( meshTxt );
 
 			// divTime.classList.add("navText");
 			// divTime.innerHTML = `geometry instanced<br> ${ (
@@ -555,14 +550,16 @@
 
 			console.log( "ms4", performance.now() - timeStart );
 
-		}
+		};
+
+
 
 		//////////
 
-		TXTgroup = new THREE.Group();
-		TXTfont = undefined;
+		TXT.group = new THREE.Group();
+		TXT.font = undefined;
 
-		function TXTinit() {
+		TXT.init = function () {
 			const loader = new THREE.FontLoader();
 
 			const url =
@@ -570,24 +567,24 @@
 
 			loader.load( url, fnt => {
 
-				TXTfont = fnt;
-				TXTaddTextContinents();
+				TXT.font = fnt;
+				TXT.addTextContinents();
 
 				// consider separating into a separate function
 
-				scene.remove( group );
-				group = new THREE.Group();
-				group.name = "instances";
+				scene.remove( PTS.group );
+				PTS.group = new THREE.Group();
+				PTS.group.name = "instances";
 
-				addMeshGeometryInstanced( geoDataGlobalCsv );
+				PTS.addPoints( geoDataGlobalCsv );
 
-				addMeshGeometryInstanced( geoDataRegionalCsv );
+				PTS.addPoints( geoDataRegionalCsv );
 
-				scene.add( group );
+				scene.add( PTS.group );
 
 				addHeart();
 
-				addMouseMove();
+				RAY.addMouseMove();
 
 				console.log( "msTxt", performance.now() - timeStart );
 
@@ -596,43 +593,43 @@
 
 
 
-		TXTaddTextContinents = function () {
-			scene.remove( TXTgroup );
+		TXT.addTextContinents = function () {
+			scene.remove( TXT.group );
 
-			TXTgroup = new THREE.Group();
-			TXTgroup.name = "txtgroup"
+			TXT.group = new THREE.Group();
+			TXT.group.name = "txtgroup"
 
 			//TXT.addBox();
 
-			TXTgetSimpleText( {
+			TXT.getSimpleText( {
 				text: "Africa",
 				color: 0x0000,
 				radius: 70,
 				latitude: "0",
 				longitude: "0"
 			} );
-			TXTgetSimpleText( {
+			TXT.getSimpleText( {
 				text: "Europe",
 				color: 0x0085c7,
 				radius: 70,
 				latitude: "50",
 				longitude: "50"
 			} );
-			TXTgetSimpleText( {
+			TXT.getSimpleText( {
 				text: "Asia",
 				color: 0xf4c300,
 				radius: 75,
 				latitude: "20",
 				longitude: "130"
 			} );
-			TXTgetSimpleText( {
+			TXT.getSimpleText( {
 				text: "Oceania",
 				color: 0x009f3d,
 				radius: 75,
 				latitude: "-10",
 				longitude: "160"
 			} );
-			TXTgetSimpleText( {
+			TXT.getSimpleText( {
 				text: "Americas",
 				color: 0xdf0024,
 				radius: 70,
@@ -640,12 +637,12 @@
 				longitude: "-100"
 			} );
 
-			scene.add( TXTgroup );
+			scene.add( TXT.group );
 		};
 
 
 
-		TXTgetSimpleText = function ( {
+		TXT.getSimpleText = function ( {
 			text = "Hello, World!\nThree.js\nabc 123",
 			color = 0x006699,
 			size = 3,
@@ -654,7 +651,7 @@
 			longitude = 0
 		} = {} ) {
 
-			const shapes = TXTfont.generateShapes( text, size );
+			const shapes = TXT.font.generateShapes( text, size );
 
 			const geometry0 = new THREE.ShapeBufferGeometry( shapes );
 			geometry0.computeBoundingBox();
@@ -678,7 +675,7 @@
 
 			const mesh = new THREE.Mesh( geometry1, material );
 
-			TXTgroup.add( mesh );
+			TXT.group.add( mesh );
 
 			const geometry2 = geometry0.clone();
 			geometry2.applyMatrix4(
@@ -698,7 +695,7 @@
 
 			const mesh2 = new THREE.Mesh( geometry2, material2 );
 
-			TXTgroup.add( mesh2 );
+			TXT.group.add( mesh2 );
 
 		};
 
@@ -706,18 +703,18 @@
 
 		////////// raycasting
 
-		function addMouseMove() {
+		RAY.addMouseMove = function () {
 
-			renderer.domElement.addEventListener( "mousemove", onMouseMove );
-			renderer.domElement.addEventListener( "touchstart", onMouseMove );
-			renderer.domElement.addEventListener( "touchmove", onMouseMove );
+			renderer.domElement.addEventListener( "mousemove", RAY.onMouseMove );
+			renderer.domElement.addEventListener( "touchstart", RAY.onMouseMove );
+			renderer.domElement.addEventListener( "touchmove", RAY.onMouseMove );
 
 			//divInfo.innerHTML = "";
 		}
 
 
 
-		function onMouseMove( event ) {
+		RAY.onMouseMove = function ( event ) {
 
 			if ( event.type === "touchmove" || event.type === "touchstart" ) {
 
@@ -725,12 +722,12 @@
 				event.clientY = event.touches[ 0 ].clientY;
 			}
 
-			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-			mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+			RAY.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+			RAY.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
 
-			raycaster.setFromCamera( mouse, camera );
+			RAY.raycaster.setFromCamera( RAY.mouse, camera );
 
-			let intersects = raycaster.intersectObjects( group.children );
+			let intersects = RAY.raycaster.intersectObjects( PTS.group.children );
 
 			if ( intersects.length ) {
 
@@ -743,11 +740,11 @@
 					//console.log( "country", country );
 
 					divLog.hidden = false;
-					divLog.innerHTML = getHtm( country );
+					divLog.innerHTML = RAY.getHtm( country );
 					divLog.style.left = event.clientX + "px";
 					divLog.style.top = event.clientY + "px";
 
-					renderer.domElement.addEventListener( "click", onClick );
+					renderer.domElement.addEventListener( "click", RAY.onClick );
 
 				}
 
@@ -767,17 +764,17 @@
 
 
 
-		function onClick() {
+		RAY.onClick = function () {
 
 			divLog.hidden = true;
 
-			renderer.domElement.removeEventListener( "click", onClick );
+			renderer.domElement.removeEventListener( "click", RAY.onClick );
 
-		}
+		};
 
 
 
-		function getHtm( country ) {
+		RAY.getHtm = function ( country ) {
 
 			const name =country[ 1 ] ? country[ 1 ] : country[ 0 ]
 			//JSON.stringify( country, null, "<br>" ).slice( 1, -1 ).replace( /[",]/g, "");
@@ -789,54 +786,10 @@
 
 			return htm;
 
-		}
+		};
 
 
-
-		////////// Matrix updates
-
-		function getMatrixComposed( r = 50, lat = 0, lon = 0, height = 1 ) {
-
-			const position = latLonToXYZ( r + 0.5 * height, lat, lon );
-			const matrix = new THREE.Matrix4();
-			const quaternion = new THREE.Quaternion().setFromRotationMatrix(
-				matrix.lookAt(
-					new THREE.Vector3( 0, 0, 0 ),
-					position,
-					new THREE.Vector3( 0, 0, 1 )
-				)
-			);
-			const scale = new THREE.Vector3( 1, 1, height );
-
-			matrix.compose(
-				position,
-				quaternion,
-				scale
-			);
-
-			return matrix;
-
-		}
-
-
-
-		function latLonToXYZ( radius = 50, lat = 0, lon = 0 ) {
-
-			const phi = ( ( 90 - lat ) * Math.PI ) / 180;
-			const theta = ( ( 180 - lon ) * Math.PI ) / 180;
-			//console.log( "lat/lon", theta, phi, index);
-
-			const x = radius * Math.sin( phi ) * Math.cos( theta );
-			const y = radius * Math.sin( phi ) * Math.sin( theta );
-			const z = radius * Math.cos( phi );
-
-			return new THREE.Vector3( -x, y, z );
-
-		}
-
-
-
-		//////////
+		////////// Easter egg
 
 		function addHeart() {
 
@@ -860,7 +813,7 @@
 			heart.rotation.set( -0.5 * Math.PI, 0, 0 );
 			heart.scale.set( 0.2, 0.2, 0.2 );
 			//heart.instanceId = 999;
-			group.add( heart );
+			PTS.group.add( heart );
 
 		}
 
@@ -868,14 +821,13 @@
 
 		////////// Screen CCapture ~ Thank you Jaume Sancchez https://github.com/spite/ccapture.js/
 
-
-
 		SCC.frames = 240;
 		SCC.delta = ( 2 * Math.PI ) / ( SCC.frames - 1 );
 		SCC.phi = Math.PI;
 		SCC.radius = 120;
 
 		SCC.init = function () {
+
 			GLO.loadGlobeWithBitmap(
 				"https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fnat-earth-800.jpg?v=1588217961784"
 			);
@@ -930,6 +882,50 @@
 
 
 
+		////////// Matrix updates. used by PTS & TXT
+
+		function getMatrixComposed( r = 50, lat = 0, lon = 0, height = 1 ) {
+
+			const position = latLonToXYZ( r + 0.5 * height, lat, lon );
+			const matrix = new THREE.Matrix4();
+			const quaternion = new THREE.Quaternion().setFromRotationMatrix(
+				matrix.lookAt(
+					new THREE.Vector3( 0, 0, 0 ),
+					position,
+					new THREE.Vector3( 0, 0, 1 )
+				)
+			);
+			const scale = new THREE.Vector3( 1, 1, height );
+
+			matrix.compose(
+				position,
+				quaternion,
+				scale
+			);
+
+			return matrix;
+
+		}
+
+
+
+		function latLonToXYZ( radius = 50, lat = 0, lon = 0 ) {
+
+			const phi = ( ( 90 - lat ) * Math.PI ) / 180;
+			const theta = ( ( 180 - lon ) * Math.PI ) / 180;
+			//console.log( "lat/lon", theta, phi, index);
+
+			const x = radius * Math.sin( phi ) * Math.cos( theta );
+			const y = radius * Math.sin( phi ) * Math.sin( theta );
+			const z = radius * Math.cos( phi );
+
+			return new THREE.Vector3( -x, y, z );
+
+		}
+
+
+
+
 		//////////
 
 		function requestFile( url, callback ) {
@@ -943,7 +939,26 @@
 
 		}
 
+
+
 		////////// three.js
+
+
+
+		function addLights() {
+
+			//scene.add( new THREE.AmbientLight( 0x404040 ) );
+			scene.add( new THREE.AmbientLight( 0xaaaaaa ) );
+
+			const pointLight = new THREE.PointLight( 0xffffff, 1 );
+			pointLight.position.copy( camera.position );
+			camera.add( pointLight );
+
+			// lightDirectional = new THREE.DirectionalLight( 0xdffffff, 0 );
+			// lightDirectional.position.set( -50, -200, 100 );
+			// scene.add( lightDirectional );
+
+		}
 
 		function setStats() {
 

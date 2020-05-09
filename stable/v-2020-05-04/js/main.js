@@ -8,10 +8,10 @@
 let build = "stable";
 //let build = "dev";
 
-let timeStamp = "1919";
+let timeStamp = "2155";
 
-let versionStable = "v-2020-05-04";
-let versionDev = "v-2020-05-04";
+let versionStable = "v-2020-05-08";
+//let versionDev = "v-2020-05-08";
 
 ////////// Menu title
 
@@ -48,7 +48,7 @@ let messageInfo = `
 
 let messageOfTheDayStable = `
 <mark>
-New for 2020-05-04
+New for 2020-05-08
 <ul>
 		<li>In process of moving this project to <a href="https://glitch.com/@theo-armour" target="_blank">Glitch</a></li>
 	<li>See <a href="https://dev.to/theoarmour" target="_blank">posts on Dev.to</a> for details</li>
@@ -59,7 +59,7 @@ New for 2020-05-04
 
 let messageOfTheDayDev = `
 <mark>
-New for 2020-05-04
+New for 2020-05-08
 <ul>
 	<li>Nothing new yet</li>
 	<li>In process of moving this project to <a href="https://glitch.com/@theo-armour" target="_blank">Glitch</a></li>

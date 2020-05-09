@@ -143,7 +143,7 @@ WP.onLoadDataInfoboxes = function ( xhr ) {
 	WP.html = parser.parseFromString( text, "text/html" );
 
 	const infoboxes = WP.html.querySelectorAll( ".infobox" );
-	console.log( "ib", infoboxes );
+	//console.log( "ib", infoboxes );
 
 	WPdivGraph.innerHTML = !infoboxes.length ?
 		`<p>Wikipedia article for ${ WP.place } has no infoboxes.</p>`

@@ -7,10 +7,10 @@ value='You are now in a GitHub web page view - Click this button to view this re
 # [Globe Template Read Me]( https://www.ladybug.tools/spider-covid-19-viz-3d/readme.html#cookbook/globe-template/README.md )
 
 
-<iframe src=https://www.ladybug.tools/spider-covid-19-viz-3d/readme.html#cookbook/globe-template/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
-_globe-temp.html_
+<iframe src=https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/globe-template/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
+_globe-template.html_
 
-### Full Screen: [Globe Template]( https://www.ladybug.tools/spider-covid-19-viz-3d/readme.html#cookbook/globe-template/ )
+### Full Screen: [Globe Template]( https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/globe-template/ )
 
 
 <details open >
@@ -19,19 +19,30 @@ _globe-temp.html_
 
 An online interactive 3D Globe designed to be forked, hacked and remixed
 
+The concept of the web page is to show you a current situation around the entire world in 3 seconds or less.
+
+- Provide entry-level programming code - plain-vanilla JavaScript - anybody can copy and make better
+- Display all the data in seconds on any device then zoom and rotate and click to see the cases in 3D
+
+The general idea is
+
+- You want to access the latest global data
+- You want to access the latest data for where you live
+- You want to access "an expression of hope" even if the data is nasty
+
 ## Features
 
 ### User Experience
 
 - Instantly recognizable content format
-  - The Earth as a globe
-  - Starts with Globe spinning
+  - The Earth as a globe is a highly familiar concept
+  - Opens with the globe spinning then stops as soon as you touch
   - Informs that you are in an interactive 3D world
 - Designed for speed
   - Useful content in under two seconds
   - Acceptable performance even on low end devices
-  - Data for each marker is accessible in real-time
-- Data files supplied via the Glitch CDN
+  - Further data for each data point is accessible in real-time
+- Data files supplied via the Glitch content delivery network (CDN)
   - Speedy delivery to anywhere in the world
 - Interact on phone, table or computer
   - Rotate and zoom
@@ -72,6 +83,7 @@ An online interactive 3D Globe designed to be forked, hacked and remixed
 - Access and display GeoJSON data
 - Access and display useful performance statistics
 
+
 ### Developer Experience
 
 - Running on GitHub pages, Glitch, embedded Glitch: Soon: Mozilla: Hubs
@@ -89,6 +101,7 @@ An online interactive 3D Globe designed to be forked, hacked and remixed
 - 60 FPS / few draw calls
 - Three files only: html, css and JavaScript
 
+
 ### Utility function
 
 - Access Stat.js and Renderer.info
@@ -101,17 +114,28 @@ An online interactive 3D Globe designed to be forked, hacked and remixed
 - Matrix compose position, scale and rotation
 - Load Three.js 3D fonts
 
+### Benefits of 3D versus 2D
+
+- Much less crowded
+- More variables visible simultaneously
+- More relationships possible
+
+
+### The globe as a familiar and non-judgmental narrative for presenting data
+
+- 2D charts have "pecking orders", items are ranked whereas in 3D, items are simply located
+
 
 </details>
 
 <details open >
 <summary>To do and wish list </summary>
+
 - Document SSC
 - Shaders
 - Zoom levels with levels of detail
 - Sky boxes and backgrounds
 
-- Stats on right
 
 </details>
 
@@ -176,6 +200,8 @@ geoJson useful
 
 - Archive files and rename folders to calendar versioning
 - Update readme
+- Stats on right
+
 
 
 ### 2020-05-07

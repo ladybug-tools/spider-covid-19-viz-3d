@@ -7,7 +7,7 @@ value='You are now in a GitHub web page view - Click this button to view this re
 # [globe-population-cities Read Me]( https://www.ladybug.tools/spider-covid-19-viz-3d/readme.html#cookbook/globe-population-cities/README.md )
 
 
-<iframe src=https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/globe-population-cities/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
+<iframe src=https://ladybug.tools/spider-covid-19-viz-3d/cookbook/globe-population-cities/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
 _globe-population-cities.html_
 
 ### Full Screen: [globe-population-cities]( https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/globe-population-cities/ )

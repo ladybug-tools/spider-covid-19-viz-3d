@@ -1,19 +1,10 @@
 /* global THREE, aSource, svgOcticon, spnIcon, sTitle, sVersion, divDescription,divLog, geoDataGlobalCsv, geoDataRegionalCsv, CCapture */
 
 
-aSource.href =
-		"https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-template";
 
-svgOcticon = `<svg height="18" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="18" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>`;
-spnIcon.innerHTML = svgOcticon;
 
-sTitle.innerHTML = document.title;
-const version = document.head.querySelector( "[ name=version ]" );
-sVersion.innerHTML = version ? version.content : "";
 
-divDescription.innerHTML = document.head.querySelector(
-	"[ name=description ]"
-).content;
+
 
 const GLO = {
 	globe: undefined,
@@ -32,7 +23,8 @@ const TXT = {}; // three.js 3D text
 const RAY = { // three.js mouse interaction with scene
 
 	raycaster: new THREE.Raycaster(),
-	mouse: new THREE.Vector2()
+	mouse: new THREE.Vector2(),
+	intersectObjects: undefined
 
 };
 
@@ -50,7 +42,7 @@ let renderer, camera, controls, scene;
 
 
 
-function init () {
+function initThreejs () {
 
 	timeStart = performance.now();
 
@@ -97,19 +89,6 @@ function init () {
 	renderer.domElement.addEventListener( "touchmove", onStart );
 	renderer.domElement.addEventListener( "touchend", onStart );
 
-	GLO.initGlobeWithBitmap();
-
-	GJS.initGeoJson();
-
-	PTS.init();
-
-	TXT.init();
-
-	HRT.initHeart();
-
-	RAY.addMouseMove();
-
-	console.log( "msInit", performance.now() - timeStart );
 
 }
 
@@ -178,7 +157,7 @@ GLO.setGlobeElevation3D = function ( value = 50 ) {
 
 		GLO.globe = new THREE.Mesh( geometry, material );
 		GLO.globe.matrixAutoUpdate = false;
-		GLO.globe.name = "globe";
+		GLO.globe.name = "globe3d";
 
 		scene.add( GLO.globe );
 
@@ -349,13 +328,13 @@ TXT.init = function () {
 		scene.remove( TXT.group );
 
 		TXT.group = new THREE.Group();
-		TXT.group.name = "txtgroup";
+		TXT.group.name = "txtGroup";
 
 		TXT.addTextContinents();
 
-		TXT.addTextDataPoints( geoDataGlobalCsv );
+		//TXT.addTextDataPoints( geoDataGlobalCsv );
 
-		TXT.addTextDataPoints( geoDataRegionalCsv );
+		//TXT.addTextDataPoints( geoDataRegionalCsv );
 
 		scene.add( TXT.group );
 
@@ -370,35 +349,35 @@ TXT.init = function () {
 TXT.addTextContinents = function () {
 
 	TXT.addSimpleText( {
-		text: "Africa",
+		text: "Africa\n1.2 billion people",
 		color: 0x0000,
 		radius: 70,
 		latitude: "0",
 		longitude: "0"
 	} );
 	TXT.addSimpleText( {
-		text: "Europe",
+		text: "Europe\n 750 million people",
 		color: 0x0085c7,
 		radius: 70,
 		latitude: "50",
 		longitude: "50"
 	} );
 	TXT.addSimpleText( {
-		text: "Asia",
+		text: "Asia\n4.5 billion people",
 		color: 0xf4c300,
 		radius: 75,
 		latitude: "20",
 		longitude: "130"
 	} );
 	TXT.addSimpleText( {
-		text: "Oceania",
+		text: "Oceania\n43 million people",
 		color: 0x009f3d,
 		radius: 75,
 		latitude: "-10",
 		longitude: "160"
 	} );
 	TXT.addSimpleText( {
-		text: "Americas",
+		text: "Americas\n1 billion people",
 		color: 0xdf0024,
 		radius: 70,
 		latitude: "0",
@@ -429,7 +408,7 @@ TXT.addSimpleText = function ( {
 	const xMid = - 0.5 * geometry0.boundingBox.getSize( new THREE.Vector3() ).x;
 	geometry0.translate( xMid, 0, 0 );
 
-	geometry1 = geometry0
+	const geometry1 = geometry0
 		.clone()
 		.applyMatrix4( new THREE.Matrix4().makeRotationY( 0.5 * Math.PI ) )
 		.applyMatrix4( matrix );
@@ -503,7 +482,7 @@ TXT.addTextDataPoints = function ( places ) {
 
 
 
-////////// raycasting
+////////// Interacting between DOM and 3D
 
 RAY.addMouseMove = function () {
 
@@ -531,7 +510,7 @@ RAY.onMouseMove = function ( event ) {
 
 	RAY.raycaster.setFromCamera( RAY.mouse, camera );
 
-	let intersects = RAY.raycaster.intersectObjects( [ ...PTS.group.children, GLO.globe ] );
+	let intersects = RAY.raycaster.intersectObjects( RAY.intersectedObjects );
 	let intersected;
 
 	if ( intersects.length ) {
@@ -539,6 +518,7 @@ RAY.onMouseMove = function ( event ) {
 		intersected = intersects[ 0 ];
 
 		if ( intersected.instanceId ) {
+
 			//console.log( "int", intersected );
 
 			divLog.hidden = false;
@@ -591,7 +571,7 @@ RAY.getHtm = function ( intersected ) {
 
 	return htm;
 
-};
+}
 
 
 ////////// Easter egg
@@ -624,7 +604,7 @@ HRT.initHeart = function () {
 
 
 
-////////// Screen CCapture ~ Thank you Jaume Sancchez https://github.com/spite/ccapture.js/
+////////// Screen CCapture ~ Thank you Jaume Sanchez https://github.com/spite/ccapture.js/
 
 SCC.frames = 240;
 SCC.delta = ( 2 * Math.PI ) / ( SCC.frames - 1 );
@@ -735,7 +715,7 @@ function latLonToXYZ ( radius = 50, lat = 0, lon = 0 ) {
 
 
 
-//////////
+////////// DOM utilities
 
 function requestFile ( url, callback ) {
 
@@ -751,8 +731,6 @@ function requestFile ( url, callback ) {
 
 
 ////////// three.js
-
-
 
 function addLights () {
 
@@ -776,7 +754,10 @@ function setStats () {
 	const script = document.head.appendChild( document.createElement( "script" ) );
 	script.onload = () => {
 
-		const stats = new Stats(); document.body.appendChild( stats.dom );
+		const stats = new Stats();
+		const statsDom = document.body.appendChild( stats.dom );
+		statsDom.style.left = "";
+		statsDom.style.right = "0px";
 		requestAnimationFrame( function loop () {
 
 			stats.update(); requestAnimationFrame( loop );
@@ -790,16 +771,14 @@ function setStats () {
 
 	const render = renderer.info.render;
 
-	divInfo.classList.add( "navText" );
+	//divInfo.classList.add( "navText" );
 	divInfo.innerHTML = `
-		Renderer<br>
-		Calls: ${render.calls }<br>
-		Triangles: ${render.triangles.toLocaleString() }<br>
-		`;
+	Renderer<br>
+	Calls: ${render.calls }<br>
+	Triangles: ${render.triangles.toLocaleString() }<br>
+	`;
 
 }
-
-
 
 function onWindowResize () {
 
@@ -820,7 +799,3 @@ function animate () {
 	controls.update();
 
 }
-
-
-init();
-animate();

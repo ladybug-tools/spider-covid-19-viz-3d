@@ -116,8 +116,10 @@ An online interactive 3D Globe designed to be forked, hacked and remixed
 </details>
 
 <details open >
-<summary>Issues </summary>
+<summary>Issues and items to resolve </summary>
 
+- 2020-05-10 ~ Should three.js be in its own name space?
+- 2020-05-10 ~ Should the JavaScript be split into several smaller modules
 
 </details>
 

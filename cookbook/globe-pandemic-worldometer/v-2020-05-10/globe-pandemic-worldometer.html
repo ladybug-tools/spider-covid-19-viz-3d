@@ -14,7 +14,7 @@
 		content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
 	<meta name="version" content="2020-05-10" />
 
-	<title>globe-population-cities</title>
+	<title>globe-pandemic-worldometer</title>
 
 	<link rel="stylesheet" href="./style.css">
 
@@ -26,7 +26,8 @@
 	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/utils/BufferGeometryUtils.js"></script>
 
 
-
+	<script src="geo-data-global-csv-2020-05-06.js"></script>
+	<script src="geo-data-regional-csv-2020-05-05.js"></script>
 
 	<nav id="navMenu">
 
@@ -41,12 +42,12 @@
 						<img width="18" src="https://cdn.glitch.com/2250d667-1452-448b-8cd3-e0bdfd5adb3c%2Fglitch-icon.svg" >
 					</a>
 
-					<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-population-cities/" target="_top" title="Source code on GitHub">
+					<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-pandemic-worldometer/" target="_top" title="Source code on GitHub">
 						<img src="https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fmark-github.svg?v=1589095846856" >
 					</a>
 
 					<a href="" title="Click to reload this page">
-						globe-population-cities &nbsp;
+						globe-pandemic-worldometer &nbsp;
 						<span id="sVersion"></span>
 					</a>
 
@@ -101,8 +102,8 @@
 
 		let groupCities;
 
-		const urlWorldCitiesCsv =
-			"https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fworldcities.csv?v=1589145004944";
+		const urlWorldometer =
+			"https://www.worldometers.info/coronavirus/";
 
 
 		init();
@@ -117,15 +118,18 @@
 
 			GJS.initGeoJson();
 
-			//PTS.init();
+			PTS.init();
 
 			TXT.init();
 
 			HRT.initHeart();
 
+
+
 			RAY.addMouseMove();
 
-			requestFile( urlWorldCitiesCsv, onLoadWorldCitiesInstanced );
+			const urlCORS = 'https://cors-anywhere.herokuapp.com/';
+			requestFile( urlCORS + urlWorldometer, onLoadWorldometer );
 
 			console.log( "msInit", performance.now() - timeStart );
 
@@ -134,18 +138,22 @@
 
 
 
-		function onLoadWorldCitiesInstanced ( response ) {
+		function onLoadWorldometer ( response ) {
 
-			cities = response.split( /\n/ ).map( line => line.replace( /\"/g, "" ).split( "," ) );
-			//console.log( "cities", cities );
+			const parser = new DOMParser();
+			const html = parser.parseFromString( response, "text/html" );
+			//console.log( "html", html );
 
-			scene.remove( groupCities );
+			const table = html.querySelector( "#main_table_countries_today" );
+			//console.log(table );
 
-			groupCities = addPoints( cities )
+			const trs = table.querySelectorAll( "tr" );
+			//console.log( 'trs', trs );
 
-			scene.add( groupCities );
+			PTS.places = Array.from( trs ).map( tr => tr.innerText.trim().split( "\n" ) );
+			console.log( "PTS.places", PTS.places );
 
-			RAY.intersectedObjects = [ ... groupCities.children, GLO.globe ];
+			PTS.group.add( PTS.getPoints( PTS.places ) );
 
 			divTime.innerHTML = `Time to load data<br> ${ ( performance.now() - timeStart ).toLocaleString() } ms`;
 
@@ -153,33 +161,59 @@
 
 
 		// following is in place of PTS() in script.js
-		function addPoints( cities ) {
+		PTS.getPoints = function( places ) {
 
-			let geometry = new THREE.CylinderBufferGeometry( 0.3, 0.1, 1, 5, 1, true );
+			let geometry = new THREE.CylinderBufferGeometry( 0.5, 0.2, 1, 5, 1, true );
 			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 			geometry.applyMatrix4( new THREE.Matrix4().makeScale( -1, -1, -1 ) );
 
 			const material = new THREE.MeshNormalMaterial({ side: 2 } );
-			const mesh = new THREE.InstancedMesh( geometry, material, cities.length );
+			const mesh = new THREE.InstancedMesh( geometry, material, places.length );
 
-			for ( let i = 0; i < cities.length; i ++ ) {
+			for ( let i = 0; i < places.length; i ++ ) {
 
-				city = cities[ i ];
-				let height = isNaN( Number( city[ 9 ] ) ) ? 1000 : Number( city[ 9 ] );
-				height = height < 1000 ? 1000 : height;
-				height = 0.005 * Math.sqrt( height );
-				//console.log( "height", height );
+				place = places[ i ];
 
-				const matrix = getMatrixComposed( { radius: 50, latitude: + city[ 2 ], longitude: + city[ 3 ],
-					sclX: 0.2 * height, sclY: 0.2 * height, height: height } );
-				mesh.setMatrixAt( i, matrix );
+				place[ 0 ] = place[ 0 ].trim()
+					.replace( /CAR/, "Central African Republic" )
+					.replace( /Channel Islands/, "Guernsey" )
+					.replace( /Congo/, "Republic of the Congo" )
+					.replace( /Czechia/, "Czech Republic" )
+					.replace( /DRC/, "Democratic Republic of the Congo" )
+					.replace( /Macao/, "Macau" )
+					.replace( /S. Korea/, "South Korea" )
+					.replace( /UAE/, "United Arab Emirates" )
+					.replace( /USA/, "United States" )
+					.replace( /UK/, "United Kingdom" );
+
+				let find = geoDataGlobalCsv.find( country => country[ 0 ] === place[ 0 ] )
+
+				if ( ! find ) {
+
+					find = geoDataRegionalCsv.find( country => country[ 1 ] === place[ 0 ] )
+
+				}
+
+				if ( find ) {
+
+					let height = + place[ 1 ].replace( /\,/g, "" );
+					height = 0.05 * Math.sqrt( height );
+					height = height < 1 ? 1: height;
+					console.log( "height", height );
+
+					const matrix = getMatrixComposed( { radius: 50, latitude: + find[ 2 ], longitude: + find[ 3 ],
+						 height: height } );
+					mesh.setMatrixAt( i, matrix );
+
+				} else {
+
+					console.log( "no find",i, place[ 0 ] );
+				}
 
 			}
 
-			group = new THREE.Group();
-			group.add( mesh );
 
-			return group;
+			return mesh;
 		}
 
 
@@ -188,11 +222,13 @@
 
 		RAY.getHtm = function ( intersected ) {
 
+			//console.log( "intersected", intersected );
+
 			const index = intersected.instanceId;
 
-			const row0 = cities[ 0 ];
-			const city = cities[ index ];
-			const htm = city.map( ( item, i ) => {
+			const row0 = PTS.places[ 0 ];
+			const place = PTS.places[ index ];
+			const htm = place.map( ( item, i ) => {
 
 				item = i === 0 ? `<a href="https://en.wikipedia.org/w/index.php?search=${ item }" target="_blank">${ item }</a>` : item;
 				item = i === 9 ? ( + item ).toLocaleString() : item;

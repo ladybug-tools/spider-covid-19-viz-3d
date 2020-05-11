@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta
+		name="viewport"
+		content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
+	<meta
+		name="description"
+		content="An online interactive 3D Globe designed to be forked, hacked and remixed  with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library" />
+	<meta
+		name="keywords"
+		content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
+	<meta name="version" content="2020-05-10" />
+
+	<title>globe-template</title>
+
+	<link rel="stylesheet" href="./style.css">
+
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/controls/OrbitControls.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/utils/BufferGeometryUtils.js"></script>
+
+	<script src="geo-data-global-csv-2020-05-06.js"></script>
+	<script src="geo-data-regional-csv-2020-05-05.js"></script>
+
+
+
+	<nav id="navMenu">
+
+		<details open>
+
+			<summary>show || hide menu</summary>
+
+			<header id="hdrTitle">
+				<h2>
+
+					<a href="https://glitch.com/~2020-05-08-globe-template" target="_top" title="Source code on Glitch">
+						<img width="18" src="https://cdn.glitch.com/2250d667-1452-448b-8cd3-e0bdfd5adb3c%2Fglitch-icon.svg" >
+					</a>
+
+					<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-template/" target="_top" title="Source code on GitHub">
+						<img src="https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fmark-github.svg?v=1589095846856" >
+					</a>
+
+					<a href="" title="Click to reload this page">
+						globe-template &nbsp;
+						<span id="sVersion"></span>
+					</a>
+
+					<span class="info">&#x24d8;<span id="divDescription" class="infotooltip" ></span></span>
+
+				</h2>
+
+			</header>
+
+			<p class=navText >
+				Elevations: <output id=outElev >0</output>
+				<input type=range value=0 id="rng"
+					oninput=GLO.setGlobeElevation3D(this.value);outElev.value=this.value; >
+			</p>
+
+			<div id="divTime" ></div>
+
+			<div id="divInfo" ></div>
+
+		</details>
+
+	</nav>
+
+	<div id="divLog" >When you touch a country indicator,<br>the rotation will stop<br>and statistics will appear here </div>
+
+	<footer  >
+
+		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
+
+		<button onclick="controls.autoRotate=!controls.autoRotate" title="toggle the rotation"
+		class=ftrButton>&circlearrowright;</button>
+
+		<button onclick="TXT.group.visible=! TXT.group.visible;divLog.hidden = true;" title="toggle statistics"
+		class=ftrButton>&sdotb;</button>
+
+		<button onclick=setStats(); title="View frames per second and number of draw calls" class=ftrButton>fps</button>
+
+	</footer>
+
+
+	<script src="script.js"></script>
+	<script>
+
+
+	</script>
+</body>
+</html>

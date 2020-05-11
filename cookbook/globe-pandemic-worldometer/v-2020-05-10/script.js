@@ -249,16 +249,16 @@ GJS.addLineSegments = function ( segments ) {
 
 //////////
 
-PTS.init = function () {
+PTS.init = function ( data ) {
 
 	scene.remove( PTS.group );
 
 	PTS.group = new THREE.Group();
 	PTS.group.name = "instances";
 
-	PTS.addPoints( geoDataGlobalCsv );
+	//PTS.group = PTS.getPoints( data );
 
-	PTS.addPoints( geoDataRegionalCsv );
+	//PTS.addPoints( geoDataRegionalCsv );
 
 	scene.add( PTS.group );
 
@@ -270,7 +270,7 @@ PTS.addPoints = function ( countries = geoDataGlobalCsv ) {
 
 	//const timeStart = performance.now();
 
-	const geometry = new THREE.CylinderBufferGeometry( 0.6, 0.1, 1, 5, 1, true );
+	const geometry = new THREE.CylinderBufferGeometry( 0.7, 0.2, 1, 5, 1, true );
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 	geometry.applyMatrix4( new THREE.Matrix4().makeScale( - 1, - 1, - 1 ) ); // prettifies the coloring
 	const material = new THREE.MeshNormalMaterial( { side: 2 } );
@@ -500,7 +500,9 @@ RAY.onMouseMove = function ( event ) {
 
 	RAY.raycaster.setFromCamera( RAY.mouse, camera );
 
-	let intersects = RAY.raycaster.intersectObjects( RAY.intersectedObjects );
+	RAY.intersectObjects = [ ... PTS.group.children, GLO.globe ];
+	
+	let intersects = RAY.raycaster.intersectObjects( RAY.intersectObjects );
 	let intersected;
 
 	if ( intersects.length ) {

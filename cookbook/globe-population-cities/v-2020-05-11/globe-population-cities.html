@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta
+		name="viewport"
+		content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
+	<meta
+		name="description"
+		content="An online interactive 3D Globe presenting the data from https://simplemaps.com/data/world-cities with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library" />
+	<meta
+		name="keywords"
+		content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
+
+	<title>globe-population-cities</title>
+
+	<link rel="stylesheet" href="./style.css">
+
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/controls/OrbitControls.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/utils/BufferGeometryUtils.js"></script>
+
+	<script src="js/glo-globe-object-2020-05-11.js" ></script>
+	<script src="js/gjs-geojson-2020-05-11.js" ></script>
+	<script src="js/pts-data-points-2020-05-11.js"></script>
+	<script src="js/txt-text-three-2020-05-11.js" ></script>
+	<script src="js/ray-raycaster-2020-05-11.js"></script>
+
+	<nav id="navMenu">
+
+		<details open>
+
+			<summary>show || hide menu</summary>
+
+			<header id="hdrTitle">
+				<h2>
+
+					<a href="https://glitch.com/~2020-05-08-globe-template" target="_top" title="Source code on Glitch">
+						<img width="18" src="https://cdn.glitch.com/2250d667-1452-448b-8cd3-e0bdfd5adb3c%2Fglitch-icon.svg" >
+					</a>
+
+					<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-population-cities/" target="_top" title="Source code on GitHub">
+						<img src="https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fmark-github.svg?v=1589095846856" >
+					</a>
+
+					<a href="" title="Click to reload this page">
+						globe-population-cities
+						2020-05-11
+					</a>
+					&nbsp;
+					<span class="info">&#x24d8;<span id="divDescription" class="infotooltip" >
+						An online interactive 3D Globe presenting the data from https://simplemaps.com/data/world-cities with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library
+					</span></span>
+
+				</h2>
+
+			</header>
+
+			<p class=navText >
+				Elevations: <output id=outElev >0</output>
+				<input type=range value=0 id="rng"
+					oninput=GLO.setGlobeElevation3D(this.value);outElev.value=this.value; >
+			</p>
+
+			<div id="divTime" ></div>
+
+			<div id="divInfo" ></div>
+
+		</details>
+
+	</nav>
+
+	<div id="divPopUp" >When you touch a country indicator,<br>the rotation will stop<br>and statistics will appear here </div>
+
+
+	<footer>
+
+		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
+
+		<button onclick="controls.autoRotate=!controls.autoRotate" title="toggle the rotation"
+		class=ftrButton>&circlearrowright;</button>
+
+		<button onclick="TXT.group.visible=! TXT.group.visible;divLog.hidden = true;" title="toggle statistics"
+		class=ftrButton>&sdotb;</button>
+
+		<button onclick=setStats(); title="View frames per second and number of draw calls" class=ftrButton>fps</button>
+
+	</footer>
+
+
+	<script src="script.js"></script>
+
+	<script>
+
+
+		let groupCities;
+
+
+		init();
+
+
+		function init () {
+
+			initThreejs();
+			animate();
+
+			GLO.initGlobeWithBitmap();
+
+			GJS.initGeoJson();
+
+			PTS.init();
+
+			TXT.init();
+
+			RAY.addMouseMove();
+
+			HRT.initHeart();
+
+
+			const urlWorldCitiesCsv =
+			"https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fworldcities.csv?v=1589145004944";
+
+			requestFile( urlWorldCitiesCsv, onLoadWorldCitiesInstanced );
+
+			console.log( "msInit", performance.now() - timeStart );
+
+		}
+
+
+
+		function onLoadWorldCitiesInstanced ( response ) {
+
+			cities = response.split( /\n/ ).map( line => line.replace( /\"/g, "" ).split( "," ) );
+			//console.log( "cities", cities );
+
+			addPoints( cities );
+
+			RAY.intersectObjects = [ ... PTS.group.children, GLO.globe ];
+
+			divTime.innerHTML = `Time to load data<br> ${ ( performance.now() - timeStart ).toLocaleString() } ms`;
+
+		}
+
+
+		// following is in place of PTS.addPoints()
+
+		function addPoints( cities ) {
+
+			let geometry = new THREE.CylinderBufferGeometry( 0.3, 0.1, 1, 5, 1, true );
+			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
+			geometry.applyMatrix4( new THREE.Matrix4().makeScale( -1, -1, -1 ) );
+
+			const material = new THREE.MeshNormalMaterial({ side: 2 } );
+			const mesh = new THREE.InstancedMesh( geometry, material, cities.length );
+
+			for ( let i = 0; i < cities.length; i ++ ) {
+
+				city = cities[ i ];
+				let height = isNaN( Number( city[ 9 ] ) ) ? 1000 : Number( city[ 9 ] );
+				height = height < 1000 ? 1000 : height;
+				height = 0.005 * Math.sqrt( height );
+				//console.log( "height", height );
+
+				const matrix = getMatrixComposed( { radius: 50, latitude: + city[ 2 ], longitude: + city[ 3 ],
+					sclX: 0.2 * height, sclY: 0.2 * height, height: height } );
+				mesh.setMatrixAt( i, matrix );
+
+			}
+
+			//group = new THREE.Group();
+			PTS.group.add( mesh );
+
+		}
+
+
+		TXT.onLoadFontRunThese = function () {
+
+			TXT.addTextContinents();
+
+		};
+
+
+
+		// following is in place of RAY.getHtm() in script.js
+
+		RAY.getHtm = function ( intersected ) {
+
+			const index = intersected.instanceId;
+
+			const row0 = cities[ 0 ];
+			const city = cities[ index ];
+			const htm = city.map( ( item, i ) => {
+
+				item = i === 0 ? `<a href="https://en.wikipedia.org/w/index.php?search=${ item }" target="_blank">${ item }</a>` : item;
+				item = i === 9 ? ( + item ).toLocaleString() : item;
+				return `${ row0[ i ] }: ${ item } `;
+
+			} ).join( "<br>" );
+
+
+			return htm;
+
+		};
+
+
+	</script>
+
+</body>
+</html>

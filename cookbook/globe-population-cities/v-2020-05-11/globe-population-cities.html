@@ -106,6 +106,7 @@
 		function init () {
 
 			initThreejs();
+
 			animate();
 
 			GLO.initGlobeWithBitmap();
@@ -124,7 +125,7 @@
 			const urlWorldCitiesCsv =
 			"https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fworldcities.csv?v=1589145004944";
 
-			requestFile( urlWorldCitiesCsv, onLoadWorldCitiesInstanced );
+			requestFile( urlWorldCitiesCsv, onLoadWorldCities );
 
 			console.log( "msInit", performance.now() - timeStart );
 
@@ -132,12 +133,12 @@
 
 
 
-		function onLoadWorldCitiesInstanced ( response ) {
+		function onLoadWorldCities ( response ) {
 
 			cities = response.split( /\n/ ).map( line => line.replace( /\"/g, "" ).split( "," ) );
 			//console.log( "cities", cities );
 
-			addPoints( cities );
+			PTS.group.add( getMesh( cities ) );
 
 			RAY.intersectObjects = [ ... PTS.group.children, GLO.globe ];
 
@@ -148,7 +149,7 @@
 
 		// following is in place of PTS.addPoints()
 
-		function addPoints( cities ) {
+		function getMesh( cities ) {
 
 			let geometry = new THREE.CylinderBufferGeometry( 0.3, 0.1, 1, 5, 1, true );
 			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
@@ -159,7 +160,7 @@
 
 			for ( let i = 0; i < cities.length; i ++ ) {
 
-				city = cities[ i ];
+				const city = cities[ i ];
 				let height = isNaN( Number( city[ 9 ] ) ) ? 1000 : Number( city[ 9 ] );
 				height = height < 1000 ? 1000 : height;
 				height = 0.005 * Math.sqrt( height );
@@ -172,7 +173,8 @@
 			}
 
 			//group = new THREE.Group();
-			PTS.group.add( mesh );
+
+			return mesh;
 
 		}
 

@@ -11,9 +11,9 @@ PTS.init = function () {
 	PTS.group = new THREE.Group();
 	PTS.group.name = "instances";
 
-	PTS.addPoints( geoDataGlobalCsv );
+	//PTS.addPoints( geoDataGlobalCsv );
 
-	PTS.addPoints( geoDataRegionalCsv );
+	//PTS.addPoints( geoDataRegionalCsv );
 
 	scene.add( PTS.group );
 

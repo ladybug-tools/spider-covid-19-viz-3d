@@ -17,7 +17,7 @@ TXT.onLoadFontRunThese = function () {
 
 	TXT.addTextDataPoints( geoDataGlobalCsv );
 
-	TXT.addTextDataPoints( geoDataRegionalCsv );
+	//TXT.addTextDataPoints( geoDataRegionalCsv );
 
 };
 

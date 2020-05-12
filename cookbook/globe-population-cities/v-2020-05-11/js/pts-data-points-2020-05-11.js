@@ -4,25 +4,23 @@
 const PTS = {}; // data points. Each point is displayed as a cylindrical 3D object rising perpendicularly from the surface of the globe.
 
 
+
 PTS.init = function () {
 
 	scene.remove( PTS.group );
-
 	PTS.group = new THREE.Group();
 	PTS.group.name = "instances";
-
-	//PTS.addPoints( geoDataGlobalCsv );
-
-	//PTS.addPoints( geoDataRegionalCsv );
-
 	scene.add( PTS.group );
 
+	//PTS.group.add( PTS.getMesh( geoDataGlobalCsv ) );
+
+	//PTS.group.add( PTS.getMesh( geoDataRegionalCsv ) );
 
 };
 
 
 
-PTS.addPoints = function ( countries = geoDataGlobalCsv ) {
+PTS.getMesh = function ( countries = geoDataGlobalCsv ) {
 
 	//const timeStart = performance.now();
 
@@ -47,9 +45,9 @@ PTS.addPoints = function ( countries = geoDataGlobalCsv ) {
 
 	} );
 
-	PTS.group.add( mesh );
-
 	console.log( "msPts", performance.now() - timeStart );
+
+	return mesh;
 
 };
 

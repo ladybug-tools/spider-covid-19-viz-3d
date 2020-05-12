@@ -176,7 +176,7 @@ TXT.addTextDataPoints = function ( places ) {
 	} );
 
 	const mergedGeometry = THREE.BufferGeometryUtils.mergeBufferGeometries( geometriesTxt );
-	const materialTxt = new THREE.MeshBasicMaterial( { color: "orange", side: 0 } );
+	const materialTxt = new THREE.MeshBasicMaterial( { color: "yellow", side: 0 } );
 	const meshTxt = new THREE.Mesh( mergedGeometry, materialTxt );
 
 	TXT.group.add( meshTxt );

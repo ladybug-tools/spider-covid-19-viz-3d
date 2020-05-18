@@ -15,7 +15,7 @@ TXT.onLoadFontRunThese = function () {
 
 	TXT.addTextContinents();
 
-	TXT.addTextDataPoints( geoDataGlobalCsv );
+	// TXT.addTextDataPoints( geoDataGlobalCsv );
 
 	//TXT.addTextDataPoints( geoDataRegionalCsv );
 
@@ -143,23 +143,31 @@ TXT.addSimpleText = function ( {
 };
 
 
-TXT.addTextDataPoints = function ( places ) {
+TXT.addTextDataPoints = function () {
+
 
 	const geometriesTxt = [];
 
-	places.forEach( place => {
+	PTS.places.forEach( place => {
 
-		const txt = place[ 1 ] ? place[ 1 ] : place[ 0 ];
-		const siz = place[ 1 ] ? 0.7 : 1.0;
+		console.log( "place", place );
+
+		placeGeoData = place.pop();
+
+		const txt = placeGeoData[ 1 ] ? placeGeoData[ 1 ] : placeGeoData[ 0 ];
+		const siz = placeGeoData[ 1 ] ? 0.7 : 1.0;
 		const shapes = TXT.font.generateShapes( txt, siz );
 		const geometryTxt0 = new THREE.ShapeBufferGeometry( shapes );
 		geometryTxt0.computeBoundingBox();
 		const xSize = geometryTxt0.boundingBox.getSize( new THREE.Vector3() ).x;
 
+		let height = + place[ 2 ].replace( /\,/g, "" );
+		height = 0.05 * Math.sqrt( height );
+		height = height < 1 ? 1 : height;
 		const matrixTxt = getMatrixComposed( {
-			radius: 51 + 0.0000001 * place[ 6 ],
-			latitude: + place[ 2 ],
-			longitude: + place[ 3 ]
+			radius: 51 + height,
+			latitude: + placeGeoData[ 2 ],
+			longitude: + placeGeoData[ 3 ]
 		} );
 
 		const geometryTxt1 = geometryTxt0.clone()

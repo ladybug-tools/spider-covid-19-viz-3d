@@ -125,7 +125,7 @@
 			const urlCORS = 'https://cors-anywhere.herokuapp.com/';
 
 			const urlWorldometer =
-				"https://www.worldometers.info/coronavirus/";
+				"https://www.worldometers.info/coronavirus/#nav-yesterday";
 
 			requestFile( urlCORS + urlWorldometer, onLoadWorldometer );
 
@@ -149,13 +149,19 @@
 
 			rows = Array.from( trs ).map( tr => tr.innerText.trim().split( "\n" ) );
 			PTS.row0 = rows[ 0 ];
-			PTS.row0[ 11 ] = PTS.row0[ 11 ].replace( /Tests/, "Tests/1M pop")
-			PTS.row0[ 12 ] = PTS.row0[ 12 ].replace( /1M pop/, "Continent")
+			PTS.row0[ 12 ] = PTS.row0[ 12 ].replace( /Tests/, "Tests/1M pop")
+			PTS.row0[ 13 ] = "Population";
+			PTS.row0[ 14 ] = "Continent";
+
 
 			PTS.places = rows.slice( 8, -7 );
 			//console.log( "PTS.places", PTS.places );
 
+			// do a clean up first here
+
 			PTS.group.add( PTS.getPoints( PTS.places ) );
+
+			TXT.addTextDataPoints( PTS.places )
 
 			RAY.intersectObjects = [ ... PTS.group.children, GLO.globe ];
 
@@ -179,7 +185,9 @@
 
 				place = places[ i ];
 
-				place[ 0 ] = place[ 0 ].trim()
+				//console.log( "place", place );
+
+				place[ 1 ] = place[ 1 ].trim()
 					.replace( /Cabo Verde/, "Cape Verde" )
 					.replace( /CAR/, "Central African Republic" )
 					.replace( /Channel Islands/, "Guernsey" )
@@ -193,27 +201,31 @@
 					.replace( /USA/, "United States" )
 					.replace( /UK/, "United Kingdom" );
 
-				let find = geoDataGlobalCsv.find( country => country[ 0 ] === place[ 0 ] )
+				let find = geoDataGlobalCsv.find( country => country[ 0 ] === place[ 1 ] )
 
 				if ( ! find ) {
 
-					find = geoDataRegionalCsv.find( country => country[ 1 ] === place[ 0 ] )
+					find = geoDataRegionalCsv.find( country => country[ 1 ] === place[ 1 ] )
 
 				}
 
 				if ( find ) {
 
-					let height = + place[ 1 ].replace( /\,/g, "" );
+					//console.log( "find", find );
+
+					let height = + place[ 2 ].replace( /\,/g, "" );
 					height = 0.05 * Math.sqrt( height );
-					height = height < 1 ? 1: height;
+					height = height < 1 ? 1 : height;
 					//console.log( "height", height );
 
 					const matrix = getMatrixComposed( { radius: 50, latitude: + find[ 2 ], longitude: + find[ 3 ],height: height } );
 					mesh.setMatrixAt( i, matrix );
 
+					place.push( find );
+
 				} else {
 
-					console.log( "no find",i, place[ 0 ] );
+					//console.log( "no find",i, place[ 0 ] );
 
 				}
 
@@ -236,8 +248,8 @@
 			const place = PTS.places[ index ];
 			const htm = place.map( ( item, i ) => {
 
-				item = i === 0 ? `<a href="https://en.wikipedia.org/w/index.php?search=${ item }" target="_blank">${ item }</a>` : item;
-				item = i === 9 ? ( + item ).toLocaleString() : item;
+				item = i === 1 ? `<a href="https://en.wikipedia.org/w/index.php?search=${ item }" target="_blank">${ item }</a>` : item;
+				item = i === 10 ? ( + item ).toLocaleString() : item;
 				return `${ PTS.row0[ i ] }: ${ item } `;
 
 			} ).join( "<br>" );

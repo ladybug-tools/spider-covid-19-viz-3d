@@ -70,7 +70,6 @@ RAY.onMouseMove = function ( event ) {
 };
 
 
-
 RAY.onClick = function () {
 
 	divPopUp.hidden = true;

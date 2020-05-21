@@ -1,0 +1,136 @@
+/* Copyright 2020 Theo Armour. MIT License */
+
+:root {
+	font: 100% monospace;
+  }
+
+  * {
+	box-sizing: border-box;
+  }
+
+  body {
+	margin: 0;
+	overflow: hidden;
+  }
+
+  a {
+	color: crimson;
+	text-decoration: none;
+  }
+
+  a:hover,
+  a:focus,
+  a:active {
+	background-color: yellow;
+	color: #aaa;
+	text-decoration: underline;
+  }
+
+  button {
+	background-color: #ddd;
+	border: none;
+	border-radius: 2px;
+	color: #322;
+	cursor: pointer;
+	padding: 3px 5px;
+  }
+
+  button:hover {
+	background: #ccc;
+	color: #fff;
+  }
+
+  input[type="range"] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-color: #ddd;
+	border-radius: 2px;
+	height: 1.7ch;
+	width: 98%;
+  }
+
+  footer {
+	border: 0px solid red;
+	bottom: 1ch;
+	position: fixed;
+	display: td;
+	left: 0;
+	margin: 0 auto;
+	right: 0;
+	text-align: center;
+	max-width: 25rem;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 2;
+	width: 10px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 18px;
+	width: 10px;
+  }
+
+  .ftrButton {
+	background-color: #eee;
+	border-radius: 5px;
+	font-size: 200%;
+	margin: 0 1rem;
+  }
+
+  .info {
+	float: right;
+  }
+
+  .info:hover {
+	background-color: yellow;
+  }
+  .info:hover > .infotooltip {
+	display: block;
+  }
+  #navMenu:hover {
+	overflow: visible;
+  }
+
+  .infotooltip {
+	border: 0.8ch double #888;
+	background: white;
+	display: none;
+	font: 100% monospace;
+	font-size: 1rem;
+	font-weight: normal;
+	/* unset summary settings */
+	margin-left: -12rem;
+	padding: 10px;
+	position: absolute;
+	max-width: 20rem;
+	z-index: 1000;
+  }
+
+  #navMenu {
+	border: 0px solid red;
+	margin: 0 20px;
+	max-height: 100vh;
+	max-width: 16rem;
+	overflow: auto;
+	position: absolute;
+  }
+
+  .navText {
+	background-color: #cce0ff;
+	margin: 1ch 0;
+	padding: 1ch;
+  }
+
+  #divPopUp {
+	background-color: white;
+	border-radius: 0.5ch;
+	margin: 1ch 0;
+	padding: 1ch;
+	position: absolute;
+	left: 30%;
+	top: 30%;
+  }

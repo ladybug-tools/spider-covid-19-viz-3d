@@ -13,7 +13,7 @@
 		name="keywords"
 		content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
 
-	<title>globe-pandemic-worldometer</title>
+	<title>globe-population-cities</title>
 
 	<link rel="stylesheet" href="./style.css">
 
@@ -23,10 +23,6 @@
 	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/build/three.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/controls/OrbitControls.js"></script>
 	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/utils/BufferGeometryUtils.js"></script>
-
-
-	<script src="geo-data-global-csv-2020-05-06.js"></script>
-	<script src="geo-data-regional-csv-2020-05-05.js"></script>
 
 	<script src="js/glo-globe-object-2020-05-11.js" ></script>
 	<script src="js/gjs-geojson-2020-05-11.js" ></script>
@@ -47,17 +43,17 @@
 						<img width="18" src="https://cdn.glitch.com/2250d667-1452-448b-8cd3-e0bdfd5adb3c%2Fglitch-icon.svg" >
 					</a>
 
-					<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-pandemic-worldometer/" target="_top" title="Source code on GitHub">
+					<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-population-cities/" target="_top" title="Source code on GitHub">
 						<img src="https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fmark-github.svg?v=1589095846856" >
 					</a>
 
 					<a href="" title="Click to reload this page">
-						globe-pandemic-worldometer &nbsp;
+						globe-population-cities
 						2020-05-11
 					</a>
-
+					&nbsp;
 					<span class="info">&#x24d8;<span id="divDescription" class="infotooltip" >
-						An online interactive 3D Globe presenting the data from https://worldometer.com/ with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library
+						An online interactive 3D Globe presenting the data from https://simplemaps.com/data/world-cities with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library
 					</span></span>
 
 				</h2>
@@ -101,6 +97,9 @@
 	<script>
 
 
+		let groupCities;
+
+
 		init();
 
 
@@ -118,16 +117,15 @@
 
 			TXT.init();
 
-			HRT.initHeart();
-
 			RAY.addMouseMove();
 
-			const urlCORS = 'https://cors-anywhere.herokuapp.com/';
+			HRT.initHeart();
 
-			const urlWorldometer =
-				"https://www.worldometers.info/coronavirus/#nav-yesterday";
 
-			requestFile( urlCORS + urlWorldometer, onLoadWorldometer );
+			const urlWorldCitiesCsv =
+			"https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fworldcities.csv?v=1589145004944";
+
+			requestFile( urlWorldCitiesCsv, onLoadWorldCities );
 
 			console.log( "msInit", performance.now() - timeStart );
 
@@ -135,33 +133,12 @@
 
 
 
-		function onLoadWorldometer ( response ) {
+		function onLoadWorldCities ( response ) {
 
-			const parser = new DOMParser();
-			const html = parser.parseFromString( response, "text/html" );
-			//console.log( "html", html );
+			cities = response.split( /\n/ ).map( line => line.replace( /\"/g, "" ).split( "," ) );
+			//console.log( "cities", cities );
 
-			const table = html.querySelector( "#main_table_countries_today" );
-			//console.log(table );
-
-			const trs = table.querySelectorAll( "tr" );
-			//console.log( 'trs', trs );
-
-			rows = Array.from( trs ).map( tr => tr.innerText.trim().split( "\n" ) );
-			PTS.row0 = rows[ 0 ];
-			PTS.row0[ 12 ] = PTS.row0[ 12 ].replace( /Tests/, "Tests/1M pop")
-			PTS.row0[ 13 ] = "Population";
-			PTS.row0[ 14 ] = "Continent";
-
-
-			PTS.places = rows.slice( 8, -7 );
-			//console.log( "PTS.places", PTS.places );
-
-			// do a clean up first here
-
-			PTS.group.add( PTS.getPoints( PTS.places ) );
-
-			TXT.addTextDataPoints( PTS.places );
+			PTS.group.add( getMesh( cities ) );
 
 			RAY.intersectObjects = [ ... PTS.group.children, GLO.globe ];
 
@@ -170,70 +147,43 @@
 		}
 
 
-		// following is in place of PTS() in script.js
+		// following is in place of PTS.addPoints()
 
-		PTS.getPoints = function( places ) {
+		function getMesh( cities ) {
 
-			let geometry = new THREE.CylinderBufferGeometry( 0.5, 0.2, 1, 5, 1, true );
+			let geometry = new THREE.CylinderBufferGeometry( 0.3, 0.1, 1, 5, 1, true );
 			geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 			geometry.applyMatrix4( new THREE.Matrix4().makeScale( -1, -1, -1 ) );
 
 			const material = new THREE.MeshNormalMaterial({ side: 2 } );
-			const mesh = new THREE.InstancedMesh( geometry, material, places.length );
+			const mesh = new THREE.InstancedMesh( geometry, material, cities.length );
 
-			for ( let i = 0; i < places.length; i ++ ) {
+			for ( let i = 0; i < cities.length; i ++ ) {
 
-				place = places[ i ];
+				const city = cities[ i ];
+				let height = isNaN( Number( city[ 9 ] ) ) ? 1000 : Number( city[ 9 ] );
+				height = height < 1000 ? 1000 : height;
+				height = 0.005 * Math.sqrt( height );
+				//console.log( "height", height );
 
-				//console.log( "place", place );
-
-				place[ 1 ] = place[ 1 ].trim()
-					.replace( /Cabo Verde/, "Cape Verde" )
-					.replace( /CAR/, "Central African Republic" )
-					.replace( /Channel Islands/, "Guernsey" )
-					.replace( /Congo/, "Republic of the Congo" )
-					.replace( /Czechia/, "Czech Republic" )
-					.replace( /DRC/, "Democratic Republic of the Congo" )
-					.replace( /Macao/, "Macau" )
-					.replace( /S. Korea/, "South Korea" )
-					.replace( /Saint Pierre Miquelon/, "Saint Pierre and Miquelon" )
-					.replace( /UAE/, "United Arab Emirates" )
-					.replace( /USA/, "United States" )
-					.replace( /UK/, "United Kingdom" );
-
-				let find = geoDataGlobalCsv.find( country => country[ 0 ] === place[ 1 ] )
-
-				if ( ! find ) {
-
-					find = geoDataRegionalCsv.find( country => country[ 1 ] === place[ 1 ] )
-
-				}
-
-				if ( find ) {
-
-					//console.log( "find", find );
-
-					let height = + place[ 2 ].replace( /\,/g, "" );
-					height = 0.05 * Math.sqrt( height );
-					height = height < 1 ? 1 : height;
-					//console.log( "height", height );
-
-					const matrix = getMatrixComposed( { radius: 50, latitude: + find[ 2 ], longitude: + find[ 3 ],height: height } );
-					mesh.setMatrixAt( i, matrix );
-
-					place.push( find );
-
-				} else {
-
-					//console.log( "no find",i, place[ 0 ] );
-
-				}
+				const matrix = getMatrixComposed( { radius: 50, latitude: + city[ 2 ], longitude: + city[ 3 ],
+					sclX: 0.2 * height, sclY: 0.2 * height, height: height } );
+				mesh.setMatrixAt( i, matrix );
 
 			}
+
+			//group = new THREE.Group();
 
 			return mesh;
 
 		}
+
+
+		TXT.onLoadFontRunThese = function () {
+
+			TXT.addTextContinents();
+
+		};
 
 
 
@@ -241,18 +191,18 @@
 
 		RAY.getHtm = function ( intersected ) {
 
-			//console.log( "intersected", intersected );
-
 			const index = intersected.instanceId;
 
-			const place = PTS.places[ index ];
-			const htm = place.map( ( item, i ) => {
+			const row0 = cities[ 0 ];
+			const city = cities[ index ];
+			const htm = city.map( ( item, i ) => {
 
-				item = i === 1 ? `<a href="https://en.wikipedia.org/w/index.php?search=${ item }" target="_blank">${ item }</a>` : item;
-				item = i === 10 ? ( + item ).toLocaleString() : item;
-				return `${ PTS.row0[ i ] }: ${ item } `;
+				item = i === 0 ? `<a href="https://en.wikipedia.org/w/index.php?search=${ item }" target="_blank">${ item }</a>` : item;
+				item = i === 9 ? ( + item ).toLocaleString() : item;
+				return `${ row0[ i ] }: ${ item } `;
 
 			} ).join( "<br>" );
+
 
 			return htm;
 

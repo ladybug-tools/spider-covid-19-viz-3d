@@ -46,6 +46,12 @@ Currently this is not true.
 <details open >
 <summary>Change log </summary>
 
+### 2020-05-21 ~ Theo
+
+* Three.js in its own file
+* All JavaScript out of html and into script.js
+
+
 ### 2020-04-07
 
 * First commit

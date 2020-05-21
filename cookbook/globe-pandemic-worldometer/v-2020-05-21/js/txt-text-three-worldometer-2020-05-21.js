@@ -28,7 +28,7 @@ TXT.init = function () {
 	const loader = new THREE.FontLoader();
 
 	const urlFont =
-			"https://cdn.jsdelivr.net/gh/mrdoob/three.js@r115/examples/fonts/helvetiker_regular.typeface.json";
+			"https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/fonts/helvetiker_regular.typeface.json";
 
 	loader.load( urlFont, fnt => {
 
@@ -143,8 +143,7 @@ TXT.addSimpleText = function ( {
 };
 
 
-TXT.addTextDataPoints = function () {
-
+TXT.addTextWorldometerPoints = function () {
 
 	const geometriesTxt = [];
 

@@ -8,7 +8,7 @@
 		content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
 	<meta
 		name="description"
-		content="An online interactive 3D Globe designed to be forked, hacked and remixed  with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library" />
+		content="An online interactive 3D Globe presenting the data from https://simplemaps.com/data/world-cities with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library" />
 	<meta
 		name="keywords"
 		content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
@@ -24,12 +24,11 @@
 	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/controls/OrbitControls.js"></script>
 	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/utils/BufferGeometryUtils.js"></script>
 
-	<script src="geo-data-global-csv-2020-05-06.js"></script>
-	<script src="geo-data-regional-csv-2020-05-05.js"></script>
 
+	<script src="js/thr-threejs-2020-05-21.js"></script>
 	<script src="js/glo-globe-object-2020-05-11.js" ></script>
 	<script src="js/gjs-geojson-2020-05-11.js" ></script>
-	<script src="js/pts-data-points-2020-05-11.js"></script>
+	<script src="js/pts-population-2020-05-21.js"></script>
 	<script src="js/txt-text-three-2020-05-11.js" ></script>
 	<script src="js/ray-raycaster-2020-05-11.js"></script>
 
@@ -48,17 +47,17 @@
 						<img width="18" src="https://cdn.glitch.com/2250d667-1452-448b-8cd3-e0bdfd5adb3c%2Fglitch-icon.svg" >
 					</a>
 
-					<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-template/" target="_top" title="Source code on GitHub">
+					<a href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-population-cities/" target="_top" title="Source code on GitHub">
 						<img src="https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fmark-github.svg?v=1589095846856" >
 					</a>
 
 					<a href="" title="Click to reload this page">
-						globe-template
-						2020-05-11
+						Globe Population Cities
+						2020-05-21
 					</a>
 					&nbsp;
 					<span class="info">&#x24d8;<span id="divDescription" class="infotooltip" >
-						An online interactive 3D Globe designed to be forked, hacked and remixed  with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library
+						An online interactive 3D Globe presenting the data from https://simplemaps.com/data/world-cities with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library
 					</span></span>
 
 				</h2>
@@ -81,7 +80,8 @@
 
 	<div id="divPopUp" >When you touch a country indicator,<br>the rotation will stop<br>and statistics will appear here </div>
 
-	<footer  >
+
+	<footer>
 
 		<button onclick=controls.reset(); class=ftrButton title="reset the view">&CirclePlus;</button>
 
@@ -91,77 +91,18 @@
 		<button onclick="TXT.group.visible=! TXT.group.visible; divPopUp.hidden = true;" title="toggle statistics"
 		class=ftrButton>&sdotb;</button>
 
-		<button onclick=setStats(); title="View frames per second and number of draw calls" class=ftrButton>fps</button>
+		<button onclick=THR.setStats(); title="View frames per second and number of draw calls" class=ftrButton>fps</button>
 
 	</footer>
 
 
-	<script src="script.js"></script><script></script>
-
-
+	<script src="script.js"></script>
 	
 	<script>
 
-
-		init();
-
-
-		function init () {
-
-			initThreejs();
-
-			animate();
-
-			GLO.initGlobeWithBitmap();
-
-			GJS.initGeoJson();
-
-			PTS.init();
-
-			TXT.init();
-
-			RAY.intersectObjects = [ ... PTS.group.children, GLO.globe ];
-
-			RAY.addMouseMove();
-
-			HRT.initHeart();
-
-			console.log( "msInit", performance.now() - timeStart );
-
-		}
-
-
-
-		TXT.onLoadFontRunThese = function () {
-
-			TXT.addTextContinents();
-
-			TXT.addTextDataPoints( geoDataGlobalCsv );
-
-			TXT.addTextDataPoints( geoDataRegionalCsv );
-
-		};
-
-
-
-		RAY.getHtm = function ( intersected ) {
-
-			const country = intersected.object.userData.data[ intersected.instanceId ];
-			//console.log( "country", country );
-
-			const name = country[ 1 ] ? country[ 1 ] : country[ 0 ];
-
-			// htm = JSON.stringify( country, null, "<br>" ).slice( 1, -1 ).replace( /[",]/g, "");
-
-			htm = `
-				<a href="https://en.wikipedia.org/wiki/${ name }" target="_blank">${ name }</a><br>
-				${ ( + country[ 6 ] ).toLocaleString() } people
-				`;
-
-			return htm;
-
-		};
+		init(); // see script.js
 
 	</script>
+
 </body>
 </html>

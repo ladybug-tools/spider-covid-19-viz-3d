@@ -27,6 +27,7 @@
 	<script src="geo-data-global-csv-2020-05-06.js"></script>
 	<script src="geo-data-regional-csv-2020-05-05.js"></script>
 
+	<script src="js/thr-threejs-2020-05-21.js"></script>
 	<script src="js/glo-globe-object-2020-05-11.js" ></script>
 	<script src="js/gjs-geojson-2020-05-11.js" ></script>
 	<script src="js/pts-data-points-2020-05-11.js"></script>
@@ -54,7 +55,7 @@
 
 					<a href="" title="Click to reload this page">
 						globe-template
-						2020-05-11
+						2020-05-21
 					</a>
 					&nbsp;
 					<span class="info">&#x24d8;<span id="divDescription" class="infotooltip" >
@@ -91,76 +92,16 @@
 		<button onclick="TXT.group.visible=! TXT.group.visible; divPopUp.hidden = true;" title="toggle statistics"
 		class=ftrButton>&sdotb;</button>
 
-		<button onclick=setStats(); title="View frames per second and number of draw calls" class=ftrButton>fps</button>
+		<button onclick=THR.setStats(); title="View frames per second and number of draw calls" class=ftrButton>fps</button>
 
 	</footer>
 
 
 	<script src="script.js"></script><script></script>
-
-
 	
 	<script>
 
-
-		init();
-
-
-		function init () {
-
-			initThreejs();
-
-			animate();
-
-			GLO.initGlobeWithBitmap();
-
-			GJS.initGeoJson();
-
-			PTS.init();
-
-			TXT.init();
-
-			RAY.intersectObjects = [ ... PTS.group.children, GLO.globe ];
-
-			RAY.addMouseMove();
-
-			HRT.initHeart();
-
-			console.log( "msInit", performance.now() - timeStart );
-
-		}
-
-
-
-		TXT.onLoadFontRunThese = function () {
-
-			TXT.addTextContinents();
-
-			TXT.addTextDataPoints( geoDataGlobalCsv );
-
-			TXT.addTextDataPoints( geoDataRegionalCsv );
-
-		};
-
-
-
-		RAY.getHtm = function ( intersected ) {
-
-			const country = intersected.object.userData.data[ intersected.instanceId ];
-			//console.log( "country", country );
-
-			const name = country[ 1 ] ? country[ 1 ] : country[ 0 ];
-
-			// htm = JSON.stringify( country, null, "<br>" ).slice( 1, -1 ).replace( /[",]/g, "");
-
-			htm = `
-				<a href="https://en.wikipedia.org/wiki/${ name }" target="_blank">${ name }</a><br>
-				${ ( + country[ 6 ] ).toLocaleString() } people
-				`;
-
-			return htm;
-
-		};
+		init(); // see script.js
 
 	</script>
 </body>

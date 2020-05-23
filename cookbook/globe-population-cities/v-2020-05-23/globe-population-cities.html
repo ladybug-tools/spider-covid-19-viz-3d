@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
+	<meta name="description" content="Part of a series of online interactive 3D globes designed to be forked, hacked and remixed  with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library" />
+	<meta name="keywords" content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
+
+	<title>Globe Template</title>
+
+	<link rel="stylesheet" href="./style-2020-05-23.css">
+
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/controls/OrbitControls.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r116/examples/js/utils/BufferGeometryUtils.js"></script>
+
+	<script src="geo-data-global-csv-2020-05-06.js"></script>
+	<script src="geo-data-regional-csv-2020-05-05.js"></script>
+
+	<script src="js/thr-threejs-2020-05-23.js"></script>
+	<script src="js/glo-globe-object-2020-05-11.js"></script>
+	<script src="js/gjs-geojson-2020-05-11.js"></script>
+	<script src="js/hrt-heart-2020-05-23.js"></script>
+	<script src="js/scc-screen-ccapture-2020-05-23.js"></script>
+	<script src="js/txt-text-three-2020-05-11.js"></script>
+	<script src="js/ray-raycaster-2020-05-11.js"></script>
+	
+	<script src="js/pts-population-2020-05-21.js"></script>
+
+	<details id=detNav open>
+
+		<summary id=sumNavMenu class="gmd-1">show || hide menu</summary>
+
+		<nav id="navMenu" class="gmd-2">
+
+			<header id="hdrTitle">
+
+				<h2>
+
+					<a id=aGlitch class=aButton href="" target="_top" title="Source code on Glitch">
+						<img width="18" src="https://cdn.glitch.com/2250d667-1452-448b-8cd3-e0bdfd5adb3c%2Fglitch-icon.svg">
+					</a>
+
+					<a id=aGithub href="" target="_top" title="Source code on GitHub">
+						<img src="https://cdn.glitch.com/7af242e2-0cf2-4179-8c41-b2f2cb982c5a%2Fmark-github.svg?v=1589095846856">
+					</a>
+
+					<a id=aTitle href="" title="Click to reload this page">
+						Globe Population Cities
+					</a>
+					&nbsp;
+					<span class="info"><img width=24 style=opacity:0.5; src=../../../assets/icons/noun_Information_585560.svg> <span id="divDescription" class="infoTooltip gmd-5">
+
+					</span></span>
+
+				</h2>
+
+			</header>
+
+			<details>
+
+				<summary class="gmd-1">more</summary>
+
+				<p class="navText">
+					Terrain height: &nbsp; <output id=outElev>0</output>
+					<input type=range value=0 id="rng" oninput=GLO.setGlobeElevation3D(this.value);outElev.value=this.value;>
+				</p>
+
+				<div id="divTime"></div>
+
+				<div id="divInfo"></div>
+
+				<hr>
+
+				<center><img width="32" src="../../../assets/icons/noun_Globe_2117848.svg"> </center>
+
+			</details>
+
+		</nav>
+
+	</details>
+
+	<div id="divPopUp" class="gmd-2">When you touch a country indicator,<br>the rotation will stop<br>and statistics will appear here </div>
+
+	<footer>
+
+		<button onclick="THR.controls.reset();" class=ftrButton title="reset the view"><img height=32 width=32 src=../../../assets/icons/noun_Home_3359355.svg> </button> <button onclick="controls.autoRotate=!controls.autoRotate" title="toggle the rotation" class=ftrButton>&circlearrowright;</button>
+
+		<button onclick="TXT.group.visible=! TXT.group.visible; divPopUp.hidden = true;" title="toggle statistics" class=ftrButton>&sdotb;</button>
+
+		<button onclick="THR.setStats();" title="View frames per second and number of draw calls" class=ftrButton>fps</button>
+
+	</footer>
+
+
+	<script src="script-population-cities.js"></script>
+
+	<script>
+
+		init(); // see script-population-cities.js
+
+	</script>
+
+</body>
+</html>

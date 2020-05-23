@@ -43,7 +43,11 @@ Thanks to
 <details open >
 <summary>Change log </summary>
 
-### 123
+### 2020-05-23
+
+* lots of standardizing
+
+### 2020-05-21
 
 * First commit
 

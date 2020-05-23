@@ -196,7 +196,12 @@ geoJson useful
 <details open >
 <summary>Change log </summary>
 
-#### 2020-05-10 ~ Theo
+### 2020-05-23 ~ Theo
+
+* lots of standardizing
+
+
+### 2020-05-10 ~ Theo
 
 - Archive files and rename folders to calendar versioning
 - Update readme

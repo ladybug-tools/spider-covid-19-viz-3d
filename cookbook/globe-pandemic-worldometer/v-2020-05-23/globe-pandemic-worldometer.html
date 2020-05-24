@@ -8,7 +8,7 @@
 	<meta name="description" content="Part of a series of online interactive 3D globes designed to be forked, hacked and remixed  with real-time interactive 3D graphics in your browser using the WebGL and the Three.js JavaScript library" />
 	<meta name="keywords" content="Three.js,WebGL,JavaScript,GitHub,FOSS,3D,STEM" />
 
-	<title>Globe Template</title>
+	<title>Globe Pandemic Worldometer</title>
 
 	<link rel="stylesheet" href="./style-2020-05-23.css">
 
@@ -27,10 +27,10 @@
 	<script src="js/gjs-geojson-2020-05-11.js"></script>
 	<script src="js/hrt-heart-2020-05-23.js"></script>
 	<script src="js/scc-screen-ccapture-2020-05-23.js"></script>
-	<script src="js/txt-text-three-2020-05-11.js"></script>
 	<script src="js/ray-raycaster-2020-05-11.js"></script>
-
-	<script src="js/pts-data-points-2020-05-11.js"></script>
+	
+	<script src="js/pts-worldometer-points-2020-05-21.js"></script>
+	<script src="js/txt-text-three-worldometer-2020-05-21.js"></script>
 
 	<details id=detNav open>
 
@@ -51,12 +51,10 @@
 					</a>
 
 					<a id=aTitle href="" title="Click to reload this page">
-						Globe Template
+						Globe Pandemic Worldometer
 					</a>
 					&nbsp;
-					<span class="info"><img width=24 style=opacity:0.5; src=../../../assets/icons/noun_Information_585560.svg> <span id="divDescription" class="infoTooltip gmd-5">
-
-					</span></span>
+					<span class="info"><img width=24 style=opacity:0.5; src=../../../assets/icons/noun_Information_585560.svg> <span id="divDescription" class="infoTooltip gmd-5"></span></span>
 
 				</h2>
 
@@ -89,8 +87,8 @@
 
 	<footer>
 
-		<button onclick="THR.controls.reset();" title="reset the view" class="ftrButton" ><img height=32 width=32 src="../../../assets/icons/noun_Home_3359355.svg"> </button>
- 
+		<button onclick="THR.controls.reset();" class=ftrButton title="reset the view"><img height=32 width=32 src="../../../assets/icons/noun_Home_3359355.svg" > </button> 
+		
 		<button onclick="controls.autoRotate=!controls.autoRotate" title="toggle the rotation" class=ftrButton>&circlearrowright;</button>
 
 		<button onclick="TXT.group.visible=! TXT.group.visible; divPopUp.hidden = true;" title="toggle statistics" class=ftrButton>&sdotb;</button>
@@ -100,13 +98,13 @@
 	</footer>
 
 
-	<script src="script-template.js"></script>
+	<script src="script-pandemic-worldometer.js"></script>
 
 	<script>
-		init(); // see script-template.js
+
+		init(); // see script-pandemic-worldometer.js
 
 	</script>
 
 </body>
-
 </html>

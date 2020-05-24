@@ -1,17 +1,17 @@
-<span style=display:none; >[You are now in a GitHub source code view - click this link to view Read Me file as a web page]( https://ladybug.tools/spider-covid-19-viz-3d/readme.html#assets/0-templates/README.md "View file as a web page." ) </span>
+<span style=display:none; >[You are now in a GitHub source code view - click this link to view Read Me file as a web page]( https://ladybug.tools/spider-covid-19-viz-3d/readme.html#cookbook/globe-pandemic-worldometer//README.md "View file as a web page." ) </span>
 
-<div><input type=button class = 'btn btn-secondary btn-sm' onclick=window.location.href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/xxxxxx/";
+<div><input type=button class = 'btn btn-secondary btn-sm' onclick=window.location.href="https://github.com/ladybug-tools/spider-covid-19-viz-3d/tree/master/cookbook/globe-pandemic-worldometer/";
 value='You are now in a GitHub web page view - Click this button to view this read me file as source code' ></div>
 
 
-# [ZZZZZ Read Me]( https://ladybug.tools/spider-covid-19-viz-3d/readme.html#xxxxxx/README.md )
+# [Globe Pandemic Worldometer Read Me]( https://ladybug.tools/spider-covid-19-viz-3d/readme.html#xxxxxx/README.md )
 
-<!--
-<iframe src=https://ladybug.tools/spider-covid-19-viz-3d/xxxxxx/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
+
+<iframe src=https://ladybug.tools/spider-covid-19-viz-3d/cookbook/globe-pandemic-worldometer/ width=100% height=500px >Iframes are not viewable in GitHub source code view</iframe>
 _basic-html.html_
 
-### Full Screen: [ZZZZZ]( https://www.ladybug.tools/spider-covid-19-viz-3d/xxxxxx/ )
--->
+### Full Screen: [Globe Pandemic Worldometer]( https://www.ladybug.tools/spider-covid-19-viz-3d/cookbook/globe-pandemic-worldometer/)
+
 
 <details open >
 <summary>Concept</summary>
@@ -40,9 +40,11 @@ _basic-html.html_
 <details open >
 <summary>Change log </summary>
 
-### 123
+### 2020-05-23 ~ Theo
 
-* First commit
+
+
+* Many updates
 
 </details>
 

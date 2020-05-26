@@ -1,6 +1,6 @@
 /* global */
 
-const version = "2020-05-23";
+const version = "2020-05-25";
 
 const description = 
 `

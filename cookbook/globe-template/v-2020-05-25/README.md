@@ -23,8 +23,11 @@ Glitch import path:  ladybug-tools/spider-covid-19-viz-3d:cookbook/globe-templat
 * noun_Home_3359355.svg ~ Home by Arvelio2001 from the Noun Project 
 * noun_Information_585560.svg ~ Information by Delwar Hossain from the Noun Project
 
+## Tips
+
+* Remember to push to GitHub befoure pulling from Glitch
 
 
 ---
 
-<img width=32 src="https://cdn.glitch.com/99804c3c-eea0-49d5-9735-80b6d136c766%2Fnoun_Globe_2117848.svg" >
+<center><img width=32 src="https://cdn.glitch.com/99804c3c-eea0-49d5-9735-80b6d136c766%2Fnoun_Globe_2117848.svg" ></center>

@@ -1,4 +1,4 @@
-# Globe Template readme
+# [Globe Template readme]( ./readme.html)
 
 GitHub
 
@@ -12,10 +12,7 @@ Glitch
 
 Glitch import path:  ladybug-tools/spider-covid-19-viz-3d:cookbook/globe-template/v-2020-05-25
 
-## 2020-05-25
-
-* Making it easier to fork to Glitch
-
+## 2020-05-26
 
 ## Credits
 

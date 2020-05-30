@@ -285,11 +285,14 @@ WP.addBars = function ( places, heights, color = "red" ) {
 
 		place = places[ i ];
 		let height = isNaN( heights[ i ] ) ? 10 : Number( heights[ i ] );
+
+		const heightScaled = WP.scale ? 0.05 * Math.sqrt( height ) : 0.0002 * height;
+
 		//height = height < 1000 ? 10 : height;
 		height = 0.05 * Math.sqrt( height );
 		//console.log( "height", height );
 
-		const matrix = BAR.getMatrixComposed( 50, place.latitude, place.longitude, height );
+		const matrix = BAR.getMatrixComposed( 50, place.latitude, place.longitude, heightScaled );
 		cases.setMatrixAt( i, matrix );
 
 	}

@@ -1,0 +1,183 @@
+/* Copyright 2020 Theo Armour. MIT License */
+
+@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700");
+
+:root {
+	font-size: 100%;
+	font-family: 'Lato', sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	color: teal;
+	margin: 0;
+	overflow: hidden;
+}
+
+a {
+	color: #22bb22;
+	font-weight: 800;
+	text-decoration: none;
+}
+
+a:hover,
+a:focus,
+a:active {
+	background-color: yellow;
+	color: #aaa;
+	text-decoration: underline;
+}
+
+button {
+	background-color: #ddd;
+	border: none;
+	border-radius: 2px;
+	color: #322;
+	cursor: pointer;
+	padding: 3px 5px;
+}
+
+button:hover {
+	background: #ccc;
+	color: #fff;
+}
+
+input[type="range"] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-color: #ddd;
+	border-radius: 2px;
+	height: 1.7ch;
+	width: 98%;
+}
+
+footer {
+	border: 0 solid red;
+	bottom: 1ch;
+	position: fixed;
+	display: td;
+	left: 0;
+	margin: 0 auto;
+	right: 0;
+	text-align: center;
+	max-width: 25rem;
+}
+
+input[type="range"]::-moz-range-thumb {
+	background-color: #888;
+	border-radius: 2;
+	width: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #888;
+	height: 18px;
+	width: 10px;
+}
+
+.ftrButton {
+	background-color: #eee;
+	border-radius: 0.5ch;
+	font-size: 2rem;
+	margin: 0 1rem;
+	vertical-align: bottom;
+}
+
+
+
+
+.gmd-1 {
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	transition: all 0.25s ease-in-out;
+}
+
+.gmd-1:hover {
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.gmd-2 {
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.gmd-5 {
+	box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
+.info {
+	cursor: pointer;
+	float: right;
+}
+
+.info:hover {
+	background-color: yellow;
+}
+
+.infoTooltip {
+	border: 0 double #888;
+	border-radius: 2ch;
+	background: white;
+	display: none;
+	font: 100% monospace;
+	font-size: 1rem;
+	font-weight: normal;
+	margin-left: -12rem;
+	padding: 10px;
+	position: absolute;
+	max-width: 20rem;
+	z-index: 1000;
+}
+
+
+.info:hover>.infoTooltip {
+	display: block;
+}
+
+
+#detNavMenu {
+	background-color: rgba(0, 0, 0, 0.1);
+	border-radius: 2ch;
+	margin: 1ch;
+	position: absolute;
+}
+
+.sumPrimary {
+	background-color: #eee;
+	border-radius: 2ch;
+	cursor: pointer;
+	outline: none;
+	padding: 1ch;
+}
+
+
+
+#divPopUp {
+	background-color: white;
+	border-radius: 0.5ch;
+	margin: 1ch 0;
+	padding: 1ch;
+	position: absolute;
+	left: 30%;
+	top: 30%;
+}
+
+#navMenu {
+	background-color: #fafffa;
+	border: 0 solid red;
+	border-radius: 2ch;
+	margin: 1ch;
+	max-height: 90vh;
+	width: 17rem;
+	overflow: auto;
+	padding: 1ch 1ch 0 1ch;
+	resize: both;
+	z-index: 5;
+}
+
+
+#sumNavMenu {
+	margin: 1ch;
+}

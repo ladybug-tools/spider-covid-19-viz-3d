@@ -32,6 +32,67 @@ function init () {
 
 	GJS.initGeoJson();
 
+	JTV.root = undefined;
+	JTV.json = undefined;
+
+
+JTV.onLoad = function ( text ) {
+
+	console.log( "text", text.slice( 0, 1000) );
+
+	json = JSON.parse( text );
+
+	JTV.root = "500 Cities";
+	JTV.json =  json;
+	
+	data = json.data;
+
+	places = [];
+
+
+	for ( let i = 0; i < data.length; i++ ) {
+		
+		item = data[ i ][ 26 ];
+
+		if ( item ) {
+
+			lat = item[ 1 ];
+			lon = item[ 2 ];
+
+			if( ! places.includes( lat+lon) ) {
+			places.push( lat+lon)
+
+			PTS.getMesh( lat, lon) 
+			//console.log( "lat", item[ 1 ], "lon", item[ 2 ] );
+
+			}
+
+
+		}
+
+
+	}
+
+
+	// JTH.init();
+	// JTF.init();
+	// //JTE.init();
+
+	// JTVdivJsonTree.innerHTML = JTV.parseJson( JTV.root, JTV.json, 0 );
+
+	// const details = JTVdivJsonTree.querySelectorAll( "details" );
+
+	// details[ 0 ].open = true;
+
+};
+	url= "../../../../500-cities.json";
+
+	requestFile ( url, JTV.onLoad  ) ;
+
+
+	PTS.getMesh()
+
+
 	//TXT.init();
 
 	//PTS.scale=false;
@@ -49,6 +110,35 @@ function init () {
 	divTime.innerHTML = `Time to load data<br> ${ ( performance.now() - timeStart ).toLocaleString() } ms`;
 
 }
+
+
+
+PTS.getMesh = function ( lat = 0,  lon = 0 ) {
+
+	//const timeStart = performance.now();
+
+	const geometry = new THREE.CylinderBufferGeometry( 0.1, 0.01, 1, 5, 1, true );
+	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
+	geometry.applyMatrix4( new THREE.Matrix4().makeScale( - 1, - 1, - 1 ) ); // prettifies the coloring
+	const material = new THREE.MeshNormalMaterial( { side: 2 } );
+
+
+
+	const matrix = getMatrixComposed( {
+		latitude: + lat,
+		longitude: + lon,
+		height: 5
+	} );
+
+	geometry.applyMatrix4( matrix );
+
+	const mesh = new THREE.Mesh( geometry, material, 50 );
+	//mesh.name = "instancedMesh";
+	//console.log( "msPts", performance.now() - timeStart );
+
+	THR.scene.add( mesh )
+
+};
 
 
 
@@ -142,3 +232,4 @@ function requestFile ( url, callback ) {
 	xhr.send( null );
 
 }
+

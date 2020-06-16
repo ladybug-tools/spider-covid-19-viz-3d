@@ -32,6 +32,11 @@
 
 	<script src="js/pts-data-points-2020-05-26.js"></script>
 
+	<script src="json-tree-view/jtv-json-tree-view-2020-06-11.js"></script>
+	<script src="json-tree-view/jth-json-tree-helper-2020-06-10.js"></script>
+	<script src="json-tree-view/jte-json-tree-edit-2020-01-24.js"></script>
+	<script src="json-tree-view/jtf-json-tree-finder-2020-06-10.js"></script>
+
 	<details id=detNavMenu open>
 
 		<summary id=sumNavMenu class="sumPrimary gmd-1">show || hide menu</summary>
@@ -58,6 +63,32 @@
 
 			</header>
 
+			<details id=detData ontoggle=JTV.onLoad(); >
+
+				<summary class="sumPrimary gmd-1" title="Browse the data in the file" >data menu</summary>
+				
+				<div id=RAYdivMeshData ></div>
+
+				<div id=GXDdivData ></div>
+
+				<p>
+					<i>We need to decide what data should appear here & and how best to format it. Work-in-progress.</i>
+				</p>	
+
+				<div id=JTHdivJsonTreeHelper ></div>
+				
+				<div id=JTFdivJsonTreeFinder ></div>
+				
+				<div id=JTEdivJsonTreeEdit ></div>
+				
+				<div id=JTVdivJsonTreeView ></div>
+				
+				<div id="JTVdivJsonTree"></div>
+
+				<hr>
+
+			</details>
+			
 			<details>
 
 				<summary class="sumPrimary gmd-1">more</summary>

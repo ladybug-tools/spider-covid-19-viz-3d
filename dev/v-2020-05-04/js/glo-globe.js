@@ -73,7 +73,7 @@ GLO.loadGlobeBasic = function ( size = 50 ) {
 	const geometry = new THREE.SphereBufferGeometry( size, 32, 32);
 	geometry.applyMatrix4( new THREE.Matrix4().makeRotationX( 0.5 * Math.PI ) );
 
-	const url = pathAssets + "images/natural-earth-4096-2048-col.jpg";
+	const url = "https://www.ladybug.tools/spider-covid-19-viz-3d/assets/images/natural-earth-4096-2048-col.jpg";
 	var texture = new THREE.TextureLoader().load( url );
 
 	const material = new THREE.MeshBasicMaterial( { color: 0xcce0ff, map: texture } );

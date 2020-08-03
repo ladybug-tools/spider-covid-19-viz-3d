@@ -154,7 +154,7 @@ GLO.toggleSkyBox = function ( boole = true ) {
 
 	THR.scene.background = boole ?
 		new THREE.CubeTextureLoader()
-			.setPath( "https://www.ladybug.tools/spider-covid-19-viz-3d/cube-textures/" )
+			.setPath( "https://www.ladybug.tools/spider-covid-19-viz-3d/assets/cube-textures/" )
 			.load( [ "f1.jpg", "f2.jpg", "f3.jpg", "f4.jpg", "f5.jpg", "f6.jpg" ] )
 		:
 		null;

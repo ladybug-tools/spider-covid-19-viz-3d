@@ -58,4 +58,3 @@ c19GeoDataUsa = [
 	{ "country": "United States", "region": "Wisconsin", "latitude": "44.7862968", "longitude": "-89.8267049", "population": "5822434" },
 	{ "country": "United States", "region": "Wyoming", "latitude": "43.000325", "longitude": "-107.5545669", "population": "578759" }
 ];
-

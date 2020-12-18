@@ -26,7 +26,7 @@ Countries
 
 * Build routine to scrape data from scratch
 	* Start with WP pop or Google DSPL?
-* Add sub-groups of improtance field?
+* Add sub-groups of importance field?
 
 
 Regions

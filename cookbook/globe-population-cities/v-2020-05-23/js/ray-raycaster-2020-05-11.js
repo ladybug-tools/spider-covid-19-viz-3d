@@ -46,7 +46,7 @@ RAY.onMouseMove = function ( event ) {
 
 		if ( intersected.instanceId ) {
 
-			//console.log( "intersected", intersected );
+			console.log( "intersected", intersected );
 
 			divPopUp.hidden = false;
 			divPopUp.style.left = event.clientX + "px";
